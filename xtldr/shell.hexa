@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Starts XTLDR shell.
 /// 
 /// @return This routine does not return any value.
@@ -7,7 +6,7 @@
 fun blStartLoaderShell() {
 	blInitializeConsole()
 	blpPrintShellPrompt()
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 }
 
 /// Prints XTLDR shell prompt.

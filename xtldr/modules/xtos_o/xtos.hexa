@@ -1,4 +1,4 @@
-// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+var __UNIQUE_ID_author0
 
 var __UNIQUE_ID_description1
 
@@ -24,40 +24,40 @@ var xtBootProtocol
 /// 
 /// @since XT 1.0
 fun xtGetDisplayInformation(frameBufferResource PSYSTEM_RESOURCE_FRAMEBUFFER, frameBufferBase PEFI_PHYSICAL_ADDRESS, frameBufferSize PULONG_PTR, frameBufferModeInfo PXTBL_FRAMEBUFFER_MODE_INFORMATION) {
-	frameBufferResource.Header.PhysicalAddress = *frameBufferBase as! PVOID
-	frameBufferResource.Header.ResourceType = systemResourceFrameBuffer
-	frameBufferResource.Header.ResourceSize = ???? resolve UnaryExprOrTypeTraitExpr
-	frameBufferResource.BufferSize = *frameBufferSize
-	frameBufferResource.Width = frameBufferModeInfo.Width
-	frameBufferResource.Height = frameBufferModeInfo.Height
-	frameBufferResource.Depth = frameBufferModeInfo.Depth
-	frameBufferResource.BitsPerPixel = frameBufferModeInfo.BitsPerPixel
-	frameBufferResource.PixelsPerScanLine = frameBufferModeInfo.PixelsPerScanLine
-	frameBufferResource.Pitch = frameBufferModeInfo.Pitch
-	frameBufferResource.Pixels.BlueShift = frameBufferModeInfo.PixelInformation.BlueShift
-	frameBufferResource.Pixels.BlueSize = frameBufferModeInfo.PixelInformation.BlueSize
-	frameBufferResource.Pixels.GreenShift = frameBufferModeInfo.PixelInformation.GreenShift
-	frameBufferResource.Pixels.GreenSize = frameBufferModeInfo.PixelInformation.GreenSize
-	frameBufferResource.Pixels.RedShift = frameBufferModeInfo.PixelInformation.RedShift
-	frameBufferResource.Pixels.RedSize = frameBufferModeInfo.PixelInformation.RedSize
-	frameBufferResource.Pixels.ReservedShift = frameBufferModeInfo.PixelInformation.ReservedShift
-	frameBufferResource.Pixels.ReservedSize = frameBufferModeInfo.PixelInformation.ReservedSize
+	frameBufferResource.header.physicalAddress = frameBufferBase[0] as! PVOID
+	frameBufferResource.header.resourceType = systemResourceFrameBuffer
+	frameBufferResource.header.resourceSize = sizeOf<Unsigned long long>()
+	frameBufferResource.bufferSize = frameBufferSize[0]
+	frameBufferResource.width = frameBufferModeInfo.width
+	frameBufferResource.height = frameBufferModeInfo.height
+	frameBufferResource.depth = frameBufferModeInfo.depth
+	frameBufferResource.bitsPerPixel = frameBufferModeInfo.bitsPerPixel
+	frameBufferResource.pixelsPerScanLine = frameBufferModeInfo.pixelsPerScanLine
+	frameBufferResource.pitch = frameBufferModeInfo.pitch
+	frameBufferResource.pixels.blueShift = frameBufferModeInfo.pixelInformation.blueShift
+	frameBufferResource.pixels.blueSize = frameBufferModeInfo.pixelInformation.blueSize
+	frameBufferResource.pixels.greenShift = frameBufferModeInfo.pixelInformation.greenShift
+	frameBufferResource.pixels.greenSize = frameBufferModeInfo.pixelInformation.greenSize
+	frameBufferResource.pixels.redShift = frameBufferModeInfo.pixelInformation.redShift
+	frameBufferResource.pixels.redSize = frameBufferModeInfo.pixelInformation.redSize
+	frameBufferResource.pixels.reservedShift = frameBufferModeInfo.pixelInformation.reservedShift
+	frameBufferResource.pixels.reservedSize = frameBufferModeInfo.pixelInformation.reservedSize
 }
 
 fun xtGetMemoryDescriptorList(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *, memoryDescriptorList PLIST_ENTRY) {
 	var address EFI_PHYSICAL_ADDRESS
 	var status EFI_STATUS
 	var pages ULONGLONG
-	pages = ((((pageMap.MapSize + 1) * ???? resolve UnaryExprOrTypeTraitExpr) >> 12) + (???? resolve ConditionalOperator)) as! ULONGLONG
-	status = xtLdrProtocol.Memory.AllocatePages(pages, address)
+	pages = ((((pageMap.mapSize + 1) * sizeOf<Unsigned long long>()) >> 12) + ([unknown clang ast] resolve ConditionalOperator)) as! ULONGLONG
+	status = xtLdrProtocol.memory.allocatePages(pages, address)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	status = xtLdrProtocol.Memory.MapVirtualMemory(pageMap, *virtualAddress, address as! PVOID, pages, loaderMemoryData)
+	status = xtLdrProtocol.memory.mapVirtualMemory(pageMap, virtualAddress[0], address as! PVOID, pages, loaderMemoryData)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Memory.FreePages(address, pages)
+		xtLdrProtocol.memory.freePages(address, pages)
 		return status
 
 	}
@@ -65,22 +65,22 @@ fun xtGetMemoryDescriptorList(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *
 	var physicalBase PVOID = address as! PVOID
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
-	listEntry = pageMap.MemoryMap.Flink
-	while listEntry != pageMap.MemoryMap {
+	listEntry = pageMap.memoryMap.flink
+	while listEntry != pageMap.memoryMap {
 		let memoryMapping = new ByValue<PXTBL_MEMORY_MAPPING>()
 
 		let memoryDescriptor = new ByValue<PLOADER_MEMORY_DESCRIPTOR>()
 
-		memoryDescriptor.MemoryType = memoryMapping.MemoryType
-		memoryDescriptor.BasePage = memoryMapping.PhysicalAddress as! UINT_PTR / 4096
-		memoryDescriptor.PageCount = memoryMapping.NumberOfPages
-		rtlInsertTailList(memoryDescriptorList, memoryDescriptor.ListEntry)
-		address = address + ???? resolve UnaryExprOrTypeTraitExpr
-		listEntry = listEntry.Flink
+		memoryDescriptor.memoryType = memoryMapping.memoryType
+		memoryDescriptor.basePage = memoryMapping.physicalAddress as! UINT_PTR / 4096
+		memoryDescriptor.pageCount = memoryMapping.numberOfPages
+		rtlInsertTailList(memoryDescriptorList, memoryDescriptor.listEntry)
+		address = address + sizeOf<Unsigned long long>()
+		listEntry = listEntry.flink
 
 	}
 
-	xtLdrProtocol.Memory.PhysicalListToVirtual(pageMap, memoryDescriptorList, physicalBase, *virtualAddress)
+	xtLdrProtocol.memory.physicalListToVirtual(pageMap, memoryDescriptorList, physicalBase, virtualAddress[0])
 	return (9223372036854775808 & 0)
 }
 
@@ -108,44 +108,44 @@ fun xtGetSystemResourcesList(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *,
 	var address EFI_PHYSICAL_ADDRESS
 	var physicalBase PVOID
 	var virtualBase PVOID
-	pages = (((???? resolve UnaryExprOrTypeTraitExpr + ???? resolve UnaryExprOrTypeTraitExpr) >> 12) + (???? resolve ConditionalOperator)) as! ULONGLONG
-	status = xtLdrProtocol.Memory.AllocatePages(pages, address)
+	pages = (((sizeOf<Unsigned long long>() + sizeOf<Unsigned long long>()) >> 12) + ([unknown clang ast] resolve ConditionalOperator)) as! ULONGLONG
+	status = xtLdrProtocol.memory.allocatePages(pages, address)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	status = xtLdrProtocol.Memory.MapVirtualMemory(pageMap, *virtualAddress, address as! PVOID, pages, loaderFirmwarePermanent)
+	status = xtLdrProtocol.memory.mapVirtualMemory(pageMap, virtualAddress[0], address as! PVOID, pages, loaderFirmwarePermanent)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Memory.FreePages(address, pages)
+		xtLdrProtocol.memory.freePages(address, pages)
 		return status
 
 	}
 
 	physicalBase = address as! PVOID
-	virtualBase = *virtualAddress
-	??? CompoundStmt CompoundAssignOperator
+	virtualBase = virtualAddress[0]
+	virtualAddress[0] += (pages * 4096) as! UINT_PTR
 	acpiResource = address as! PSYSTEM_RESOURCE_ACPI
-	rtlZeroMemory(acpiResource, ???? resolve UnaryExprOrTypeTraitExpr)
-	status = xtLdrProtocol.Protocol.Open(protocolHandle, acpiProtocol as! PVOID *, acpiGuid)
+	rtlZeroMemory(acpiResource, sizeOf<Unsigned long long>())
+	status = xtLdrProtocol.protocol.open(protocolHandle, acpiProtocol as! PVOID *, acpiGuid)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	acpiResource.Header.ResourceType = systemResourceAcpi
-	acpiResource.Header.ResourceSize = ???? resolve UnaryExprOrTypeTraitExpr
-	acpiProtocol.GetApicBase(acpiResource.ApicBase)
-	acpiProtocol.GetAcpiDescriptionPointer(acpiResource.Header.PhysicalAddress)
-	acpiResource.Header.VirtualAddress = 0
-	rtlInsertTailList(systemResourcesList, acpiResource.Header.ListEntry)
-	xtLdrProtocol.Protocol.Close(protocolHandle, frameBufGuid)
-	address = address + ???? resolve UnaryExprOrTypeTraitExpr
+	acpiResource.header.resourceType = systemResourceAcpi
+	acpiResource.header.resourceSize = sizeOf<Unsigned long long>()
+	acpiProtocol.getApicBase(acpiResource.apicBase)
+	acpiProtocol.getAcpiDescriptionPointer(acpiResource.header.physicalAddress)
+	acpiResource.header.virtualAddress = 0
+	rtlInsertTailList(systemResourcesList, acpiResource.header.listEntry)
+	xtLdrProtocol.protocol.close(protocolHandle, frameBufGuid)
+	address = address + sizeOf<Unsigned long long>()
 	frameBufferResource = address as! PSYSTEM_RESOURCE_FRAMEBUFFER
-	rtlZeroMemory(frameBufferResource, ???? resolve UnaryExprOrTypeTraitExpr)
-	status = xtLdrProtocol.Protocol.Open(protocolHandle, frameBufProtocol as! PVOID *, frameBufGuid)
+	rtlZeroMemory(frameBufferResource, sizeOf<Unsigned long long>())
+	status = xtLdrProtocol.protocol.open(protocolHandle, frameBufProtocol as! PVOID *, frameBufGuid)
 	if status == (9223372036854775808 & 0) {
-		status = frameBufProtocol.GetDisplayInformation(fbAddress, fbSize, fbModeInfo)
+		status = frameBufProtocol.getDisplayInformation(fbAddress, fbSize, fbModeInfo)
 		if status == (9223372036854775808 & 0) {
 			xtGetDisplayInformation(frameBufferResource, fbAddress, fbSize, fbModeInfo)
 
@@ -159,13 +159,13 @@ fun xtGetSystemResourcesList(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *,
 
 	}
 
-	frameBufferPages = (((fbSize) >> 12) + (???? resolve ConditionalOperator))
-	frameBufferResource.Header.VirtualAddress = *virtualAddress
-	xtLdrProtocol.Memory.MapVirtualMemory(pageMap, frameBufferResource.Header.VirtualAddress, frameBufferResource.Header.PhysicalAddress, frameBufferPages, loaderFirmwarePermanent)
-	xtLdrProtocol.Protocol.Close(protocolHandle, frameBufGuid)
-	??? CompoundStmt CompoundAssignOperator
-	rtlInsertTailList(systemResourcesList, frameBufferResource.Header.ListEntry)
-	xtLdrProtocol.Memory.PhysicalListToVirtual(pageMap, systemResourcesList, physicalBase, virtualBase)
+	frameBufferPages = (((fbSize) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
+	frameBufferResource.header.virtualAddress = virtualAddress[0]
+	xtLdrProtocol.memory.mapVirtualMemory(pageMap, frameBufferResource.header.virtualAddress, frameBufferResource.header.physicalAddress, frameBufferPages, loaderFirmwarePermanent)
+	xtLdrProtocol.protocol.close(protocolHandle, frameBufGuid)
+	virtualAddress[0] += (frameBufferPages * 4096) as! UINT_PTR
+	rtlInsertTailList(systemResourcesList, frameBufferResource.header.listEntry)
+	xtLdrProtocol.memory.physicalListToVirtual(pageMap, systemResourcesList, physicalBase, virtualBase)
 	return (9223372036854775808 & 0)
 }
 
@@ -188,74 +188,73 @@ fun xtBootSystem(parameters PXTBL_BOOT_PARAMETERS) {
 
 	var systemPath PWCHAR
 	var status EFI_STATUS
-	xtLdrProtocol.Debug.Print("XTOS boot protocol activated\n")
-	status = xtLdrProtocol.Protocol.Open(protocolHandle, xtPeCoffProtocol as! PVOID *, peCoffProtocolGuid)
+	xtLdrProtocol.debug.print("XTOS boot protocol activated\n")
+	status = xtLdrProtocol.protocol.open(protocolHandle, xtPeCoffProtocol as! PVOID *, peCoffProtocolGuid)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Unable to load PE/COFF image protocol\n")
+		xtLdrProtocol.debug.print("ERROR: Unable to load PE/COFF image protocol\n")
 		return (9223372036854775808 | 24)
 
 	}
 
-	if parameters.DevicePath == (0 as! PVOID) {
-		xtLdrProtocol.Debug.Print("ERROR: No device path provided, unable to boot system\n")
+	if parameters.devicePath == (0 as! PVOID) {
+		xtLdrProtocol.debug.print("ERROR: No device path provided, unable to boot system\n")
 		return (9223372036854775808 | 2)
 
 	}
 
-	if parameters.SystemPath != (0 as! PVOID) {
-		if ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral {
-			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+	if parameters.systemPath != (0 as! PVOID) {
+		if parameters.systemPath[0] == 47/* "/" */ {
+			parameters.systemPath[0] = 92/* "\\" */
 
 		}
 
-		systemPath = ???? resolve ArraySubscriptExpr
-		while *systemPath {
-			if ((*systemPath | 32) - ???? resolve CharacterLiteral >= 26) and ((*systemPath - ???? resolve CharacterLiteral) >= 10) {
-				xtLdrProtocol.Debug.Print("ERROR: System path does not point to the valid XTOS installation\n")
+		systemPath = parameters.systemPath[1]
+		while systemPath[0] {
+			if ((systemPath[0] | 32) - 97/* "a" */ >= 26) and ((systemPath[0] - 48/* "0" */) >= 10) {
+				xtLdrProtocol.debug.print("ERROR: System path does not point to the valid XTOS installation\n")
 				return (9223372036854775808 | 2)
 
 			}
 
-			??? CompoundStmt UnaryOperator
-
+			systemPath++
 		}
 
 
 	} else {
-		xtLdrProtocol.Debug.Print("WARNING: No system path set, falling back to defaults\n")
-		parameters.SystemPath = "\\ExectOS"
+		xtLdrProtocol.debug.print("WARNING: No system path set, falling back to defaults\n")
+		parameters.systemPath = "\\ExectOS"
 
 	}
 
-	if parameters.KernelFile == (0 as! PVOID) {
-		xtLdrProtocol.Debug.Print("WARNING: No kernel file specified, falling back to defaults\n")
-		parameters.KernelFile = "xtoskrnl.exe"
+	if parameters.kernelFile == (0 as! PVOID) {
+		xtLdrProtocol.debug.print("WARNING: No kernel file specified, falling back to defaults\n")
+		parameters.kernelFile = "xtoskrnl.exe"
 
 	}
 
-	if parameters.Parameters == (0 as! PVOID) {
-		parameters.Parameters = ""
+	if parameters.parameters == (0 as! PVOID) {
+		parameters.parameters = ""
 
 	}
 
-	xtLdrProtocol.Debug.Print("[XTOS] ARC Path: %S\n[XTOS] System Path: %S\n[XTOS] Kernel File: %S\n[XTOS] Boot Arguments: %S\n", parameters.ArcName, parameters.SystemPath, parameters.KernelFile, parameters.Parameters)
-	status = xtLdrProtocol.Disk.OpenVolume((0 as! PVOID), diskHandle, fsHandle)
+	xtLdrProtocol.debug.print("[XTOS] ARC Path: %S\n[XTOS] System Path: %S\n[XTOS] Kernel File: %S\n[XTOS] Boot Arguments: %S\n", parameters.arcName, parameters.systemPath, parameters.kernelFile, parameters.parameters)
+	status = xtLdrProtocol.disk.openVolume((0 as! PVOID), diskHandle, fsHandle)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Unable to open boot volume\n")
+		xtLdrProtocol.debug.print("ERROR: Unable to open boot volume\n")
 		return status
 
 	}
 
-	rtlConcatenateWideString(parameters.SystemPath, "\\Boot", 0)
-	status = fsHandle.Open(fsHandle, bootDir, parameters.SystemPath, 1, 0)
-	fsHandle.Close(fsHandle)
+	rtlConcatenateWideString(parameters.systemPath, "\\Boot", 0)
+	status = fsHandle.open(fsHandle, bootDir, parameters.systemPath, 1, 0)
+	fsHandle.close(fsHandle)
 	if status == (9223372036854775808 | 14) {
-		xtLdrProtocol.Debug.Print("ERROR: System boot directory not found\n")
-		xtLdrProtocol.Disk.CloseVolume(diskHandle)
+		xtLdrProtocol.debug.print("ERROR: System boot directory not found\n")
+		xtLdrProtocol.disk.closeVolume(diskHandle)
 		return status
 
 	} else {
-		??? CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
 
 	}
 
@@ -293,40 +292,40 @@ fun xtpBootSequence(bootDir PEFI_FILE_HANDLE, parameters PXTBL_BOOT_PARAMETERS) 
 	var status EFI_STATUS
 	let pageMap = new ByValue<XTBL_PAGE_MAPPING>()
 
-	xtLdrProtocol.Debug.Print("Initializing XTOS startup sequence\n")
-	status = xtLdrProtocol.Protocol.Open(protocolHandle, frameBufProtocol as! PVOID *, frameBufGuid)
+	xtLdrProtocol.debug.print("Initializing XTOS startup sequence\n")
+	status = xtLdrProtocol.protocol.open(protocolHandle, frameBufProtocol as! PVOID *, frameBufGuid)
 	if status == (9223372036854775808 & 0) {
-		frameBufProtocol.Initialize()
-		frameBufProtocol.SetScreenResolution(0, 0)
+		frameBufProtocol.initialize()
+		frameBufProtocol.setScreenResolution(0, 0)
 
 	}
 
-	xtLdrProtocol.Protocol.Close(protocolHandle, frameBufGuid)
+	xtLdrProtocol.protocol.close(protocolHandle, frameBufGuid)
 	virtualMemoryArea = 18446735277616529408 as! PVOID
 	virtualAddress = (18446735277616529408 + 34359738368) as! PVOID
-	xtLdrProtocol.Memory.InitializePageMap(pageMap, 3, size4K)
-	status = xtLdrProtocol.Memory.MapEfiMemory(pageMap, virtualMemoryArea, (0 as! PVOID))
+	xtLdrProtocol.memory.initializePageMap(pageMap, 3, size4K)
+	status = xtLdrProtocol.memory.mapEfiMemory(pageMap, virtualMemoryArea, (0 as! PVOID))
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	status = xtpLoadModule(bootDir, parameters.KernelFile, virtualAddress, loaderSystemCode, imageContext)
+	status = xtpLoadModule(bootDir, parameters.kernelFile, virtualAddress, loaderSystemCode, imageContext)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	status = xtLdrProtocol.Memory.MapVirtualMemory(pageMap, imageContext.VirtualAddress, imageContext.PhysicalAddress, imageContext.ImagePages, 0)
+	status = xtLdrProtocol.memory.mapVirtualMemory(pageMap, imageContext.virtualAddress, imageContext.physicalAddress, imageContext.imagePages, 0)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	??? CompoundStmt CompoundAssignOperator
+	virtualAddress += imageContext.imagePages * 4096
 	status = xtpInitializeApicBase(pageMap)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("Failed to initialize APIC (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("Failed to initialize APIC (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
@@ -334,22 +333,22 @@ fun xtpBootSequence(bootDir PEFI_FILE_HANDLE, parameters PXTBL_BOOT_PARAMETERS) 
 	kernelParameters = virtualAddress as! PKERNEL_INITIALIZATION_BLOCK
 	status = xtpInitializeLoaderBlock(pageMap, virtualAddress, parameters)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("Failed to setup kernel initialization block (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("Failed to setup kernel initialization block (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	xtPeCoffProtocol.GetEntryPoint(imageContext, kernelEntryPoint as! PVOID)
-	bootDir.Close(bootDir)
-	xtLdrProtocol.Protocol.Open(protocolHandle, imageProtocol as! PVOID *, loadedImageGuid)
+	xtPeCoffProtocol.getEntryPoint(imageContext, kernelEntryPoint as! PVOID)
+	bootDir.close(bootDir)
+	xtLdrProtocol.protocol.open(protocolHandle, imageProtocol as! PVOID *, loadedImageGuid)
 	status = xtEnablePaging(pageMap)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("Failed to enable paging (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("Failed to enable paging (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	xtLdrProtocol.Debug.Print("Booting the XTOS kernel\n")
+	xtLdrProtocol.debug.print("Booting the XTOS kernel\n")
 	kernelEntryPoint(kernelParameters)
 	return (9223372036854775808 & 0)
 }
@@ -370,19 +369,19 @@ fun xtpInitializeApicBase(pageMap PXTBL_PAGE_MAPPING) {
 	var protocolHandle EFI_HANDLE
 	var apicBaseAddress PVOID
 	var status EFI_STATUS
-	status = xtLdrProtocol.Protocol.Open(protocolHandle, acpiProtocol as! PVOID *, acpiGuid)
+	status = xtLdrProtocol.protocol.open(protocolHandle, acpiProtocol as! PVOID *, acpiGuid)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	status = acpiProtocol.GetApicBase(apicBaseAddress)
+	status = acpiProtocol.getApicBase(apicBaseAddress)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	xtLdrProtocol.Memory.MapVirtualMemory(pageMap, 18446744073709420544 as! PVOID, apicBaseAddress, 1, loaderFirmwarePermanent)
+	xtLdrProtocol.memory.mapVirtualMemory(pageMap, 18446744073709420544 as! PVOID, apicBaseAddress, 1, loaderFirmwarePermanent)
 	return (9223372036854775808 & 0)
 }
 
@@ -403,30 +402,30 @@ fun xtpInitializeLoaderBlock(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *,
 	var address EFI_PHYSICAL_ADDRESS
 	var status EFI_STATUS
 	var blockPages UINT
-	blockPages = (((???? resolve UnaryExprOrTypeTraitExpr) >> 12) + (???? resolve ConditionalOperator))
-	status = xtLdrProtocol.Memory.AllocatePages(blockPages, address)
+	blockPages = (((sizeOf<Unsigned long long>()) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
+	status = xtLdrProtocol.memory.allocatePages(blockPages, address)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
 	loaderBlock = address as! UINT_PTR as! PKERNEL_INITIALIZATION_BLOCK
-	rtlZeroMemory(loaderBlock, ???? resolve UnaryExprOrTypeTraitExpr)
-	loaderBlock.BlockSize = ???? resolve UnaryExprOrTypeTraitExpr
-	loaderBlock.BlockVersion = 1
-	loaderBlock.ProtocolVersion = 1
-	loaderBlock.LoaderInformation.DbgPrint = xtLdrProtocol.Debug.Print
-	loaderBlock.LoaderInformation.PageMapLevel = 3
-	loaderBlock.FirmwareInformation.FirmwareType = systemFirmwareEfi
-	loaderBlock.FirmwareInformation..EfiFirmware.EfiVersion = 0
-	loaderBlock.FirmwareInformation..EfiFirmware.EfiRuntimeServices = (0 as! PVOID)
-	rtlCopyMemory(loaderBlock.KernelParameters, parameters.Parameters, (rtlWideStringLength(parameters.Parameters, 0) + 1) * ???? resolve UnaryExprOrTypeTraitExpr)
-	xtLdrProtocol.Memory.MapVirtualMemory(pageMap, *virtualAddress, loaderBlock as! PVOID, blockPages, loaderSystemBlock)
-	??? CompoundStmt CompoundAssignOperator
-	rtlInitializeListHead(loaderBlock.SystemResourcesListHead)
-	xtGetSystemResourcesList(pageMap, virtualAddress, loaderBlock.SystemResourcesListHead)
-	rtlInitializeListHead(loaderBlock.MemoryDescriptorListHead)
-	xtGetMemoryDescriptorList(pageMap, virtualAddress, loaderBlock.MemoryDescriptorListHead)
+	rtlZeroMemory(loaderBlock, sizeOf<Unsigned long long>())
+	loaderBlock.blockSize = sizeOf<Unsigned long long>()
+	loaderBlock.blockVersion = 1
+	loaderBlock.protocolVersion = 1
+	loaderBlock.loaderInformation.dbgPrint = xtLdrProtocol.debug.print
+	loaderBlock.loaderInformation.pageMapLevel = 3
+	loaderBlock.firmwareInformation.firmwareType = systemFirmwareEfi
+	loaderBlock.firmwareInformation.efiFirmware.efiVersion = 0
+	loaderBlock.firmwareInformation.efiFirmware.efiRuntimeServices = (0 as! PVOID)
+	rtlCopyMemory(loaderBlock.kernelParameters, parameters.parameters, (rtlWideStringLength(parameters.parameters, 0) + 1) * sizeOf<Unsigned long long>())
+	xtLdrProtocol.memory.mapVirtualMemory(pageMap, virtualAddress[0], loaderBlock as! PVOID, blockPages, loaderSystemBlock)
+	virtualAddress[0] += (blockPages * 4096) as! UINT_PTR
+	rtlInitializeListHead(loaderBlock.systemResourcesListHead)
+	xtGetSystemResourcesList(pageMap, virtualAddress, loaderBlock.systemResourcesListHead)
+	rtlInitializeListHead(loaderBlock.memoryDescriptorListHead)
+	xtGetMemoryDescriptorList(pageMap, virtualAddress, loaderBlock.memoryDescriptorListHead)
 	return (9223372036854775808 & 0)
 }
 
@@ -456,36 +455,36 @@ fun xtpLoadModule(systemDir PEFI_FILE_HANDLE, fileName PWCHAR, virtualAddress PV
 	var machineType USHORT
 	var subSystem USHORT
 	var status EFI_STATUS
-	xtLdrProtocol.Debug.Print("Loading %S ... \n", fileName)
-	status = systemDir.Open(systemDir, moduleHandle, fileName, 1, 0)
+	xtLdrProtocol.debug.print("Loading %S ... \n", fileName)
+	status = systemDir.open(systemDir, moduleHandle, fileName, 1, 0)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Failed to open '%S'\n", fileName)
+		xtLdrProtocol.debug.print("ERROR: Failed to open '%S'\n", fileName)
 		return status
 
 	}
 
-	status = xtPeCoffProtocol.LoadImage(moduleHandle, memoryType, virtualAddress, imageContext as! PVOID)
+	status = xtPeCoffProtocol.loadImage(moduleHandle, memoryType, virtualAddress, imageContext as! PVOID)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Failed to load '%S'\n", fileName)
+		xtLdrProtocol.debug.print("ERROR: Failed to load '%S'\n", fileName)
 		return status
 
 	}
 
-	moduleHandle.Close(moduleHandle)
-	xtPeCoffProtocol.GetMachineType(*imageContext, machineType)
+	moduleHandle.close(moduleHandle)
+	xtPeCoffProtocol.getMachineType(imageContext[0], machineType)
 	if machineType != 34404 {
-		xtLdrProtocol.Debug.Print("ERROR: Loaded incompatible PE/COFF image (machine type mismatch)\n")
+		xtLdrProtocol.debug.print("ERROR: Loaded incompatible PE/COFF image (machine type mismatch)\n")
 		return (9223372036854775808 | 25)
 
 	}
 
-	xtPeCoffProtocol.GetSubSystem(*imageContext, subSystem)
+	xtPeCoffProtocol.getSubSystem(imageContext[0], subSystem)
 	if subSystem != 20 and subSystem != 21 and subSystem != 22 {
-		xtLdrProtocol.Debug.Print("WARNING: Loaded PE/COFF image with non-XT subsystem set\n")
+		xtLdrProtocol.debug.print("WARNING: Loaded PE/COFF image with non-XT subsystem set\n")
 
 	}
 
-	xtLdrProtocol.Debug.Print("Loaded %S at PA: %P, VA: %P\n", fileName, (*imageContext).PhysicalAddress, (*imageContext).VirtualAddress)
+	xtLdrProtocol.debug.print("Loaded %S at PA: %P, VA: %P\n", fileName, (imageContext[0]).physicalAddress, (imageContext[0]).virtualAddress)
 	return (9223372036854775808 & 0)
 }
 
@@ -511,6 +510,6 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	}
 
 	XtBootProtocol.BootSystem = xtBootSystem
-	xtLdrProtocol.Boot.RegisterProtocol("XTOS", guid)
-	return xtLdrProtocol.Protocol.Install(xtBootProtocol, guid)
+	xtLdrProtocol.boot.registerProtocol("XTOS", guid)
+	return xtLdrProtocol.protocol.install(xtBootProtocol, guid)
 }

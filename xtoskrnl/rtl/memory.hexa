@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// This routine compares the first bytes of the specified memory buffers.
 /// 
 /// @param LeftBuffer
@@ -17,13 +16,11 @@ fun rtlCompareMemory(leftBuffer PCVOID, rightBuffer PCVOID, length SIZE_T) {
 	var bytes SIZE_T = 0
 	if length {
 		while bytes < length {
-			if ???? resolve ArraySubscriptExpr != ???? resolve ArraySubscriptExpr {
-				??? CompoundStmt BreakStmt
-
+			if (leftBuffer as! PBYTE)[bytes] != (rightBuffer as! PBYTE)[bytes] {
+				break
 			}
 
-			??? CompoundStmt UnaryOperator
-
+			bytes++
 		}
 
 
@@ -50,7 +47,7 @@ fun rtlCopyMemory(destination PVOID, source PCVOID, length SIZE_T) {
 	var destinationBytes PCHAR = destination as! PCHAR
 	var sourceBytes PCCHAR = source as! PCHAR
 	while --length {
-		*++destinationBytes = *++sourceBytes
+		++destinationBytes[0] = ++sourceBytes[0]
 
 	}
 
@@ -80,9 +77,8 @@ fun rtlMoveMemory(destination PVOID, source PCVOID, length SIZE_T) {
 
 	if (destinationBytes > sourceBytes) and (sourceBytes + length > destinationBytes) {
 		while length {
-			???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr
-			??? CompoundStmt UnaryOperator
-
+			destinationBytes[length - 1] = sourceBytes[length - 1]
+			length--
 		}
 
 
@@ -108,7 +104,7 @@ fun rtlMoveMemory(destination PVOID, source PCVOID, length SIZE_T) {
 /// 
 /// @since XT 1.0
 fun rtlSameMemory(leftBuffer PCVOID, rightBuffer PCVOID, length SIZE_T) {
-	return ???? resolve ConditionalOperator
+	return [unknown clang ast] resolve ConditionalOperator
 }
 
 /// This routine fills a section of memory with a specified byte.
@@ -128,7 +124,7 @@ fun rtlSameMemory(leftBuffer PCVOID, rightBuffer PCVOID, length SIZE_T) {
 fun rtlSetMemory(destination PVOID, byte UCHAR, length SIZE_T) {
 	var destinationBytes PCHAR = destination as! PCHAR
 	while --length {
-		*++destinationBytes = byte
+		++destinationBytes[0] = byte
 
 	}
 

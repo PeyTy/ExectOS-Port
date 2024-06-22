@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Maps the page table for hardware layer addess space.
 /// 
 /// @param PageMap
@@ -16,49 +15,49 @@ fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 
 	var address EFI_PHYSICAL_ADDRESS
 	var status XTSTATUS
-	if pageMap.PageMapLevel > 4 {
+	if pageMap.pageMapLevel > 4 {
 		return (9223372036854775808 | 3)
 
 	}
 
-	pxeBase = ((pageMap.PtePointer) as! PHARDWARE_PTE)
-	if !???? resolve ArraySubscriptExpr.Valid {
-		status = xtLdrProtocol.Memory.AllocatePages(1, address)
+	pxeBase = ((pageMap.ptePointer) as! PHARDWARE_PTE)
+	if !pxeBase[(18446744073705357312 >> 39) & 511].valid {
+		status = xtLdrProtocol.memory.allocatePages(1, address)
 		if status != (9223372036854775808 & 0) {
 			return status
 
 		}
 
 		rtlZeroMemory(address as! PVOID, 4096)
-		???? resolve ArraySubscriptExpr.Valid = 1
-		???? resolve ArraySubscriptExpr.PageFrameNumber = address / 4096
-		???? resolve ArraySubscriptExpr.Writable = 1
+		pxeBase[(18446744073705357312 >> 39) & 511].valid = 1
+		pxeBase[(18446744073705357312 >> 39) & 511].pageFrameNumber = address / 4096
+		pxeBase[(18446744073705357312 >> 39) & 511].writable = 1
 		ppeBase = address as! UINT_PTR as! PHARDWARE_PTE
 
 	} else {
-		ppeBase = ((???? resolve ArraySubscriptExpr.PageFrameNumber) << 12) as! PHARDWARE_PTE
+		ppeBase = ((pxeBase[(18446744073705357312 >> 39) & 511].pageFrameNumber) << 12) as! PHARDWARE_PTE
 
 	}
 
-	if !???? resolve ArraySubscriptExpr.Valid {
-		status = xtLdrProtocol.Memory.AllocatePages(1, address)
+	if !ppeBase[(18446744073705357312 >> 30) & 511].valid {
+		status = xtLdrProtocol.memory.allocatePages(1, address)
 		if status != (9223372036854775808 & 0) {
 			return status
 
 		}
 
 		rtlZeroMemory(address as! PVOID, 4096)
-		???? resolve ArraySubscriptExpr.Valid = 1
-		???? resolve ArraySubscriptExpr.PageFrameNumber = address / 4096
-		???? resolve ArraySubscriptExpr.Writable = 1
+		ppeBase[(18446744073705357312 >> 30) & 511].valid = 1
+		ppeBase[(18446744073705357312 >> 30) & 511].pageFrameNumber = address / 4096
+		ppeBase[(18446744073705357312 >> 30) & 511].writable = 1
 		pdeBase = address as! PHARDWARE_PTE
 
 	} else {
-		pdeBase = ((???? resolve ArraySubscriptExpr.PageFrameNumber) << 12) as! PHARDWARE_PTE
+		pdeBase = ((ppeBase[(18446744073705357312 >> 30) & 511].pageFrameNumber) << 12) as! PHARDWARE_PTE
 
 	}
 
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	return (9223372036854775808 & 0)
 }
 
@@ -72,28 +71,28 @@ fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 /// @since XT 1.0
 fun xtEnablePaging(pageMap PXTBL_PAGE_MAPPING) {
 	var status EFI_STATUS
-	status = xtLdrProtocol.Memory.BuildPageMap(pageMap, 18446734158739722240)
+	status = xtLdrProtocol.memory.buildPageMap(pageMap, 18446734158739722240)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("Failed to build page map (Status code: %zX)\n", status)
+		xtLdrProtocol.debug.print("Failed to build page map (Status code: %zX)\n", status)
 		return status
 
 	}
 
 	status = xtpMapHardwareMemoryPool(pageMap)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("Failed to map memory for hardware leyer (Status code: %zX)\n", status)
+		xtLdrProtocol.debug.print("Failed to map memory for hardware leyer (Status code: %zX)\n", status)
 		return status
 
 	}
 
-	xtLdrProtocol.Debug.Print("Exiting EFI boot services\n")
-	status = xtLdrProtocol.Util.ExitBootServices()
+	xtLdrProtocol.debug.print("Exiting EFI boot services\n")
+	status = xtLdrProtocol.util.exitBootServices()
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("Failed to exit boot services (Status code: %zX)\n", status)
+		xtLdrProtocol.debug.print("Failed to exit boot services (Status code: %zX)\n", status)
 		return (9223372036854775808 | 21)
 
 	}
 
-	arWriteControlRegister(3, pageMap.PtePointer as! UINT_PTR)
+	arWriteControlRegister(3, pageMap.ptePointer as! UINT_PTR)
 	return (9223372036854775808 & 0)
 }

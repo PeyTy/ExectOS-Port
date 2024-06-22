@@ -1,4 +1,4 @@
-// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+var __UNIQUE_ID_author0
 
 var __UNIQUE_ID_description1
 
@@ -18,13 +18,13 @@ var __UNIQUE_ID_version3
 fun acGetAcpiDescriptionPointer(acpiTable PVOID *) {
 	var rsdp PVOID
 	if acGetXsdpTable(rsdp) == (9223372036854775808 & 0) {
-		*acpiTable = rsdp
+		acpiTable[0] = rsdp
 		return (9223372036854775808 & 0)
 
 	}
 
 	if acGetRsdpTable(rsdp) == (9223372036854775808 & 0) {
-		*acpiTable = rsdp
+		acpiTable[0] = rsdp
 		return (9223372036854775808 & 0)
 
 	}
@@ -58,33 +58,33 @@ fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *)
 	let rsdt = new ByValue<PACPI_RSDT>()
 
 	var xsdp BOOLEAN
-	*acpiTable = (0 as! PVOID)
+	acpiTable[0] = (0 as! PVOID)
 	status = acGetAcpiDescriptionPointer(rsdp as! PVOID)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	if rsdp.Revision >= 2 and rsdp.XsdtAddress {
+	if rsdp.revision >= 2 and rsdp.xsdtAddress {
 		xsdp = tRUE
-		rsdt = rsdp.XsdtAddress as! UINT_PTR as! PACPI_RSDT
-		tableCount = (rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 8
+		rsdt = rsdp.xsdtAddress as! UINT_PTR as! PACPI_RSDT
+		tableCount = (rsdt.header.length - sizeOf<Unsigned long long>()) / 8
 
 	} else {
 		xsdp = fALSE
-		rsdt = rsdp.RsdtAddress as! UINT_PTR as! PACPI_RSDT
-		tableCount = (rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 4
+		rsdt = rsdp.rsdtAddress as! UINT_PTR as! PACPI_RSDT
+		tableCount = (rsdt.header.length - sizeOf<Unsigned long long>()) / 4
 
 	}
 
-	??? CompoundStmt ForStmt
-	if tableHeader.Signature != signature {
+	[unknown clang ast] CompoundStmt ForStmt
+	if tableHeader.signature != signature {
 		return (9223372036854775808 | 14)
 
 	}
 
-	if tableHeader.Signature != 1346584902 or tableHeader.Revision > 2 {
-		if !acpValidateAcpiTable(tableHeader, tableHeader.Length) {
+	if tableHeader.signature != 1346584902 or tableHeader.revision > 2 {
+		if !acpValidateAcpiTable(tableHeader, tableHeader.length) {
 			return (9223372036854775808 | 27)
 
 		}
@@ -92,7 +92,7 @@ fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *)
 
 	}
 
-	*acpiTable = tableHeader
+	acpiTable[0] = tableHeader
 	return (9223372036854775808 & 0)
 }
 
@@ -107,19 +107,19 @@ fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *)
 fun acGetApicBase(apicBase PVOID *) {
 	let cpuRegisters = new ByValue<PCPUID_REGISTERS>()
 
-	cpuRegisters.Leaf = cPUID_GET_CPU_FEATURES
-	cpuRegisters.SubLeaf = 0
-	cpuRegisters.Eax = 0
-	cpuRegisters.Ebx = 0
-	cpuRegisters.Ecx = 0
-	cpuRegisters.Edx = 0
+	cpuRegisters.leaf = cPUID_GET_CPU_FEATURES
+	cpuRegisters.subLeaf = 0
+	cpuRegisters.eax = 0
+	cpuRegisters.ebx = 0
+	cpuRegisters.ecx = 0
+	cpuRegisters.edx = 0
 	arCpuId(cpuRegisters)
-	if (cpuRegisters.Edx & cPUID_FEATURES_EDX_APIC) == 0 {
+	if (cpuRegisters.edx & cPUID_FEATURES_EDX_APIC) == 0 {
 		return (9223372036854775808 | 3)
 
 	}
 
-	*apicBase = (arReadModelSpecificRegister(27) as! UINT_PTR & 4294963200) as! PVOID
+	apicBase[0] = (arReadModelSpecificRegister(27) as! UINT_PTR & 4294963200) as! PVOID
 	return (9223372036854775808 & 0)
 }
 
@@ -136,14 +136,14 @@ fun acGetRsdpTable(acpiTable PVOID *) {
 
 	var status EFI_STATUS
 	var rsdpTable PVOID
-	status = xtLdrProtocol.Util.GetConfigurationTable(acpiGuid, rsdpTable)
+	status = xtLdrProtocol.util.getConfigurationTable(acpiGuid, rsdpTable)
 	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(rsdpTable, 20) {
-		*acpiTable = (0 as! PVOID)
+		acpiTable[0] = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
 	}
 
-	*acpiTable = rsdpTable
+	acpiTable[0] = rsdpTable
 	return (9223372036854775808 & 0)
 }
 
@@ -161,14 +161,14 @@ fun acGetSMBiosTable(smBiosTable PVOID *) {
 	let smBios = new ByValue<PSMBIOS_TABLE_HEADER>()
 
 	var status EFI_STATUS
-	status = xtLdrProtocol.Util.GetConfigurationTable(smBiosGuid, smBios as! PVOID)
-	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(smBios, smBios.Length) {
-		*smBiosTable = (0 as! PVOID)
+	status = xtLdrProtocol.util.getConfigurationTable(smBiosGuid, smBios as! PVOID)
+	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(smBios, smBios.length) {
+		smBiosTable[0] = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
 	}
 
-	*smBiosTable = smBios
+	smBiosTable[0] = smBios
 	return (9223372036854775808 & 0)
 }
 
@@ -186,14 +186,14 @@ fun acGetSMBios3Table(smBiosTable PVOID *) {
 	let smBios = new ByValue<PSMBIOS3_TABLE_HEADER>()
 
 	var status EFI_STATUS
-	status = xtLdrProtocol.Util.GetConfigurationTable(smBios3Guid, smBios as! PVOID)
-	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(smBios, smBios.Length) {
-		*smBiosTable = (0 as! PVOID)
+	status = xtLdrProtocol.util.getConfigurationTable(smBios3Guid, smBios as! PVOID)
+	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(smBios, smBios.length) {
+		smBiosTable[0] = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
 	}
 
-	*smBiosTable = smBios
+	smBiosTable[0] = smBios
 	return (9223372036854775808 & 0)
 }
 
@@ -210,14 +210,14 @@ fun acGetXsdpTable(acpiTable PVOID *) {
 
 	var status EFI_STATUS
 	var xsdpTable PVOID
-	status = xtLdrProtocol.Util.GetConfigurationTable(acpiGuid, xsdpTable)
+	status = xtLdrProtocol.util.getConfigurationTable(acpiGuid, xsdpTable)
 	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(xsdpTable, 36) {
-		*acpiTable = (0 as! PVOID)
+		acpiTable[0] = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
 	}
 
-	*acpiTable = xsdpTable
+	acpiTable[0] = xsdpTable
 	return (9223372036854775808 & 0)
 }
 
@@ -238,13 +238,13 @@ fun acpValidateAcpiTable(buffer PVOID, size UINT_PTR) {
 	sum = 0
 	pointer = buffer
 	while size != 0 {
-		sum = (sum + *pointer) as! UCHAR
-		??? CompoundStmt CompoundAssignOperator
-		??? CompoundStmt CompoundAssignOperator
+		sum = (sum + pointer[0]) as! UCHAR
+		pointer += 1
+		size -= 1
 
 	}
 
-	return ???? resolve ConditionalOperator
+	return [unknown clang ast] resolve ConditionalOperator
 }
 
 /// This routine is the entry point of the XT EFI boot loader module.
@@ -275,5 +275,5 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	AcpAcpiProtocol.GetSMBiosTable = acGetSMBiosTable
 	AcpAcpiProtocol.GetSMBios3Table = acGetSMBios3Table
 	AcpAcpiProtocol.GetXsdpTable = acGetXsdpTable
-	return xtLdrProtocol.Protocol.Install(acpAcpiProtocol, guid)
+	return xtLdrProtocol.protocol.install(acpAcpiProtocol, guid)
 }

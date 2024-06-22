@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Performs an atomic bitwise AND operation on the 8-bit value.
 /// 
 /// @param Address
@@ -71,7 +70,7 @@ fun rtlAtomicAnd64(address Volatile PLONG_PTR, mask LONG_PTR) {
 /// 
 /// @since XT 1.0
 fun rtlAtomicBitTestAndSet(base Volatile PLONG, offset LONG) {
-	return (???? resolve AtomicExpr >> offset) & 1
+	return ([unknown clang ast] resolve AtomicExpr >> offset) & 1
 }
 
 /// Performs an atomic test of the specified bit of the specified 64-bit long value and sets it to 1.
@@ -86,7 +85,7 @@ fun rtlAtomicBitTestAndSet(base Volatile PLONG, offset LONG) {
 /// 
 /// @since XT 1.0
 fun rtlAtomicBitTestAndSet64(base Volatile PLONGLONG, offset LONGLONG) {
-	return (???? resolve AtomicExpr >> offset) & 1
+	return ([unknown clang ast] resolve AtomicExpr >> offset) & 1
 }
 
 /// Performs atomically compare exchange operation on the 8-bit value.
@@ -372,7 +371,7 @@ fun rtlAtomicExchangePointer(address Volatile PVOID *, exchange PVOID) {
 /// 
 /// @since XT 1.0
 fun rtlAtomicFlushSingleList(header PSINGLE_LIST_HEADER) {
-	return rtlAtomicExchange64(header.Alignment as! PLONG_PTR, (0 as! PVOID) as! LONGLONG) as! PSINGLE_LIST_ENTRY
+	return rtlAtomicExchange64(header.alignment as! PLONG_PTR, (0 as! PVOID) as! LONGLONG) as! PSINGLE_LIST_ENTRY
 }
 
 /// Performs atomically increment of the 8-bit value.
@@ -499,8 +498,8 @@ fun rtlAtomicPopEntrySingleList(header PSINGLE_LIST_HEADER) {
 	let nextEntry = new ByValue<PSINGLE_LIST_ENTRY>()
 
 	listHead = header as! PVOID
-	firstEntry = listHead.Next
-	??? CompoundStmt DoStmt
+	firstEntry = listHead.next
+	[unknown clang ast] CompoundStmt DoStmt
 	return firstEntry
 }
 
@@ -526,8 +525,8 @@ fun rtlAtomicPushEntrySingleList(header PSINGLE_LIST_HEADER, entry PSINGLE_LIST_
 
 	listHead = header as! PVOID
 	listEntry = entry as! PVOID
-	firstEntry = listHead.Next
-	??? CompoundStmt DoStmt
+	firstEntry = listHead.next
+	[unknown clang ast] CompoundStmt DoStmt
 	return firstEntry
 }
 

@@ -1,4 +1,4 @@
-// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+var __UNIQUE_ID_author0
 
 var __UNIQUE_ID_description1
 
@@ -21,7 +21,7 @@ fun fbGetDisplayDriver(protocol PEFI_GRAPHICS_PROTOCOL) {
 
 	}
 
-	*protocol = FbpDisplayInfo.Protocol
+	protocol[0] = FbpDisplayInfo.Protocol
 	return (9223372036854775808 & 0)
 }
 
@@ -39,18 +39,18 @@ fun fbGetDisplayInformation(frameBufferBase PEFI_PHYSICAL_ADDRESS, frameBufferSi
 
 	}
 
-	*frameBufferBase = FbpDisplayInfo.FrameBufferBase
-	*frameBufferSize = FbpDisplayInfo.FrameBufferSize
-	modeInfo.Width = FbpDisplayInfo.ModeInfo.Width
-	modeInfo.Height = FbpDisplayInfo.ModeInfo.Height
-	modeInfo.Depth = FbpDisplayInfo.ModeInfo.Depth
-	modeInfo.RefreshRate = FbpDisplayInfo.ModeInfo.RefreshRate
-	modeInfo.BitsPerPixel = FbpDisplayInfo.ModeInfo.BitsPerPixel
-	modeInfo.BytesPerPixel = FbpDisplayInfo.ModeInfo.BytesPerPixel
-	modeInfo.PixelsPerScanLine = FbpDisplayInfo.ModeInfo.PixelsPerScanLine
-	modeInfo.Pitch = FbpDisplayInfo.ModeInfo.Pitch
-	modeInfo.PixelFormat = FbpDisplayInfo.ModeInfo.PixelFormat
-	modeInfo.PixelInformation = FbpDisplayInfo.ModeInfo.PixelInformation
+	frameBufferBase[0] = FbpDisplayInfo.FrameBufferBase
+	frameBufferSize[0] = FbpDisplayInfo.FrameBufferSize
+	modeInfo.width = FbpDisplayInfo.ModeInfo.width
+	modeInfo.height = FbpDisplayInfo.ModeInfo.height
+	modeInfo.depth = FbpDisplayInfo.ModeInfo.depth
+	modeInfo.refreshRate = FbpDisplayInfo.ModeInfo.refreshRate
+	modeInfo.bitsPerPixel = FbpDisplayInfo.ModeInfo.bitsPerPixel
+	modeInfo.bytesPerPixel = FbpDisplayInfo.ModeInfo.bytesPerPixel
+	modeInfo.pixelsPerScanLine = FbpDisplayInfo.ModeInfo.pixelsPerScanLine
+	modeInfo.pitch = FbpDisplayInfo.ModeInfo.pitch
+	modeInfo.pixelFormat = FbpDisplayInfo.ModeInfo.pixelFormat
+	modeInfo.pixelInformation = FbpDisplayInfo.ModeInfo.pixelInformation
 	return (9223372036854775808 & 0)
 }
 
@@ -83,16 +83,16 @@ fun fbGetPreferredScreenResolution(preferredWidth PUINT, preferredHeight PUINT) 
 
 	}
 
-	status = xtLdrProtocol.Protocol.OpenHandle(FbpDisplayInfo.Handle, activeEdid as! PVOID *, edidGuid)
+	status = xtLdrProtocol.protocol.openHandle(FbpDisplayInfo.Handle, activeEdid as! PVOID *, edidGuid)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
+		xtLdrProtocol.protocol.close(FbpDisplayInfo.Handle, gopGuid)
 		return status
 
 	}
 
-	*preferredWidth = ???? resolve ArraySubscriptExpr | ((???? resolve ArraySubscriptExpr & 240) << 4)
-	*preferredHeight = ???? resolve ArraySubscriptExpr | ((???? resolve ArraySubscriptExpr & 240) << 4)
-	xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, edidGuid)
+	preferredWidth[0] = activeEdid.edid[56] | ((activeEdid.edid[58] & 240) << 4)
+	preferredHeight[0] = activeEdid.edid[59] | ((activeEdid.edid[61] & 240) << 4)
+	xtLdrProtocol.protocol.close(FbpDisplayInfo.Handle, edidGuid)
 	return (9223372036854775808 & 0)
 }
 
@@ -114,59 +114,59 @@ fun fbInitializeDisplay() {
 	var infoSize UINT_PTR
 	var status EFI_STATUS
 	if !FbpDisplayInfo.Initialized {
-		xtLdrProtocol.Debug.Print("Initializing framebuffer device\n")
-		status = xtLdrProtocol.Protocol.Open(FbpDisplayInfo.Handle, FbpDisplayInfo.Driver.Gop as! PVOID *, gopGuid)
+		xtLdrProtocol.debug.print("Initializing framebuffer device\n")
+		status = xtLdrProtocol.protocol.open(FbpDisplayInfo.Handle, FbpDisplayInfo.Driver.gop as! PVOID *, gopGuid)
 		if status == (9223372036854775808 & 0) {
-			if FbpDisplayInfo.Driver.Gop.Mode.MaxMode == 0 {
-				xtLdrProtocol.Debug.Print("ERROR: No GOP video mode available\n")
-				xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
+			if FbpDisplayInfo.Driver.gop.mode.maxMode == 0 {
+				xtLdrProtocol.debug.print("ERROR: No GOP video mode available\n")
+				xtLdrProtocol.protocol.close(FbpDisplayInfo.Handle, gopGuid)
 				return (9223372036854775808 | 3)
 
 			}
 
-			queryMode = ???? resolve ConditionalOperator
-			status = FbpDisplayInfo.Driver.Gop.QueryMode(FbpDisplayInfo.Driver.Gop, queryMode, infoSize, gopModeInfo)
+			queryMode = [unknown clang ast] resolve ConditionalOperator
+			status = FbpDisplayInfo.Driver.gop.queryMode(FbpDisplayInfo.Driver.gop, queryMode, infoSize, gopModeInfo)
 			if status == (9223372036854775808 | 19) {
-				status = FbpDisplayInfo.Driver.Gop.SetMode(FbpDisplayInfo.Driver.Gop, 0)
+				status = FbpDisplayInfo.Driver.gop.setMode(FbpDisplayInfo.Driver.gop, 0)
 
 			}
 
 			if status != (9223372036854775808 & 0) {
-				xtLdrProtocol.Debug.Print("ERROR: Failed to get GOP native mode (Status Code: 0x%zX)\n")
-				xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
+				xtLdrProtocol.debug.print("ERROR: Failed to get GOP native mode (Status Code: 0x%zX)\n")
+				xtLdrProtocol.protocol.close(FbpDisplayInfo.Handle, gopGuid)
 				return (9223372036854775808 | 3)
 
 			}
 
-			FbpDisplayInfo.FrameBufferBase = FbpDisplayInfo.Driver.Gop.Mode.FrameBufferBase
-			FbpDisplayInfo.DefaultMode = FbpDisplayInfo.Driver.Gop.Mode.Mode
+			FbpDisplayInfo.FrameBufferBase = FbpDisplayInfo.Driver.gop.mode.frameBufferBase
+			FbpDisplayInfo.DefaultMode = FbpDisplayInfo.Driver.gop.mode.mode
 			FbpDisplayInfo.Protocol = gOP
 			status = fbpGetModeInfo()
 			if status != (9223372036854775808 & 0) {
-				xtLdrProtocol.Debug.Print("ERROR: Failed to get GOP mode information (Status Code: 0x%zX)\n")
-				xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
+				xtLdrProtocol.debug.print("ERROR: Failed to get GOP mode information (Status Code: 0x%zX)\n")
+				xtLdrProtocol.protocol.close(FbpDisplayInfo.Handle, gopGuid)
 				return (9223372036854775808 | 3)
 
 			}
 
-			xtLdrProtocol.Debug.Print("Found EFI-GOP compatible display adapter @ %P (%zu bytes)\n", FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
-			status = xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
+			xtLdrProtocol.debug.print("Found EFI-GOP compatible display adapter @ %P (%zu bytes)\n", FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
+			status = xtLdrProtocol.protocol.close(FbpDisplayInfo.Handle, gopGuid)
 
 		} else {
-			status = xtLdrProtocol.Protocol.Open(FbpDisplayInfo.Handle, FbpDisplayInfo.Driver.Uga as! PVOID *, ugaGuid)
+			status = xtLdrProtocol.protocol.open(FbpDisplayInfo.Handle, FbpDisplayInfo.Driver.uga as! PVOID *, ugaGuid)
 			if status == (9223372036854775808 & 0) {
-				status = FbpDisplayInfo.Driver.Uga.GetMode(FbpDisplayInfo.Driver.Uga, FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, depth, refresh)
+				status = FbpDisplayInfo.Driver.uga.getMode(FbpDisplayInfo.Driver.uga, FbpDisplayInfo.ModeInfo.width, FbpDisplayInfo.ModeInfo.height, depth, refresh)
 				if status != (9223372036854775808 & 0) {
-					xtLdrProtocol.Debug.Print("ERROR: Failed to get current UGA mode (Status Code: 0x%zX)\n", status)
-					xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ugaGuid)
+					xtLdrProtocol.debug.print("ERROR: Failed to get current UGA mode (Status Code: 0x%zX)\n", status)
+					xtLdrProtocol.protocol.close(FbpDisplayInfo.Handle, ugaGuid)
 					return (9223372036854775808 | 7)
 
 				}
 
 				status = fbpFindFramebufferAddress(FbpDisplayInfo.FrameBufferBase)
 				if status != (9223372036854775808 & 0) {
-					xtLdrProtocol.Debug.Print("ERROR: Failed to get EFI FB address (Status Code: 0x%zX)\n", status)
-					xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ugaGuid)
+					xtLdrProtocol.debug.print("ERROR: Failed to get EFI FB address (Status Code: 0x%zX)\n", status)
+					xtLdrProtocol.protocol.close(FbpDisplayInfo.Handle, ugaGuid)
 					return (9223372036854775808 | 7)
 
 				}
@@ -175,13 +175,13 @@ fun fbInitializeDisplay() {
 				FbpDisplayInfo.Protocol = uGA
 				status = fbpGetModeInfo()
 				if status != (9223372036854775808 & 0) {
-					xtLdrProtocol.Debug.Print("ERROR: Failed to get UGA mode information (Status Code: 0x%zX)\n")
+					xtLdrProtocol.debug.print("ERROR: Failed to get UGA mode information (Status Code: 0x%zX)\n")
 					return (9223372036854775808 | 3)
 
 				}
 
-				xtLdrProtocol.Debug.Print("Found EFI-UGA compatible display adapter @ %P (%zu bytes)\n", FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
-				xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ugaGuid)
+				xtLdrProtocol.debug.print("Found EFI-UGA compatible display adapter @ %P (%zu bytes)\n", FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
+				xtLdrProtocol.protocol.close(FbpDisplayInfo.Handle, ugaGuid)
 
 			}
 
@@ -189,12 +189,12 @@ fun fbInitializeDisplay() {
 		}
 
 		if FbpDisplayInfo.Protocol == nONE {
-			xtLdrProtocol.Debug.Print("WARNING: No display adapter found!\n")
+			xtLdrProtocol.debug.print("WARNING: No display adapter found!\n")
 			return (9223372036854775808 | 14)
 
 		}
 
-		xtLdrProtocol.Debug.Print("Current screen resolution is %ux%ux%u\n", FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, FbpDisplayInfo.ModeInfo.BitsPerPixel)
+		xtLdrProtocol.debug.print("Current screen resolution is %ux%ux%u\n", FbpDisplayInfo.ModeInfo.width, FbpDisplayInfo.ModeInfo.height, FbpDisplayInfo.ModeInfo.bitsPerPixel)
 		FbpDisplayInfo.Initialized = tRUE
 
 	}
@@ -226,16 +226,16 @@ fun fbSetScreenResolution(width UINT, height UINT) {
 	}
 
 	modeChanged = fALSE
-	??? CompoundStmt SwitchStmt
+	[unknown clang ast] CompoundStmt SwitchStmt
 	if !modeChanged {
-		xtLdrProtocol.Debug.Print("ERROR: Failed to change screen mode to %ux%u (Status Code: 0x%zX)\n", width, height, status)
+		xtLdrProtocol.debug.print("ERROR: Failed to change screen mode to %ux%u (Status Code: 0x%zX)\n", width, height, status)
 		return (9223372036854775808 | 3)
 
 	}
 
 	status = fbpGetModeInfo()
 	if status == (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("Changed screen resolution to %ux%ux%u\n", FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, FbpDisplayInfo.ModeInfo.BitsPerPixel)
+		xtLdrProtocol.debug.print("Changed screen resolution to %ux%ux%u\n", FbpDisplayInfo.ModeInfo.width, FbpDisplayInfo.ModeInfo.height, FbpDisplayInfo.ModeInfo.bitsPerPixel)
 
 	}
 
@@ -267,15 +267,15 @@ fun fbpFindFramebufferAddress(address PEFI_PHYSICAL_ADDRESS) {
 	var index UINT
 	framebufAddressLength = 0
 	handles = (0 as! PVOID)
-	status = xtLdrProtocol.Protocol.LocateHandles(handles, handlesCount, pciIoGuid)
+	status = xtLdrProtocol.protocol.locateHandles(handles, handlesCount, pciIoGuid)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Failed to get handles (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("ERROR: Failed to get handles (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	??? CompoundStmt ForStmt
-	*address = framebufAddress as! EFI_PHYSICAL_ADDRESS
+	[unknown clang ast] CompoundStmt ForStmt
+	address[0] = framebufAddress as! EFI_PHYSICAL_ADDRESS
 	return (9223372036854775808 & 0)
 }
 
@@ -300,22 +300,20 @@ fun fbpGetColorMask(pixelBitMask UINT, colorSize PUSHORT, colorShift PUSHORT) {
 	size = 0
 	if pixelBitMask {
 		while (pixelBitMask & 1) == 0 {
-			??? CompoundStmt UnaryOperator
-			??? CompoundStmt CompoundAssignOperator
+			shift++			pixelBitMask >>= 1
 
 		}
 
 		while (pixelBitMask & 1) == 1 {
-			??? CompoundStmt UnaryOperator
-			??? CompoundStmt CompoundAssignOperator
+			size++			pixelBitMask >>= 1
 
 		}
 
 
 	}
 
-	*colorShift = shift
-	*colorSize = size
+	colorShift[0] = shift
+	colorSize[0] = size
 }
 
 /// Gets information about the current display mode and stores it in internal structure.
@@ -330,7 +328,7 @@ fun fbpGetModeInfo() {
 
 	var status XTSTATUS
 	var size UINT_PTR
-	??? CompoundStmt SwitchStmt
+	[unknown clang ast] CompoundStmt SwitchStmt
 	return (9223372036854775808 & 0)
 }
 
@@ -347,8 +345,8 @@ fun fbpGetModeInfo() {
 /// @since XT 1.0
 fun fbpGetPixelInformation(pixelsBitMask PEFI_PIXEL_BITMASK) {
 	var compoundMask UINT
-	??? CompoundStmt SwitchStmt
-	FbpDisplayInfo.ModeInfo.BytesPerPixel = FbpDisplayInfo.ModeInfo.BitsPerPixel >> 3
+	[unknown clang ast] CompoundStmt SwitchStmt
+	FbpDisplayInfo.ModeInfo.bytesPerPixel = FbpDisplayInfo.ModeInfo.bitsPerPixel >> 3
 }
 
 /// This routine is the entry point of the XT EFI boot loader module.
@@ -379,5 +377,5 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	FbpFrameBufferProtocol.GetPreferredScreenResolution = fbGetPreferredScreenResolution
 	FbpFrameBufferProtocol.Initialize = fbInitializeDisplay
 	FbpFrameBufferProtocol.SetScreenResolution = fbSetScreenResolution
-	return xtLdrProtocol.Protocol.Install(fbpFrameBufferProtocol, guid)
+	return xtLdrProtocol.protocol.install(fbpFrameBufferProtocol, guid)
 }

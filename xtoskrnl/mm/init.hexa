@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Performs an early initialization of the XTOS Memory Manager.
 /// 
 /// @return This routine does not return any value.
@@ -8,17 +7,17 @@ fun mmInitializeMemoryManager() {
 	mmpScanMemoryDescriptors()
 	if mmNumberOfPhysicalPages < 2048 {
 		if keDbgPrint {
-			??? CompoundStmt ImplicitCastExpr
-			??? CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 		}
 
-		??? CompoundStmt NullStmt
+		[unknown clang ast] CompoundStmt NullStmt
 		kePanic(0)
 
 	}
 
-	mmPageMapLevel = keInitializationBlock.LoaderInformation.PageMapLevel
+	mmPageMapLevel = keInitializationBlock.loaderInformation.pageMapLevel
 	mmpInitializeArchitecture()
 }
 
@@ -34,33 +33,32 @@ fun mmpScanMemoryDescriptors() {
 
 	var freePages PFN_NUMBER
 	freePages = 0
-	memoryMappings = keInitializationBlock.MemoryDescriptorListHead.Flink
-	while memoryMappings != keInitializationBlock.MemoryDescriptorListHead {
-		memoryDescriptor = (((memoryMappings) as! Char * - ???? resolve OffsetOfExpr) as! LOADER_MEMORY_DESCRIPTOR *)
-		if mmpVerifyMemoryTypeInvisible(memoryDescriptor.MemoryType) or (memoryDescriptor.MemoryType == loaderHardwareCachedMemory) {
-			memoryMappings = memoryMappings.Flink
-			??? CompoundStmt ContinueStmt
+	memoryMappings = keInitializationBlock.memoryDescriptorListHead.flink
+	while memoryMappings != keInitializationBlock.memoryDescriptorListHead {
+		memoryDescriptor = (((memoryMappings) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! LOADER_MEMORY_DESCRIPTOR *)
+		if mmpVerifyMemoryTypeInvisible(memoryDescriptor.memoryType) or (memoryDescriptor.memoryType == loaderHardwareCachedMemory) {
+			memoryMappings = memoryMappings.flink
+			continue
+		}
+
+		if memoryDescriptor.memoryType != loaderBad {
+			mmNumberOfPhysicalPages += memoryDescriptor.pageCount
 
 		}
 
-		if memoryDescriptor.MemoryType != loaderBad {
-			??? CompoundStmt CompoundAssignOperator
+		if memoryDescriptor.basePage < mmLowestPhysicalPage {
+			mmLowestPhysicalPage = memoryDescriptor.basePage
 
 		}
 
-		if memoryDescriptor.BasePage < mmLowestPhysicalPage {
-			mmLowestPhysicalPage = memoryDescriptor.BasePage
+		if memoryDescriptor.basePage + memoryDescriptor.pageCount > mmHighestPhysicalPage {
+			mmHighestPhysicalPage = (memoryDescriptor.basePage + memoryDescriptor.pageCount) - 1
 
 		}
 
-		if memoryDescriptor.BasePage + memoryDescriptor.PageCount > mmHighestPhysicalPage {
-			mmHighestPhysicalPage = (memoryDescriptor.BasePage + memoryDescriptor.PageCount) - 1
-
-		}
-
-		if mmpVerifyMemoryTypeFree(memoryDescriptor.MemoryType) {
-			if memoryDescriptor.PageCount >= freePages {
-				freePages = memoryDescriptor.PageCount
+		if mmpVerifyMemoryTypeFree(memoryDescriptor.memoryType) {
+			if memoryDescriptor.pageCount >= freePages {
+				freePages = memoryDescriptor.pageCount
 				mmFreeDescriptor = memoryDescriptor
 
 			}
@@ -68,11 +66,11 @@ fun mmpScanMemoryDescriptors() {
 
 		}
 
-		memoryMappings = memoryMappings.Flink
+		memoryMappings = memoryMappings.flink
 
 	}
 
-	rtlCopyMemory(mmOldFreeDescriptor, mmFreeDescriptor, ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlCopyMemory(mmOldFreeDescriptor, mmFreeDescriptor, sizeOf<Unsigned long long>())
 }
 
 /// Checks whether the specified memory type should be considered as free.

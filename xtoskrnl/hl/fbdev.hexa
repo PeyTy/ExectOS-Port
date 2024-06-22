@@ -1,7 +1,6 @@
-// Hexa 2024 from clang 15.0.3
 fun hlGetFrameBufferDimensions(width PUINT, height PUINT) {
-	*width = HlpFrameBufferData.Width
-	*height = HlpFrameBufferData.Height
+	width[0] = HlpFrameBufferData.Width
+	height[0] = HlpFrameBufferData.Height
 }
 
 fun hlFrameBufferInitialized() {
@@ -29,7 +28,7 @@ fun hlClearScreen(color ULONG) {
 
 	frameBuf = HlpFrameBufferData.Address
 	backgroundColor = hlpRGBColor(color)
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 }
 
 /// Draw a pixel on the screen at the given position and color.
@@ -59,7 +58,7 @@ fun hlDrawPixel(positionX ULONG, positionY ULONG, color ULONG) {
 	}
 
 	frameBufferIndex = 4 * HlpFrameBufferData.PixelsPerScanLine * positionY + 4 * positionX
-	*((HlpFrameBufferData.Address + frameBufferIndex) as! PULONG) = hlpRGBColor(color)
+	((HlpFrameBufferData.Address + frameBufferIndex) as! PULONG)[0] = hlpRGBColor(color)
 }
 
 /// Initializes frame buffer display.
@@ -85,33 +84,33 @@ fun hlInitializeFrameBuffer() {
 	}
 
 	frameBufferResource = systemResource as! PSYSTEM_RESOURCE_FRAMEBUFFER
-	if !frameBufferResource.Header.VirtualAddress {
+	if !frameBufferResource.header.virtualAddress {
 		return (3221225635 as! XTSTATUS)
 
 	}
 
-	if frameBufferResource.Font {
-		HlpFrameBufferData.Font = frameBufferResource.Font
+	if frameBufferResource.font {
+		HlpFrameBufferData.Font = frameBufferResource.font
 
 	} else {
 		HlpFrameBufferData.Font = xtFbDefaultFont as! PVOID
 
 	}
 
-	HlpFrameBufferData.Address = frameBufferResource.Header.VirtualAddress
-	HlpFrameBufferData.Width = frameBufferResource.Width
-	HlpFrameBufferData.Height = frameBufferResource.Height
-	HlpFrameBufferData.BitsPerPixel = frameBufferResource.BitsPerPixel
-	HlpFrameBufferData.PixelsPerScanLine = frameBufferResource.PixelsPerScanLine
-	HlpFrameBufferData.Pitch = frameBufferResource.Pitch
-	HlpFrameBufferData.Pixels.BlueShift = frameBufferResource.Pixels.BlueShift
-	HlpFrameBufferData.Pixels.BlueSize = frameBufferResource.Pixels.BlueSize
-	HlpFrameBufferData.Pixels.GreenShift = frameBufferResource.Pixels.GreenShift
-	HlpFrameBufferData.Pixels.GreenSize = frameBufferResource.Pixels.GreenSize
-	HlpFrameBufferData.Pixels.RedShift = frameBufferResource.Pixels.RedShift
-	HlpFrameBufferData.Pixels.RedSize = frameBufferResource.Pixels.RedSize
-	HlpFrameBufferData.Pixels.ReservedShift = frameBufferResource.Pixels.ReservedShift
-	HlpFrameBufferData.Pixels.ReservedSize = frameBufferResource.Pixels.ReservedSize
+	HlpFrameBufferData.Address = frameBufferResource.header.virtualAddress
+	HlpFrameBufferData.Width = frameBufferResource.width
+	HlpFrameBufferData.Height = frameBufferResource.height
+	HlpFrameBufferData.BitsPerPixel = frameBufferResource.bitsPerPixel
+	HlpFrameBufferData.PixelsPerScanLine = frameBufferResource.pixelsPerScanLine
+	HlpFrameBufferData.Pitch = frameBufferResource.pitch
+	HlpFrameBufferData.Pixels.blueShift = frameBufferResource.pixels.blueShift
+	HlpFrameBufferData.Pixels.blueSize = frameBufferResource.pixels.blueSize
+	HlpFrameBufferData.Pixels.greenShift = frameBufferResource.pixels.greenShift
+	HlpFrameBufferData.Pixels.greenSize = frameBufferResource.pixels.greenSize
+	HlpFrameBufferData.Pixels.redShift = frameBufferResource.pixels.redShift
+	HlpFrameBufferData.Pixels.redSize = frameBufferResource.pixels.redSize
+	HlpFrameBufferData.Pixels.reservedShift = frameBufferResource.pixels.reservedShift
+	HlpFrameBufferData.Pixels.reservedSize = frameBufferResource.pixels.reservedSize
 	HlpFrameBufferData.Initialized = tRUE
 	hlClearScreen(0)
 	return (0 as! XTSTATUS)
@@ -155,9 +154,9 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 	}
 
 	fbFont = HlpFrameBufferData.Font as! PSSFN_FONT_HEADER
-	characterMapping = fbFont as! PUCHAR + fbFont.CharactersOffset
+	characterMapping = fbFont as! PUCHAR + fbFont.charactersOffset
 	character = 0
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	if !character {
 		return ??
 
@@ -167,7 +166,7 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 	fontColor = hlpRGBColor(color)
 	mapping = 0
 	characterMapping = character + 6
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 }
 
 /// Converts color format from (A)RGB one expected by current FrameBuffer.
@@ -187,5 +186,5 @@ fun hlpRGBColor(color ULONG) {
 	green = ((color >> 8) & 255) as! USHORT
 	red = ((color >> 16) & 255) as! USHORT
 	reserved = ((color >> 24) & 255) as! USHORT
-	return ((blue << HlpFrameBufferData.Pixels.BlueShift) | (green << HlpFrameBufferData.Pixels.GreenShift) | (red << HlpFrameBufferData.Pixels.RedShift) | (reserved << HlpFrameBufferData.Pixels.ReservedShift)) as! ULONG
+	return ((blue << HlpFrameBufferData.Pixels.blueShift) | (green << HlpFrameBufferData.Pixels.greenShift) | (red << HlpFrameBufferData.Pixels.redShift) | (reserved << HlpFrameBufferData.Pixels.reservedShift)) as! ULONG
 }

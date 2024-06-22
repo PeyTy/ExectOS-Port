@@ -1,4 +1,4 @@
-// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+var __UNIQUE_ID_author0
 
 var __UNIQUE_ID_description1
 
@@ -41,6 +41,6 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	}
 
 	BlpDummyProtocol.BootSystem = dmBootSystem
-	xtLdrProtocol.Boot.RegisterProtocol("DUMMYOS", dummyGuid)
-	return xtLdrProtocol.Protocol.Install(blpDummyProtocol, dummyGuid)
+	xtLdrProtocol.boot.registerProtocol("DUMMYOS", dummyGuid)
+	return xtLdrProtocol.protocol.install(blpDummyProtocol, dummyGuid)
 }

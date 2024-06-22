@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Initializes an APC object.
 /// 
 /// @param Apc
@@ -29,28 +28,28 @@
 /// 
 /// @since NT 3.5
 fun keInitializeApc(apc PKAPC, thread PKTHREAD, environment KAPC_ENVIRONMENT, kernelRoutine PKKERNEL_ROUTINE, rundownRoutine PKRUNDOWN_ROUTINE, normalRoutine PKNORMAL_ROUTINE, apcMode KPROCESSOR_MODE, context PVOID) {
-	apc.Type = apcObject
-	apc.Thread = thread
-	apc.KernelRoutine = kernelRoutine
-	apc.RundownRoutine = rundownRoutine
-	apc.NormalRoutine = normalRoutine
+	apc.type = apcObject
+	apc.thread = thread
+	apc.kernelRoutine = kernelRoutine
+	apc.rundownRoutine = rundownRoutine
+	apc.normalRoutine = normalRoutine
 	if environment == currentApcEnvironment {
-		apc.ApcStateIndex = thread.ApcStateIndex
+		apc.apcStateIndex = thread.apcStateIndex
 
 	} else {
-		apc.ApcStateIndex = environment
+		apc.apcStateIndex = environment
 
 	}
 
 	if normalRoutine {
-		apc.ApcMode = apcMode
-		apc.NormalContext = context
+		apc.apcMode = apcMode
+		apc.normalContext = context
 
 	} else {
-		apc.ApcMode = kernelMode
-		apc.NormalContext = (0 as! PVOID)
+		apc.apcMode = kernelMode
+		apc.normalContext = (0 as! PVOID)
 
 	}
 
-	apc.Inserted = fALSE
+	apc.inserted = fALSE
 }

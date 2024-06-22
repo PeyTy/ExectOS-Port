@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Flushes current Translation Lookaside Buffer (TLB)
 /// 
 /// @return This routine does not return any value.

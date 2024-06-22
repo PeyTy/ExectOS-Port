@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Cancels the timer.
 /// 
 /// @param Timer
@@ -13,7 +12,7 @@ fun keCancelTimer(timer PKTIMER) {
 	result = fALSE
 	runLevel = keRaiseRunLevel(12)
 	keAcquireQueuedSpinLock(dispatcherLock)
-	if timer.Header.Inserted {
+	if timer.header.inserted {
 		kepRemoveTimer(timer)
 		result = tRUE
 
@@ -33,7 +32,7 @@ fun keCancelTimer(timer PKTIMER) {
 /// 
 /// @since NT 4.0
 fun keClearTimer(timer PKTIMER) {
-	timer.Header.SignalState = 0
+	timer.header.signalState = 0
 }
 
 /// Reads the current signal state of the given timer.
@@ -45,7 +44,7 @@ fun keClearTimer(timer PKTIMER) {
 /// 
 /// @since XT 1.0
 fun keGetTimerState(timer PKTIMER) {
-	return timer.Header.SignalState as! BOOLEAN
+	return timer.header.signalState as! BOOLEAN
 }
 
 /// Initializes an extended kernel timer.
@@ -60,13 +59,13 @@ fun keGetTimerState(timer PKTIMER) {
 /// 
 /// @since XT 1.0
 fun keInitializeTimer(timer PKTIMER, type KTIMER_TYPE) {
-	timer.Header.Type = timerNotificationObject + type
-	timer.Header.Inserted = 0
-	timer.Header.SignalState = 0
-	timer.DueTime.QuadPart = 0
-	timer.Period = 0
-	rtlInitializeListHead(timer.Header.WaitListHead)
-	rtlInitializeListHead(timer.TimerListEntry)
+	timer.header.type = timerNotificationObject + type
+	timer.header.inserted = 0
+	timer.header.signalState = 0
+	timer.dueTime.quadPart = 0
+	timer.period = 0
+	rtlInitializeListHead(timer.header.waitListHead)
+	rtlInitializeListHead(timer.timerListEntry)
 }
 
 /// Queries the timer's interrupt due time.
@@ -83,8 +82,8 @@ fun keQueryTimer(timer PKTIMER) {
 	dueTime = 0
 	runLevel = keRaiseRunLevel(12)
 	keAcquireQueuedSpinLock(dispatcherLock)
-	if timer.Header.Inserted {
-		dueTime = timer.DueTime.QuadPart
+	if timer.header.inserted {
+		dueTime = timer.dueTime.quadPart
 
 	}
 
@@ -122,6 +121,6 @@ fun keSetTimer(timer PKTIMER, dueTime LARGE_INTEGER, period LONG, dpc PKDPC) {
 /// 
 /// @since XT 1.0
 fun kepRemoveTimer(timer PKTIMER) {
-	timer.Header.Inserted = fALSE
-	rtlRemoveEntryList(timer.TimerListEntry)
+	timer.header.inserted = fALSE
+	rtlRemoveEntryList(timer.timerListEntry)
 }

@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Compares at most specified number of characters of two C wide strings.
 /// 
 /// @param String1
@@ -15,7 +14,7 @@
 /// @since XT 1.0
 fun rtlCompareWideString(string1 Const PWCHAR, string2 Const PWCHAR, length SIZE_T) {
 	var index SIZE_T
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	return 0
 }
 
@@ -37,31 +36,29 @@ fun rtlCompareWideStringInsensitive(string1 Const PWCHAR, string2 Const PWCHAR, 
 	var character1 WCHAR
 	var character2 WCHAR
 	var index ULONG = 0
-	while ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral and ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral {
+	while string1[index] != 0/* "\u0000" */ and string2[index] != 0/* "\u0000" */ {
 		if index != 0 and index == length {
-			??? CompoundStmt BreakStmt
+			break
+		}
+
+		character1 = string1[index]
+		character2 = string2[index]
+		if string1[index] >= 65/* "A" */ and string1[index] <= 90/* "Z" */ {
+			character1 = string1[index] - 65/* "A" */ + 97/* "a" */
 
 		}
 
-		character1 = ???? resolve ArraySubscriptExpr
-		character2 = ???? resolve ArraySubscriptExpr
-		if ???? resolve ArraySubscriptExpr >= ???? resolve CharacterLiteral and ???? resolve ArraySubscriptExpr <= ???? resolve CharacterLiteral {
-			character1 = ???? resolve ArraySubscriptExpr - ???? resolve CharacterLiteral + ???? resolve CharacterLiteral
-
-		}
-
-		if ???? resolve ArraySubscriptExpr >= ???? resolve CharacterLiteral and ???? resolve ArraySubscriptExpr <= ???? resolve CharacterLiteral {
-			character2 = ???? resolve ArraySubscriptExpr - ???? resolve CharacterLiteral + ???? resolve CharacterLiteral
+		if string2[index] >= 65/* "A" */ and string2[index] <= 90/* "Z" */ {
+			character2 = string2[index] - 65/* "A" */ + 97/* "a" */
 
 		}
 
 		if character1 != character2 {
-			return ???? resolve ConditionalOperator
+			return [unknown clang ast] resolve ConditionalOperator
 
 		}
 
-		??? CompoundStmt UnaryOperator
-
+		index++
 	}
 
 	return 0
@@ -83,17 +80,16 @@ fun rtlCompareWideStringInsensitive(string1 Const PWCHAR, string2 Const PWCHAR, 
 /// @since XT 1.0
 fun rtlConcatenateWideString(destination PWCHAR, source PWCHAR, count SIZE_T) {
 	var destString PWCHAR = destination
-	while *destination {
-		??? CompoundStmt UnaryOperator
-
+	while destination[0] {
+		destination++
 	}
 
 	if count > 0 {
-		??? CompoundStmt DoStmt
-		*destination = ???? resolve CharacterLiteral
+		[unknown clang ast] CompoundStmt DoStmt
+		destination[0] = 0/* "\u0000" */
 
 	} else {
-		while (*++destination = *++source) != 0 {
+		while (++destination[0] = ++source[0]) != 0 {
 
 		}
 
@@ -119,8 +115,8 @@ fun rtlConcatenateWideString(destination PWCHAR, source PWCHAR, count SIZE_T) {
 /// @since XT 1.0
 fun rtlCopyWideString(destination PWCHAR, source Const PWCHAR, length ULONG) {
 	var index ULONG
-	??? CompoundStmt ForStmt
-	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+	[unknown clang ast] CompoundStmt ForStmt
+	destination[index] = 0/* "\u0000" */
 }
 
 /// Formats a wide string according to the given printf-alike format string.
@@ -141,7 +137,7 @@ fun rtlFormatWideString(context PRTL_PRINT_CONTEXT, format PCWSTR, argumentList 
 	var localArgumentList VA_LIST
 	var status XTSTATUS
 	var index ULONG
-	if context == (0 as! PVOID) or context.WriteWideCharacter == (0 as! PVOID) {
+	if context == (0 as! PVOID) or context.writeWideCharacter == (0 as! PVOID) {
 		return fALSE
 
 	}
@@ -153,14 +149,13 @@ fun rtlFormatWideString(context PRTL_PRINT_CONTEXT, format PCWSTR, argumentList 
 
 	__builtin_va_copy(localArgumentList, argumentList)
 	index = 0
-	while ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral {
-		if ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral {
+	while format[index] != 0/* "\u0000" */ {
+		if format[index] == 37/* "%" */ {
 			status = rtlpFormatWideStringArgumentSpecifier(context, format, localArgumentList, index)
 
 		} else {
-			status = rtlpWriteWideCharacter(context, ???? resolve ArraySubscriptExpr)
-			??? CompoundStmt UnaryOperator
-
+			status = rtlpWriteWideCharacter(context, format[index])
+			index++
 		}
 
 		if status != (0 as! XTSTATUS) {
@@ -189,7 +184,7 @@ fun rtlFormatWideString(context PRTL_PRINT_CONTEXT, format PCWSTR, argumentList 
 fun rtlReverseWideString(string PWCHAR, length ULONG) {
 	var tempChar WCHAR
 	var index ULONG
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 }
 
 /// Finds the next token in a null-terminated wide string.
@@ -211,20 +206,20 @@ fun rtlTokenizeWideString(string PWCHAR, delimiter Const PWCHAR, savePtr PWCHAR 
 	var token PWCHAR
 	var char WCHAR
 	var spanChar WCHAR
-	if string == (0 as! PVOID) and (string = *savePtr) == (0 as! PVOID) {
+	if string == (0 as! PVOID) and (string = savePtr[0]) == (0 as! PVOID) {
 		return (0 as! PVOID)
 
 	}
 
-	char = *++string
-	if char == ???? resolve CharacterLiteral {
-		*savePtr = (0 as! PVOID)
+	char = ++string[0]
+	if char == 0/* "\u0000" */ {
+		savePtr[0] = (0 as! PVOID)
 		return (0 as! PVOID)
 
 	}
 
 	token = string - 1
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 }
 
 /// Removes certain characters from a beginning of the wide string.
@@ -238,9 +233,8 @@ fun rtlTokenizeWideString(string PWCHAR, delimiter Const PWCHAR, savePtr PWCHAR 
 fun rtlTrimLeftWideString(string Const PWCHAR) {
 	var start PWCHAR
 	start = string
-	while *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral {
-		??? CompoundStmt UnaryOperator
-
+	while start[0] == 32/* " " */ or start[0] == 10/* "\n" */ or start[0] == 9/* "\t" */ or start[0] == 13/* "\r" */ or start[0] == 11/* "\u000b" */ or start[0] == 12/* "\f" */ {
+		start++
 	}
 
 	return start
@@ -257,12 +251,11 @@ fun rtlTrimLeftWideString(string Const PWCHAR) {
 fun rtlTrimRightWideString(string Const PWCHAR) {
 	var end PWCHAR
 	end = string + rtlWideStringLength(string, 0)
-	while (end != string) and (*end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral) {
-		??? CompoundStmt UnaryOperator
-
+	while (end != string) and (end[0] == 32/* " " */ or end[0] == 10/* "\n" */ or end[0] == 9/* "\t" */ or end[0] == 13/* "\r" */ or end[0] == 11/* "\u000b" */ or end[0] == 12/* "\f" */) {
+		end--
 	}
 
-	*end = 0
+	end[0] = 0
 	return string
 }
 
@@ -296,7 +289,7 @@ fun rtlWideStringLength(string Const PWCHAR, maxLength SIZE_T) {
 
 	}
 
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	return length
 }
 
@@ -338,18 +331,17 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 	var strArg PCHAR
 	var charArg CHAR
-	formatIndex = format + *index + 1
+	formatIndex = format + index[0] + 1
 	argPosition = 0
-	rtlZeroMemory(formatProperties, ???? resolve UnaryExprOrTypeTraitExpr)
-	FormatProperties.IntegerSize = ???? resolve UnaryExprOrTypeTraitExpr
+	rtlZeroMemory(formatProperties, sizeOf<Unsigned long long>())
+	FormatProperties.IntegerSize = sizeOf<Unsigned long long>()
 	FormatProperties.Precision = -1
-	__builtin_va_copy(argumentsCopy, *argumentList)
-	if (*formatIndex >= ???? resolve CharacterLiteral) and (*formatIndex <= ???? resolve CharacterLiteral) {
+	__builtin_va_copy(argumentsCopy, argumentList[0])
+	if (formatIndex[0] >= 49/* "1" */) and (formatIndex[0] <= 57/* "9" */) {
 		specifierValue = rtlpGetWideStringSpecifierValue(formatIndex as! PWSTR *)
-		if *formatIndex == ???? resolve CharacterLiteral {
+		if formatIndex[0] == 36/* "$" */ {
 			argPosition = specifierValue as! ULONG
-			??? CompoundStmt UnaryOperator
-
+			formatIndex++
 		} else {
 			FormatProperties.FieldWidth = specifierValue as! ULONG
 
@@ -359,22 +351,22 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 	}
 
 	while tRUE {
-		if *formatIndex == ???? resolve CharacterLiteral {
-			??? CompoundStmt CompoundAssignOperator
+		if formatIndex[0] == 39/* "'" */ {
+			FormatProperties.Flags |= 16384
 
 		} else {
-			??? CompoundStmt CompoundStmt
-			if *formatIndex == ???? resolve CharacterLiteral {
-				??? CompoundStmt CompoundAssignOperator
+			[unknown clang ast] CompoundStmt CompoundStmt
+			if formatIndex[0] == 32/* " " */ {
+				FormatProperties.Flags |= 2
 
 			} else {
-				??? CompoundStmt CompoundStmt
-				if *formatIndex == ???? resolve CharacterLiteral {
-					??? CompoundStmt CompoundAssignOperator
+				[unknown clang ast] CompoundStmt CompoundStmt
+				if formatIndex[0] == 35/* "#" */ {
+					FormatProperties.Flags |= 1024
 
 				} else {
-					??? CompoundStmt CompoundStmt
-					??? CompoundStmt CompoundStmt
+					[unknown clang ast] CompoundStmt CompoundStmt
+					[unknown clang ast] CompoundStmt CompoundStmt
 
 				}
 
@@ -384,44 +376,40 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 		}
 
-		??? CompoundStmt UnaryOperator
-
+		formatIndex++
 	}
 
 	if FormatProperties.Flags & 4 {
-		??? CompoundStmt CompoundAssignOperator
+		FormatProperties.Flags &= ~8
 
 	}
 
 	if FormatProperties.Flags & 1 {
-		??? CompoundStmt CompoundAssignOperator
+		FormatProperties.Flags &= ~2
 
 	}
 
-	if *formatIndex == ???? resolve CharacterLiteral {
-		??? CompoundStmt UnaryOperator
-		FormatProperties.FieldWidth = (???? resolve ConditionalOperator)
+	if formatIndex[0] == 42/* "*" */ {
+		formatIndex++		FormatProperties.FieldWidth = ([unknown clang ast] resolve ConditionalOperator)
 
 	} else {
-		??? CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
 
 	}
 
 	if FormatProperties.FieldWidth < 0 {
-		??? CompoundStmt CompoundAssignOperator
-		??? CompoundStmt CompoundAssignOperator
+		FormatProperties.Flags |= 4
+		FormatProperties.FieldWidth *= -1
 
 	}
 
-	if *formatIndex == ???? resolve CharacterLiteral {
-		??? CompoundStmt UnaryOperator
-		if *formatIndex == ???? resolve CharacterLiteral {
-			??? CompoundStmt UnaryOperator
-			FormatProperties.Precision = (???? resolve ConditionalOperator)
+	if formatIndex[0] == 46/* "." */ {
+		formatIndex++		if formatIndex[0] == 42/* "*" */ {
+			formatIndex++			FormatProperties.Precision = ([unknown clang ast] resolve ConditionalOperator)
 
 		} else {
-			??? CompoundStmt CompoundStmt
-			??? CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
 
 		}
 
@@ -433,23 +421,23 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 	}
 
-	specifier = *formatIndex
-	??? CompoundStmt SwitchStmt
-	specifier = *++formatIndex
+	specifier = formatIndex[0]
+	[unknown clang ast] CompoundStmt SwitchStmt
+	specifier = ++formatIndex[0]
 	if FormatProperties.Flags & 64 {
-		if specifier == ???? resolve CharacterLiteral {
-			specifier = ???? resolve CharacterLiteral
+		if specifier == 99/* "c" */ {
+			specifier = 67/* "C" */
 
 		} else {
-			??? CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
 
 		}
 
 
 	}
 
-	??? CompoundStmt CompoundAssignOperator
-	??? CompoundStmt SwitchStmt
+	FormatProperties.Flags |= 256
+	[unknown clang ast] CompoundStmt SwitchStmt
 	if FormatProperties.VariableType == unknown {
 		status = rtlpWriteWideStringValue(context, formatProperties, wideCharArg, 1)
 
@@ -460,45 +448,45 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, FormatProperties.IntegerSize)
 
 		} else {
-			intArg = (???? resolve ConditionalOperator)
+			intArg = ([unknown clang ast] resolve ConditionalOperator)
 
 		}
 
 		if FormatProperties.Flags & 512 {
-			wideStrArg = ???? resolve ConditionalOperator
+			wideStrArg = [unknown clang ast] resolve ConditionalOperator
 
 		} else {
-			wideStrArg = ???? resolve ConditionalOperator
+			wideStrArg = [unknown clang ast] resolve ConditionalOperator
 
 		}
 
 		status = rtlpWriteWideStringValue(context, formatProperties, wideStrArg, rtlWideStringLength(wideStrArg, 0))
 
 	} else {
-		??? CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
 		if FormatProperties.VariableType == char {
 			if argPosition != 0 {
-				charArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, ???? resolve UnaryExprOrTypeTraitExpr) as! UCHAR
+				charArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>()) as! UCHAR
 
 			} else {
-				charArg = (???? resolve ConditionalOperator)
+				charArg = ([unknown clang ast] resolve ConditionalOperator)
 
 			}
 
 			status = rtlpWriteWideStringStringValue(context, formatProperties, charArg, 1)
 
 		} else {
-			??? CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
 			if FormatProperties.VariableType == float {
 				if argPosition != 0 {
-					FloatArg.QuadPart = rtlpGetWideStringArgument(argumentsCopy, argPosition, ???? resolve UnaryExprOrTypeTraitExpr)
+					FloatArg.QuadPart = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
 
 				} else {
 					if FormatProperties.Flags & 32 {
-						FloatArg.DoublePart = (???? resolve ConditionalOperator)
+						FloatArg.DoublePart = ([unknown clang ast] resolve ConditionalOperator)
 
 					} else {
-						FloatArg.DoublePart = (???? resolve ConditionalOperator)
+						FloatArg.DoublePart = ([unknown clang ast] resolve ConditionalOperator)
 
 					}
 
@@ -508,39 +496,39 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 				status = rtlpWriteWideStringDoubleValue(context, formatProperties, FloatArg.DoublePart)
 
 			} else {
-				??? CompoundStmt CompoundStmt
+				[unknown clang ast] CompoundStmt CompoundStmt
 				if FormatProperties.VariableType == string {
 					if argPosition != 0 {
-						intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, ???? resolve UnaryExprOrTypeTraitExpr)
+						intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
 						strArg = intArg as! UINT_PTR as! PCHAR
 
 					} else {
-						strArg = (???? resolve ConditionalOperator)
+						strArg = ([unknown clang ast] resolve ConditionalOperator)
 
 					}
 
 					status = rtlpWriteWideStringStringValue(context, formatProperties, strArg, rtlStringLength(strArg, 0))
 
 				} else {
-					??? CompoundStmt CompoundStmt
+					[unknown clang ast] CompoundStmt CompoundStmt
 					if FormatProperties.VariableType == ansiString {
 						if argPosition != 0 {
-							intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, ???? resolve UnaryExprOrTypeTraitExpr)
+							intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
 							ansiStrArg = intArg as! UINT_PTR as! PANSI_STRING
 
 						} else {
-							ansiStrArg = (???? resolve ConditionalOperator)
+							ansiStrArg = ([unknown clang ast] resolve ConditionalOperator)
 
 						}
 
 						if ansiStrArg != (0 as! PVOID) {
-							status = rtlpWriteWideStringStringValue(context, formatProperties, ansiStrArg.Buffer, ansiStrArg.Length)
+							status = rtlpWriteWideStringStringValue(context, formatProperties, ansiStrArg.buffer, ansiStrArg.length)
 
 						}
 
 
 					} else {
-						??? CompoundStmt CompoundStmt
+						[unknown clang ast] CompoundStmt CompoundStmt
 
 					}
 
@@ -557,7 +545,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 	}
 
 	__builtin_va_end(argumentsCopy)
-	??? CompoundStmt CompoundAssignOperator
+	index[0] += (formatIndex as! UINT_PTR - (format + index[0]) as! UINT_PTR) / sizeOf<Unsigned long long>()
 	return status
 }
 
@@ -575,10 +563,10 @@ fun rtlpGetWideStringArgument(argumentList PVA_LIST, argumentNumber ULONG, argum
 	var argumentsCopy VA_LIST
 	var value ULONGLONG
 	var index ULONG
-	__builtin_va_copy(argumentsCopy, *argumentList)
-	??? CompoundStmt ForStmt
+	__builtin_va_copy(argumentsCopy, argumentList[0])
+	[unknown clang ast] CompoundStmt ForStmt
 	value = 0
-	??? CompoundStmt SwitchStmt
+	[unknown clang ast] CompoundStmt SwitchStmt
 	__builtin_va_end(argumentsCopy)
 	return value
 }
@@ -594,9 +582,9 @@ fun rtlpGetWideStringArgument(argumentList PVA_LIST, argumentNumber ULONG, argum
 fun rtlpGetWideStringSpecifierValue(format PWCHAR *) {
 	var count ULONG
 	var fmt PWCHAR
-	fmt = *format
+	fmt = format[0]
 	count = 0
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	return 0
 }
 
@@ -613,9 +601,8 @@ fun rtlpGetWideStringSpecifierValue(format PWCHAR *) {
 /// @since XT 1.0
 fun rtlpWriteWideCharacter(context PRTL_PRINT_CONTEXT, character WCHAR) {
 	var status XTSTATUS
-	status = context.WriteWideCharacter(character)
-	??? CompoundStmt UnaryOperator
-	return status
+	status = context.writeWideCharacter(character)
+	context.charactersWritten++	return status
 }
 
 /// Writes a wide string custom-formatted value to the destination provided by the print context.
@@ -667,21 +654,21 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	negativeValue = fALSE
 	numberLength = 0
 	Parts.DoublePart = value
-	precision = formatProperties.Precision
+	precision = formatProperties.precision
 	signCharacter = 0
 	if precision == -1 {
 		precision = 6
 
 	}
 
-	if (formatProperties.Flags & 8192) and (precision == 0) {
+	if (formatProperties.flags & 8192) and (precision == 0) {
 		precision = 1
 
 	}
 
 	if rtlInfiniteDouble(value) {
 		if rtlNanDouble(value) {
-			if formatProperties.Flags & 512 {
+			if formatProperties.flags & 512 {
 				nonNumberString = "#NAN"
 
 			} else {
@@ -691,7 +678,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 
 		} else {
-			if formatProperties.Flags & 512 {
+			if formatProperties.flags & 512 {
 				nonNumberString = "#INF"
 
 			} else {
@@ -709,40 +696,38 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		index = 0
 		if negativeValue != fALSE {
-			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-			??? CompoundStmt UnaryOperator
-
+			buffer[index] = 45/* "-" */
+			index++
 		} else {
-			??? CompoundStmt CompoundStmt
-			if formatProperties.Flags & 2 {
-				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-				??? CompoundStmt UnaryOperator
-
+			[unknown clang ast] CompoundStmt CompoundStmt
+			if formatProperties.flags & 2 {
+				buffer[index] = 32/* " " */
+				index++
 			}
 
 
 		}
 
-		rtlCopyWideString(buffer + index, nonNumberString, ???? resolve UnaryExprOrTypeTraitExpr - index)
+		rtlCopyWideString(buffer + index, nonNumberString, sizeOf<Unsigned long long>() - index)
 		return rtlpWriteWideStringValue(context, formatProperties, buffer, rtlWideStringLength(buffer, 0))
 
 	}
 
-	if formatProperties.Radix == 16 {
+	if formatProperties.radix == 16 {
 		return rtlpWriteWideStringHexDoubleValue(context, formatProperties, value)
 
 	}
 
-	if (Parts.u.HighPart & (9223372036854775808 >> 32)) != 0 {
-		??? CompoundStmt CompoundAssignOperator
+	if (Parts.u.highPart & (9223372036854775808 >> 32)) != 0 {
+		value *= -1
 		negativeValue = tRUE
 
 	}
 
 	exponent = rtlGetBaseExponent(value, tenPower)
-	roundingAmount = ???? resolve FloatingLiteral
-	writeExponent = (formatProperties.Flags & 4096)
-	if (writeExponent == fALSE) and !(formatProperties.Flags & 2048) {
+	roundingAmount = [unknown clang ast] resolve FloatingLiteral
+	writeExponent = (formatProperties.flags & 4096)
+	if (writeExponent == fALSE) and !(formatProperties.flags & 2048) {
 		if (exponent < -4) or (exponent >= precision) {
 			writeExponent = tRUE
 
@@ -752,34 +737,34 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	}
 
 	digitCount = 0
-	if value != ???? resolve FloatingLiteral {
-		if (writeExponent != fALSE) or (formatProperties.Flags & 8192) {
-			??? CompoundStmt CompoundAssignOperator
-			if formatProperties.Flags & 8192 {
-				??? CompoundStmt CompoundAssignOperator
+	if value != [unknown clang ast] resolve FloatingLiteral {
+		if (writeExponent != fALSE) or (formatProperties.flags & 8192) {
+			roundingAmount /= tenPower
+			if formatProperties.flags & 8192 {
+				roundingAmount *= [unknown clang ast] resolve FloatingLiteral
 
 			}
 
 
 		}
 
-		??? CompoundStmt ForStmt
-		??? CompoundStmt CompoundAssignOperator
-		??? CompoundStmt CompoundAssignOperator
+		[unknown clang ast] CompoundStmt ForStmt
+		value += roundingAmount
+		value *= tenPower
 		if value as! LONG > 9 {
-			??? CompoundStmt CompoundAssignOperator
-			??? CompoundStmt CompoundAssignOperator
+			value *= [unknown clang ast] resolve FloatingLiteral
+			exponent += 1
 
 		}
 
-		while (value != ???? resolve FloatingLiteral) and (digitCount < 15) {
-			???? resolve ArraySubscriptExpr = value as! LONG + ???? resolve CharacterLiteral
-			??? CompoundStmt CompoundAssignOperator
-			value = (value - value as! LONG as! Double) * ???? resolve FloatingLiteral
+		while (value != [unknown clang ast] resolve FloatingLiteral) and (digitCount < 15) {
+			buffer[digitCount] = value as! LONG + 48/* "0" */
+			digitCount += 1
+			value = (value - value as! LONG as! Double) * [unknown clang ast] resolve FloatingLiteral
 
 		}
 
-		if formatProperties.Flags & 8192 {
+		if formatProperties.flags & 8192 {
 			if precision > 0 {
 				if digitCount > precision {
 					digitCount = precision
@@ -792,8 +777,8 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		while (digitCount > 1) and (???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral) {
-			??? CompoundStmt CompoundAssignOperator
+		while (digitCount > 1) and (buffer[digitCount - 1] == 48/* "0" */) {
+			digitCount -= 1
 
 		}
 
@@ -801,12 +786,12 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	}
 
 	if negativeValue {
-		signCharacter = ???? resolve CharacterLiteral
+		signCharacter = 45/* "-" */
 
 	} else {
-		??? CompoundStmt CompoundStmt
-		if formatProperties.Flags & 2 {
-			signCharacter = ???? resolve CharacterLiteral
+		[unknown clang ast] CompoundStmt CompoundStmt
+		if formatProperties.flags & 2 {
+			signCharacter = 32/* " " */
 
 		}
 
@@ -814,12 +799,12 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	}
 
 	significantDigits = digitCount
-	if formatProperties.Flags & 8192 {
+	if formatProperties.flags & 8192 {
 		if significantDigits > precision {
 			significantDigits = precision
 
 		} else {
-			??? CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
 
 		}
 
@@ -827,13 +812,13 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	}
 
 	numberLength = precision
-	if formatProperties.Flags & 1024 {
-		??? CompoundStmt CompoundAssignOperator
+	if formatProperties.flags & 1024 {
+		numberLength += 1
 
 	} else {
-		??? CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
 		if precision != 0 {
-			??? CompoundStmt CompoundAssignOperator
+			numberLength += 1
 
 		}
 
@@ -841,17 +826,17 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	}
 
 	if writeExponent {
-		??? CompoundStmt CompoundAssignOperator
-		if !(formatProperties.Flags & 8192) {
-			??? CompoundStmt CompoundAssignOperator
+		numberLength += 4
+		if !(formatProperties.flags & 8192) {
+			numberLength += 1
 
 		}
 
 		if exponent < 0 {
 			if exponent <= -100 {
-				??? CompoundStmt CompoundAssignOperator
+				numberLength += 1
 				if exponent <= -1000 {
-					??? CompoundStmt CompoundAssignOperator
+					numberLength += 1
 
 				}
 
@@ -861,9 +846,9 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		} else {
 			if exponent >= 100 {
-				??? CompoundStmt CompoundAssignOperator
+				numberLength += 1
 				if exponent >= 1000 {
-					??? CompoundStmt CompoundAssignOperator
+					numberLength += 1
 
 				}
 
@@ -876,17 +861,17 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 	} else {
 		if exponent >= 0 {
-			if !(formatProperties.Flags & 8192) {
-				??? CompoundStmt CompoundAssignOperator
+			if !(formatProperties.flags & 8192) {
+				numberLength += exponent + 1
 
 			}
 
 
 		} else {
-			??? CompoundStmt CompoundAssignOperator
-			if formatProperties.Flags & 8192 {
-				??? CompoundStmt CompoundAssignOperator
-				??? CompoundStmt CompoundAssignOperator
+			numberLength += 1
+			if formatProperties.flags & 8192 {
+				precision += (-exponent) - 1
+				numberLength += (-exponent) - 1
 
 			}
 
@@ -897,17 +882,17 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	}
 
 	if signCharacter != 0 {
-		??? CompoundStmt CompoundAssignOperator
+		numberLength += 1
 
 	}
 
 	fieldCount = 0
-	if numberLength < formatProperties.FieldWidth {
-		fieldCount = formatProperties.FieldWidth - numberLength
+	if numberLength < formatProperties.fieldWidth {
+		fieldCount = formatProperties.fieldWidth - numberLength
 
 	}
 
-	if (formatProperties.Flags & 4) or (formatProperties.Flags & 8) {
+	if (formatProperties.flags & 4) or (formatProperties.flags & 8) {
 		if signCharacter != 0 {
 			status = rtlpWriteWideCharacter(context, signCharacter)
 			if status != (0 as! XTSTATUS) {
@@ -922,16 +907,16 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 	}
 
-	if !(formatProperties.Flags & 4) or (formatProperties.Flags & 8) {
-		if formatProperties.Flags & 8 {
-			character = ???? resolve CharacterLiteral
+	if !(formatProperties.flags & 4) or (formatProperties.flags & 8) {
+		if formatProperties.flags & 8 {
+			character = 48/* "0" */
 
 		} else {
-			character = ???? resolve CharacterLiteral
+			character = 32/* " " */
 
 		}
 
-		??? CompoundStmt ForStmt
+		[unknown clang ast] CompoundStmt ForStmt
 		fieldCount = 0
 
 	}
@@ -949,12 +934,11 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	index = 0
 	if writeExponent {
 		if digitCount == 0 {
-			digit = ???? resolve CharacterLiteral
+			digit = 48/* "0" */
 
 		} else {
-			digit = ???? resolve ArraySubscriptExpr
-			??? CompoundStmt UnaryOperator
-
+			digit = buffer[index]
+			index++
 		}
 
 		status = rtlpWriteWideCharacter(context, digit)
@@ -963,13 +947,12 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		if (formatProperties.Flags & 8192) and (precision != 0) {
-			??? CompoundStmt UnaryOperator
-
+		if (formatProperties.flags & 8192) and (precision != 0) {
+			precision--
 		}
 
-		if (precision != 0) or (formatProperties.Flags & 1024) {
-			status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+		if (precision != 0) or (formatProperties.flags & 1024) {
+			status = rtlpWriteWideCharacter(context, 46/* "." */)
 			if status != (0 as! XTSTATUS) {
 				return status
 
@@ -978,12 +961,12 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		??? CompoundStmt ForStmt
-		if formatProperties.Flags & 512 {
-			exponentCharacter = ???? resolve CharacterLiteral
+		[unknown clang ast] CompoundStmt ForStmt
+		if formatProperties.flags & 512 {
+			exponentCharacter = 69/* "E" */
 
 		} else {
-			exponentCharacter = ???? resolve CharacterLiteral
+			exponentCharacter = 101/* "e" */
 
 		}
 
@@ -999,11 +982,10 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 			currentExponent = exponent
 			while currentExponent >= 0 {
 				if index < digitCount {
-					digit = ???? resolve ArraySubscriptExpr
-					??? CompoundStmt UnaryOperator
-
+					digit = buffer[index]
+					index++
 				} else {
-					digit = ???? resolve CharacterLiteral
+					digit = 48/* "0" */
 
 				}
 
@@ -1013,18 +995,16 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 				}
 
-				if (formatProperties.Flags & 8192) and (precision != 0) {
-					??? CompoundStmt UnaryOperator
-
+				if (formatProperties.flags & 8192) and (precision != 0) {
+					precision--
 				}
 
-				??? CompoundStmt UnaryOperator
-
+				currentExponent--
 			}
 
 
 		} else {
-			status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+			status = rtlpWriteWideCharacter(context, 48/* "0" */)
 			if status != (0 as! XTSTATUS) {
 				return status
 
@@ -1034,8 +1014,8 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		if (precision != 0) or (formatProperties.Flags & 1024) {
-			status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+		if (precision != 0) or (formatProperties.flags & 1024) {
+			status = rtlpWriteWideCharacter(context, 46/* "." */)
 			if status != (0 as! XTSTATUS) {
 				return status
 
@@ -1044,11 +1024,11 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		??? CompoundStmt ForStmt
+		[unknown clang ast] CompoundStmt ForStmt
 
 	}
 
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	return (0 as! XTSTATUS)
 }
 
@@ -1090,40 +1070,40 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 	var status XTSTATUS
 	negativeValue = fALSE
 	Parts.DoublePart = double
-	precision = formatProperties.Precision
-	if double == ???? resolve FloatingLiteral {
+	precision = formatProperties.precision
+	if double == [unknown clang ast] resolve FloatingLiteral {
 		absoluteExponent = 0
 		exponent = 0
-		integerValue = ???? resolve CharacterLiteral
+		integerValue = 48/* "0" */
 		significand = 0
 		if precision == -1 {
 			precision = 0
 
 		}
 
-		??? CompoundStmt ForStmt
+		[unknown clang ast] CompoundStmt ForStmt
 
 	} else {
-		if (Parts.u.HighPart & (9223372036854775808 >> 32)) != 0 {
+		if (Parts.u.highPart & (9223372036854775808 >> 32)) != 0 {
 			negativeValue = tRUE
-			??? CompoundStmt CompoundAssignOperator
+			Parts.DoublePart *= -1
 
 		}
 
-		exponent = (Parts.u.HighPart & (9218868437227405312 >> 32)) >> (52 - 32)
-		??? CompoundStmt CompoundAssignOperator
+		exponent = (Parts.u.highPart & (9218868437227405312 >> 32)) >> (52 - 32)
+		exponent -= 1023
 		absoluteExponent = exponent
 		if absoluteExponent < 0 {
-			??? CompoundStmt CompoundAssignOperator
+			absoluteExponent *= -1
 
 		}
 
-		significand = Parts.u.LowPart | ((Parts.u.HighPart & 1048575) as! ULONGLONG << (???? resolve UnaryExprOrTypeTraitExpr * 8))
-		integerValue = ???? resolve CharacterLiteral
+		significand = Parts.u.lowPart | ((Parts.u.highPart & 1048575) as! ULONGLONG << (sizeOf<Unsigned long long>() * 8))
+		integerValue = 49/* "1" */
 		if precision != -1 {
 			halfWay = 1 << (52 - 1)
 			roundingValue = halfWay
-			if (precision * 4) > (???? resolve UnaryExprOrTypeTraitExpr * 8) {
+			if (precision * 4) > (sizeOf<Unsigned long long>() * 8) {
 				roundingValue = 0
 
 			} else {
@@ -1131,22 +1111,20 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 			}
 
-			??? CompoundStmt CompoundAssignOperator
+			significand += roundingValue
 			if significand >= (1 << 52) {
-				??? CompoundStmt CompoundAssignOperator
-				??? CompoundStmt UnaryOperator
-
+				significand -= (1 << 52)
+				integerValue++
 			}
 
 
 		}
 
-		??? CompoundStmt ForStmt
+		[unknown clang ast] CompoundStmt ForStmt
 		if precision == -1 {
 			precision = 13
-			while (precision - 1 >= 0) and (???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral) {
-				??? CompoundStmt UnaryOperator
-
+			while (precision - 1 >= 0) and (buffer[precision - 1] == 48/* "0" */) {
+				precision--
 			}
 
 
@@ -1157,44 +1135,44 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 	prefixSize = 0
 	if negativeValue {
-		???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-		??? CompoundStmt CompoundAssignOperator
+		prefix[prefixSize] = 45/* "-" */
+		prefixSize += 1
 
 	} else {
-		??? CompoundStmt CompoundStmt
-		if formatProperties.Flags & 2 {
-			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-			??? CompoundStmt CompoundAssignOperator
+		[unknown clang ast] CompoundStmt CompoundStmt
+		if formatProperties.flags & 2 {
+			prefix[prefixSize] = 32/* " " */
+			prefixSize += 1
 
 		}
 
 
 	}
 
-	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-	??? CompoundStmt CompoundAssignOperator
+	prefix[prefixSize] = 48/* "0" */
+	prefix[prefixSize + 1] = 120/* "x" */
+	prefixSize += 2
 	numberLength = precision + 1
-	if (formatProperties.Flags & 1024) or (precision != 0) {
-		??? CompoundStmt CompoundAssignOperator
+	if (formatProperties.flags & 1024) or (precision != 0) {
+		numberLength += 1
 
 	}
 
-	if formatProperties.Flags & 512 {
-		exponentCharacter = ???? resolve CharacterLiteral
+	if formatProperties.flags & 512 {
+		exponentCharacter = 80/* "P" */
 
 	} else {
-		exponentCharacter = ???? resolve CharacterLiteral
+		exponentCharacter = 112/* "p" */
 
 	}
 
-	??? CompoundStmt CompoundAssignOperator
+	numberLength += 3
 	if absoluteExponent > 10 {
-		??? CompoundStmt CompoundAssignOperator
+		numberLength += 1
 		if absoluteExponent > 100 {
-			??? CompoundStmt CompoundAssignOperator
+			numberLength += 1
 			if absoluteExponent > 1000 {
-				??? CompoundStmt CompoundAssignOperator
+				numberLength += 1
 
 			}
 
@@ -1205,29 +1183,28 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 	}
 
 	fieldCount = 0
-	if numberLength + prefixSize < formatProperties.FieldWidth {
-		fieldCount = formatProperties.FieldWidth - (numberLength + prefixSize)
+	if numberLength + prefixSize < formatProperties.fieldWidth {
+		fieldCount = formatProperties.fieldWidth - (numberLength + prefixSize)
 
 	}
 
-	if !(formatProperties.Flags & 4) or (formatProperties.Flags & 8) {
-		if formatProperties.Flags & 8 {
-			character = ???? resolve CharacterLiteral
+	if !(formatProperties.flags & 4) or (formatProperties.flags & 8) {
+		if formatProperties.flags & 8 {
+			character = 48/* "0" */
 			prefixIndex = 0
 			while --prefixSize {
-				status = rtlpWriteWideCharacter(context, ???? resolve ArraySubscriptExpr)
+				status = rtlpWriteWideCharacter(context, prefix[prefixIndex])
 				if status != (0 as! XTSTATUS) {
 					return status
 
 				}
 
-				??? CompoundStmt UnaryOperator
-
+				prefixIndex++
 			}
 
 
 		} else {
-			character = ???? resolve CharacterLiteral
+			character = 32/* " " */
 
 		}
 
@@ -1238,22 +1215,21 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 			}
 
-			??? CompoundStmt UnaryOperator
-
+			fieldCount--
 		}
 
 
 	}
 
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	status = rtlpWriteWideCharacter(context, integerValue)
 	if status != (0 as! XTSTATUS) {
 		return status
 
 	}
 
-	if (formatProperties.Flags & 1024) or (precision != 0) {
-		status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+	if (formatProperties.flags & 1024) or (precision != 0) {
+		status = rtlpWriteWideCharacter(context, 46/* "." */)
 		if status != (0 as! XTSTATUS) {
 			return status
 
@@ -1262,7 +1238,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 	}
 
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	status = rtlpWriteWideStringCustomValue(context, "%C%+d", exponentCharacter, exponent)
 	if status != (0 as! XTSTATUS) {
 		return status
@@ -1270,14 +1246,13 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 	}
 
 	while fieldCount {
-		status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+		status = rtlpWriteWideCharacter(context, 32/* " " */)
 		if status != (0 as! XTSTATUS) {
 			return status
 
 		}
 
-		??? CompoundStmt UnaryOperator
-
+		fieldCount--
 	}
 
 	return (0 as! XTSTATUS)
@@ -1313,56 +1288,56 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 	var status XTSTATUS
 	integerLength = 0
 	negative = fALSE
-	if !(formatProperties.Flags & 256) {
-		??? CompoundStmt SwitchStmt
+	if !(formatProperties.flags & 256) {
+		[unknown clang ast] CompoundStmt SwitchStmt
 
 	}
 
 	if integer == 0 {
-		??? CompoundStmt CompoundAssignOperator
+		formatProperties.flags &= ~1024
 
 	}
 
-	if integer != 0 or formatProperties.Precision != 0 {
-		if !(formatProperties.Flags & 256) and integer as! LONGLONG < 0 {
+	if integer != 0 or formatProperties.precision != 0 {
+		if !(formatProperties.flags & 256) and integer as! LONGLONG < 0 {
 			negative = tRUE
-			??? CompoundStmt CompoundAssignOperator
+			integer *= -1
 
 		}
 
-		rtlZeroMemory(buffer, ???? resolve UnaryExprOrTypeTraitExpr)
-		??? CompoundStmt DoStmt
+		rtlZeroMemory(buffer, sizeOf<Unsigned long long>())
+		[unknown clang ast] CompoundStmt DoStmt
 		rtlReverseWideString(buffer, integerLength)
 
 	}
 
 	prefixLength = 0
-	if !(formatProperties.Flags & 256) and negative {
-		???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-		??? CompoundStmt CompoundAssignOperator
+	if !(formatProperties.flags & 256) and negative {
+		prefix[prefixLength] = 45/* "-" */
+		prefixLength += 1
 
 	} else {
-		??? CompoundStmt CompoundStmt
-		if formatProperties.Flags & 2 {
-			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-			??? CompoundStmt CompoundAssignOperator
+		[unknown clang ast] CompoundStmt CompoundStmt
+		if formatProperties.flags & 2 {
+			prefix[prefixLength] = 32/* " " */
+			prefixLength += 1
 
 		}
 
 
 	}
 
-	if formatProperties.Flags & 1024 {
-		if formatProperties.Radix == 8 {
-			if ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral {
-				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-				??? CompoundStmt CompoundAssignOperator
+	if formatProperties.flags & 1024 {
+		if formatProperties.radix == 8 {
+			if buffer[0] != 48/* "0" */ {
+				prefix[prefixLength] = 48/* "0" */
+				prefixLength += 1
 
 			}
 
 
 		} else {
-			??? CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
 
 		}
 
@@ -1370,22 +1345,22 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 	}
 
 	precisionLength = 0
-	if integerLength < formatProperties.Precision {
-		precisionLength = formatProperties.Precision - integerLength
+	if integerLength < formatProperties.precision {
+		precisionLength = formatProperties.precision - integerLength
 
 	}
 
 	fieldLength = 0
-	if integerLength + prefixLength + precisionLength < formatProperties.FieldWidth {
-		fieldLength = formatProperties.FieldWidth - (integerLength + prefixLength + precisionLength)
+	if integerLength + prefixLength + precisionLength < formatProperties.fieldWidth {
+		fieldLength = formatProperties.fieldWidth - (integerLength + prefixLength + precisionLength)
 
 	}
 
-	if !(formatProperties.Flags & 4) or (formatProperties.Flags & 8) {
-		character = ???? resolve CharacterLiteral
-		if formatProperties.Flags & 8 {
-			character = ???? resolve CharacterLiteral
-			??? CompoundStmt ForStmt
+	if !(formatProperties.flags & 4) or (formatProperties.flags & 8) {
+		character = 32/* " " */
+		if formatProperties.flags & 8 {
+			character = 48/* "0" */
+			[unknown clang ast] CompoundStmt ForStmt
 			prefixLength = 0
 
 		}
@@ -1397,35 +1372,32 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 			}
 
-			??? CompoundStmt UnaryOperator
-
+			fieldLength--
 		}
 
 
 	}
 
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	while precisionLength > 0 {
-		status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+		status = rtlpWriteWideCharacter(context, 48/* "0" */)
 		if status != (0 as! XTSTATUS) {
 			return status
 
 		}
 
-		??? CompoundStmt UnaryOperator
-
+		precisionLength--
 	}
 
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	while fieldLength > 0 {
-		status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+		status = rtlpWriteWideCharacter(context, 32/* " " */)
 		if status != (0 as! XTSTATUS) {
 			return status
 
 		}
 
-		??? CompoundStmt UnaryOperator
-
+		fieldLength--
 	}
 
 	return (0 as! XTSTATUS)
@@ -1453,60 +1425,56 @@ fun rtlpWriteWideStringStringValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	var paddingLength ULONG
 	var status XTSTATUS
 	if string == (0 as! PVOID) {
-		string = ???? resolve StringLiteral
+		string = [unknown clang ast] resolve StringLiteral
 		stringLength = 6
 
 	}
 
-	if (formatProperties.Precision >= 0) and (stringLength > formatProperties.Precision) {
-		stringLength = formatProperties.Precision
+	if (formatProperties.precision >= 0) and (stringLength > formatProperties.precision) {
+		stringLength = formatProperties.precision
 
 	}
 
 	paddingLength = 0
-	if formatProperties.FieldWidth > stringLength {
-		paddingLength = formatProperties.FieldWidth - stringLength
+	if formatProperties.fieldWidth > stringLength {
+		paddingLength = formatProperties.fieldWidth - stringLength
 
 	}
 
-	if !(formatProperties.Flags & 4) {
+	if !(formatProperties.flags & 4) {
 		while paddingLength > 0 {
-			status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+			status = rtlpWriteWideCharacter(context, 32/* " " */)
 			if status != (0 as! XTSTATUS) {
 				return status
 
 			}
 
-			??? CompoundStmt UnaryOperator
-
+			paddingLength--
 		}
 
 
 	}
 
 	while stringLength {
-		???? resolve ArraySubscriptExpr = *string
-		???? resolve ArraySubscriptExpr = 0
-		status = rtlpWriteWideCharacter(context, *wideCharacter)
+		wideCharacter[0] = string[0]
+		wideCharacter[1] = 0
+		status = rtlpWriteWideCharacter(context, wideCharacter[0])
 		if status != (0 as! XTSTATUS) {
 			return status
 
 		}
 
-		??? CompoundStmt UnaryOperator
-		??? CompoundStmt UnaryOperator
-
+		stringLength--		string++
 	}
 
 	while paddingLength > 0 {
-		status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+		status = rtlpWriteWideCharacter(context, 32/* " " */)
 		if status != (0 as! XTSTATUS) {
 			return status
 
 		}
 
-		??? CompoundStmt UnaryOperator
-
+		paddingLength--
 	}
 
 	return (0 as! XTSTATUS)
@@ -1538,53 +1506,49 @@ fun rtlpWriteWideStringValue(context PRTL_PRINT_CONTEXT, formatProperties PRTL_P
 
 	}
 
-	if (formatProperties.Precision >= 0) and (stringLength > formatProperties.Precision) {
-		stringLength = formatProperties.Precision
+	if (formatProperties.precision >= 0) and (stringLength > formatProperties.precision) {
+		stringLength = formatProperties.precision
 
 	}
 
 	paddingLength = 0
-	if formatProperties.FieldWidth > stringLength {
-		paddingLength = formatProperties.FieldWidth - stringLength
+	if formatProperties.fieldWidth > stringLength {
+		paddingLength = formatProperties.fieldWidth - stringLength
 
 	}
 
-	if !(formatProperties.Flags & 4) {
+	if !(formatProperties.flags & 4) {
 		while paddingLength > 0 {
-			status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+			status = rtlpWriteWideCharacter(context, 32/* " " */)
 			if status != (0 as! XTSTATUS) {
 				return status
 
 			}
 
-			??? CompoundStmt UnaryOperator
-
+			paddingLength--
 		}
 
 
 	}
 
 	while stringLength != 0 {
-		status = rtlpWriteWideCharacter(context, *string)
+		status = rtlpWriteWideCharacter(context, string[0])
 		if status != (0 as! XTSTATUS) {
 			return status
 
 		}
 
-		??? CompoundStmt UnaryOperator
-		??? CompoundStmt UnaryOperator
-
+		stringLength--		string++
 	}
 
 	while paddingLength > 0 {
-		status = rtlpWriteWideCharacter(context, ???? resolve CharacterLiteral)
+		status = rtlpWriteWideCharacter(context, 32/* " " */)
 		if status != (0 as! XTSTATUS) {
 			return status
 
 		}
 
-		??? CompoundStmt UnaryOperator
-
+		paddingLength--
 	}
 
 	return (0 as! XTSTATUS)

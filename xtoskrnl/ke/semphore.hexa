@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// initializes a kernel semaphore object.
 /// 
 /// @param Semaphore
@@ -14,10 +13,10 @@
 /// 
 /// @since NT 3.5
 fun keInitializeSemaphore(semaphore PKSEMAPHORE, count LONG, limit LONG) {
-	semaphore.Header.Type = semaphoreObject
-	semaphore.Header.SignalState = count
-	semaphore.Limit = limit
-	rtlInitializeListHead(semaphore.Header.WaitListHead)
+	semaphore.header.type = semaphoreObject
+	semaphore.header.signalState = count
+	semaphore.limit = limit
+	rtlInitializeListHead(semaphore.header.waitListHead)
 }
 
 /// Reads semaphore's current signal state.
@@ -29,7 +28,7 @@ fun keInitializeSemaphore(semaphore PKSEMAPHORE, count LONG, limit LONG) {
 /// 
 /// @since XT 1.0
 fun keReadSemaphoreState(semaphore PKSEMAPHORE) {
-	return semaphore.Header.SignalState
+	return semaphore.header.signalState
 }
 
 /// Releases a semaphore.

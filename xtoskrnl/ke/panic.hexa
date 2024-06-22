@@ -1,11 +1,10 @@
-// Hexa 2024 from clang 15.0.3
 /// Halts the system.
 /// 
 /// @return This routine does not return any value.
 /// 
 /// @since XT 1.0
 fun keHaltSystem() {
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 }
 
 /// Crashes the system upon detecting a fatal error in which either it is unable to recover or continue to run system.

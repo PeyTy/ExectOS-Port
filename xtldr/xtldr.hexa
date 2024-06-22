@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Initializes EFI Boot Loader (XTLDR).
 /// 
 /// @return This routine does not return any value.
@@ -13,17 +12,17 @@ fun blInitializeBootLoader() {
 	var status EFI_STATUS
 	BlpStatus.BootServices = tRUE
 	blInitializeConsole()
-	blConsolePrint("XTLDR boot loader v%s\n", ???? resolve StringLiteral)
+	blConsolePrint("XTLDR boot loader v%s\n", [unknown clang ast] resolve StringLiteral)
 	rtlInitializeListHead(blpBootProtocols)
 	rtlInitializeListHead(blpConfig)
 	rtlInitializeListHead(blpLoadedModules)
 	BlpStatus.SecureBoot = blGetSecureBootStatus()
 	status = blOpenProtocol(handle, loadedImage as! PVOID *, lipGuid)
 	if status == (9223372036854775808 & 0) {
-		BlpStatus.LoaderBase = loadedImage.ImageBase
-		BlpStatus.LoaderSize = loadedImage.ImageSize
+		BlpStatus.LoaderBase = loadedImage.imageBase
+		BlpStatus.LoaderSize = loadedImage.imageSize
 		if 1 {
-			blConsolePrint("\n---------- BOOTLOADER DEBUG ----------\nPointer Size      : %d\nImage Base Address: %P\nImage Base Size   : 0x%lX\nImage Revision    : 0x%lX\n--------------------------------------\n", ???? resolve UnaryExprOrTypeTraitExpr, loadedImage.ImageBase, loadedImage.ImageSize, loadedImage.Revision)
+			blConsolePrint("\n---------- BOOTLOADER DEBUG ----------\nPointer Size      : %d\nImage Base Address: %P\nImage Base Size   : 0x%lX\nImage Revision    : 0x%lX\n--------------------------------------\n", sizeOf<Unsigned long long>(), loadedImage.imageBase, loadedImage.imageSize, loadedImage.revision)
 			blSleepExecution(3000)
 
 		}
@@ -80,52 +79,50 @@ fun blInitializeBootMenuList(menuEntries PXTBL_BOOTMENU_ITEM *, entriesCount PUL
 
 	}
 
-	menuEntrySectionList = blpMenuList.Flink
+	menuEntrySectionList = blpMenuList.flink
 	while menuEntrySectionList != blpMenuList {
-		??? CompoundStmt UnaryOperator
-		menuEntrySectionList = menuEntrySectionList.Flink
+		numberOfEntries++		menuEntrySectionList = menuEntrySectionList.flink
 
 	}
 
-	status = blAllocateMemoryPool(numberOfEntries * ???? resolve UnaryExprOrTypeTraitExpr, osList as! PVOID *)
+	status = blAllocateMemoryPool(numberOfEntries * sizeOf<Unsigned long long>(), osList as! PVOID *)
 	if status != (9223372036854775808 & 0) or !osList {
 		return (9223372036854775808 | 9)
 
 	}
 
 	numberOfEntries = 0
-	menuEntrySectionList = blpMenuList.Flink
+	menuEntrySectionList = blpMenuList.flink
 	while menuEntrySectionList != blpMenuList {
 		menuEntryName = (0 as! PVOID)
-		menuEntrySection = (((menuEntrySectionList) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_SECTION *)
-		if rtlCompareWideStringInsensitive(menuEntrySection.SectionName, defaultMenuEntry, 0) == 0 {
+		menuEntrySection = (((menuEntrySectionList) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_SECTION *)
+		if rtlCompareWideStringInsensitive(menuEntrySection.sectionName, defaultMenuEntry, 0) == 0 {
 			defaultOS = numberOfEntries
 
 		}
 
-		menuEntryList = menuEntrySection.Options.Flink
-		while menuEntryList != menuEntrySection.Options {
-			menuEntryOption = (((menuEntryList) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
-			if rtlCompareWideStringInsensitive(menuEntryOption.Name, "SYSTEMNAME", 0) == 0 {
-				menuEntryName = menuEntryOption.Value
+		menuEntryList = menuEntrySection.options.flink
+		while menuEntryList != menuEntrySection.options {
+			menuEntryOption = (((menuEntryList) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+			if rtlCompareWideStringInsensitive(menuEntryOption.name, "SYSTEMNAME", 0) == 0 {
+				menuEntryName = menuEntryOption.value
 
 			}
 
-			menuEntryList = menuEntryList.Flink
+			menuEntryList = menuEntryList.flink
 
 		}
 
-		???? resolve ArraySubscriptExpr.EntryName = menuEntryName
-		???? resolve ArraySubscriptExpr.ShortName = menuEntrySection.SectionName
-		???? resolve ArraySubscriptExpr.Options = menuEntrySection.Options
-		menuEntrySectionList = menuEntrySectionList.Flink
-		??? CompoundStmt UnaryOperator
-
+		osList[numberOfEntries].entryName = menuEntryName
+		osList[numberOfEntries].shortName = menuEntrySection.sectionName
+		osList[numberOfEntries].options = menuEntrySection.options
+		menuEntrySectionList = menuEntrySectionList.flink
+		numberOfEntries++
 	}
 
-	*defaultId = defaultOS
-	*entriesCount = numberOfEntries
-	*menuEntries = osList
+	defaultId[0] = defaultOS
+	entriesCount[0] = numberOfEntries
+	menuEntries[0] = osList
 	return (9223372036854775808 & 0)
 }
 
@@ -157,26 +154,26 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 	var modulesList PWCHAR
 	var handle EFI_HANDLE
 	var status EFI_STATUS
-	rtlZeroMemory(bootParameters, ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlZeroMemory(bootParameters, sizeOf<Unsigned long long>())
 	modulesList = (0 as! PVOID)
-	optionsListEntry = optionsList.Flink
+	optionsListEntry = optionsList.flink
 	while optionsListEntry != optionsList {
-		option = (((optionsListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
-		if rtlCompareWideStringInsensitive(option.Name, "BOOTMODULES", 0) == 0 {
-			moduleListLength = rtlWideStringLength(option.Value, 0)
-			status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (moduleListLength + 1), modulesList as! PVOID *)
+		option = (((optionsListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		if rtlCompareWideStringInsensitive(option.name, "BOOTMODULES", 0) == 0 {
+			moduleListLength = rtlWideStringLength(option.value, 0)
+			status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (moduleListLength + 1), modulesList as! PVOID *)
 			if status != (9223372036854775808 & 0) {
 				blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
 				return (9223372036854775808 | 9)
 
 			}
 
-			rtlCopyMemory(modulesList, option.Value, ???? resolve UnaryExprOrTypeTraitExpr * (moduleListLength + 1))
+			rtlCopyMemory(modulesList, option.value, sizeOf<Unsigned long long>() * (moduleListLength + 1))
 
 		} else {
-			??? CompoundStmt CompoundStmt
-			if rtlCompareWideStringInsensitive(option.Name, "SYSTEMPATH", 0) == 0 {
-				status = blGetVolumeDevicePath(option.Value, BootParameters.DevicePath, BootParameters.ArcName, BootParameters.SystemPath)
+			[unknown clang ast] CompoundStmt CompoundStmt
+			if rtlCompareWideStringInsensitive(option.name, "SYSTEMPATH", 0) == 0 {
+				status = blGetVolumeDevicePath(option.value, BootParameters.DevicePath, BootParameters.ArcName, BootParameters.SystemPath)
 				if status != (9223372036854775808 & 0) {
 					blDebugPrint("ERROR: Failed to find volume device path (Status Code: 0x%zX)\n", status)
 					return status
@@ -192,14 +189,14 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 
 
 			} else {
-				??? CompoundStmt CompoundStmt
-				if rtlCompareWideStringInsensitive(option.Name, "INITRDFILE", 0) == 0 {
-					BootParameters.InitrdFile = option.Value
+				[unknown clang ast] CompoundStmt CompoundStmt
+				if rtlCompareWideStringInsensitive(option.name, "INITRDFILE", 0) == 0 {
+					BootParameters.InitrdFile = option.value
 
 				} else {
-					??? CompoundStmt CompoundStmt
-					if rtlCompareWideStringInsensitive(option.Name, "PARAMETERS", 0) == 0 {
-						BootParameters.Parameters = option.Value
+					[unknown clang ast] CompoundStmt CompoundStmt
+					if rtlCompareWideStringInsensitive(option.name, "PARAMETERS", 0) == 0 {
+						BootParameters.Parameters = option.value
 
 					}
 
@@ -212,7 +209,7 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 
 		}
 
-		optionsListEntry = optionsListEntry.Flink
+		optionsListEntry = optionsListEntry.flink
 
 	}
 
@@ -238,7 +235,7 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 	}
 
 	if blGetConfigBooleanValue("KEEPLASTBOOT") {
-		status = blSetEfiVariable(vendorGuid, "XtLdrLastBootOS", shortName as! PVOID, rtlWideStringLength(shortName, 0) * ???? resolve UnaryExprOrTypeTraitExpr)
+		status = blSetEfiVariable(vendorGuid, "XtLdrLastBootOS", shortName as! PVOID, rtlWideStringLength(shortName, 0) * sizeOf<Unsigned long long>())
 		if status != (9223372036854775808 & 0) {
 			blDebugPrint("WARNING: Failed to save chosen Operating System in NVRAM (Status Code: 0x%zX)\n", status)
 
@@ -247,7 +244,7 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 
 	}
 
-	return bootProtocol.BootSystem(bootParameters)
+	return bootProtocol.bootSystem(bootParameters)
 }
 
 /// This routine is the entry point of the XT EFI boot loader.
@@ -298,7 +295,7 @@ fun blStartXtLoader(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 
 	}
 
-	status = efiSystemTable.BootServices.SetWatchdogTimer(0, 65536, 0, (0 as! PVOID))
+	status = efiSystemTable.bootServices.setWatchdogTimer(0, 65536, 0, (0 as! PVOID))
 	if status != (9223372036854775808 & 0) {
 		blDebugPrint("WARNING: Failed to disable watchdog timer (Status Code: 0x%zX)\n", status)
 

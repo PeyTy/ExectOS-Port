@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Initializes CPU architecture dependent context of a thread.
 /// 
 /// @param Thread
@@ -22,40 +21,40 @@
 fun kepInitializeThreadContext(thread PKTHREAD, systemRoutine PKSYSTEM_ROUTINE, startRoutine PKSTART_ROUTINE, startContext PVOID, contextRecord PCONTEXT) {
 	let threadFrame = new ByValue<PKTHREAD_INIT_FRAME>()
 
-	threadFrame = (thread.InitialStack as! PKTHREAD_INIT_FRAME) - 1
-	rtlZeroMemory(threadFrame.NpxFrame, ???? resolve UnaryExprOrTypeTraitExpr)
+	threadFrame = (thread.initialStack as! PKTHREAD_INIT_FRAME) - 1
+	rtlZeroMemory(threadFrame.npxFrame, sizeOf<Unsigned long long>())
 	if contextRecord {
-		rtlZeroMemory(threadFrame.ExceptionFrame, ???? resolve UnaryExprOrTypeTraitExpr)
-		rtlZeroMemory(threadFrame.TrapFrame, ???? resolve UnaryExprOrTypeTraitExpr)
-		??? CompoundStmt CompoundAssignOperator
-		contextRecord.Rsp = (contextRecord.Rsp & ~15) - 40
-		contextRecord.SegCs = 48 | 3
-		contextRecord.SegSs = 40 | 3
-		thread.PreviousMode = userMode
-		thread.NpxState = 1
-		threadFrame.NpxFrame.ControlWord = 639
-		threadFrame.NpxFrame.TagWord = 65535
-		threadFrame.TrapFrame.Dr6 = 0
-		threadFrame.TrapFrame.Dr7 = 0
-		threadFrame.TrapFrame.MxCsr = 8064
-		threadFrame.ExceptionFrame.P1Home = startContext as! ULONG64
-		threadFrame.ExceptionFrame.P2Home = startRoutine as! ULONG64
-		threadFrame.ExceptionFrame.P3Home = systemRoutine as! ULONG64
-		threadFrame.ExceptionFrame.P4Home = systemRoutine as! ULONG64
+		rtlZeroMemory(threadFrame.exceptionFrame, sizeOf<Unsigned long long>())
+		rtlZeroMemory(threadFrame.trapFrame, sizeOf<Unsigned long long>())
+		contextRecord.contextFlags &= ~(1048576 | 16) | (1048576 | 1)
+		contextRecord.rsp = (contextRecord.rsp & ~15) - 40
+		contextRecord.segCs = 48 | 3
+		contextRecord.segSs = 40 | 3
+		thread.previousMode = userMode
+		thread.npxState = 1
+		threadFrame.npxFrame.controlWord = 639
+		threadFrame.npxFrame.tagWord = 65535
+		threadFrame.trapFrame.dr6 = 0
+		threadFrame.trapFrame.dr7 = 0
+		threadFrame.trapFrame.mxCsr = 8064
+		threadFrame.exceptionFrame.p1Home = startContext as! ULONG64
+		threadFrame.exceptionFrame.p2Home = startRoutine as! ULONG64
+		threadFrame.exceptionFrame.p3Home = systemRoutine as! ULONG64
+		threadFrame.exceptionFrame.p4Home = systemRoutine as! ULONG64
 
 	} else {
-		thread.PreviousMode = kernelMode
-		thread.NpxState = 0
-		threadFrame.StartFrame.Return = (0 as! PVOID) as! ULONG64
+		thread.previousMode = kernelMode
+		thread.npxState = 0
+		threadFrame.startFrame.return = (0 as! PVOID) as! ULONG64
 
 	}
 
-	threadFrame.StartFrame.P1Home = startContext as! ULONG64
-	threadFrame.StartFrame.P2Home = startRoutine as! ULONG64
-	threadFrame.StartFrame.P3Home = systemRoutine as! ULONG64
-	threadFrame.StartFrame.P4Home = systemRoutine as! ULONG64
-	threadFrame.SwitchFrame.ApcBypass = 1
-	threadFrame.SwitchFrame.MxCsr = 8064
-	threadFrame.SwitchFrame.Rbp = threadFrame.TrapFrame as! ULONG64
-	thread.KernelStack = threadFrame.SwitchFrame
+	threadFrame.startFrame.p1Home = startContext as! ULONG64
+	threadFrame.startFrame.p2Home = startRoutine as! ULONG64
+	threadFrame.startFrame.p3Home = systemRoutine as! ULONG64
+	threadFrame.startFrame.p4Home = systemRoutine as! ULONG64
+	threadFrame.switchFrame.apcBypass = 1
+	threadFrame.switchFrame.mxCsr = 8064
+	threadFrame.switchFrame.rbp = threadFrame.trapFrame as! ULONG64
+	thread.kernelStack = threadFrame.switchFrame
 }

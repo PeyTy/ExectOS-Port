@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// This routine initializes a structure representing the head of a double-linked list.
 /// 
 /// @param ListHead
@@ -8,8 +7,8 @@
 /// 
 /// @since XT 1.0
 fun rtlInitializeListHead(listHead PLIST_ENTRY) {
-	listHead.Blink = listHead
-	listHead.Flink = listHead
+	listHead.blink = listHead
+	listHead.flink = listHead
 }
 
 /// This routine initializes a structure representing the head of a 32bit double-linked list.
@@ -21,8 +20,8 @@ fun rtlInitializeListHead(listHead PLIST_ENTRY) {
 /// 
 /// @since XT 1.0
 fun rtlInitializeListHead32(listHead PLIST_ENTRY32) {
-	listHead.Blink = (listHead as! ULONG_PTR as! ULONG)
-	listHead.Flink = (listHead as! ULONG_PTR as! ULONG)
+	listHead.blink = (listHead as! ULONG_PTR as! ULONG)
+	listHead.flink = (listHead as! ULONG_PTR as! ULONG)
 }
 
 /// This routine inserts an entry at the head of a doubly linked list.
@@ -37,10 +36,10 @@ fun rtlInitializeListHead32(listHead PLIST_ENTRY32) {
 /// 
 /// @since XT 1.0
 fun rtlInsertHeadList(listHead PLIST_ENTRY, entry PLIST_ENTRY) {
-	entry.Flink = listHead.Flink
-	entry.Blink = listHead
-	listHead.Flink.Blink = entry
-	listHead.Flink = entry
+	entry.flink = listHead.flink
+	entry.blink = listHead
+	listHead.flink.blink = entry
+	listHead.flink = entry
 }
 
 /// This routine inserts an entry at the tail of a doubly linked list.
@@ -55,10 +54,10 @@ fun rtlInsertHeadList(listHead PLIST_ENTRY, entry PLIST_ENTRY) {
 /// 
 /// @since XT 1.0
 fun rtlInsertTailList(listHead PLIST_ENTRY, entry PLIST_ENTRY) {
-	entry.Flink = listHead
-	entry.Blink = listHead.Blink
-	listHead.Blink.Flink = entry
-	listHead.Blink = entry
+	entry.flink = listHead
+	entry.blink = listHead.blink
+	listHead.blink.flink = entry
+	listHead.blink = entry
 }
 
 /// Indicates whether a doubly linked list structure is empty, or not initialized at all.
@@ -70,7 +69,7 @@ fun rtlInsertTailList(listHead PLIST_ENTRY, entry PLIST_ENTRY) {
 /// 
 /// @since XT 1.0
 fun rtlListEmpty(listHead PLIST_ENTRY) {
-	return (((listHead.Flink == (0 as! PVOID)) and (listHead.Blink == (0 as! PVOID))) or (listHead.Flink == listHead))
+	return (((listHead.flink == (0 as! PVOID)) and (listHead.blink == (0 as! PVOID))) or (listHead.flink == listHead))
 }
 
 /// This routine detects a loop in a doubly linked list.
@@ -93,9 +92,9 @@ fun rtlListLoop(listHead PLIST_ENTRY) {
 
 	fastEntry = listHead
 	slowEntry = listHead
-	while slowEntry != (0 as! PVOID) and fastEntry != (0 as! PVOID) and fastEntry.Flink != (0 as! PVOID) {
-		slowEntry = slowEntry.Flink
-		fastEntry = fastEntry.Flink.Flink
+	while slowEntry != (0 as! PVOID) and fastEntry != (0 as! PVOID) and fastEntry.flink != (0 as! PVOID) {
+		slowEntry = slowEntry.flink
+		fastEntry = fastEntry.flink.flink
 		if slowEntry == fastEntry {
 			return tRUE
 
@@ -116,6 +115,6 @@ fun rtlListLoop(listHead PLIST_ENTRY) {
 /// 
 /// @since XT 1.0
 fun rtlRemoveEntryList(entry PLIST_ENTRY) {
-	entry.Flink.Blink = entry.Blink
-	entry.Blink.Flink = entry.Flink
+	entry.flink.blink = entry.blink
+	entry.blink.flink = entry.flink
 }

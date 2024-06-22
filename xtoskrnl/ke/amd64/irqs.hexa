@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Sets new interrupt handler for the existing IDT entry.
 /// 
 /// @param HalVector
@@ -14,7 +13,7 @@ fun keSetInterruptHandler(vector ULONG, handler PVOID) {
 	let processorBlock = new ByValue<PKPROCESSOR_BLOCK>()
 
 	processorBlock = keGetCurrentProcessorBlock()
-	???? resolve ArraySubscriptExpr.OffsetLow = (handler as! ULONG_PTR & 65535)
-	???? resolve ArraySubscriptExpr.OffsetMiddle = ((handler as! ULONG_PTR >> 16) & 65535)
-	???? resolve ArraySubscriptExpr.OffsetHigh = handler as! ULONG_PTR >> 32
+	processorBlock.idtBase[vector as! UCHAR].offsetLow = (handler as! ULONG_PTR & 65535)
+	processorBlock.idtBase[vector as! UCHAR].offsetMiddle = ((handler as! ULONG_PTR >> 16) & 65535)
+	processorBlock.idtBase[vector as! UCHAR].offsetHigh = handler as! ULONG_PTR >> 32
 }

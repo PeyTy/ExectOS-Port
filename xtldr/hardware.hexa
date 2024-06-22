@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Enables I/O space access to all serial controllers found on the PCI(E) root bridge.
 /// 
 /// @return This routine returns a status code.
@@ -20,14 +19,14 @@ fun blpActivateSerialIOController() {
 
 	var status EFI_STATUS
 	var address ULONGLONG
-	pciHandleSize = ???? resolve UnaryExprOrTypeTraitExpr
+	pciHandleSize = sizeOf<Unsigned long long>()
 	status = blAllocateMemoryPool(pciHandleSize, pciHandle as! PVOID *)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	status = efiSystemTable.BootServices.LocateHandle(byProtocol, pciGuid, (0 as! PVOID), pciHandleSize, pciHandle)
+	status = efiSystemTable.bootServices.locateHandle(byProtocol, pciGuid, (0 as! PVOID), pciHandleSize, pciHandle)
 	if status == (9223372036854775808 | 5) {
 		blFreeMemoryPool(pciHandle)
 		status = blAllocateMemoryPool(pciHandleSize, pciHandle as! PVOID *)
@@ -36,7 +35,7 @@ fun blpActivateSerialIOController() {
 
 		}
 
-		status = efiSystemTable.BootServices.LocateHandle(byProtocol, pciGuid, (0 as! PVOID), pciHandleSize, pciHandle)
+		status = efiSystemTable.bootServices.locateHandle(byProtocol, pciGuid, (0 as! PVOID), pciHandleSize, pciHandle)
 
 	}
 
@@ -45,6 +44,6 @@ fun blpActivateSerialIOController() {
 
 	}
 
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	return (9223372036854775808 & 0)
 }

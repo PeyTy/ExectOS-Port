@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// This routine formats the input string and prints it out to the debug ports.
 /// 
 /// @param Format
@@ -20,7 +19,7 @@ fun blDebugPrint(format PUSHORT) {
 		ConsolePrintContext.WriteWideCharacter = blpConsolePutChar
 		SerialPrintContext.WriteWideCharacter = blpDebugPutChar
 		__builtin_va_start(arguments, format)
-		if (BlpStatus.DebugPort & 2) and (BlpStatus.SerialPort.Flags & 1) {
+		if (BlpStatus.DebugPort & 2) and (BlpStatus.SerialPort.flags & 1) {
 			rtlFormatWideString(serialPrintContext, format as! PWCHAR, arguments)
 
 		}
@@ -46,9 +45,9 @@ fun blDebugPrint(format PUSHORT) {
 /// @since XT 1.0
 fun blpDebugPutChar(character USHORT) {
 	var buffer USHORT[2]
-	???? resolve ArraySubscriptExpr = character
-	???? resolve ArraySubscriptExpr = 0
-	hlComPortPutByte(BlpStatus.SerialPort, ???? resolve ArraySubscriptExpr)
+	buffer[0] = character
+	buffer[1] = 0
+	hlComPortPutByte(BlpStatus.SerialPort, buffer[0])
 	return (9223372036854775808 & 0)
 }
 
@@ -73,55 +72,51 @@ fun blpInitializeDebugConsole() {
 		debugPort = rtlTokenizeWideString(debugConfiguration, ";", lastPort)
 		while debugPort != (0 as! PVOID) {
 			if rtlCompareWideStringInsensitive(debugPort, "COM", 3) == 0 {
-				??? CompoundStmt CompoundAssignOperator
-				while *debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral {
-					??? CompoundStmt CompoundAssignOperator
-					??? CompoundStmt CompoundAssignOperator
-					??? CompoundStmt UnaryOperator
-
+				debugPort += 3
+				while debugPort[0] >= 48/* "0" */ and debugPort[0] <= 57/* "9" */ {
+					portNumber *= 10
+					portNumber += debugPort[0] - 48/* "0" */
+					debugPort++
 				}
 
 				if portNumber == 0 and rtlCompareWideStringInsensitive(debugPort, ":0x", 3) == 0 {
-					??? CompoundStmt CompoundAssignOperator
-					while (*debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral) or (*debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral) or (*debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral) {
-						??? CompoundStmt CompoundAssignOperator
-						if *debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral {
-							??? CompoundStmt CompoundAssignOperator
+					debugPort += 3
+					while (debugPort[0] >= 48/* "0" */ and debugPort[0] <= 57/* "9" */) or (debugPort[0] >= 65/* "A" */ and debugPort[0] <= 70/* "F" */) or (debugPort[0] >= 97/* "a" */ and debugPort[0] <= 102/* "f" */) {
+						portAddress *= 16
+						if debugPort[0] >= 48/* "0" */ and debugPort[0] <= 57/* "9" */ {
+							portAddress += debugPort[0] - 48/* "0" */
 
 						} else {
-							??? CompoundStmt CompoundStmt
-							if *debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral {
-								??? CompoundStmt CompoundAssignOperator
+							[unknown clang ast] CompoundStmt CompoundStmt
+							if debugPort[0] >= 97/* "a" */ and debugPort[0] <= 102/* "f" */ {
+								portAddress += debugPort[0] - 97/* "a" */ + 10
 
 							}
 
 
 						}
 
-						??? CompoundStmt UnaryOperator
-
+						debugPort++
 					}
 
 
 				}
 
-				if *debugPort == ???? resolve CharacterLiteral {
-					??? CompoundStmt UnaryOperator
-					while *debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral {
-						??? CompoundStmt CompoundAssignOperator
-						??? CompoundStmt CompoundAssignOperator
-						??? CompoundStmt UnaryOperator
-
+				if debugPort[0] == 44/* "," */ {
+					debugPort++					while debugPort[0] >= 48/* "0" */ and debugPort[0] <= 57/* "9" */ {
+						baudRate *= 10
+						baudRate += debugPort[0] - 48/* "0" */
+						debugPort++
 					}
 
 
 				}
 
-				??? CompoundStmt CompoundAssignOperator
+				BlpStatus.DebugPort |= 2
 
 			} else {
-				??? CompoundStmt CompoundStmt
-				??? CompoundStmt CompoundStmt
+				[unknown clang ast] CompoundStmt CompoundStmt
+				[unknown clang ast] CompoundStmt CompoundStmt
 
 			}
 
@@ -132,7 +127,7 @@ fun blpInitializeDebugConsole() {
 		if BlpStatus.DebugPort & 2 {
 			status = blpInitializeSerialPort(portNumber, portAddress, baudRate)
 			if status != (9223372036854775808 & 0) {
-				??? CompoundStmt CompoundAssignOperator
+				BlpStatus.DebugPort &= ~2
 				return status
 
 			}
@@ -174,7 +169,7 @@ fun blpInitializeSerialPort(portNumber ULONG, portAddress ULONG, baudRate ULONG)
 
 		}
 
-		portAddress = ???? resolve ArraySubscriptExpr
+		portAddress = blComPortList[portNumber - 1]
 		blConsolePrint("Initializing serial console at port COM%d\n", portNumber)
 
 	} else {

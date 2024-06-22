@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Acquires the rundown protection for given descriptor.
 /// 
 /// @param Descriptor
@@ -10,7 +9,7 @@
 fun exAcquireRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
 	var currentValue ULONG_PTR
 	var newValue ULONG_PTR
-	currentValue = descriptor..Count
+	currentValue = descriptor.count
 	while tRUE {
 		if currentValue & 1 {
 			return fALSE
@@ -18,7 +17,7 @@ fun exAcquireRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
 		}
 
 		newValue = currentValue + 2
-		newValue = rtlAtomicCompareExchangePointer(descriptor..Ptr, newValue as! PVOID, currentValue as! PVOID) as! ULONG_PTR
+		newValue = rtlAtomicCompareExchangePointer(descriptor.ptr, newValue as! PVOID, currentValue as! PVOID) as! ULONG_PTR
 		if newValue == currentValue {
 			return tRUE
 
@@ -39,7 +38,7 @@ fun exAcquireRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
 /// 
 /// @since NT 5.1
 fun exCompleteRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
-	rtlAtomicExchangePointer(descriptor..Ptr, 1 as! PVOID)
+	rtlAtomicExchangePointer(descriptor.ptr, 1 as! PVOID)
 }
 
 /// Initializes the rundown protection descriptor.
@@ -51,7 +50,7 @@ fun exCompleteRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
 /// 
 /// @since NT 5.1
 fun exInitializeRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
-	descriptor..Count = 0
+	descriptor.count = 0
 }
 
 /// Reinitializes the rundown protection structure after it has been completed.
@@ -63,7 +62,7 @@ fun exInitializeRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
 /// 
 /// @since NT 5.1
 fun exReInitializeRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
-	rtlAtomicExchangePointer(descriptor..Ptr, (0 as! PVOID))
+	rtlAtomicExchangePointer(descriptor.ptr, (0 as! PVOID))
 }
 
 /// Releases the rundown protection for given descriptor.
@@ -79,23 +78,21 @@ fun exReleaseRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
 	var newValue ULONG_PTR
 	let waitBlock = new ByValue<PEX_RUNDOWN_WAIT_BLOCK>()
 
-	currentValue = descriptor..Count
+	currentValue = descriptor.count
 	while tRUE {
 		if currentValue & 1 {
 			waitBlock = (currentValue & ~1) as! PEX_RUNDOWN_WAIT_BLOCK
-			if !rtlAtomicDecrement64(waitBlock.Count as! PLONG_PTR) {
-				keSetEvent(waitBlock.WakeEvent, 0, fALSE)
+			if !rtlAtomicDecrement64(waitBlock.count as! PLONG_PTR) {
+				keSetEvent(waitBlock.wakeEvent, 0, fALSE)
 
 			}
 
-			??? CompoundStmt BreakStmt
-
+			break
 		} else {
 			newValue = currentValue - 2
-			newValue = rtlAtomicCompareExchangePointer(descriptor..Ptr, newValue as! PVOID, currentValue as! PVOID) as! ULONG_PTR
+			newValue = rtlAtomicCompareExchangePointer(descriptor.ptr, newValue as! PVOID, currentValue as! PVOID) as! ULONG_PTR
 			if newValue == currentValue {
-				??? CompoundStmt BreakStmt
-
+				break
 			}
 
 			currentValue = newValue

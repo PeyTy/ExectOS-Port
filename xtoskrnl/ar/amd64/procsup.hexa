@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Initializes AMD64 processor specific structures.
 /// 
 /// @return This routine does not return any value.
@@ -38,9 +37,9 @@ fun arInitializeProcessor(processorStructures PVOID) {
 	arpInitializeIdt(processorBlock)
 	arpInitializeTss(processorBlock, kernelBootStack, kernelFaultStack)
 	GdtDescriptor.Base = gdt
-	GdtDescriptor.Limit = (128 * ???? resolve UnaryExprOrTypeTraitExpr) - 1
+	GdtDescriptor.Limit = (128 * sizeOf<Unsigned long long>()) - 1
 	IdtDescriptor.Base = idt
-	IdtDescriptor.Limit = (256 * ???? resolve UnaryExprOrTypeTraitExpr) - 1
+	IdtDescriptor.Limit = (256 * sizeOf<Unsigned long long>()) - 1
 	arLoadGlobalDescriptorTable(GdtDescriptor.Limit)
 	arLoadInterruptDescriptorTable(IdtDescriptor.Limit)
 	arLoadTaskRegister(64 as! UINT)
@@ -70,10 +69,10 @@ fun arSetGdtEntryBase(gdt PKGDTENTRY, selector USHORT, base ULONG_PTR) {
 	let gdtEntry = new ByValue<PKGDTENTRY>()
 
 	gdtEntry = (gdt as! ULONG_PTR + (selector & ~3)) as! PKGDTENTRY
-	gdtEntry.BaseLow = (base & 65535)
-	gdtEntry..Bytes.BaseMiddle = ((base >> 16) & 255)
-	gdtEntry..Bytes.BaseHigh = ((base >> 24) & 255)
-	gdtEntry.BaseUpper = (base >> 32)
+	gdtEntry.baseLow = (base & 65535)
+	gdtEntry.bytes.baseMiddle = ((base >> 16) & 255)
+	gdtEntry.bytes.baseHigh = ((base >> 24) & 255)
+	gdtEntry.baseUpper = (base >> 32)
 }
 
 /// Identifies processor type (vendor, model, stepping) as well as looks for available CPU features and stores them in Processor Control Block (PRCB).
@@ -89,32 +88,32 @@ fun arpIdentifyProcessor() {
 	let cpuSignature = new ByValue<CPUID_SIGNATURE>()
 
 	prcb = keGetCurrentProcessorControlBlock()
-	rtlZeroMemory(cpuRegisters, ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlZeroMemory(cpuRegisters, sizeOf<Unsigned long long>())
 	CpuRegisters.Leaf = cPUID_GET_VENDOR_STRING
 	arCpuId(cpuRegisters)
-	prcb.CpuId.Vendor = CpuRegisters.Ebx
-	*???? resolve ArraySubscriptExpr as! PULONG = CpuRegisters.Ebx
-	*???? resolve ArraySubscriptExpr as! PULONG = CpuRegisters.Edx
-	*???? resolve ArraySubscriptExpr as! PULONG = CpuRegisters.Ecx
-	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-	rtlZeroMemory(cpuRegisters, ???? resolve UnaryExprOrTypeTraitExpr)
+	prcb.cpuId.vendor = CpuRegisters.Ebx
+	prcb.cpuId.vendorName[0] as! PULONG[0] = CpuRegisters.Ebx
+	prcb.cpuId.vendorName[4] as! PULONG[0] = CpuRegisters.Edx
+	prcb.cpuId.vendorName[8] as! PULONG[0] = CpuRegisters.Ecx
+	prcb.cpuId.vendorName[12] = 0/* "\u0000" */
+	rtlZeroMemory(cpuRegisters, sizeOf<Unsigned long long>())
 	CpuRegisters.Leaf = cPUID_GET_CPU_FEATURES
 	arCpuId(cpuRegisters)
-	cpuSignature = *CpuRegisters.Eax as! PCPUID_SIGNATURE
-	prcb.CpuId.Family = CpuSignature.Family
-	prcb.CpuId.Model = CpuSignature.Model
-	prcb.CpuId.Stepping = CpuSignature.Stepping
-	if prcb.CpuId.Vendor == cPU_VENDOR_AMD {
-		if prcb.CpuId.Family >= 15 {
-			prcb.CpuId.Family = prcb.CpuId.Family + CpuSignature.ExtendedFamily
-			prcb.CpuId.Model = prcb.CpuId.Model + (CpuSignature.ExtendedModel << 4)
+	cpuSignature = CpuRegisters.Eax as! PCPUID_SIGNATURE[0]
+	prcb.cpuId.family = CpuSignature.Family
+	prcb.cpuId.model = CpuSignature.Model
+	prcb.cpuId.stepping = CpuSignature.Stepping
+	if prcb.cpuId.vendor == cPU_VENDOR_AMD {
+		if prcb.cpuId.family >= 15 {
+			prcb.cpuId.family = prcb.cpuId.family + CpuSignature.ExtendedFamily
+			prcb.cpuId.model = prcb.cpuId.model + (CpuSignature.ExtendedModel << 4)
 
 		}
 
 
 	} else {
-		??? CompoundStmt CompoundStmt
-		??? CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
 
 	}
 
@@ -129,16 +128,16 @@ fun arpIdentifyProcessor() {
 /// 
 /// @since XT 1.0
 fun arpInitializeGdt(processorBlock PKPROCESSOR_BLOCK) {
-	arpSetGdtEntry(processorBlock...GdtBase, 0, 0, 0, 0, 0, 1)
-	arpSetGdtEntry(processorBlock...GdtBase, 16, 0, 0, (16 | 8 | 2), 0, 1)
-	arpSetGdtEntry(processorBlock...GdtBase, 24, 0, 0, (16 | 2), 0, 1)
-	arpSetGdtEntry(processorBlock...GdtBase, 32, 0, 4294967295, (16 | 8 | 2), 3, 2)
-	arpSetGdtEntry(processorBlock...GdtBase, 40, 0, 4294967295, (16 | 2), 3, 2)
-	arpSetGdtEntry(processorBlock...GdtBase, 48, 0, 0, (16 | 8 | 2), 3, 1)
-	arpSetGdtEntry(processorBlock...GdtBase, 64, processorBlock...TssBase as! ULONG_PTR, ???? resolve UnaryExprOrTypeTraitExpr, 9, 0, 0)
-	arpSetGdtEntry(processorBlock...GdtBase, 80, 0, 4095, (16 | 2), 3, 2)
-	arpSetGdtEntry(processorBlock...GdtBase, 96, 0, 4294967295, (16 | 8 | 2), 0, 0)
-	arpSetGdtEntry(processorBlock...GdtBase, 112, processorBlock...GdtBase as! ULONG_PTR, (128 * ???? resolve UnaryExprOrTypeTraitExpr) - 1, (16 | 2), 0, 0)
+	arpSetGdtEntry(processorBlock.gdtBase, 0, 0, 0, 0, 0, 1)
+	arpSetGdtEntry(processorBlock.gdtBase, 16, 0, 0, (16 | 8 | 2), 0, 1)
+	arpSetGdtEntry(processorBlock.gdtBase, 24, 0, 0, (16 | 2), 0, 1)
+	arpSetGdtEntry(processorBlock.gdtBase, 32, 0, 4294967295, (16 | 8 | 2), 3, 2)
+	arpSetGdtEntry(processorBlock.gdtBase, 40, 0, 4294967295, (16 | 2), 3, 2)
+	arpSetGdtEntry(processorBlock.gdtBase, 48, 0, 0, (16 | 8 | 2), 3, 1)
+	arpSetGdtEntry(processorBlock.gdtBase, 64, processorBlock.tssBase as! ULONG_PTR, sizeOf<Unsigned long long>(), 9, 0, 0)
+	arpSetGdtEntry(processorBlock.gdtBase, 80, 0, 4095, (16 | 2), 3, 2)
+	arpSetGdtEntry(processorBlock.gdtBase, 96, 0, 4294967295, (16 | 8 | 2), 0, 0)
+	arpSetGdtEntry(processorBlock.gdtBase, 112, processorBlock.gdtBase as! ULONG_PTR, (128 * sizeOf<Unsigned long long>()) - 1, (16 | 2), 0, 0)
 }
 
 /// Initializes the kernel's Interrupt Descriptor Table (IDT).
@@ -151,31 +150,31 @@ fun arpInitializeGdt(processorBlock PKPROCESSOR_BLOCK) {
 /// @since XT 1.0
 fun arpInitializeIdt(processorBlock PKPROCESSOR_BLOCK) {
 	var vector UINT
-	??? CompoundStmt ForStmt
-	arpSetIdtGate(processorBlock.IdtBase, 0, arpTrap0x00, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 1, arpTrap0x01, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 2, arpTrap0x02, 16, 1, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 3, arpTrap0x03, 16, 0, 3)
-	arpSetIdtGate(processorBlock.IdtBase, 4, arpTrap0x04, 16, 0, 3)
-	arpSetIdtGate(processorBlock.IdtBase, 5, arpTrap0x05, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 6, arpTrap0x06, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 7, arpTrap0x07, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 8, arpTrap0x08, 16, 1, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 9, arpTrap0x09, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 10, arpTrap0x0A, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 11, arpTrap0x0B, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 12, arpTrap0x0C, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 13, arpTrap0x0D, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 14, arpTrap0x0E, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 16, arpTrap0x10, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 17, arpTrap0x11, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 18, arpTrap0x12, 16, 2, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 19, arpTrap0x13, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 31, arpTrap0x1F, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 44, arpTrap0x2C, 16, 0, 3)
-	arpSetIdtGate(processorBlock.IdtBase, 45, arpTrap0x2D, 16, 0, 3)
-	arpSetIdtGate(processorBlock.IdtBase, 47, arpTrap0x2F, 16, 0, 0)
-	arpSetIdtGate(processorBlock.IdtBase, 225, arpTrap0xE1, 16, 0, 0)
+	[unknown clang ast] CompoundStmt ForStmt
+	arpSetIdtGate(processorBlock.idtBase, 0, arpTrap0x00, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 1, arpTrap0x01, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 2, arpTrap0x02, 16, 1, 0)
+	arpSetIdtGate(processorBlock.idtBase, 3, arpTrap0x03, 16, 0, 3)
+	arpSetIdtGate(processorBlock.idtBase, 4, arpTrap0x04, 16, 0, 3)
+	arpSetIdtGate(processorBlock.idtBase, 5, arpTrap0x05, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 6, arpTrap0x06, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 7, arpTrap0x07, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 8, arpTrap0x08, 16, 1, 0)
+	arpSetIdtGate(processorBlock.idtBase, 9, arpTrap0x09, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 10, arpTrap0x0A, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 11, arpTrap0x0B, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 12, arpTrap0x0C, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 13, arpTrap0x0D, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 14, arpTrap0x0E, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 16, arpTrap0x10, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 17, arpTrap0x11, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 18, arpTrap0x12, 16, 2, 0)
+	arpSetIdtGate(processorBlock.idtBase, 19, arpTrap0x13, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 31, arpTrap0x1F, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 44, arpTrap0x2C, 16, 0, 3)
+	arpSetIdtGate(processorBlock.idtBase, 45, arpTrap0x2D, 16, 0, 3)
+	arpSetIdtGate(processorBlock.idtBase, 47, arpTrap0x2F, 16, 0, 0)
+	arpSetIdtGate(processorBlock.idtBase, 225, arpTrap0xE1, 16, 0, 0)
 }
 
 /// Initializes processor block.
@@ -196,24 +195,24 @@ fun arpInitializeIdt(processorBlock PKPROCESSOR_BLOCK) {
 /// 
 /// @since XT 1.0
 fun arpInitializeProcessorBlock(processorBlock PKPROCESSOR_BLOCK, gdt PKGDTENTRY, idt PKIDTENTRY, tss PKTSS, dpcStack PVOID) {
-	processorBlock...Self = processorBlock
-	processorBlock...CurrentPrcb = processorBlock.Prcb
-	processorBlock...GdtBase = gdt as! PVOID
-	processorBlock.IdtBase = idt
-	processorBlock...TssBase = tss
-	processorBlock.Prcb.RspBase = tss.Rsp0
-	processorBlock.Prcb.DpcStack = dpcStack
-	processorBlock.Prcb.CpuNumber = processorBlock.CpuNumber
-	processorBlock.Prcb.SetMember = 1 << processorBlock.CpuNumber
-	processorBlock.Prcb.MultiThreadProcessorSet = 1 << processorBlock.CpuNumber
-	processorBlock.Prcb.ProcessorState.SpecialRegisters.KernelDr6 = 0
-	processorBlock.Prcb.ProcessorState.SpecialRegisters.KernelDr7 = 0
-	processorBlock.Prcb.CurrentThread = KeInitialThread.ThreadControlBlock
-	processorBlock.Prcb.CurrentThread..ApcState.Process = KeInitialProcess.ProcessControlBlock
-	processorBlock.Prcb.IdleThread = KeInitialThread.ThreadControlBlock
-	processorBlock.Prcb.NextThread = (0 as! PVOID)
-	processorBlock.Prcb.MxCsr = 8064
-	processorBlock.RunLevel = 0
+	processorBlock.self = processorBlock
+	processorBlock.currentPrcb = processorBlock.prcb
+	processorBlock.gdtBase = gdt as! PVOID
+	processorBlock.idtBase = idt
+	processorBlock.tssBase = tss
+	processorBlock.prcb.rspBase = tss.rsp0
+	processorBlock.prcb.dpcStack = dpcStack
+	processorBlock.prcb.cpuNumber = processorBlock.cpuNumber
+	processorBlock.prcb.setMember = 1 << processorBlock.cpuNumber
+	processorBlock.prcb.multiThreadProcessorSet = 1 << processorBlock.cpuNumber
+	processorBlock.prcb.processorState.specialRegisters.kernelDr6 = 0
+	processorBlock.prcb.processorState.specialRegisters.kernelDr7 = 0
+	processorBlock.prcb.currentThread = KeInitialThread.ThreadControlBlock
+	processorBlock.prcb.currentThread.apcState.process = KeInitialProcess.ProcessControlBlock
+	processorBlock.prcb.idleThread = KeInitialThread.ThreadControlBlock
+	processorBlock.prcb.nextThread = (0 as! PVOID)
+	processorBlock.prcb.mxCsr = 8064
+	processorBlock.runLevel = 0
 }
 
 /// Initializes processor registers and other boot structures.
@@ -269,14 +268,14 @@ fun arpInitializeProcessorRegisters() {
 fun arpInitializeProcessorStructures(processorStructures PVOID, gdt PKGDTENTRY *, tss PKTSS *, processorBlock PKPROCESSOR_BLOCK *, kernelBootStack PVOID *, kernelFaultStack PVOID *) {
 	var address UINT_PTR
 	address = (((processorStructures as! UINT_PTR) + (4096 - 1)) & ~((4096) - 1)) + 32768
-	*kernelBootStack = address as! PVOID
-	??? CompoundStmt CompoundAssignOperator
-	*kernelFaultStack = address as! PVOID
-	*gdt = address as! PVOID
-	??? CompoundStmt CompoundAssignOperator
-	*processorBlock = address as! PVOID
-	??? CompoundStmt CompoundAssignOperator
-	*tss = address as! PVOID
+	kernelBootStack[0] = address as! PVOID
+	address += 32768
+	kernelFaultStack[0] = address as! PVOID
+	gdt[0] = address as! PVOID
+	address += sizeOf<Unsigned long long>()
+	processorBlock[0] = address as! PVOID
+	address += sizeOf<Unsigned long long>()
+	tss[0] = address as! PVOID
 }
 
 /// Initializes segment registers.
@@ -305,11 +304,11 @@ fun arpInitializeSegments() {
 /// 
 /// @since XT 1.0
 fun arpInitializeTss(processorBlock PKPROCESSOR_BLOCK, kernelBootStack PVOID, kernelFaultStack PVOID) {
-	rtlZeroMemory(processorBlock...TssBase, ???? resolve UnaryExprOrTypeTraitExpr)
-	processorBlock...TssBase.IoMapBase = ???? resolve UnaryExprOrTypeTraitExpr
-	processorBlock...TssBase.Rsp0 = kernelBootStack as! ULONG_PTR
-	???? resolve ArraySubscriptExpr = kernelFaultStack as! ULONG_PTR
-	???? resolve ArraySubscriptExpr = kernelFaultStack as! ULONG_PTR
+	rtlZeroMemory(processorBlock.tssBase, sizeOf<Unsigned long long>())
+	processorBlock.tssBase.ioMapBase = sizeOf<Unsigned long long>()
+	processorBlock.tssBase.rsp0 = kernelBootStack as! ULONG_PTR
+	processorBlock.tssBase.ist[1] = kernelFaultStack as! ULONG_PTR
+	processorBlock.tssBase.ist[2] = kernelFaultStack as! ULONG_PTR
 }
 
 /// Fills in an AMD64 GDT entry.
@@ -347,25 +346,25 @@ fun arpSetGdtEntry(gdt PKGDTENTRY, selector USHORT, base ULONG_PTR, limit ULONG,
 
 	} else {
 		granularity = 1
-		??? CompoundStmt CompoundAssignOperator
+		limit >>= 12
 
 	}
 
 	gdtEntry = (gdt as! ULONG_PTR + (selector & ~3)) as! PKGDTENTRY
-	gdtEntry.BaseLow = (base & 65535)
-	gdtEntry..Bytes.BaseMiddle = ((base >> 16) & 255)
-	gdtEntry..Bytes.BaseHigh = ((base >> 24) & 255)
-	gdtEntry.BaseUpper = (base >> 32)
-	gdtEntry.LimitLow = (limit & 65535)
-	gdtEntry..Bits.LimitHigh = ((limit >> 16) & 15)
-	gdtEntry..Bits.DefaultBig = !!(segmentMode & 2)
-	gdtEntry..Bits.Dpl = (dpl & 3)
-	gdtEntry..Bits.Granularity = granularity
-	gdtEntry..Bits.LongMode = !!(segmentMode & 1)
-	gdtEntry..Bits.Present = (type != 0)
-	gdtEntry..Bits.System = 0
-	gdtEntry..Bits.Type = (type & 31)
-	gdtEntry.MustBeZero = 0
+	gdtEntry.baseLow = (base & 65535)
+	gdtEntry.bytes.baseMiddle = ((base >> 16) & 255)
+	gdtEntry.bytes.baseHigh = ((base >> 24) & 255)
+	gdtEntry.baseUpper = (base >> 32)
+	gdtEntry.limitLow = (limit & 65535)
+	gdtEntry.bits.limitHigh = ((limit >> 16) & 15)
+	gdtEntry.bits.defaultBig = !!(segmentMode & 2)
+	gdtEntry.bits.dpl = (dpl & 3)
+	gdtEntry.bits.granularity = granularity
+	gdtEntry.bits.longMode = !!(segmentMode & 1)
+	gdtEntry.bits.present = (type != 0)
+	gdtEntry.bits.system = 0
+	gdtEntry.bits.type = (type & 31)
+	gdtEntry.mustBeZero = 0
 }
 
 /// Fills in a call, interrupt, task or trap gate entry.
@@ -392,12 +391,12 @@ fun arpSetGdtEntry(gdt PKGDTENTRY, selector USHORT, base ULONG_PTR, limit ULONG,
 /// 
 /// @since XT 1.0
 fun arpSetIdtGate(idt PKIDTENTRY, vector USHORT, handler PVOID, selector USHORT, ist USHORT, access USHORT) {
-	???? resolve ArraySubscriptExpr.OffsetLow = (handler as! ULONG_PTR & 65535)
-	???? resolve ArraySubscriptExpr.OffsetMiddle = ((handler as! ULONG_PTR >> 16) & 65535)
-	???? resolve ArraySubscriptExpr.OffsetHigh = handler as! ULONG_PTR >> 32
-	???? resolve ArraySubscriptExpr.Dpl = access
-	???? resolve ArraySubscriptExpr.IstIndex = ist
-	???? resolve ArraySubscriptExpr.Present = 1
-	???? resolve ArraySubscriptExpr.Selector = selector
-	???? resolve ArraySubscriptExpr.Type = 14
+	idt[vector].offsetLow = (handler as! ULONG_PTR & 65535)
+	idt[vector].offsetMiddle = ((handler as! ULONG_PTR >> 16) & 65535)
+	idt[vector].offsetHigh = handler as! ULONG_PTR >> 32
+	idt[vector].dpl = access
+	idt[vector].istIndex = ist
+	idt[vector].present = 1
+	idt[vector].selector = selector
+	idt[vector].type = 14
 }

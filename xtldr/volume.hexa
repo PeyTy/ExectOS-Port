@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// This routine closes an EFI volume handle.
 /// 
 /// @param VolumeHandle
@@ -11,7 +10,7 @@ fun blCloseVolume(volumeHandle PEFI_HANDLE) {
 	let lIPGuid = new ByValue<EFI_GUID>()
 
 	if volumeHandle != (0 as! PVOID) {
-		return efiSystemTable.BootServices.CloseProtocol(volumeHandle, lIPGuid, efiImageHandle, (0 as! PVOID))
+		return efiSystemTable.bootServices.closeProtocol(volumeHandle, lIPGuid, efiImageHandle, (0 as! PVOID))
 
 	}
 
@@ -63,51 +62,50 @@ fun blEnumerateBlockDevices() {
 
 	listEntry = BlockDevices.Flink
 	while listEntry != blockDevices {
-		blockDeviceData = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE_DATA *)
-		status = blpFindLastBlockDeviceNode(blockDeviceData.DevicePath, lastNode)
+		blockDeviceData = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE_DATA *)
+		status = blpFindLastBlockDeviceNode(blockDeviceData.devicePath, lastNode)
 		if status != (9223372036854775808 & 0) {
 			blDebugPrint("WARNING: Block device last node not found\n")
-			listEntry = listEntry.Flink
-			??? CompoundStmt ContinueStmt
-
+			listEntry = listEntry.flink
+			continue
 		}
 
 		driveType = 0
-		if lastNode.Type == 2 and lastNode.SubType == 1 {
+		if lastNode.type == 2 and lastNode.subType == 1 {
 			acpiDevice = lastNode as! PEFI_ACPI_HID_DEVICE_PATH
-			if acpiDevice.HID == 100942288 or acpiDevice.HID == 117457360 or acpiDevice.HID == 117522897 {
-				media = blockDeviceData.BlockIo.Media
+			if acpiDevice.hID == 100942288 or acpiDevice.hID == 117457360 or acpiDevice.hID == 117522897 {
+				media = blockDeviceData.blockIo.media
 				driveType = 2
 				driveNumber = ++fDCount
 				partitionNumber = 0
-				blDebugPrint("Found Floppy Disk (DiskNumber: %lu, MediaPresent: %u, RO: %u)\n", driveNumber, media.MediaPresent, media.ReadOnly)
+				blDebugPrint("Found Floppy Disk (DiskNumber: %lu, MediaPresent: %u, RO: %u)\n", driveNumber, media.mediaPresent, media.readOnly)
 
 			}
 
 
 		} else {
-			??? CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
 
 		}
 
 		if driveType != 0 {
-			status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, blockDevice as! PVOID *)
+			status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), blockDevice as! PVOID *)
 			if status != (9223372036854775808 & 0) {
 				blDebugPrint("ERROR: Failed to allocate memory pool for block device (Status Code: 0x%zX)\n", status)
 				return (9223372036854775808 | 9)
 
 			}
 
-			blockDevice.DevicePath = blpDuplicateDevicePath(blockDeviceData.DevicePath)
-			blockDevice.DriveType = driveType
-			blockDevice.DriveNumber = driveNumber
-			blockDevice.PartitionNumber = partitionNumber
-			blockDevice.PartitionGuid = partitionGuid
-			rtlInsertTailList(efiBlockDevices, blockDevice.ListEntry)
+			blockDevice.devicePath = blpDuplicateDevicePath(blockDeviceData.devicePath)
+			blockDevice.driveType = driveType
+			blockDevice.driveNumber = driveNumber
+			blockDevice.partitionNumber = partitionNumber
+			blockDevice.partitionGuid = partitionGuid
+			rtlInsertTailList(efiBlockDevices, blockDevice.listEntry)
 
 		}
 
-		listEntry = listEntry.Flink
+		listEntry = listEntry.flink
 
 	}
 
@@ -140,40 +138,39 @@ fun blFindVolumeDevicePath(fsHandle PEFI_DEVICE_PATH_PROTOCOL, fileSystemPath Co
 
 	devicePathHandle = fsHandle
 	while tRUE {
-		if *devicePathHandle.Length as! PUSHORT == 0 {
+		if devicePathHandle.length as! PUSHORT[0] == 0 {
 			return (9223372036854775808 | 14)
 
 		}
 
-		if devicePathHandle.Type == 127 {
-			??? CompoundStmt BreakStmt
-
+		if devicePathHandle.type == 127 {
+			break
 		}
 
-		??? CompoundStmt CompoundAssignOperator
-		devicePathHandle = (devicePathHandle as! PUCHAR + *devicePathHandle.Length as! PUSHORT) as! PEFI_DEVICE_PATH_PROTOCOL
+		devicePathLength += devicePathHandle.length as! PUSHORT[0]
+		devicePathHandle = (devicePathHandle as! PUCHAR + devicePathHandle.length as! PUSHORT[0]) as! PEFI_DEVICE_PATH_PROTOCOL
 
 	}
 
-	fsPathLength = rtlWideStringLength(fileSystemPath, 0) * ???? resolve UnaryExprOrTypeTraitExpr
-	status = blAllocateMemoryPool(fsPathLength + devicePathLength + ???? resolve UnaryExprOrTypeTraitExpr, devicePath as! PVOID *)
+	fsPathLength = rtlWideStringLength(fileSystemPath, 0) * sizeOf<Unsigned long long>()
+	status = blAllocateMemoryPool(fsPathLength + devicePathLength + sizeOf<Unsigned long long>(), devicePath as! PVOID *)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	rtlCopyMemory(*devicePath, fsHandle, devicePathLength)
-	filePath = (*devicePath as! PUCHAR + devicePathLength) as! PEFI_FILEPATH_DEVICE_PATH
-	filePath.Header.Type = 4
-	filePath.Header.SubType = 4
-	???? resolve ArraySubscriptExpr = fsPathLength as! UCHAR + ???? resolve OffsetOfExpr + ???? resolve UnaryExprOrTypeTraitExpr
-	???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr >> 8
-	rtlCopyMemory(filePath.PathName, fileSystemPath, fsPathLength + ???? resolve UnaryExprOrTypeTraitExpr)
-	endDevicePath = ???? resolve ArraySubscriptExpr as! PEFI_DEVICE_PATH_PROTOCOL
-	endDevicePath.Type = 127
-	endDevicePath.SubType = 255
-	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
-	???? resolve ArraySubscriptExpr = 0
+	rtlCopyMemory(devicePath[0], fsHandle, devicePathLength)
+	filePath = (devicePath[0] as! PUCHAR + devicePathLength) as! PEFI_FILEPATH_DEVICE_PATH
+	filePath.header.type = 4
+	filePath.header.subType = 4
+	filePath.header.length[0] = fsPathLength as! UCHAR + [unknown clang ast] resolve OffsetOfExpr + sizeOf<Unsigned long long>()
+	filePath.header.length[1] = filePath.header.length[0] >> 8
+	rtlCopyMemory(filePath.pathName, fileSystemPath, fsPathLength + sizeOf<Unsigned long long>())
+	endDevicePath = filePath.pathName[(fsPathLength / sizeOf<Unsigned long long>()) + 1] as! PEFI_DEVICE_PATH_PROTOCOL
+	endDevicePath.type = 127
+	endDevicePath.subType = 255
+	endDevicePath.length[0] = sizeOf<Unsigned long long>()
+	endDevicePath.length[1] = 0
 	return (9223372036854775808 & 0)
 }
 
@@ -193,15 +190,15 @@ fun blGetEfiPath(systemPath PWCHAR, efiPath PWCHAR *) {
 	var pathLength SIZE_T
 	var status EFI_STATUS
 	pathLength = rtlWideStringLength(systemPath, 0)
-	status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (pathLength + 1), efiPath as! PVOID *)
+	status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (pathLength + 1), efiPath as! PVOID *)
 	if status != (9223372036854775808 & 0) {
 		blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
 		return (9223372036854775808 | 9)
 
 	}
 
-	rtlCopyMemory(*efiPath, systemPath, ???? resolve UnaryExprOrTypeTraitExpr * (pathLength + 1))
-	??? CompoundStmt ForStmt
+	rtlCopyMemory(efiPath[0], systemPath, sizeOf<Unsigned long long>() * (pathLength + 1))
+	[unknown clang ast] CompoundStmt ForStmt
 	return (9223372036854775808 & 0)
 }
 
@@ -230,28 +227,27 @@ fun blGetVolumeDevicePath(systemPath PWCHAR, devicePath PEFI_DEVICE_PATH_PROTOCO
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
 	var status EFI_STATUS
-	*devicePath = (0 as! PVOID)
+	devicePath[0] = (0 as! PVOID)
 	volume = systemPath
-	while *volume != ???? resolve CharacterLiteral and *volume != ???? resolve CharacterLiteral and *volume != ???? resolve CharacterLiteral {
-		??? CompoundStmt UnaryOperator
-
+	while volume[0] != 47/* "/" */ and volume[0] != 92/* "\\" */ and volume[0] != 0/* "\u0000" */ {
+		volume++
 	}
 
 	pathLength = volume - systemPath
 	if pathLength == 0 {
-		*path = systemPath
+		path[0] = systemPath
 		return (9223372036854775808 | 14)
 
 	}
 
-	if ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral {
+	if systemPath[0] == 123/* "{" */ {
 		if pathLength == 38 {
 			blDebugPrint("WARNING: EFI/GPT GUID in system path is not supported\n")
 			return (9223372036854775808 | 3)
 
 		} else {
-			??? CompoundStmt CompoundStmt
-			??? CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
 
 		}
 
@@ -269,18 +265,17 @@ fun blGetVolumeDevicePath(systemPath PWCHAR, devicePath PEFI_DEVICE_PATH_PROTOCO
 
 	listEntry = EfiBlockDevices.Flink
 	while listEntry != efiBlockDevices {
-		device = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE *)
-		if (device.DriveType == driveType and device.DriveNumber == driveNumber and device.PartitionNumber == partNumber) {
-			*devicePath = device.DevicePath
-			??? CompoundStmt BreakStmt
-
+		device = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE *)
+		if (device.driveType == driveType and device.driveNumber == driveNumber and device.partitionNumber == partNumber) {
+			devicePath[0] = device.devicePath
+			break
 		}
 
-		listEntry = listEntry.Flink
+		listEntry = listEntry.flink
 
 	}
 
-	if *devicePath == (0 as! PVOID) {
+	if devicePath[0] == (0 as! PVOID) {
 		blDebugPrint("ERROR: Volume (DriveType: %u, DriveNumber: %lu, PartNumber: %lu) not found\n", driveType, driveNumber, partNumber)
 		return (9223372036854775808 | 14)
 
@@ -314,7 +309,7 @@ fun blOpenVolume(devicePath PEFI_DEVICE_PATH_PROTOCOL, diskHandle PEFI_HANDLE, f
 
 	var status EFI_STATUS
 	if devicePath != (0 as! PVOID) {
-		status = efiSystemTable.BootServices.LocateDevicePath(sFSGuid, devicePath, diskHandle)
+		status = efiSystemTable.bootServices.locateDevicePath(sFSGuid, devicePath, diskHandle)
 		if status != (9223372036854775808 & 0) {
 			return status
 
@@ -322,26 +317,26 @@ fun blOpenVolume(devicePath PEFI_DEVICE_PATH_PROTOCOL, diskHandle PEFI_HANDLE, f
 
 
 	} else {
-		status = efiSystemTable.BootServices.OpenProtocol(efiImageHandle, lIPGuid, imageProtocol as! PVOID *, efiImageHandle, (0 as! PVOID), 1)
+		status = efiSystemTable.bootServices.openProtocol(efiImageHandle, lIPGuid, imageProtocol as! PVOID *, efiImageHandle, (0 as! PVOID), 1)
 		if status != (9223372036854775808 & 0) {
 			return status
 
 		}
 
-		*diskHandle = imageProtocol.DeviceHandle
+		diskHandle[0] = imageProtocol.deviceHandle
 
 	}
 
-	status = efiSystemTable.BootServices.OpenProtocol(*diskHandle, sFSGuid, fileSystemProtocol as! PVOID *, efiImageHandle, (0 as! PVOID), 1)
+	status = efiSystemTable.bootServices.openProtocol(diskHandle[0], sFSGuid, fileSystemProtocol as! PVOID *, efiImageHandle, (0 as! PVOID), 1)
 	if status != (9223372036854775808 & 0) {
-		blCloseVolume(*diskHandle)
+		blCloseVolume(diskHandle[0])
 		return status
 
 	}
 
-	status = fileSystemProtocol.OpenVolume(fileSystemProtocol, fsHandle)
+	status = fileSystemProtocol.openVolume(fileSystemProtocol, fsHandle)
 	if status != (9223372036854775808 & 0) {
-		blCloseVolume(*diskHandle)
+		blCloseVolume(diskHandle[0])
 		return status
 
 	}
@@ -377,64 +372,64 @@ fun blReadFile(dirHandle PEFI_FILE_HANDLE, fileName Const PWCHAR, fileData PVOID
 	var status EFI_STATUS
 	var readSize UINT_PTR
 	var pages SIZE_T
-	status = dirHandle.Open(dirHandle, fileHandle, fileName, 1, 1 | 2 | 4)
+	status = dirHandle.open(dirHandle, fileHandle, fileName, 1, 1 | 2 | 4)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	readSize = ???? resolve UnaryExprOrTypeTraitExpr + 32
+	readSize = sizeOf<Unsigned long long>() + 32
 	status = blAllocateMemoryPool(readSize, fileInfo as! PVOID *)
 	if status != (9223372036854775808 & 0) {
-		fileHandle.Close(fileHandle)
+		fileHandle.close(fileHandle)
 		return status
 
 	}
 
-	fileHandle.GetInfo(fileHandle, fileInfoGuid, readSize, fileInfo)
+	fileHandle.getInfo(fileHandle, fileInfoGuid, readSize, fileInfo)
 	if status == (9223372036854775808 | 5) {
 		blFreeMemoryPool(fileInfo)
 		status = blAllocateMemoryPool(readSize, fileInfo as! PVOID *)
 		if status != (9223372036854775808 & 0) {
-			fileHandle.Close(fileHandle)
+			fileHandle.close(fileHandle)
 			return status
 
 		}
 
-		status = fileHandle.GetInfo(fileHandle, fileInfoGuid, readSize, fileInfo)
+		status = fileHandle.getInfo(fileHandle, fileInfoGuid, readSize, fileInfo)
 
 	}
 
 	if status != (9223372036854775808 & 0) {
-		fileHandle.Close(fileHandle)
+		fileHandle.close(fileHandle)
 		blFreeMemoryPool(fileInfo)
 		return status
 
 	}
 
-	*fileSize = fileInfo.FileSize
-	pages = (((fileInfo.FileSize) >> 12) + (???? resolve ConditionalOperator))
+	fileSize[0] = fileInfo.fileSize
+	pages = (((fileInfo.fileSize) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
 	status = blAllocateMemoryPages(pages, address)
 	if status != (9223372036854775808 & 0) {
-		fileHandle.Close(fileHandle)
+		fileHandle.close(fileHandle)
 		blFreeMemoryPool(fileInfo)
 		return status
 
 	}
 
 	readSize = pages * 4096
-	*fileData = address as! UINT_PTR as! PCHAR
-	rtlZeroMemory(*fileData, readSize)
-	status = fileHandle.Read(fileHandle, readSize, *fileData)
+	fileData[0] = address as! UINT_PTR as! PCHAR
+	rtlZeroMemory(fileData[0], readSize)
+	status = fileHandle.read(fileHandle, readSize, fileData[0])
 	if status != (9223372036854775808 & 0) {
-		fileHandle.Close(fileHandle)
+		fileHandle.close(fileHandle)
 		blFreeMemoryPool(fileInfo)
-		blFreeMemoryPages(pages, *fileData as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
+		blFreeMemoryPages(pages, fileData[0] as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
 		return status
 
 	}
 
-	fileHandle.Close(fileHandle)
+	fileHandle.close(fileHandle)
 	blFreeMemoryPool(fileInfo)
 	return (9223372036854775808 & 0)
 }
@@ -469,7 +464,7 @@ fun blpDiscoverEfiBlockDevices(blockDevices PLIST_ENTRY) {
 
 	}
 
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	blFreeMemoryPool(handles)
 	return (9223372036854775808 & 0)
 }
@@ -498,29 +493,29 @@ fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, 
 	var arcPath PWCHAR
 	var localArcName PWCHAR
 	var arcLength ULONG = 0
-	*driveType = 0
-	*driveNumber = 0
-	*partNumber = 0
+	driveType[0] = 0
+	driveNumber[0] = 0
+	partNumber[0] = 0
 	if rtlCompareWideStringInsensitive(systemPath, "ramdisk(0)", 0) == 0 {
 		arcLength = 10
-		*driveType = 4
+		driveType[0] = 4
 
 	} else {
-		??? CompoundStmt CompoundStmt
-		??? CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
 
 	}
 
 	if path {
-		*path = systemPath + arcLength
+		path[0] = systemPath + arcLength
 
 	}
 
 	if arcName {
-		blAllocateMemoryPool(arcLength * ???? resolve UnaryExprOrTypeTraitExpr, localArcName as! PVOID *)
-		rtlCopyMemory(localArcName, systemPath, arcLength * ???? resolve UnaryExprOrTypeTraitExpr)
-		???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-		*arcName = localArcName
+		blAllocateMemoryPool(arcLength * sizeOf<Unsigned long long>(), localArcName as! PVOID *)
+		rtlCopyMemory(localArcName, systemPath, arcLength * sizeOf<Unsigned long long>())
+		localArcName[arcLength] = 0/* "\u0000" */
+		arcName[0] = localArcName
 
 	}
 
@@ -544,13 +539,12 @@ fun blpDuplicateDevicePath(devicePath PEFI_DEVICE_PATH_PROTOCOL) {
 	var length UINT = 0
 	devicePathNode = devicePath
 	while tRUE {
-		??? CompoundStmt CompoundAssignOperator
-		if devicePathNode.Type == 127 {
-			??? CompoundStmt BreakStmt
-
+		length += devicePath.length as! PUSHORT[0]
+		if devicePathNode.type == 127 {
+			break
 		}
 
-		devicePathNode = (devicePathNode as! PUCHAR + *devicePath.Length as! PUSHORT) as! PEFI_DEVICE_PATH_PROTOCOL
+		devicePathNode = (devicePathNode as! PUCHAR + devicePath.length as! PUSHORT[0]) as! PEFI_DEVICE_PATH_PROTOCOL
 
 	}
 
@@ -586,20 +580,20 @@ fun blpFindLastBlockDeviceNode(devicePath PEFI_DEVICE_PATH_PROTOCOL, lastNode PE
 
 	let nextNode = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
 
-	if devicePath.Type == 127 {
+	if devicePath.type == 127 {
 		lastNode = (0 as! PVOID)
 		return (9223372036854775808 | 2)
 
 	}
 
 	endNode = devicePath
-	while endNode.Type != 127 {
+	while endNode.type != 127 {
 		nextNode = endNode
-		endNode = (endNode as! PUCHAR + *endNode.Length as! PUSHORT) as! PEFI_DEVICE_PATH_PROTOCOL
+		endNode = (endNode as! PUCHAR + endNode.length as! PUSHORT[0]) as! PEFI_DEVICE_PATH_PROTOCOL
 
 	}
 
-	*lastNode = nextNode
+	lastNode[0] = nextNode
 	return (9223372036854775808 & 0)
 }
 
@@ -628,23 +622,22 @@ fun blpFindParentBlockDevice(blockDevices PLIST_ENTRY, childNode PEFI_BLOCK_DEVI
 	var parentLength UINT
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
-	listEntry = blockDevices.Flink
+	listEntry = blockDevices.flink
 	while listEntry != blockDevices {
-		blockDeviceData = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE_DATA *)
-		childDevicePath = childNode.DevicePath
-		parentDevicePath = blockDeviceData.DevicePath
+		blockDeviceData = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE_DATA *)
+		childDevicePath = childNode.devicePath
+		parentDevicePath = blockDeviceData.devicePath
 		while tRUE {
-			if parentDevicePath.Type == 127 {
+			if parentDevicePath.type == 127 {
 				parentNode = blockDeviceData
 				return tRUE
 
 			}
 
-			childLength = *childDevicePath.Length as! PUSHORT
-			parentLength = *parentDevicePath.Length as! PUSHORT
+			childLength = childDevicePath.length as! PUSHORT[0]
+			parentLength = parentDevicePath.length as! PUSHORT[0]
 			if childLength != parentLength {
-				??? CompoundStmt BreakStmt
-
+				break
 			}
 
 			childDevicePath = (childDevicePath as! PUCHAR + childLength) as! PEFI_DEVICE_PATH_PROTOCOL
@@ -652,7 +645,7 @@ fun blpFindParentBlockDevice(blockDevices PLIST_ENTRY, childNode PEFI_BLOCK_DEVI
 
 		}
 
-		listEntry = listEntry.Flink
+		listEntry = listEntry.flink
 
 	}
 

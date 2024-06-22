@@ -1,4 +1,4 @@
-// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+var __UNIQUE_ID_author0
 
 var __UNIQUE_ID_description1
 
@@ -21,16 +21,16 @@ var __UNIQUE_ID_version3
 fun peGetEntryPoint(imagePointer PVOID, entryPoint PVOID *) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.PeHeader {
+	if !image or !image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
 
-	if image.PeHeader..OptionalHeader32.Magic == 523 {
-		*entryPoint = image.VirtualAddress as! PUINT8 + image.PeHeader..OptionalHeader64.AddressOfEntryPoint
+	if image.peHeader.optionalHeader32.magic == 523 {
+		entryPoint[0] = image.virtualAddress as! PUINT8 + image.peHeader.optionalHeader64.addressOfEntryPoint
 
 	} else {
-		*entryPoint = image.VirtualAddress as! PUINT8 + image.PeHeader..OptionalHeader32.AddressOfEntryPoint
+		entryPoint[0] = image.virtualAddress as! PUINT8 + image.peHeader.optionalHeader32.addressOfEntryPoint
 
 	}
 
@@ -52,12 +52,12 @@ fun peGetFileSize(imagePointer PVOID, fileSize PULONGLONG) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
 	image = imagePointer
-	if !image or !image.ImageSize {
+	if !image or !image.imageSize {
 		return (9223372036854775808 | 2)
 
 	}
 
-	*fileSize = image.FileSize
+	fileSize[0] = image.fileSize
 	return (9223372036854775808 | 14)
 }
 
@@ -76,12 +76,12 @@ fun peGetImageSize(imagePointer PVOID, imageSize PUINT) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
 	image = imagePointer
-	if !image or !image.ImageSize {
+	if !image or !image.imageSize {
 		return (9223372036854775808 | 2)
 
 	}
 
-	*imageSize = image.ImageSize
+	imageSize[0] = image.imageSize
 	return (9223372036854775808 | 14)
 }
 
@@ -99,12 +99,12 @@ fun peGetImageSize(imagePointer PVOID, imageSize PUINT) {
 fun peGetMachineType(imagePointer PVOID, machineType PUSHORT) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.PeHeader {
+	if !image or !image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
 
-	*machineType = image.PeHeader.FileHeader.Machine
+	machineType[0] = image.peHeader.fileHeader.machine
 	return (9223372036854775808 & 0)
 }
 
@@ -130,21 +130,21 @@ fun peGetSection(imagePointer PVOID, sectionName PCHAR, rawData PULONG *) {
 	var sectionNameLength SIZE_T
 	var sectionIndex USHORT
 	image = imagePointer
-	if !image or !image.PeHeader {
+	if !image or !image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
 
-	if image.PeHeader..OptionalHeader32.Magic == 523 {
-		sectionHeader = (image.PeHeader..OptionalHeader64 as! PUCHAR + image.PeHeader.FileHeader.SizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
+	if image.peHeader.optionalHeader32.magic == 523 {
+		sectionHeader = (image.peHeader.optionalHeader64 as! PUCHAR + image.peHeader.fileHeader.sizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
 
 	} else {
-		sectionHeader = (image.PeHeader..OptionalHeader32 as! PUCHAR + image.PeHeader.FileHeader.SizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
+		sectionHeader = (image.peHeader.optionalHeader32 as! PUCHAR + image.peHeader.fileHeader.sizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
 
 	}
 
 	sectionNameLength = rtlStringLength(sectionName, 0)
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	return (9223372036854775808 | 14)
 }
 
@@ -162,16 +162,16 @@ fun peGetSection(imagePointer PVOID, sectionName PCHAR, rawData PULONG *) {
 fun peGetSubSystem(imagePointer PVOID, subSystem PUSHORT) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.PeHeader {
+	if !image or !image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
 
-	if image.PeHeader..OptionalHeader32.Magic == 523 {
-		*subSystem = image.PeHeader..OptionalHeader64.Subsystem
+	if image.peHeader.optionalHeader32.magic == 523 {
+		subSystem[0] = image.peHeader.optionalHeader64.subsystem
 
 	} else {
-		*subSystem = image.PeHeader..OptionalHeader32.Subsystem
+		subSystem[0] = image.peHeader.optionalHeader32.subsystem
 
 	}
 
@@ -192,16 +192,16 @@ fun peGetSubSystem(imagePointer PVOID, subSystem PUSHORT) {
 fun peGetVersion(imagePointer PVOID, version PUSHORT) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.PeHeader {
+	if !image or !image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
 
-	if image.PeHeader..OptionalHeader32.Magic == 523 {
-		*version = image.PeHeader..OptionalHeader64.MajorImageVersion
+	if image.peHeader.optionalHeader32.magic == 523 {
+		version[0] = image.peHeader.optionalHeader64.majorImageVersion
 
 	} else {
-		*version = image.PeHeader..OptionalHeader32.MajorImageVersion
+		version[0] = image.peHeader.optionalHeader32.majorImageVersion
 
 	}
 
@@ -241,131 +241,131 @@ fun peLoadImage(fileHandle PEFI_FILE_HANDLE, memoryType LOADER_MEMORY_TYPE, virt
 	var pages SIZE_T
 	var data PUCHAR
 	var index UINT
-	readSize = ???? resolve UnaryExprOrTypeTraitExpr + 32
-	status = xtLdrProtocol.Memory.AllocatePool(readSize, fileInfo as! PVOID *)
+	readSize = sizeOf<Unsigned long long>() + 32
+	status = xtLdrProtocol.memory.allocatePool(readSize, fileInfo as! PVOID *)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	status = fileHandle.GetInfo(fileHandle, fileInfoGuid, readSize, fileInfo)
+	status = fileHandle.getInfo(fileHandle, fileInfoGuid, readSize, fileInfo)
 	if status == (9223372036854775808 | 5) {
-		xtLdrProtocol.Memory.FreePool(fileInfo)
-		status = xtLdrProtocol.Memory.AllocatePool(readSize, fileInfo as! PVOID *)
+		xtLdrProtocol.memory.freePool(fileInfo)
+		status = xtLdrProtocol.memory.allocatePool(readSize, fileInfo as! PVOID *)
 		if status != (9223372036854775808 & 0) {
-			xtLdrProtocol.Debug.Print("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
+			xtLdrProtocol.debug.print("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
 			return status
 
 		}
 
-		status = fileHandle.GetInfo(fileHandle, fileInfoGuid, readSize, fileInfo)
+		status = fileHandle.getInfo(fileHandle, fileInfoGuid, readSize, fileInfo)
 
 	}
 
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Failed to get PE/COFF file information (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("ERROR: Failed to get PE/COFF file information (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	status = xtLdrProtocol.Memory.AllocatePool(???? resolve UnaryExprOrTypeTraitExpr, imageData as! PVOID *)
+	status = xtLdrProtocol.memory.allocatePool(sizeOf<Unsigned long long>(), imageData as! PVOID *)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	imageData.Data = (0 as! PVOID)
-	imageData.FileSize = fileInfo.FileSize
-	imageData.MemoryType = memoryType
-	xtLdrProtocol.Memory.FreePool(fileInfo)
-	pages = (((imageData.FileSize) >> 12) + (???? resolve ConditionalOperator))
-	status = xtLdrProtocol.Memory.AllocatePages(pages, address)
+	imageData.data = (0 as! PVOID)
+	imageData.fileSize = fileInfo.fileSize
+	imageData.memoryType = memoryType
+	xtLdrProtocol.memory.freePool(fileInfo)
+	pages = (((imageData.fileSize) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
+	status = xtLdrProtocol.memory.allocatePages(pages, address)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Pages allocation failure (Status Code: 0x%zX)\n", status)
-		xtLdrProtocol.Memory.FreePool(imageData)
+		xtLdrProtocol.debug.print("ERROR: Pages allocation failure (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.memory.freePool(imageData)
 		return status
 
 	}
 
 	readSize = pages * 4096
 	data = address as! UINT_PTR as! PUCHAR
-	status = fileHandle.Read(fileHandle, readSize, data)
+	status = fileHandle.read(fileHandle, readSize, data)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Failed to read PE/COFF image file (Status Code: 0x%zX)\n", status)
-		xtLdrProtocol.Memory.FreePages(pages, data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
-		xtLdrProtocol.Memory.FreePool(imageData)
+		xtLdrProtocol.debug.print("ERROR: Failed to read PE/COFF image file (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.memory.freePages(pages, data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
+		xtLdrProtocol.memory.freePool(imageData)
 		return status
 
 	}
 
-	imageData.DosHeader = data as! PPECOFF_IMAGE_DOS_HEADER
-	imageData.PeHeader = (data as! PUINT8 + imageData.DosHeader.PeHeaderOffset) as! PPECOFF_IMAGE_PE_HEADER
+	imageData.dosHeader = data as! PPECOFF_IMAGE_DOS_HEADER
+	imageData.peHeader = (data as! PUINT8 + imageData.dosHeader.peHeaderOffset) as! PPECOFF_IMAGE_PE_HEADER
 	status = peVerifyImage(imageData)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Invalid PE/COFF image headers (Status Code: 0x%zX)\n", status)
-		xtLdrProtocol.Memory.FreePages(pages, data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
-		xtLdrProtocol.Memory.FreePool(imageData)
+		xtLdrProtocol.debug.print("ERROR: Invalid PE/COFF image headers (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.memory.freePages(pages, data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
+		xtLdrProtocol.memory.freePool(imageData)
 		return status
 
 	}
 
-	if !(imageData.PeHeader.FileHeader.Characteristics & 2) {
-		xtLdrProtocol.Debug.Print("ERROR: Non-executable PE/COFF image loaded\n")
-		xtLdrProtocol.Memory.FreePages(pages, data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
-		xtLdrProtocol.Memory.FreePool(imageData)
+	if !(imageData.peHeader.fileHeader.characteristics & 2) {
+		xtLdrProtocol.debug.print("ERROR: Non-executable PE/COFF image loaded\n")
+		xtLdrProtocol.memory.freePages(pages, data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
+		xtLdrProtocol.memory.freePool(imageData)
 		return (9223372036854775808 | 1)
 
 	}
 
-	if imageData.PeHeader..OptionalHeader32.Magic == 523 {
-		imageData.ImageSize = imageData.PeHeader..OptionalHeader64.SizeOfImage
+	if imageData.peHeader.optionalHeader32.magic == 523 {
+		imageData.imageSize = imageData.peHeader.optionalHeader64.sizeOfImage
 
 	} else {
-		imageData.ImageSize = imageData.PeHeader..OptionalHeader32.SizeOfImage
+		imageData.imageSize = imageData.peHeader.optionalHeader32.sizeOfImage
 
 	}
 
-	imageData.ImagePages = (((imageData.ImageSize) >> 12) + (???? resolve ConditionalOperator))
-	status = xtLdrProtocol.Memory.AllocatePages(imageData.ImagePages, address)
+	imageData.imagePages = (((imageData.imageSize) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
+	status = xtLdrProtocol.memory.allocatePages(imageData.imagePages, address)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Pages reallocation failure (Status Code: 0x%zX)\n", status)
-		xtLdrProtocol.Memory.FreePool(imageData)
+		xtLdrProtocol.debug.print("ERROR: Pages reallocation failure (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.memory.freePool(imageData)
 		return status
 
 	}
 
-	imageData.Data = address as! UINT_PTR as! PUINT8
-	imageData.PhysicalAddress = address as! UINT_PTR as! PVOID
+	imageData.data = address as! UINT_PTR as! PUINT8
+	imageData.physicalAddress = address as! UINT_PTR as! PVOID
 	if virtualAddress {
-		imageData.VirtualAddress = virtualAddress
+		imageData.virtualAddress = virtualAddress
 
 	} else {
-		imageData.VirtualAddress = address as! UINT_PTR as! PVOID
+		imageData.virtualAddress = address as! UINT_PTR as! PVOID
 
 	}
 
-	if imageData.PeHeader..OptionalHeader32.Magic == 523 {
-		xtLdrProtocol.Memory.CopyMemory(imageData.Data, data, imageData.PeHeader..OptionalHeader64.SizeOfHeaders)
-		sectionHeader = (imageData.PeHeader..OptionalHeader64 as! PUCHAR + imageData.PeHeader.FileHeader.SizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
+	if imageData.peHeader.optionalHeader32.magic == 523 {
+		xtLdrProtocol.memory.copyMemory(imageData.data, data, imageData.peHeader.optionalHeader64.sizeOfHeaders)
+		sectionHeader = (imageData.peHeader.optionalHeader64 as! PUCHAR + imageData.peHeader.fileHeader.sizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
 
 	} else {
-		xtLdrProtocol.Memory.CopyMemory(imageData.Data, data, imageData.PeHeader..OptionalHeader64.SizeOfHeaders)
-		sectionHeader = (imageData.PeHeader..OptionalHeader64 as! PUCHAR + imageData.PeHeader.FileHeader.SizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
+		xtLdrProtocol.memory.copyMemory(imageData.data, data, imageData.peHeader.optionalHeader64.sizeOfHeaders)
+		sectionHeader = (imageData.peHeader.optionalHeader64 as! PUCHAR + imageData.peHeader.fileHeader.sizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
 
 	}
 
-	??? CompoundStmt ForStmt
-	xtLdrProtocol.Memory.FreePages(data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS, pages)
+	[unknown clang ast] CompoundStmt ForStmt
+	xtLdrProtocol.memory.freePages(data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS, pages)
 	status = pepRelocateLoadedImage(imageData)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: PE/COFF image relocation failed (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("ERROR: PE/COFF image relocation failed (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	*imagePointer = imageData
+	imagePointer[0] = imageData
 	return (9223372036854775808 & 0)
 }
 
@@ -386,23 +386,23 @@ fun peRelocateImage(imagePointer PVOID, address EFI_VIRTUAL_ADDRESS) {
 	var imageBase UINT64
 	var oldVirtualAddress UINT64
 	var status EFI_STATUS
-	oldVirtualAddress = image.VirtualAddress as! UINT_PTR
-	if image.PeHeader..OptionalHeader32.Magic == 523 {
-		imageBase = image.PeHeader..OptionalHeader64.ImageBase
+	oldVirtualAddress = image.virtualAddress as! UINT_PTR
+	if image.peHeader.optionalHeader32.magic == 523 {
+		imageBase = image.peHeader.optionalHeader64.imageBase
 
 	} else {
-		imageBase = image.PeHeader..OptionalHeader32.ImageBase
+		imageBase = image.peHeader.optionalHeader32.imageBase
 
 	}
 
-	image.VirtualAddress = (address - oldVirtualAddress + imageBase) as! PVOID
+	image.virtualAddress = (address - oldVirtualAddress + imageBase) as! PVOID
 	status = pepRelocateLoadedImage(image)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	image.VirtualAddress = address as! PVOID
+	image.virtualAddress = address as! PVOID
 	return (9223372036854775808 & 0)
 }
 
@@ -419,13 +419,13 @@ fun peUnloadImage(imagePointer PVOID) {
 
 	var status EFI_STATUS
 	image = imagePointer
-	if !image or !image.Data {
+	if !image or !image.data {
 		return (9223372036854775808 | 2)
 
 	}
 
-	status = xtLdrProtocol.Memory.FreePages(image.ImagePages, image.Data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
-	??? CompoundStmt CompoundAssignOperator
+	status = xtLdrProtocol.memory.freePages(image.imagePages, image.data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
+	status |= xtLdrProtocol.memory.freePool(image)
 	return status
 }
 
@@ -440,27 +440,27 @@ fun peUnloadImage(imagePointer PVOID) {
 fun peVerifyImage(imagePointer PVOID) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.PeHeader {
+	if !image or !image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
 
-	if image.FileSize < ???? resolve UnaryExprOrTypeTraitExpr {
+	if image.fileSize < sizeOf<Unsigned long long>() {
 		return (9223372036854775808 | 31)
 
 	}
 
-	if image.DosHeader.Magic != 23117 {
+	if image.dosHeader.magic != 23117 {
 		return (9223372036854775808 | 25)
 
 	}
 
-	if image.PeHeader.Signature != 17744 and image.PeHeader.Signature != 1415071056 {
+	if image.peHeader.signature != 17744 and image.peHeader.signature != 1415071056 {
 		return (9223372036854775808 | 25)
 
 	}
 
-	if image.PeHeader..OptionalHeader32.Magic != 267 and image.PeHeader..OptionalHeader64.Magic != 523 {
+	if image.peHeader.optionalHeader32.magic != 267 and image.peHeader.optionalHeader64.magic != 523 {
 		return (9223372036854775808 | 25)
 
 	}
@@ -491,25 +491,25 @@ fun pepRelocateLoadedImage(image PPECOFF_IMAGE_CONTEXT) {
 	var address PUINT32
 	var longPtr PUINT64
 	var shortPtr PUINT
-	if image.PeHeader.FileHeader.Characteristics & 1 {
-		xtLdrProtocol.Debug.Print("WARNING: PE/COFF image is stripped and contains no information about relocations\n")
+	if image.peHeader.fileHeader.characteristics & 1 {
+		xtLdrProtocol.debug.print("WARNING: PE/COFF image is stripped and contains no information about relocations\n")
 		return (9223372036854775808 & 0)
 
 	}
 
-	if image.PeHeader..OptionalHeader32.Magic == 523 {
-		dataDirectory = ???? resolve ArraySubscriptExpr
-		imageBase = image.PeHeader..OptionalHeader64.ImageBase
-		if image.PeHeader..OptionalHeader64.NumberOfRvaAndSizes <= 5 or dataDirectory.VirtualAddress == 0 or dataDirectory.Size < ???? resolve UnaryExprOrTypeTraitExpr {
+	if image.peHeader.optionalHeader32.magic == 523 {
+		dataDirectory = image.peHeader.optionalHeader64.dataDirectory[5]
+		imageBase = image.peHeader.optionalHeader64.imageBase
+		if image.peHeader.optionalHeader64.numberOfRvaAndSizes <= 5 or dataDirectory.virtualAddress == 0 or dataDirectory.size < sizeOf<Unsigned long long>() {
 			return (9223372036854775808 & 0)
 
 		}
 
 
 	} else {
-		dataDirectory = ???? resolve ArraySubscriptExpr
-		imageBase = image.PeHeader..OptionalHeader32.ImageBase
-		if image.PeHeader..OptionalHeader32.NumberOfRvaAndSizes <= 5 or dataDirectory.VirtualAddress == 0 or dataDirectory.Size < ???? resolve UnaryExprOrTypeTraitExpr {
+		dataDirectory = image.peHeader.optionalHeader32.dataDirectory[5]
+		imageBase = image.peHeader.optionalHeader32.imageBase
+		if image.peHeader.optionalHeader32.numberOfRvaAndSizes <= 5 or dataDirectory.virtualAddress == 0 or dataDirectory.size < sizeOf<Unsigned long long>() {
 			return (9223372036854775808 & 0)
 
 		}
@@ -517,30 +517,28 @@ fun pepRelocateLoadedImage(image PPECOFF_IMAGE_CONTEXT) {
 
 	}
 
-	relocationDir = (image.Data as! ULONG_PTR + dataDirectory.VirtualAddress) as! PPECOFF_IMAGE_BASE_RELOCATION
-	relocationEnd = (relocationDir as! ULONG_PTR + dataDirectory.Size) as! PPECOFF_IMAGE_BASE_RELOCATION
-	while relocationDir < relocationEnd and relocationDir.SizeOfBlock > 0 {
-		count = (relocationDir.SizeOfBlock - ???? resolve UnaryExprOrTypeTraitExpr) / ???? resolve UnaryExprOrTypeTraitExpr
-		address = (image.Data as! PUCHAR + relocationDir.VirtualAddress) as! PUINT
-		typeOffset = (relocationDir as! PUCHAR + ???? resolve UnaryExprOrTypeTraitExpr) as! PUSHORT
+	relocationDir = (image.data as! ULONG_PTR + dataDirectory.virtualAddress) as! PPECOFF_IMAGE_BASE_RELOCATION
+	relocationEnd = (relocationDir as! ULONG_PTR + dataDirectory.size) as! PPECOFF_IMAGE_BASE_RELOCATION
+	while relocationDir < relocationEnd and relocationDir.sizeOfBlock > 0 {
+		count = (relocationDir.sizeOfBlock - sizeOf<Unsigned long long>()) / sizeOf<Unsigned long long>()
+		address = (image.data as! PUCHAR + relocationDir.virtualAddress) as! PUINT
+		typeOffset = (relocationDir as! PUCHAR + sizeOf<Unsigned long long>()) as! PUSHORT
 		while --count {
-			offset = *typeOffset & 4095
-			type = *typeOffset >> 12
-			if (address + offset) as! PUSHORT as! PVOID >= image.Data + image.ImageSize {
-				??? CompoundStmt BreakStmt
-
+			offset = typeOffset[0] & 4095
+			type = typeOffset[0] >> 12
+			if (address + offset) as! PUSHORT as! PVOID >= image.data + image.imageSize {
+				break
 			}
 
 			if (address + offset) as! ULONG_PTR < relocationDir as! ULONG_PTR or (address + offset) as! ULONG_PTR >= relocationEnd as! ULONG_PTR {
-				??? CompoundStmt SwitchStmt
+				[unknown clang ast] CompoundStmt SwitchStmt
 
 			}
 
-			??? CompoundStmt UnaryOperator
-
+			typeOffset++
 		}
 
-		relocationDir = (relocationDir as! PUCHAR + relocationDir.SizeOfBlock) as! PPECOFF_IMAGE_BASE_RELOCATION
+		relocationDir = (relocationDir as! PUCHAR + relocationDir.sizeOfBlock) as! PPECOFF_IMAGE_BASE_RELOCATION
 
 	}
 
@@ -579,5 +577,5 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	PeCoffProtocol.RelocateImage = peRelocateImage
 	PeCoffProtocol.UnloadImage = peUnloadImage
 	PeCoffProtocol.VerifyImage = peVerifyImage
-	return xtLdrProtocol.Protocol.Install(peCoffProtocol, guid)
+	return xtLdrProtocol.protocol.install(peCoffProtocol, guid)
 }

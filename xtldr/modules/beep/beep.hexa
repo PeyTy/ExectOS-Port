@@ -1,4 +1,4 @@
-// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+var __UNIQUE_ID_author0
 
 var __UNIQUE_ID_description1
 
@@ -33,7 +33,7 @@ fun bpEnableToneBeep(pitch UINT) {
 		pitch = 20
 
 	} else {
-		??? CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
 
 	}
 
@@ -69,8 +69,8 @@ fun bpPlayTune(arguments PWCHAR) {
 			tempo = bpWideStringToNumber(argument)
 
 		} else {
-			??? CompoundStmt CompoundStmt
-			??? CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
+			[unknown clang ast] CompoundStmt CompoundStmt
 
 		}
 
@@ -91,7 +91,7 @@ fun bpPlayTune(arguments PWCHAR) {
 /// @since XT 1.0
 fun bpWideStringToNumber(string PWCHAR) {
 	var number ULONG = 0
-	??? CompoundStmt DoStmt
+	[unknown clang ast] CompoundStmt DoStmt
 	return number
 }
 
@@ -114,6 +114,6 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 
 	}
 
-	bpPlayTune(xtLdrProtocol.Config.GetValue("TUNE"))
+	bpPlayTune(xtLdrProtocol.config.getValue("TUNE"))
 	return (9223372036854775808 & 0)
 }

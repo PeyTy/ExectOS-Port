@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Finds and opens the XT Boot Loader protocol. This routine should be called by module to access XTLDR protocol.
 /// 
 /// @param SystemTable
@@ -20,19 +19,19 @@ fun blGetXtLdrProtocol(systemTable PEFI_SYSTEM_TABLE, imageHandle EFI_HANDLE, pr
 	var status EFI_STATUS
 	var count UINT_PTR
 	var index UINT
-	status = systemTable.BootServices.LocateHandleBuffer(byProtocol, protocolGuid, (0 as! PVOID), count, handles)
+	status = systemTable.bootServices.locateHandleBuffer(byProtocol, protocolGuid, (0 as! PVOID), count, handles)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
 	if count > 0 {
-		??? CompoundStmt ForStmt
+		[unknown clang ast] CompoundStmt ForStmt
 
 	}
 
-	systemTable.BootServices.FreePool(handles)
-	if *protocolHandler == (0 as! PVOID) {
+	systemTable.bootServices.freePool(handles)
+	if protocolHandler[0] == (0 as! PVOID) {
 		return (9223372036854775808 | 14)
 
 	}

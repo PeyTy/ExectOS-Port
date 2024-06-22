@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Allocates physical memory for kernel hardware layer before memory manager gets initialized.
 /// 
 /// @param PageCount
@@ -25,68 +24,65 @@ fun mmAllocateHardwareMemory(pageCount PFN_NUMBER, aligned BOOLEAN, buffer PULON
 	var physicalAddress ULONGLONG
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
-	*buffer = 0
+	buffer[0] = 0
 	maxPage = 4294967295 >> 12
 	if (mmpUsedHardwareAllocationDescriptors + 2) > 64 {
 		return (3221225626 as! XTSTATUS)
 
 	}
 
-	listEntry = keInitializationBlock.MemoryDescriptorListHead.Flink
-	while listEntry != keInitializationBlock.MemoryDescriptorListHead {
-		descriptor = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! LOADER_MEMORY_DESCRIPTOR *)
-		alignment = ???? resolve ConditionalOperator
-		if descriptor.MemoryType == loaderFree {
-			if descriptor.BasePage and ((descriptor.BasePage + pageCount + alignment) < maxPage) and (descriptor.PageCount >= (pageCount + alignment)) {
-				physicalAddress = (descriptor.BasePage + alignment) << 12
-				??? CompoundStmt BreakStmt
-
+	listEntry = keInitializationBlock.memoryDescriptorListHead.flink
+	while listEntry != keInitializationBlock.memoryDescriptorListHead {
+		descriptor = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! LOADER_MEMORY_DESCRIPTOR *)
+		alignment = [unknown clang ast] resolve ConditionalOperator
+		if descriptor.memoryType == loaderFree {
+			if descriptor.basePage and ((descriptor.basePage + pageCount + alignment) < maxPage) and (descriptor.pageCount >= (pageCount + alignment)) {
+				physicalAddress = (descriptor.basePage + alignment) << 12
+				break
 			}
 
 
 		}
 
-		listEntry = listEntry.Flink
+		listEntry = listEntry.flink
 
 	}
 
-	if listEntry == keInitializationBlock.MemoryDescriptorListHead {
+	if listEntry == keInitializationBlock.memoryDescriptorListHead {
 		return (3221225626 as! XTSTATUS)
 
 	}
 
-	hardwareDescriptor = ???? resolve ArraySubscriptExpr
-	hardwareDescriptor.BasePage = descriptor.BasePage + alignment
-	hardwareDescriptor.MemoryType = loaderHardwareCachedMemory
-	hardwareDescriptor.PageCount = pageCount
-	??? CompoundStmt UnaryOperator
-	if alignment {
-		if descriptor.PageCount > (pageCount + alignment) {
-			extraDescriptor = ???? resolve ArraySubscriptExpr
-			extraDescriptor.BasePage = descriptor.BasePage + alignment + pageCount as! ULONG
-			extraDescriptor.MemoryType = loaderFree
-			extraDescriptor.PageCount = descriptor.PageCount - (alignment + pageCount as! ULONG)
-			??? CompoundStmt UnaryOperator
-			rtlInsertHeadList(descriptor.ListEntry, extraDescriptor.ListEntry)
+	hardwareDescriptor = mmpHardwareAllocationDescriptors[mmpUsedHardwareAllocationDescriptors]
+	hardwareDescriptor.basePage = descriptor.basePage + alignment
+	hardwareDescriptor.memoryType = loaderHardwareCachedMemory
+	hardwareDescriptor.pageCount = pageCount
+	mmpUsedHardwareAllocationDescriptors++	if alignment {
+		if descriptor.pageCount > (pageCount + alignment) {
+			extraDescriptor = mmpHardwareAllocationDescriptors[mmpUsedHardwareAllocationDescriptors]
+			extraDescriptor.basePage = descriptor.basePage + alignment + pageCount as! ULONG
+			extraDescriptor.memoryType = loaderFree
+			extraDescriptor.pageCount = descriptor.pageCount - (alignment + pageCount as! ULONG)
+			mmpUsedHardwareAllocationDescriptors++			rtlInsertHeadList(descriptor.listEntry, extraDescriptor.listEntry)
 
 		}
 
-		descriptor.PageCount = alignment
-		rtlInsertHeadList(descriptor.ListEntry, hardwareDescriptor.ListEntry)
+		descriptor.pageCount = alignment
+		rtlInsertHeadList(descriptor.listEntry, hardwareDescriptor.listEntry)
 
 	} else {
-		??? CompoundStmt CompoundAssignOperator
-		??? CompoundStmt CompoundAssignOperator
-		rtlInsertTailList(descriptor.ListEntry, hardwareDescriptor.ListEntry)
-		if descriptor.PageCount == 0 {
-			rtlRemoveEntryList(descriptor.ListEntry)
+		descriptor.basePage += pageCount as! ULONG
+		descriptor.pageCount -= pageCount as! ULONG
+		rtlInsertTailList(descriptor.listEntry, hardwareDescriptor.listEntry)
+		if descriptor.pageCount == 0 {
+			rtlRemoveEntryList(descriptor.listEntry)
 
 		}
 
 
 	}
 
-	*buffer = physicalAddress
+	buffer[0] = physicalAddress
 	return (0 as! XTSTATUS)
 }
 
@@ -116,7 +112,7 @@ fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, 
 	baseAddress = mmpHardwareHeapStart
 	mappedPages = 0
 	returnAddress = baseAddress
-	*virtualAddress = (0 as! PVOID)
+	virtualAddress[0] = (0 as! PVOID)
 	while mappedPages < pageCount {
 		if baseAddress == (0 as! PVOID) {
 			return (3221225626 as! XTSTATUS)
@@ -125,18 +121,16 @@ fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, 
 
 		ptePointer = mmpGetPteAddress(returnAddress) as! PHARDWARE_PTE
 		returnAddress = returnAddress as! ULONG_PTR as! PVOID + 4096
-		if ptePointer.Valid {
+		if ptePointer.valid {
 			baseAddress = returnAddress
 			mappedPages = 0
-			??? CompoundStmt ContinueStmt
-
+			continue
 		}
 
-		??? CompoundStmt UnaryOperator
-
+		mappedPages++
 	}
 
-	returnAddress = (baseAddress + ((PhysicalAddress..LowPart as! ULONG_PTR & (4096 - 1)) as! ULONG)) as! ULONG_PTR as! PVOID
+	returnAddress = (baseAddress + ((PhysicalAddress..lowPart as! ULONG_PTR & (4096 - 1)) as! ULONG)) as! ULONG_PTR as! PVOID
 	if baseAddress == mmpHardwareHeapStart {
 		mmpHardwareHeapStart = (baseAddress as! ULONG_PTR + (pageCount as! ULONG_PTR << 12)) as! PVOID
 
@@ -144,10 +138,10 @@ fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, 
 
 	while --mappedPages {
 		ptePointer = mmpGetPteAddress(baseAddress) as! PHARDWARE_PTE
-		ptePointer.PageFrameNumber = (PhysicalAddress.QuadPart >> 12) as! PFN_NUMBER
-		ptePointer.Valid = 1
-		ptePointer.Writable = 1
-		??? CompoundStmt CompoundAssignOperator
+		ptePointer.pageFrameNumber = (PhysicalAddress.QuadPart >> 12) as! PFN_NUMBER
+		ptePointer.valid = 1
+		ptePointer.writable = 1
+		PhysicalAddress.QuadPart += 4096
 		baseAddress = (baseAddress as! ULONG_PTR + 4096) as! PVOID
 
 	}
@@ -158,14 +152,14 @@ fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, 
 	}
 
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
-	*virtualAddress = returnAddress
+	[unknown clang ast] CompoundStmt NullStmt
+	virtualAddress[0] = returnAddress
 	return (0 as! XTSTATUS)
 }
 
@@ -185,7 +179,7 @@ fun mmMarkHardwareMemoryWriteThrough(virtualAddress PVOID, pageCount PFN_NUMBER)
 
 	var page PFN_NUMBER
 	ptePointer = mmpGetPteAddress(virtualAddress) as! PHARDWARE_PTE
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 }
 
 /// Remaps the PTE to new physical address.
@@ -206,9 +200,9 @@ fun mmRemapHardwareMemory(virtualAddress PVOID, physicalAddress PHYSICAL_ADDRESS
 	let ptePointer = new ByValue<PHARDWARE_PTE>()
 
 	ptePointer = mmpGetPteAddress(virtualAddress) as! PHARDWARE_PTE
-	ptePointer.PageFrameNumber = (PhysicalAddress.QuadPart >> 12) as! PFN_NUMBER
-	ptePointer.Valid = 1
-	ptePointer.Writable = 1
+	ptePointer.pageFrameNumber = (PhysicalAddress.QuadPart >> 12) as! PFN_NUMBER
+	ptePointer.valid = 1
+	ptePointer.writable = 1
 	if flushTlb {
 		mmFlushTlb()
 
@@ -241,7 +235,7 @@ fun mmUnmapHardwareMemory(virtualAddress PVOID, pageCount PFN_NUMBER, flushTlb B
 
 	virtualAddress = (virtualAddress as! ULONG_PTR & ~(4096 - 1)) as! PVOID
 	ptePointer = mmpGetPteAddress(virtualAddress) as! PHARDWARE_PTE
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 	if flushTlb {
 		mmFlushTlb()
 

@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Checks whether handled UBSAN error should be reported.
 /// 
 /// @param Location
@@ -25,16 +24,16 @@ fun kepCheckUbsanReport(location PKUBSAN_SOURCE_LOCATION) {
 fun kepEnterUbsanFrame(location PKUBSAN_SOURCE_LOCATION, reason PCCHAR) {
 	kepUbsanActiveFrame = tRUE
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 }
 
 /// Gets signed value from UBSAN.
@@ -52,15 +51,15 @@ fun kepGetSignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 	var bitWidth ULONG
 	var extraBits ULONG
 	var longValue ULONG_PTR
-	bitWidth = 1 << (type.TypeInfo >> 1)
-	if bitWidth <= ???? resolve UnaryExprOrTypeTraitExpr * 8 {
-		extraBits = ???? resolve UnaryExprOrTypeTraitExpr * 8 - bitWidth
+	bitWidth = 1 << (type.typeInfo >> 1)
+	if bitWidth <= sizeOf<Unsigned long long>() * 8 {
+		extraBits = sizeOf<Unsigned long long>() * 8 - bitWidth
 		longValue = value as! ULONG_PTR
 		return (longValue as! LONGLONG) << extraBits >> extraBits
 
 	}
 
-	return *value as! PLONGLONG
+	return value as! PLONGLONG[0]
 }
 
 /// Gets a string representation of the UBSAN type kind.
@@ -72,7 +71,7 @@ fun kepGetSignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 /// 
 /// @since XT 1.0
 fun kepGetUbsanTypeKind(typeCheckKind UCHAR) {
-	??? CompoundStmt SwitchStmt
+	[unknown clang ast] CompoundStmt SwitchStmt
 }
 
 /// Gets unsigned value from UBSAN.
@@ -88,13 +87,13 @@ fun kepGetUbsanTypeKind(typeCheckKind UCHAR) {
 /// @since XT 1.0
 fun kepGetUnsignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 	var bitWidth ULONG
-	bitWidth = 1 << (type.TypeInfo >> 1)
-	if bitWidth <= ???? resolve UnaryExprOrTypeTraitExpr * 8 {
+	bitWidth = 1 << (type.typeInfo >> 1)
+	if bitWidth <= sizeOf<Unsigned long long>() * 8 {
 		return value as! ULONG_PTR
 
 	}
 
-	return *value as! PULONGLONG
+	return value as! PULONGLONG[0]
 }
 
 /// Handles the division overflow error reported by UBSAN.
@@ -112,30 +111,30 @@ fun kepGetUnsignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PVOID) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
-	if (data.Type.TypeInfo & 1) and (kepGetSignedUbsanValue(data.Type, rhs) == -1) {
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	if (data.type.typeInfo & 1) and (kepGetSignedUbsanValue(data.type, rhs) == -1) {
 		if keDbgPrint {
-			??? CompoundStmt ImplicitCastExpr
-			??? CompoundStmt ImplicitCastExpr
-			??? CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 		}
 
-		??? CompoundStmt NullStmt
+		[unknown clang ast] CompoundStmt NullStmt
 
 	} else {
 		if keDbgPrint {
-			??? CompoundStmt ImplicitCastExpr
-			??? CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 		}
 
-		??? CompoundStmt NullStmt
+		[unknown clang ast] CompoundStmt NullStmt
 
 	}
 
@@ -157,21 +156,21 @@ fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PV
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -187,21 +186,21 @@ fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs U
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt CStyleCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt CStyleCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -220,20 +219,20 @@ fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA,
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -246,30 +245,30 @@ fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
-	if data.Kind == 0 or data.Kind == 1 {
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	if data.kind == 0 or data.kind == 1 {
 		if keDbgPrint {
-			??? CompoundStmt ImplicitCastExpr
-			??? CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 		}
 
-		??? CompoundStmt NullStmt
+		[unknown clang ast] CompoundStmt NullStmt
 
 	} else {
 		if keDbgPrint {
-			??? CompoundStmt ImplicitCastExpr
-			??? CompoundStmt ImplicitCastExpr
-			??? CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 		}
 
-		??? CompoundStmt NullStmt
+		[unknown clang ast] CompoundStmt NullStmt
 
 	}
 
@@ -288,23 +287,23 @@ fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		kepGetUbsanTypeKind(data.TypeCheckKind)
-		??? CompoundStmt CStyleCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		kepGetUbsanTypeKind(data.typeCheckKind)
+		[unknown clang ast] CompoundStmt CStyleCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -320,21 +319,21 @@ fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULON
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -350,21 +349,21 @@ fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR)
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		kepGetUbsanTypeKind(data.TypeCheckKind)
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		kepGetUbsanTypeKind(data.typeCheckKind)
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -380,22 +379,22 @@ fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		kepGetUbsanTypeKind(data.TypeCheckKind)
-		??? CompoundStmt CStyleCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		kepGetUbsanTypeKind(data.typeCheckKind)
+		[unknown clang ast] CompoundStmt CStyleCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -411,20 +410,20 @@ fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer UL
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -443,22 +442,22 @@ fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) 
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ConditionalOperator
-		??? CompoundStmt CStyleCastExpr
-		??? CompoundStmt CStyleCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ConditionalOperator
+		[unknown clang ast] CompoundStmt CStyleCastExpr
+		[unknown clang ast] CompoundStmt CStyleCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -478,48 +477,48 @@ fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 /// @since XT 1.0
 fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
 	var lhsBitWidth ULONG
-	if !kepCheckUbsanReport(data.Location) {
+	if !kepCheckUbsanReport(data.location) {
 		return ??
 
 	}
 
-	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
-	lhsBitWidth = 1 << (data.LhsType.TypeInfo >> 1)
-	if (data.RhsType.TypeInfo & 1) and (kepGetSignedUbsanValue(data.RhsType, rhs as! PVOID) < 0) {
+	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	lhsBitWidth = 1 << (data.lhsType.typeInfo >> 1)
+	if (data.rhsType.typeInfo & 1) and (kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID) < 0) {
 		if keDbgPrint {
-			??? CompoundStmt ImplicitCastExpr
-			??? CompoundStmt ImplicitCastExpr
-			kepGetSignedUbsanValue(data.RhsType, rhs as! PVOID)
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
+			[unknown clang ast] CompoundStmt ImplicitCastExpr
+			kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID)
 
 		}
 
-		??? CompoundStmt NullStmt
+		[unknown clang ast] CompoundStmt NullStmt
 
 	} else {
-		??? CompoundStmt CompoundStmt
-		if kepGetUnsignedUbsanValue(data.RhsType, rhs as! PVOID) >= lhsBitWidth {
+		[unknown clang ast] CompoundStmt CompoundStmt
+		if kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID) >= lhsBitWidth {
 			if keDbgPrint {
-				??? CompoundStmt ImplicitCastExpr
-				??? CompoundStmt ImplicitCastExpr
-				kepGetUnsignedUbsanValue(data.RhsType, rhs as! PVOID)
-				??? CompoundStmt ImplicitCastExpr
-				??? CompoundStmt ImplicitCastExpr
+				[unknown clang ast] CompoundStmt ImplicitCastExpr
+				[unknown clang ast] CompoundStmt ImplicitCastExpr
+				kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID)
+				[unknown clang ast] CompoundStmt ImplicitCastExpr
+				[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 			}
 
-			??? CompoundStmt NullStmt
+			[unknown clang ast] CompoundStmt NullStmt
 
 		} else {
 			if keDbgPrint {
-				??? CompoundStmt ImplicitCastExpr
-				??? CompoundStmt ImplicitCastExpr
-				kepGetSignedUbsanValue(data.LhsType, lhs as! PVOID)
-				kepGetSignedUbsanValue(data.RhsType, rhs as! PVOID)
-				??? CompoundStmt ImplicitCastExpr
+				[unknown clang ast] CompoundStmt ImplicitCastExpr
+				[unknown clang ast] CompoundStmt ImplicitCastExpr
+				kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID)
+				kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID)
+				[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 			}
 
-			??? CompoundStmt NullStmt
+			[unknown clang ast] CompoundStmt NullStmt
 
 		}
 
@@ -545,8 +544,8 @@ fun kepHandleUbsanTypeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PT
 		kepHandleUbsanNullPointerDereference(data)
 
 	} else {
-		??? CompoundStmt CompoundStmt
-		??? CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
+		[unknown clang ast] CompoundStmt CompoundStmt
 
 	}
 

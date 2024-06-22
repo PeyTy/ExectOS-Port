@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Clears the signal state of the event.
 /// 
 /// @param Event
@@ -8,7 +7,7 @@
 /// 
 /// @since NT 3.5
 fun keClearEvent(event PKEVENT) {
-	event.Header.SignalState = fALSE
+	event.header.signalState = fALSE
 }
 
 /// Initializes a kernel event.
@@ -26,9 +25,9 @@ fun keClearEvent(event PKEVENT) {
 /// 
 /// @since NT 3.5
 fun keInitializeEvent(event PKEVENT, eventType KEVENT_TYPE, initialState BOOLEAN) {
-	event.Header.Type = eventType
-	event.Header.SignalState = initialState
-	rtlInitializeListHead(event.Header.WaitListHead)
+	event.header.type = eventType
+	event.header.signalState = initialState
+	rtlInitializeListHead(event.header.waitListHead)
 }
 
 /// Sets new signal state and satisfy waits if possible.

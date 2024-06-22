@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Fills a section of memory with zeroes like RtlZeroMemory(), but in more efficient way.
 /// 
 /// @param Address
@@ -11,5 +10,5 @@
 /// 
 /// @since XT 1.0
 fun mmZeroPages(address PVOID, size ULONG) {
-	??? CompoundStmt GCCAsmStmt
+	[unknown clang ast] CompoundStmt GCCAsmStmt
 }

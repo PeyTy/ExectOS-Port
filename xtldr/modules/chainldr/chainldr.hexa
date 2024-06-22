@@ -1,4 +1,4 @@
-// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+var __UNIQUE_ID_author0
 
 var __UNIQUE_ID_description1
 
@@ -30,64 +30,64 @@ fun chBootSystem(parameters PXTBL_BOOT_PARAMETERS) {
 	var status EFI_STATUS
 	var loaderSize SIZE_T
 	var loaderData PVOID
-	if parameters.KernelFile == (0 as! PVOID) {
-		xtLdrProtocol.Debug.Print("ERROR: No EFI image filename provided\n")
+	if parameters.kernelFile == (0 as! PVOID) {
+		xtLdrProtocol.debug.print("ERROR: No EFI image filename provided\n")
 		return (9223372036854775808 | 2)
 
 	}
 
-	status = xtLdrProtocol.Disk.OpenVolume((0 as! PVOID), diskHandle, fsHandle)
+	status = xtLdrProtocol.disk.openVolume((0 as! PVOID), diskHandle, fsHandle)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Unable to open boot volume (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("ERROR: Unable to open boot volume (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	status = fsHandle.Open(fsHandle, bootDir, parameters.EfiPath, 1, 0)
-	fsHandle.Close(fsHandle)
+	status = fsHandle.open(fsHandle, bootDir, parameters.efiPath, 1, 0)
+	fsHandle.close(fsHandle)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Unable to open system boot directory (Status Code: 0x%zX)\n", status)
-		xtLdrProtocol.Disk.CloseVolume(diskHandle)
+		xtLdrProtocol.debug.print("ERROR: Unable to open system boot directory (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.disk.closeVolume(diskHandle)
 		return status
 
 	}
 
-	status = xtLdrProtocol.Disk.ReadFile(bootDir, parameters.KernelFile, loaderData, loaderSize)
-	bootDir.Close(bootDir)
-	xtLdrProtocol.Disk.CloseVolume(diskHandle)
-	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
-	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr >> 8
-	???? resolve ArraySubscriptExpr.Header.Type = 1
-	???? resolve ArraySubscriptExpr.Header.SubType = 3
-	???? resolve ArraySubscriptExpr.MemoryType = efiLoaderData
-	???? resolve ArraySubscriptExpr.StartingAddress = loaderData as! UINT_PTR
-	???? resolve ArraySubscriptExpr.EndingAddress = loaderData as! UINT_PTR + loaderSize
-	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
-	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr >> 8
-	???? resolve ArraySubscriptExpr.Header.Type = 127
-	???? resolve ArraySubscriptExpr.Header.SubType = 255
-	status = xtLdrProtocol.Util.LoadEfiImage(memoryDevicePath as! PEFI_DEVICE_PATH_PROTOCOL, loaderData, loaderSize, loaderHandle)
+	status = xtLdrProtocol.disk.readFile(bootDir, parameters.kernelFile, loaderData, loaderSize)
+	bootDir.close(bootDir)
+	xtLdrProtocol.disk.closeVolume(diskHandle)
+	memoryDevicePath[0].header.length[0] = sizeOf<Unsigned long long>()
+	memoryDevicePath[0].header.length[1] = sizeOf<Unsigned long long>() >> 8
+	memoryDevicePath[0].header.type = 1
+	memoryDevicePath[0].header.subType = 3
+	memoryDevicePath[0].memoryType = efiLoaderData
+	memoryDevicePath[0].startingAddress = loaderData as! UINT_PTR
+	memoryDevicePath[0].endingAddress = loaderData as! UINT_PTR + loaderSize
+	memoryDevicePath[1].header.length[0] = sizeOf<Unsigned long long>()
+	memoryDevicePath[1].header.length[1] = sizeOf<Unsigned long long>() >> 8
+	memoryDevicePath[1].header.type = 127
+	memoryDevicePath[1].header.subType = 255
+	status = xtLdrProtocol.util.loadEfiImage(memoryDevicePath as! PEFI_DEVICE_PATH_PROTOCOL, loaderData, loaderSize, loaderHandle)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Unable to chainload '%S' (Status Code: 0x%zX)\n", parameters.KernelFile, status)
+		xtLdrProtocol.debug.print("ERROR: Unable to chainload '%S' (Status Code: 0x%zX)\n", parameters.kernelFile, status)
 		return status
 
 	}
 
-	status = xtLdrProtocol.Protocol.OpenHandle(loaderHandle, loadedImage as! PVOID *, lIPGuid)
+	status = xtLdrProtocol.protocol.openHandle(loaderHandle, loadedImage as! PVOID *, lIPGuid)
 	if status != (9223372036854775808 & 0) {
-		xtLdrProtocol.Debug.Print("ERROR: Unable to access binary interface (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.debug.print("ERROR: Unable to access binary interface (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	if parameters.Parameters {
-		loadedImage.LoadOptionsSize = rtlWideStringLength(parameters.Parameters, 0) * ???? resolve UnaryExprOrTypeTraitExpr
-		loadedImage.LoadOptions = parameters.Parameters
+	if parameters.parameters {
+		loadedImage.loadOptionsSize = rtlWideStringLength(parameters.parameters, 0) * sizeOf<Unsigned long long>()
+		loadedImage.loadOptions = parameters.parameters
 
 	}
 
-	loadedImage.DeviceHandle = diskHandle
-	return xtLdrProtocol.Util.StartEfiImage(loaderHandle)
+	loadedImage.deviceHandle = diskHandle
+	return xtLdrProtocol.util.startEfiImage(loaderHandle)
 }
 
 /// This routine is the entry point of the XT EFI boot loader module.
@@ -112,6 +112,6 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	}
 
 	ChpBootProtocol.BootSystem = chBootSystem
-	xtLdrProtocol.Boot.RegisterProtocol("CHAINLOADER", guid)
-	return xtLdrProtocol.Protocol.Install(chpBootProtocol, guid)
+	xtLdrProtocol.boot.registerProtocol("CHAINLOADER", guid)
+	return xtLdrProtocol.protocol.install(chpBootProtocol, guid)
 }

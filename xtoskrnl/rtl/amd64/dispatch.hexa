@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Returns the stack limits for the current thread.
 /// 
 /// @param StackBase
@@ -13,6 +12,6 @@
 fun rtlGetStackLimits(stackBase PULONG_PTR, stackLimit PULONG_PTR) {
 	let thread = new ByValue<PKTHREAD>()
 
-	*stackBase = thread.StackBase as! ULONG_PTR
-	*stackLimit = thread.StackLimit as! ULONG_PTR
+	stackBase[0] = thread.stackBase as! ULONG_PTR
+	stackLimit[0] = thread.stackLimit as! ULONG_PTR
 }

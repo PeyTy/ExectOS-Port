@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Initializes the thread.
 /// 
 /// @param Process
@@ -35,36 +34,36 @@ fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTE
 	var status XTSTATUS
 	var index ULONG
 	allocation = fALSE
-	thread.Header.Type = threadObject
-	thread.Header.SignalState = 0
-	rtlInitializeListHead(thread.Header.WaitListHead)
-	rtlInitializeListHead(thread.MutantListHead)
-	??? CompoundStmt ForStmt
-	thread.AutoAlignment = process...AutoAlignment
-	thread.StackResident = tRUE
-	thread.StackSwap = tRUE
-	thread.SwapBusy = fALSE
-	thread...AdjustReason = adjustNone
-	keInitializeSpinLock(thread.ThreadLock)
-	thread.ServiceTable = keServiceDescriptorTable
-	???? resolve ArraySubscriptExpr = thread..ApcState
-	???? resolve ArraySubscriptExpr = thread.SavedApcState
-	thread...ApcQueueable = tRUE
-	thread..ApcState.Process = process
-	thread.Process = process
-	rtlInitializeListHead(???? resolve ArraySubscriptExpr)
-	rtlInitializeListHead(???? resolve ArraySubscriptExpr)
-	keInitializeSpinLock(thread.ApcQueueLock)
-	keInitializeApc(thread.SuspendApc, thread, originalApcEnvironment, kepSuspendNop, kepSuspendRundown, kepSuspendThread, kernelMode, (0 as! PVOID))
-	keInitializeSemaphore(thread.SuspendSemaphore, 0, 2)
-	keInitializeTimer(thread.Timer, notificationTimer)
-	timerWaitBlock = ???? resolve ArraySubscriptExpr
-	timerWaitBlock.Object = thread.Timer
-	timerWaitBlock.WaitKey = (258 as! XTSTATUS)
-	timerWaitBlock.WaitType = waitAny
-	timerWaitBlock.WaitListEntry.Flink = (thread.Timer).Header.WaitListHead
-	timerWaitBlock.WaitListEntry.Blink = (thread.Timer).Header.WaitListHead
-	thread.EnvironmentBlock = environmentBlock
+	thread.header.type = threadObject
+	thread.header.signalState = 0
+	rtlInitializeListHead(thread.header.waitListHead)
+	rtlInitializeListHead(thread.mutantListHead)
+	[unknown clang ast] CompoundStmt ForStmt
+	thread.autoAlignment = process.autoAlignment
+	thread.stackResident = tRUE
+	thread.stackSwap = tRUE
+	thread.swapBusy = fALSE
+	thread.adjustReason = adjustNone
+	keInitializeSpinLock(thread.threadLock)
+	thread.serviceTable = keServiceDescriptorTable
+	thread.apcStatePointer[0] = thread.apcState
+	thread.apcStatePointer[1] = thread.savedApcState
+	thread.apcQueueable = tRUE
+	thread.apcState.process = process
+	thread.process = process
+	rtlInitializeListHead(thread.apcState.apcListHead[kernelMode])
+	rtlInitializeListHead(thread.apcState.apcListHead[userMode])
+	keInitializeSpinLock(thread.apcQueueLock)
+	keInitializeApc(thread.suspendApc, thread, originalApcEnvironment, kepSuspendNop, kepSuspendRundown, kepSuspendThread, kernelMode, (0 as! PVOID))
+	keInitializeSemaphore(thread.suspendSemaphore, 0, 2)
+	keInitializeTimer(thread.timer, notificationTimer)
+	timerWaitBlock = thread.waitBlock[3]
+	timerWaitBlock.object = thread.timer
+	timerWaitBlock.waitKey = (258 as! XTSTATUS)
+	timerWaitBlock.waitType = waitAny
+	timerWaitBlock.waitListEntry.flink = (thread.timer).header.waitListHead
+	timerWaitBlock.waitListEntry.blink = (thread.timer).header.waitListHead
+	thread.environmentBlock = environmentBlock
 	if !stack {
 		status = mmAllocateKernelStack(stack, fALSE, 0)
 		if status != (0 as! XTSTATUS) or !stack {
@@ -76,11 +75,11 @@ fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTE
 
 	}
 
-	thread.InitialStack = stack
-	thread.StackBase = stack
-	thread.StackLimit = stack - 32768
-	??? CompoundStmt SEHTryStmt
-	thread.State = initialized
+	thread.initialStack = stack
+	thread.stackBase = stack
+	thread.stackLimit = stack - 32768
+	[unknown clang ast] CompoundStmt SEHTryStmt
+	thread.state = initialized
 	if startThread {
 		keStartThread(thread)
 
@@ -105,27 +104,26 @@ fun keStartThread(thread PKTHREAD) {
 
 	var processorAffinity KAFFINITY
 	var testAffinity KAFFINITY
-	process = thread..ApcState.Process
-	thread.DisableBoost = process...DisableBoost
-	thread.Iopl = thread..ApcState.Process.Iopl
-	thread.Quantum = process.Quantum
-	thread.SystemAffinityActive = fALSE
-	keAcquireSpinLock(thread..ApcState.Process.ProcessLock)
+	process = thread.apcState.process
+	thread.disableBoost = process.disableBoost
+	thread.iopl = thread.apcState.process.iopl
+	thread.quantum = process.quantum
+	thread.systemAffinityActive = fALSE
+	keAcquireSpinLock(thread.apcState.process.processLock)
 	runLevel = keRaiseRunLevel(12)
-	thread.Affinity = process.Affinity
-	thread.UserAffinity = process.Affinity
-	thread.Priority = process.BasePriority
-	thread.BasePriority = process.BasePriority
-	process.ThreadSeed = 0
-	thread.IdealProcessor = process.ThreadSeed
-	thread.UserIdealProcessor = process.ThreadSeed
-	rtlInsertTailList(process.ThreadListHead, thread.ThreadListEntry)
-	if process.StackCount != 2147483647 {
-		??? CompoundStmt UnaryOperator
-
+	thread.affinity = process.affinity
+	thread.userAffinity = process.affinity
+	thread.priority = process.basePriority
+	thread.basePriority = process.basePriority
+	process.threadSeed = 0
+	thread.idealProcessor = process.threadSeed
+	thread.userIdealProcessor = process.threadSeed
+	rtlInsertTailList(process.threadListHead, thread.threadListEntry)
+	if process.stackCount != 2147483647 {
+		process.stackCount++
 	}
 
-	keReleaseSpinLock(thread..ApcState.Process.ProcessLock)
+	keReleaseSpinLock(thread.apcState.process.processLock)
 	keLowerRunLevel(runLevel)
 }
 

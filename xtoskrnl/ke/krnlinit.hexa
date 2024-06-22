@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// This routine starts up the XT kernel. It is called by boot loader.
 /// 
 /// @param Parameters
@@ -9,32 +8,32 @@
 /// @since XT 1.0
 fun keStartXtSystem(parameters PKERNEL_INITIALIZATION_BLOCK) {
 	keInitializationBlock = parameters
-	if keInitializationBlock.BlockSize != ???? resolve UnaryExprOrTypeTraitExpr or keInitializationBlock.BlockVersion != 1 or keInitializationBlock.ProtocolVersion != 1 {
+	if keInitializationBlock.blockSize != sizeOf<Unsigned long long>() or keInitializationBlock.blockVersion != 1 or keInitializationBlock.protocolVersion != 1 {
 		keHaltSystem()
 
 	}
 
-	if 1 and keInitializationBlock.LoaderInformation.DbgPrint {
-		keDbgPrint = keInitializationBlock.LoaderInformation.DbgPrint
+	if 1 and keInitializationBlock.loaderInformation.dbgPrint {
+		keDbgPrint = keInitializationBlock.loaderInformation.dbgPrint
 
 	}
 
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt IntegerLiteral
-		??? CompoundStmt IntegerLiteral
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt IntegerLiteral
+		[unknown clang ast] CompoundStmt IntegerLiteral
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt NullStmt
 	arInitializeProcessor((0 as! PVOID))
 	kepInitializeSystemResources()
 	kepInitializeMachine()

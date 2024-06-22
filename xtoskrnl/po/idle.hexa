@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Initializes Processor Control Block's (PRCB) power state structures.
 /// 
 /// @param Prcb
@@ -8,14 +7,14 @@
 /// 
 /// @since XT 1.0
 fun poInitializeProcessorControlBlock(prcb PKPROCESSOR_CONTROL_BLOCK) {
-	rtlZeroMemory(prcb.PowerState, ???? resolve UnaryExprOrTypeTraitExpr)
-	prcb.PowerState.Idle0TimeLimit = 4294967295
-	prcb.PowerState.CurrentThrottle = 100
-	prcb.PowerState.CurrentThrottleIndex = 0
-	prcb.PowerState.IdleFunction = popIdle0Function
-	keInitializeDpc(prcb.PowerState.PerfDpc, popPerfIdleDpc, prcb)
-	keSetTargetProcessorDpc(prcb.PowerState.PerfDpc, prcb.CpuNumber)
-	keInitializeTimer(prcb.PowerState.PerfTimer, synchronizationTimer)
+	rtlZeroMemory(prcb.powerState, sizeOf<Unsigned long long>())
+	prcb.powerState.idle0TimeLimit = 4294967295
+	prcb.powerState.currentThrottle = 100
+	prcb.powerState.currentThrottleIndex = 0
+	prcb.powerState.idleFunction = popIdle0Function
+	keInitializeDpc(prcb.powerState.perfDpc, popPerfIdleDpc, prcb)
+	keSetTargetProcessorDpc(prcb.powerState.perfDpc, prcb.cpuNumber)
+	keInitializeTimer(prcb.powerState.perfTimer, synchronizationTimer)
 }
 
 /// Processor idle loop routine.

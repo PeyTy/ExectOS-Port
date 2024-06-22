@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Returns a boolean value of the specified configuration key.
 /// 
 /// @param ConfigName
@@ -38,23 +37,23 @@ fun blGetConfigValue(configName Const PWCHAR) {
 	keyLength = rtlWideStringLength(configName, 0)
 	configListEntry = BlpConfig.Flink
 	while configListEntry != blpConfig {
-		configEntry = (((configListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
-		if rtlCompareWideStringInsensitive(configEntry.Name, configName, keyLength) == 0 {
-			valueLength = rtlWideStringLength(configEntry.Value, 0)
-			status = blAllocateMemoryPool((valueLength + 1) * ???? resolve UnaryExprOrTypeTraitExpr, value as! PVOID *)
+		configEntry = (((configListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		if rtlCompareWideStringInsensitive(configEntry.name, configName, keyLength) == 0 {
+			valueLength = rtlWideStringLength(configEntry.value, 0)
+			status = blAllocateMemoryPool((valueLength + 1) * sizeOf<Unsigned long long>(), value as! PVOID *)
 			if status != (9223372036854775808 & 0) {
 				blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
 				return (0 as! PVOID)
 
 			}
 
-			rtlCopyMemory(value, configEntry.Value, valueLength * ???? resolve UnaryExprOrTypeTraitExpr)
-			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+			rtlCopyMemory(value, configEntry.value, valueLength * sizeOf<Unsigned long long>())
+			value[valueLength] = 0/* "\u0000" */
 			return value
 
 		}
 
-		configListEntry = configListEntry.Flink
+		configListEntry = configListEntry.flink
 
 	}
 
@@ -82,12 +81,12 @@ fun blSetConfigValue(configName Const PWCHAR, configValue Const PWCHAR) {
 	length = rtlWideStringLength(configName, 0)
 	configListEntry = BlpConfig.Flink
 	while configListEntry != blpConfig {
-		configEntry = (((configListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
-		if rtlCompareWideStringInsensitive(configEntry.Name, configName, length) == 0 {
+		configEntry = (((configListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		if rtlCompareWideStringInsensitive(configEntry.name, configName, length) == 0 {
 			length = rtlWideStringLength(configValue, 0)
-			status = blFreeMemoryPool(configEntry.Value)
+			status = blFreeMemoryPool(configEntry.value)
 			if status == (9223372036854775808 & 0) {
-				status = blAllocateMemoryPool((length + 1) * ???? resolve UnaryExprOrTypeTraitExpr, configEntry.Value as! PVOID *)
+				status = blAllocateMemoryPool((length + 1) * sizeOf<Unsigned long long>(), configEntry.value as! PVOID *)
 
 			}
 
@@ -96,13 +95,13 @@ fun blSetConfigValue(configName Const PWCHAR, configValue Const PWCHAR) {
 
 			}
 
-			rtlCopyMemory(configEntry.Value, configValue, length * ???? resolve UnaryExprOrTypeTraitExpr)
-			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+			rtlCopyMemory(configEntry.value, configValue, length * sizeOf<Unsigned long long>())
+			configEntry.value[length] = 0/* "\u0000" */
 			return (9223372036854775808 & 0)
 
 		}
 
-		configListEntry = configListEntry.Flink
+		configListEntry = configListEntry.flink
 
 	}
 
@@ -143,14 +142,13 @@ fun blpLoadConfiguration() {
 	while sectionListEntry != blpConfigSections {
 		let section = new ByValue<PXTBL_CONFIG_SECTION>()
 
-		if rtlCompareWideStringInsensitive(section.SectionName, "XTLDR", 5) == 0 {
-			blpUpdateConfiguration(section.Options)
+		if rtlCompareWideStringInsensitive(section.sectionName, "XTLDR", 5) == 0 {
+			blpUpdateConfiguration(section.options)
 			rtlRemoveEntryList(sectionListEntry)
-			??? CompoundStmt BreakStmt
-
+			break
 		}
 
-		sectionListEntry = sectionListEntry.Flink
+		sectionListEntry = sectionListEntry.flink
 
 	}
 
@@ -180,39 +178,34 @@ fun blpParseCommandLine() {
 	let config = new ByValue<LIST_ENTRY>()
 
 	rtlInitializeListHead(config)
-	status = efiSystemTable.BootServices.HandleProtocol(efiImageHandle, lIPGuid, loadedImage as! PVOID *)
+	status = efiSystemTable.bootServices.handleProtocol(efiImageHandle, lIPGuid, loadedImage as! PVOID *)
 	if status == (9223372036854775808 & 0) {
-		if loadedImage and loadedImage.LoadOptions {
-			argument = rtlTokenizeWideString(loadedImage.LoadOptions, " ", lastArg)
+		if loadedImage and loadedImage.loadOptions {
+			argument = rtlTokenizeWideString(loadedImage.loadOptions, " ", lastArg)
 			while argument != (0 as! PVOID) {
 				key = argument
-				while *argument != ???? resolve CharacterLiteral and *argument != ???? resolve CharacterLiteral and *argument != ???? resolve CharacterLiteral {
-					??? CompoundStmt UnaryOperator
-
+				while argument[0] != 61/* "=" */ and argument[0] != 0/* "\u0000" */ and argument[0] != 10/* "\n" */ {
+					argument++
 				}
 
-				*argument = ???? resolve CharacterLiteral
-				??? CompoundStmt UnaryOperator
-				value = argument
-				while *argument != ???? resolve CharacterLiteral and *argument != ???? resolve CharacterLiteral {
-					??? CompoundStmt UnaryOperator
-
+				argument[0] = 0/* "\u0000" */
+				argument++				value = argument
+				while argument[0] != 0/* "\u0000" */ and argument[0] != 10/* "\n" */ {
+					argument++
 				}
 
-				*argument = ???? resolve CharacterLiteral
-				??? CompoundStmt UnaryOperator
-				keyLength = rtlWideStringLength(key, 0)
+				argument[0] = 0/* "\u0000" */
+				argument++				keyLength = rtlWideStringLength(key, 0)
 				valueLength = rtlWideStringLength(value, 0)
 				if keyLength == 0 or valueLength == 0 {
-					??? CompoundStmt ContinueStmt
-
+					continue
 				}
 
-				status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, option as! PVOID *)
+				status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), option as! PVOID *)
 				if status == (9223372036854775808 & 0) {
-					status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (keyLength + 1), option.Name as! PVOID *)
+					status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (keyLength + 1), option.name as! PVOID *)
 					if status == (9223372036854775808 & 0) {
-						status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (valueLength + 1), option.Value as! PVOID *)
+						status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (valueLength + 1), option.value as! PVOID *)
 
 					}
 
@@ -224,11 +217,11 @@ fun blpParseCommandLine() {
 
 				}
 
-				rtlCopyMemory(option.Name, key, (keyLength * ???? resolve UnaryExprOrTypeTraitExpr))
-				rtlCopyMemory(option.Value, value, (valueLength * ???? resolve UnaryExprOrTypeTraitExpr))
-				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-				rtlInsertTailList(config, option.Flink)
+				rtlCopyMemory(option.name, key, (keyLength * sizeOf<Unsigned long long>()))
+				rtlCopyMemory(option.value, value, (valueLength * sizeOf<Unsigned long long>()))
+				option.name[keyLength] = 0/* "\u0000" */
+				option.value[valueLength] = 0/* "\u0000" */
+				rtlInsertTailList(config, option.flink)
 				argument = rtlTokenizeWideString((0 as! PVOID), " ", lastArg)
 
 			}
@@ -273,36 +266,32 @@ fun blpParseConfigFile(rawConfig Const PCHAR, configuration PLIST_ENTRY) {
 	sectionName = (0 as! PVOID)
 	key = (0 as! PVOID)
 	value = (0 as! PVOID)
-	while *inputData != ???? resolve CharacterLiteral {
-		if *inputData == ???? resolve CharacterLiteral or *inputData == ???? resolve CharacterLiteral {
-			while *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral {
-				??? CompoundStmt UnaryOperator
-
+	while inputData[0] != 0/* "\u0000" */ {
+		if inputData[0] == 59/* ";" */ or inputData[0] == 35/* "#" */ {
+			while inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
+				inputData++
 			}
 
 
 		} else {
-			??? CompoundStmt CompoundStmt
-			if *inputData == ???? resolve CharacterLiteral {
-				??? CompoundStmt UnaryOperator
-				sectionName = inputData
-				while *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral {
-					??? CompoundStmt UnaryOperator
-
+			[unknown clang ast] CompoundStmt CompoundStmt
+			if inputData[0] == 91/* "[" */ {
+				inputData++				sectionName = inputData
+				while inputData[0] != 93/* "]" */ and inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
+					inputData++
 				}
 
-				if *inputData != ???? resolve CharacterLiteral {
+				if inputData[0] != 93/* "]" */ {
 					return (9223372036854775808 | 2)
 
 				}
 
-				*inputData = ???? resolve CharacterLiteral
-				??? CompoundStmt UnaryOperator
-				sectionName = rtlTrimString(sectionName)
+				inputData[0] = 0/* "\u0000" */
+				inputData++				sectionName = rtlTrimString(sectionName)
 				sectionLength = rtlStringLength(sectionName, 0)
-				status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, section as! PVOID *)
+				status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), section as! PVOID *)
 				if status == (9223372036854775808 & 0) {
-					status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (sectionLength + 1), section.SectionName as! PVOID *)
+					status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (sectionLength + 1), section.sectionName as! PVOID *)
 
 				}
 
@@ -311,47 +300,42 @@ fun blpParseConfigFile(rawConfig Const PCHAR, configuration PLIST_ENTRY) {
 
 				}
 
-				rtlInitializeListHead(section.Options)
-				rtlStringToWideString(section.SectionName, sectionName, sectionLength)
-				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-				rtlInsertTailList(configuration, section.Flink)
+				rtlInitializeListHead(section.options)
+				rtlStringToWideString(section.sectionName, sectionName, sectionLength)
+				section.sectionName[sectionLength] = 0/* "\u0000" */
+				rtlInsertTailList(configuration, section.flink)
 
 			} else {
 				key = inputData
-				while *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral {
-					??? CompoundStmt UnaryOperator
-
+				while inputData[0] != 61/* "=" */ and inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
+					inputData++
 				}
 
-				if *inputData != ???? resolve CharacterLiteral {
+				if inputData[0] != 61/* "=" */ {
 					return (9223372036854775808 | 2)
 
 				}
 
-				*inputData = 0
-				??? CompoundStmt UnaryOperator
-				while *inputData == ???? resolve CharacterLiteral {
-					??? CompoundStmt UnaryOperator
-
+				inputData[0] = 0
+				inputData++				while inputData[0] == 32/* " " */ {
+					inputData++
 				}
 
 				value = inputData
-				while *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral {
-					??? CompoundStmt UnaryOperator
-
+				while inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
+					inputData++
 				}
 
-				*inputData = 0
-				??? CompoundStmt UnaryOperator
-				key = rtlTrimString(key)
+				inputData[0] = 0
+				inputData++				key = rtlTrimString(key)
 				value = rtlTrimString(value)
 				keyLength = rtlStringLength(key, 0)
 				valueLength = rtlStringLength(value, 0)
-				status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, option as! PVOID *)
+				status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), option as! PVOID *)
 				if status == (9223372036854775808 & 0) {
-					status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (keyLength + 1), option.Name as! PVOID *)
+					status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (keyLength + 1), option.name as! PVOID *)
 					if status == (9223372036854775808 & 0) {
-						status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (valueLength + 1), option.Value as! PVOID *)
+						status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (valueLength + 1), option.value as! PVOID *)
 
 					}
 
@@ -363,21 +347,20 @@ fun blpParseConfigFile(rawConfig Const PCHAR, configuration PLIST_ENTRY) {
 
 				}
 
-				if *value == ???? resolve CharacterLiteral or *value == ???? resolve CharacterLiteral {
-					??? CompoundStmt UnaryOperator
+				if value[0] == 34/* "\"" */ or value[0] == 39/* "'" */ {
+					value++
+				}
+
+				if value[valueLength - 2] == 34/* "\"" */ or value[valueLength - 2] == 39/* "'" */ {
+					value[valueLength - 2] = 0/* "\u0000" */
 
 				}
 
-				if ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral or ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral {
-					???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-
-				}
-
-				rtlStringToWideString(option.Name, key, rtlStringLength(key, 0) + 1)
-				rtlStringToWideString(option.Value, value, rtlStringLength(value, 0) + 1)
-				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-				rtlInsertTailList(section.Options, option.Flink)
+				rtlStringToWideString(option.name, key, rtlStringLength(key, 0) + 1)
+				rtlStringToWideString(option.value, value, rtlStringLength(value, 0) + 1)
+				option.name[keyLength] = 0/* "\u0000" */
+				option.value[valueLength] = 0/* "\u0000" */
+				rtlInsertTailList(section.options, option.flink)
 
 			}
 
@@ -418,8 +401,8 @@ fun blpReadConfigFile(configDirectory Const PWCHAR, configFile Const PWCHAR, con
 
 	}
 
-	status = fsHandle.Open(fsHandle, dirHandle, configDirectory, 1, 0)
-	fsHandle.Close(fsHandle)
+	status = fsHandle.open(fsHandle, dirHandle, configDirectory, 1, 0)
+	fsHandle.close(fsHandle)
 	if status != (9223372036854775808 & 0) {
 		blCloseVolume(diskHandle)
 		return status
@@ -427,7 +410,7 @@ fun blpReadConfigFile(configDirectory Const PWCHAR, configFile Const PWCHAR, con
 	}
 
 	status = blReadFile(dirHandle, configFile, configData as! PVOID *, fileSize)
-	dirHandle.Close(dirHandle)
+	dirHandle.close(dirHandle)
 	blCloseVolume(diskHandle)
 	return status
 }
@@ -447,13 +430,13 @@ fun blpUpdateConfiguration(newConfig PLIST_ENTRY) {
 
 	let nextListEntry = new ByValue<PLIST_ENTRY>()
 
-	configListEntry = newConfig.Flink
+	configListEntry = newConfig.flink
 	while configListEntry != newConfig {
-		configEntry = (((configListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
-		nextListEntry = configListEntry.Flink
-		if blGetConfigValue(configEntry.Name) == (0 as! PVOID) {
-			rtlRemoveEntryList(configEntry.Flink)
-			rtlInsertTailList(blpConfig, configEntry.Flink)
+		configEntry = (((configListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		nextListEntry = configListEntry.flink
+		if blGetConfigValue(configEntry.name) == (0 as! PVOID) {
+			rtlRemoveEntryList(configEntry.flink)
+			rtlInsertTailList(blpConfig, configEntry.flink)
 
 		}
 

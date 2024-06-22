@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// This routine converts endianness on 16bit value.
 /// 
 /// @param Source

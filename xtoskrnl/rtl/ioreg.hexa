@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Reads a byte from a specified register address.
 /// 
 /// @param Register
@@ -8,7 +7,7 @@
 /// 
 /// @since XT 1.0
 fun rtlReadRegisterByte(register Volatile PVOID) {
-	return *(register as! PUCHAR)
+	return (register as! PUCHAR)[0]
 }
 
 /// Reads a byte from a specified register address.
@@ -20,7 +19,7 @@ fun rtlReadRegisterByte(register Volatile PVOID) {
 /// 
 /// @since XT 1.0
 fun rtlReadRegisterLong(register Volatile PVOID) {
-	return *(register as! PULONG)
+	return (register as! PULONG)[0]
 }
 
 /// Reads a byte from a specified register address.
@@ -32,7 +31,7 @@ fun rtlReadRegisterLong(register Volatile PVOID) {
 /// 
 /// @since XT 1.0
 fun rtlReadRegisterShort(register Volatile PVOID) {
-	return *(register as! PUSHORT)
+	return (register as! PUSHORT)[0]
 }
 
 /// Writes a byte into a specified register address.
@@ -47,7 +46,7 @@ fun rtlReadRegisterShort(register Volatile PVOID) {
 /// 
 /// @since XT 1.0
 fun rtlWriteRegisterByte(register Volatile PVOID, value UCHAR) {
-	*(register as! PUCHAR) = value
+	(register as! PUCHAR)[0] = value
 }
 
 /// Writes a byte into a specified register address.
@@ -62,7 +61,7 @@ fun rtlWriteRegisterByte(register Volatile PVOID, value UCHAR) {
 /// 
 /// @since XT 1.0
 fun rtlWriteRegisterLong(register Volatile PVOID, value ULONG) {
-	*(register as! PULONG) = value
+	(register as! PULONG)[0] = value
 }
 
 /// Writes a byte into a specified register address.
@@ -77,5 +76,5 @@ fun rtlWriteRegisterLong(register Volatile PVOID, value ULONG) {
 /// 
 /// @since XT 1.0
 fun rtlWriteRegisterShort(register Volatile PVOID, value USHORT) {
-	*(register as! PUSHORT) = value
+	(register as! PUSHORT)[0] = value
 }

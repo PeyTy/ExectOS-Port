@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Reboots into UEFI firmware setup interface.
 /// 
 /// @return This routine returns a status code.
@@ -11,7 +10,7 @@ fun blEnterFirmwareSetup() {
 	var indications ULONGLONG
 	var status EFI_STATUS
 	status = blGetEfiVariable(guid, "OsIndicationsSupported", setupSupport as! PVOID *)
-	if status != (9223372036854775808 & 0) or !(*setupSupport & 1) {
+	if status != (9223372036854775808 & 0) or !(setupSupport[0] & 1) {
 		blDebugPrint("WARNING: Reboot into firmware setup interface not supported\n")
 		return (9223372036854775808 | 3)
 
@@ -19,8 +18,8 @@ fun blEnterFirmwareSetup() {
 
 	indications = 0
 	status = blGetEfiVariable(guid, "OsIndications", indications as! PVOID)
-	??? CompoundStmt CompoundAssignOperator
-	status = blSetEfiVariable(guid, "OsIndications", indications as! PVOID, ???? resolve UnaryExprOrTypeTraitExpr)
+	indications |= 1
+	status = blSetEfiVariable(guid, "OsIndications", indications as! PVOID, sizeOf<Unsigned long long>())
 	if status != (9223372036854775808 & 0) {
 		return status
 
@@ -41,14 +40,14 @@ fun blExitBootServices() {
 	var status EFI_STATUS
 	var counter ULONG
 	BlpStatus.BootServices = fALSE
-	status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, memoryMap as! PVOID *)
+	status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), memoryMap as! PVOID *)
 	if status != (9223372036854775808 & 0) {
 		blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
 		return status
 
 	}
 
-	rtlZeroMemory(memoryMap, ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlZeroMemory(memoryMap, sizeOf<Unsigned long long>())
 	counter = 255
 	while counter > 0 {
 		status = blGetMemoryMap(memoryMap)
@@ -57,14 +56,12 @@ fun blExitBootServices() {
 
 		}
 
-		status = efiSystemTable.BootServices.ExitBootServices(efiImageHandle, memoryMap.MapKey)
+		status = efiSystemTable.bootServices.exitBootServices(efiImageHandle, memoryMap.mapKey)
 		if status == (9223372036854775808 & 0) {
-			??? CompoundStmt BreakStmt
-
+			break
 		}
 
-		??? CompoundStmt UnaryOperator
-
+		counter--
 	}
 
 	return status
@@ -83,8 +80,8 @@ fun blExitBootServices() {
 /// @since XT 1.0
 fun blGetConfigurationTable(tableGuid PEFI_GUID, table PVOID *) {
 	var index SIZE_T
-	??? CompoundStmt ForStmt
-	*table = (0 as! PVOID)
+	[unknown clang ast] CompoundStmt ForStmt
+	table[0] = (0 as! PVOID)
 	return (9223372036854775808 | 14)
 }
 
@@ -106,20 +103,20 @@ fun blGetEfiVariable(vendor PEFI_GUID, variableName PWCHAR, variableValue PVOID 
 	var status EFI_STATUS
 	var buffer PVOID
 	var size UINT_PTR
-	size = 1024 * ???? resolve UnaryExprOrTypeTraitExpr
+	size = 1024 * sizeOf<Unsigned long long>()
 	status = blAllocateMemoryPool(size, buffer as! PVOID *)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	status = efiSystemTable.RuntimeServices.GetVariable(variableName, vendor, (0 as! PVOID), size, buffer)
+	status = efiSystemTable.runtimeServices.getVariable(variableName, vendor, (0 as! PVOID), size, buffer)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	*variableValue = buffer
+	variableValue[0] = buffer
 	return (9223372036854775808 & 0)
 }
 
@@ -134,10 +131,10 @@ fun blGetEfiVariable(vendor PEFI_GUID, variableName PWCHAR, variableValue PVOID 
 /// 
 /// @see https://en.wikipedia.org/wiki/Xorshift
 fun blGetRandomValue(rNGBuffer PULONGLONG) {
-	??? CompoundStmt CompoundAssignOperator
-	??? CompoundStmt CompoundAssignOperator
-	??? CompoundStmt CompoundAssignOperator
-	return *rNGBuffer * 2685821657736338717
+	rNGBuffer[0] ^= rNGBuffer[0] >> 12
+	rNGBuffer[0] ^= rNGBuffer[0] << 25
+	rNGBuffer[0] ^= rNGBuffer[0] >> 27
+	return rNGBuffer[0] * 2685821657736338717
 }
 
 /// Checks whether SecureBoot is enabled or not.
@@ -151,10 +148,10 @@ fun blGetSecureBootStatus() {
 	var secureBootStatus INT_PTR = 0
 	var varValue UCHAR = 0
 	var size UINT_PTR
-	size = ???? resolve UnaryExprOrTypeTraitExpr
-	if efiSystemTable.RuntimeServices.GetVariable("SecureBoot", varGuid, (0 as! PVOID), size, varValue) == (9223372036854775808 & 0) {
+	size = sizeOf<Unsigned long long>()
+	if efiSystemTable.runtimeServices.getVariable("SecureBoot", varGuid, (0 as! PVOID), size, varValue) == (9223372036854775808 & 0) {
 		secureBootStatus = varValue as! INT_PTR
-		if (efiSystemTable.RuntimeServices.GetVariable("SetupMode", varGuid, (0 as! PVOID), size, varValue) == (9223372036854775808 & 0)) and varValue != 0 {
+		if (efiSystemTable.runtimeServices.getVariable("SetupMode", varGuid, (0 as! PVOID), size, varValue) == (9223372036854775808 & 0)) and varValue != 0 {
 			secureBootStatus = -1
 
 		}
@@ -182,19 +179,19 @@ fun blInitializeEntropy(rNGBuffer PULONGLONG) {
 	var seed ULONGLONG
 	rng = (0 as! PVOID)
 	seed = 0
-	status = efiSystemTable.BootServices.LocateProtocol(rngGuid, (0 as! PVOID), rng as! PVOID *)
+	status = efiSystemTable.bootServices.locateProtocol(rngGuid, (0 as! PVOID), rng as! PVOID *)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	status = rng.GetRNG(rng, (0 as! PVOID), 8, seed as! PUCHAR)
+	status = rng.getRNG(rng, (0 as! PVOID), 8, seed as! PUCHAR)
 	if status != (9223372036854775808 & 0) {
 		return status
 
 	}
 
-	*rNGBuffer = ???? resolve ConditionalOperator
+	rNGBuffer[0] = [unknown clang ast] resolve ConditionalOperator
 	return (9223372036854775808 & 0)
 }
 
@@ -216,7 +213,7 @@ fun blInitializeEntropy(rNGBuffer PULONGLONG) {
 /// 
 /// @since XT 1.0
 fun blLoadEfiImage(devicePath PEFI_DEVICE_PATH_PROTOCOL, imageData PVOID, imageSize SIZE_T, imageHandle PEFI_HANDLE) {
-	return efiSystemTable.BootServices.LoadImage(fALSE, efiImageHandle, devicePath, imageData, imageSize, imageHandle)
+	return efiSystemTable.bootServices.loadImage(fALSE, efiImageHandle, devicePath, imageData, imageSize, imageHandle)
 }
 
 /// Reboots the machine.
@@ -225,7 +222,7 @@ fun blLoadEfiImage(devicePath PEFI_DEVICE_PATH_PROTOCOL, imageData PVOID, imageS
 /// 
 /// @since XT 1.0
 fun blRebootSystem() {
-	return efiSystemTable.RuntimeServices.ResetSystem(efiResetCold, (9223372036854775808 & 0), 0, (0 as! PVOID))
+	return efiSystemTable.runtimeServices.resetSystem(efiResetCold, (9223372036854775808 & 0), 0, (0 as! PVOID))
 }
 
 /// Sets a value of an EFI variable.
@@ -248,7 +245,7 @@ fun blRebootSystem() {
 fun blSetEfiVariable(vendor PEFI_GUID, variableName PWCHAR, variableValue PVOID, size UINT_PTR) {
 	var attributes ULONG
 	attributes = 1 | 2 | 4
-	return efiSystemTable.RuntimeServices.SetVariable(variableName, vendor, attributes, size, variableValue)
+	return efiSystemTable.runtimeServices.setVariable(variableName, vendor, attributes, size, variableValue)
 }
 
 /// Shuts down the machine.
@@ -257,7 +254,7 @@ fun blSetEfiVariable(vendor PEFI_GUID, variableName PWCHAR, variableValue PVOID,
 /// 
 /// @since XT 1.0
 fun blShutdownSystem() {
-	return efiSystemTable.RuntimeServices.ResetSystem(efiResetShutdown, (9223372036854775808 & 0), 0, (0 as! PVOID))
+	return efiSystemTable.runtimeServices.resetSystem(efiResetShutdown, (9223372036854775808 & 0), 0, (0 as! PVOID))
 }
 
 /// Puts the system to sleep for the specified number of milliseconds.
@@ -269,7 +266,7 @@ fun blShutdownSystem() {
 /// 
 /// @since XT 1.0
 fun blSleepExecution(milliseconds ULONG_PTR) {
-	efiSystemTable.BootServices.Stall(milliseconds * 1000)
+	efiSystemTable.bootServices.stall(milliseconds * 1000)
 }
 
 /// Executes a loaded EFI image entry point.
@@ -281,7 +278,7 @@ fun blSleepExecution(milliseconds ULONG_PTR) {
 /// 
 /// @since XT 1.0
 fun blStartEfiImage(imageHandle EFI_HANDLE) {
-	return efiSystemTable.BootServices.StartImage(imageHandle, (0 as! PVOID), (0 as! PVOID))
+	return efiSystemTable.bootServices.startImage(imageHandle, (0 as! PVOID), (0 as! PVOID))
 }
 
 /// Waits for one or more EFI events.
@@ -299,5 +296,5 @@ fun blStartEfiImage(imageHandle EFI_HANDLE) {
 /// 
 /// @since XT 1.0
 fun blWaitForEfiEvent(numberOfEvents UINT_PTR, event PEFI_EVENT, index PUINT_PTR) {
-	return efiSystemTable.BootServices.WaitForEvent(numberOfEvents, event, index)
+	return efiSystemTable.bootServices.waitForEvent(numberOfEvents, event, index)
 }

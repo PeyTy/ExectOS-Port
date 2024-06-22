@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Initializes the process.
 /// 
 /// @param Process
@@ -20,18 +19,18 @@
 /// 
 /// @since NT 3.5
 fun keInitializeProcess(process PKPROCESS, priority KPRIORITY, affinity KAFFINITY, directoryTable PULONG_PTR, alignment BOOLEAN) {
-	process.Header.Type = processObject
-	rtlInitializeListHead(process.Header.WaitListHead)
-	rtlInitializeListHead(process.ProfileListHead)
-	rtlInitializeListHead(process.ReadyListHead)
-	rtlInitializeListHead(process.ThreadListHead)
-	process.BasePriority = priority
-	process.Affinity = affinity
-	process...AutoAlignment = alignment
-	???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr
-	???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr
-	process.StackCount = 32767
-	process.Quantum = 6
-	process.IopmOffset = ???? resolve UnaryExprOrTypeTraitExpr
-	process.State = processInMemory
+	process.header.type = processObject
+	rtlInitializeListHead(process.header.waitListHead)
+	rtlInitializeListHead(process.profileListHead)
+	rtlInitializeListHead(process.readyListHead)
+	rtlInitializeListHead(process.threadListHead)
+	process.basePriority = priority
+	process.affinity = affinity
+	process.autoAlignment = alignment
+	process.directoryTable[0] = directoryTable[0]
+	process.directoryTable[1] = directoryTable[1]
+	process.stackCount = 32767
+	process.quantum = 6
+	process.iopmOffset = sizeOf<Unsigned long long>()
+	process.state = processInMemory
 }

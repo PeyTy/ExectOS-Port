@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Clears a specified line on the UEFI text console.
 /// 
 /// @param LineNo
@@ -13,7 +12,7 @@ fun blClearConsoleLine(lineNo ULONGLONG) {
 	var resY UINT_PTR
 	blQueryConsoleMode(resX, resY)
 	blSetCursorPosition(0, lineNo)
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt ForStmt
 }
 
 /// This routine clears the UEFI console screen.
@@ -22,7 +21,7 @@ fun blClearConsoleLine(lineNo ULONGLONG) {
 /// 
 /// @since XT 1.0
 fun blClearConsoleScreen() {
-	efiSystemTable.ConOut.ClearScreen(efiSystemTable.ConOut)
+	efiSystemTable.conOut.clearScreen(efiSystemTable.conOut)
 }
 
 /// Disables the cursor on the UEFI console.
@@ -31,7 +30,7 @@ fun blClearConsoleScreen() {
 /// 
 /// @since XT 1.0
 fun blDisableConsoleCursor() {
-	efiSystemTable.ConOut.EnableCursor(efiSystemTable.ConOut, fALSE)
+	efiSystemTable.conOut.enableCursor(efiSystemTable.conOut, fALSE)
 }
 
 /// Enables the cursor on the UEFI console.
@@ -40,7 +39,7 @@ fun blDisableConsoleCursor() {
 /// 
 /// @since XT 1.0
 fun blEnableConsoleCursor() {
-	efiSystemTable.ConOut.EnableCursor(efiSystemTable.ConOut, tRUE)
+	efiSystemTable.conOut.enableCursor(efiSystemTable.conOut, tRUE)
 }
 
 /// This routine formats the input string and prints it out to the stdout and serial console.
@@ -64,8 +63,8 @@ fun blConsolePrint(format PUSHORT) {
 	SerialPrintContext.WriteWideCharacter = blpDebugPutChar
 	__builtin_va_start(arguments, format)
 	rtlFormatWideString(consolePrintContext, format as! PWCHAR, arguments)
-	if rtlCompareWideString(efiSystemTable.FirmwareVendor, "EDK II", 6) != 0 {
-		if 1 and (BlpStatus.SerialPort.Flags & 1) {
+	if rtlCompareWideString(efiSystemTable.firmwareVendor, "EDK II", 6) != 0 {
+		if 1 and (BlpStatus.SerialPort.flags & 1) {
 			rtlFormatWideString(serialPrintContext, format as! PWCHAR, arguments)
 
 		}
@@ -85,7 +84,7 @@ fun blConsolePrint(format PUSHORT) {
 /// 
 /// @since XT 1.0
 fun blConsoleWrite(string PUSHORT) {
-	efiSystemTable.ConOut.OutputString(efiSystemTable.ConOut, string)
+	efiSystemTable.conOut.outputString(efiSystemTable.conOut, string)
 }
 
 /// This routine initializes the EFI console.
@@ -94,10 +93,10 @@ fun blConsoleWrite(string PUSHORT) {
 /// 
 /// @since XT 1.0
 fun blInitializeConsole() {
-	efiSystemTable.ConIn.Reset(efiSystemTable.ConIn, tRUE)
-	efiSystemTable.ConOut.Reset(efiSystemTable.ConOut, tRUE)
-	efiSystemTable.StdErr.Reset(efiSystemTable.StdErr, tRUE)
-	if efiSystemTable.ConOut.Mode.Mode != 0 {
+	efiSystemTable.conIn.reset(efiSystemTable.conIn, tRUE)
+	efiSystemTable.conOut.reset(efiSystemTable.conOut, tRUE)
+	efiSystemTable.stdErr.reset(efiSystemTable.stdErr, tRUE)
+	if efiSystemTable.conOut.mode.mode != 0 {
 		blSetConsoleMode(0)
 
 	}
@@ -119,7 +118,7 @@ fun blInitializeConsole() {
 /// 
 /// @since XT 1.0
 fun blQueryConsoleMode(resX PUINT_PTR, resY PUINT_PTR) {
-	efiSystemTable.ConOut.QueryMode(efiSystemTable.ConOut, efiSystemTable.ConOut.Mode.Mode, resX, resY)
+	efiSystemTable.conOut.queryMode(efiSystemTable.conOut, efiSystemTable.conOut.mode.mode, resX, resY)
 }
 
 /// Reads a keystroke from the input device.
@@ -131,7 +130,7 @@ fun blQueryConsoleMode(resX PUINT_PTR, resY PUINT_PTR) {
 /// 
 /// @since XT 1.0
 fun blReadKeyStroke(key PEFI_INPUT_KEY) {
-	efiSystemTable.ConIn.ReadKeyStroke(efiSystemTable.ConIn, key)
+	efiSystemTable.conIn.readKeyStroke(efiSystemTable.conIn, key)
 }
 
 /// Resets the console input device and clears its input buffer.
@@ -140,7 +139,7 @@ fun blReadKeyStroke(key PEFI_INPUT_KEY) {
 /// 
 /// @since XT 1.0
 fun blResetConsoleInputBuffer() {
-	efiSystemTable.ConIn.Reset(efiSystemTable.ConIn, fALSE)
+	efiSystemTable.conIn.reset(efiSystemTable.conIn, fALSE)
 }
 
 /// Sets the foreground and background colors.
@@ -152,7 +151,7 @@ fun blResetConsoleInputBuffer() {
 /// 
 /// @since XT 1.0
 fun blSetConsoleAttributes(attributes ULONGLONG) {
-	efiSystemTable.ConOut.SetAttribute(efiSystemTable.ConOut, attributes)
+	efiSystemTable.conOut.setAttribute(efiSystemTable.conOut, attributes)
 }
 
 /// Sets the output console device to the requested mode.
@@ -164,7 +163,7 @@ fun blSetConsoleAttributes(attributes ULONGLONG) {
 /// 
 /// @since XT 1.0
 fun blSetConsoleMode(mode ULONGLONG) {
-	return efiSystemTable.ConOut.SetMode(efiSystemTable.ConOut, mode)
+	return efiSystemTable.conOut.setMode(efiSystemTable.conOut, mode)
 }
 
 /// Sets new coordinates of the console cursor position.
@@ -179,7 +178,7 @@ fun blSetConsoleMode(mode ULONGLONG) {
 /// 
 /// @since XT 1.0
 fun blSetCursorPosition(posX ULONGLONG, posY ULONGLONG) {
-	efiSystemTable.ConOut.SetCursorPosition(efiSystemTable.ConOut, posX, posY)
+	efiSystemTable.conOut.setCursorPosition(efiSystemTable.conOut, posX, posY)
 }
 
 /// Writes a character to the default EFI console.
@@ -192,13 +191,13 @@ fun blSetCursorPosition(posX ULONGLONG, posY ULONGLONG) {
 /// @since XT 1.0
 fun blpConsolePutChar(character USHORT) {
 	var buffer USHORT[2]
-	if character == ???? resolve CharacterLiteral {
-		blpConsolePutChar(???? resolve CharacterLiteral)
+	if character == 10/* "\n" */ {
+		blpConsolePutChar(13/* "\r" */)
 
 	}
 
-	???? resolve ArraySubscriptExpr = character
-	???? resolve ArraySubscriptExpr = 0
-	efiSystemTable.ConOut.OutputString(efiSystemTable.ConOut, buffer)
+	buffer[0] = character
+	buffer[1] = 0
+	efiSystemTable.conOut.outputString(efiSystemTable.conOut, buffer)
 	return (0 as! XTSTATUS)
 }

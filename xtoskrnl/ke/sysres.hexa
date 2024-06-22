@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Looks for an unacquired system resource of the specified type and acquires it.
 /// 
 /// @param ResourceType
@@ -12,7 +11,7 @@
 /// @since XT 1.0
 fun keAcquireSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
 	kepGetSystemResource(resourceType, tRUE, resourceHeader)
-	return ???? resolve ConditionalOperator
+	return [unknown clang ast] resolve ConditionalOperator
 }
 
 /// Looks for an unacquired system resource of the specified type and returns it without acquiring an ownership.
@@ -28,7 +27,7 @@ fun keAcquireSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PS
 /// @since XT 1.0
 fun keGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
 	kepGetSystemResource(resourceType, fALSE, resourceHeader)
-	return ???? resolve ConditionalOperator
+	return [unknown clang ast] resolve ConditionalOperator
 }
 
 /// Releases system resource.
@@ -42,7 +41,7 @@ fun keGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PSYSTE
 fun keReleaseSystemResource(resourceHeader PSYSTEM_RESOURCE_HEADER) {
 	arClearInterruptFlag()
 	keAcquireSpinLock(kepSystemResourcesLock)
-	resourceHeader.Acquired = fALSE
+	resourceHeader.acquired = fALSE
 	keReleaseSpinLock(kepSystemResourcesLock)
 	arSetInterruptFlag()
 }
@@ -72,18 +71,17 @@ fun kepGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, acquire BOOLEAN, res
 	keAcquireSpinLock(kepSystemResourcesLock)
 	listEntry = KepSystemResourcesListHead.Flink
 	while listEntry != kepSystemResourcesListHead {
-		resource = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
-		if resource.ResourceType == resourceType and resource.Acquired == fALSE {
+		resource = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
+		if resource.resourceType == resourceType and resource.acquired == fALSE {
 			if acquire {
-				resource.Acquired = tRUE
+				resource.acquired = tRUE
 
 			}
 
-			??? CompoundStmt BreakStmt
-
+			break
 		}
 
-		listEntry = listEntry.Flink
+		listEntry = listEntry.flink
 
 	}
 
@@ -98,7 +96,7 @@ fun kepGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, acquire BOOLEAN, res
 
 	}
 
-	*resourceHeader = resource
+	resourceHeader[0] = resource
 }
 
 /// Initializes system resource management.
@@ -116,15 +114,15 @@ fun kepInitializeSystemResources() {
 	var resourceSize ULONG
 	keInitializeSpinLock(kepSystemResourcesLock)
 	rtlInitializeListHead(kepSystemResourcesListHead)
-	if !rtlListEmpty(keInitializationBlock.SystemResourcesListHead) {
-		listEntry = keInitializationBlock.SystemResourcesListHead.Flink
-		while listEntry != keInitializationBlock.SystemResourcesListHead {
-			resourceHeader = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
-			nextListEntry = listEntry.Flink
-			??? CompoundStmt SwitchStmt
-			if resourceSize != 0 and resourceSize == resourceHeader.ResourceSize {
-				rtlRemoveEntryList(resourceHeader.ListEntry)
-				rtlInsertTailList(kepSystemResourcesListHead, resourceHeader.ListEntry)
+	if !rtlListEmpty(keInitializationBlock.systemResourcesListHead) {
+		listEntry = keInitializationBlock.systemResourcesListHead.flink
+		while listEntry != keInitializationBlock.systemResourcesListHead {
+			resourceHeader = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
+			nextListEntry = listEntry.flink
+			[unknown clang ast] CompoundStmt SwitchStmt
+			if resourceSize != 0 and resourceSize == resourceHeader.resourceSize {
+				rtlRemoveEntryList(resourceHeader.listEntry)
+				rtlInsertTailList(kepSystemResourcesListHead, resourceHeader.listEntry)
 
 			}
 

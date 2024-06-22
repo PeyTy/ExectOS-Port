@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Allocates a new kernel stack.
 /// 
 /// @param Stack
@@ -33,12 +32,12 @@ fun mmAllocateProcessorStructures(cpuNumber ULONG, structuresData PVOID *) {
 
 	var processorStructures PVOID
 	var address UINT_PTR
-	processorStructures = ???? resolve ArraySubscriptExpr
-	rtlZeroMemory(processorStructures, ((2 * 32768) + ???? resolve UnaryExprOrTypeTraitExpr + ???? resolve UnaryExprOrTypeTraitExpr + ???? resolve UnaryExprOrTypeTraitExpr + 4096))
+	processorStructures = mmProcessorStructuresData[cpuNumber - 1]
+	rtlZeroMemory(processorStructures, ((2 * 32768) + sizeOf<Unsigned long long>() + sizeOf<Unsigned long long>() + sizeOf<Unsigned long long>() + 4096))
 	address = (((processorStructures as! UINT_PTR) + (4096 - 1)) & ~((4096) - 1))
-	processorBlock = (address as! PUCHAR + (2 * 32768) + ???? resolve UnaryExprOrTypeTraitExpr) as! PKPROCESSOR_BLOCK
-	processorBlock.CpuNumber = cpuNumber
-	*structuresData = processorStructures
+	processorBlock = (address as! PUCHAR + (2 * 32768) + sizeOf<Unsigned long long>()) as! PKPROCESSOR_BLOCK
+	processorBlock.cpuNumber = cpuNumber
+	structuresData[0] = processorStructures
 	return (0 as! XTSTATUS)
 }
 

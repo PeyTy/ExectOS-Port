@@ -1,4 +1,3 @@
-// Hexa 2024 from clang 15.0.3
 /// Clears all bits in the bit map.
 /// 
 /// @param BitMap
@@ -8,7 +7,7 @@
 /// 
 /// @since NT 3.5
 fun rtlClearAllBits(bitMap PRTL_BITMAP) {
-	rtlSetMemory(bitMap.Buffer, 0, ((bitMap.Size + 64 - 1) / 64) * ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlSetMemory(bitMap.buffer, 0, ((bitMap.size + 64 - 1) / 64) * sizeOf<Unsigned long long>())
 }
 
 /// Clears a single bit in the bit map.
@@ -23,12 +22,12 @@ fun rtlClearAllBits(bitMap PRTL_BITMAP) {
 /// 
 /// @since NT 5.1
 fun rtlClearBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
-	if bit >= bitMap.Size {
+	if bit >= bitMap.size {
 		return ??
 
 	}
 
-	??? CompoundStmt CompoundAssignOperator
+	bitMap.buffer[bit / 64] &= ~(1 << (bit & (64 - 1)))
 }
 
 /// Clears a specified set of bits within a bit map.
@@ -54,30 +53,29 @@ fun rtlClearBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) 
 
 	}
 
-	buffer = ???? resolve ArraySubscriptExpr
+	buffer = bitMap.buffer[startingIndex / 64]
 	bitOffset = startingIndex & (64 - 1)
 	if bitOffset {
 		mask = (~(0 as! ULONG_PTR)) << bitOffset
 		bitOffset = 64 - bitOffset
 		if length < bitOffset {
-			??? CompoundStmt CompoundAssignOperator
+			bitOffset -= length
 			mask = mask << bitOffset >> bitOffset
-			??? CompoundStmt CompoundAssignOperator
+			buffer[0] &= ~mask
 			return ??
 
 		}
 
-		??? CompoundStmt CompoundAssignOperator
-		??? CompoundStmt CompoundAssignOperator
-		??? CompoundStmt UnaryOperator
-
+		buffer[0] &= ~mask
+		length -= bitOffset
+		buffer++
 	}
 
 	rtlSetMemory(buffer, 0, length >> 3)
-	??? CompoundStmt CompoundAssignOperator
-	??? CompoundStmt CompoundAssignOperator
+	buffer += length / 64
+	length &= 64 - 1
 	if length {
-		??? CompoundStmt CompoundAssignOperator
+		buffer[0] &= (~(0 as! ULONG_PTR)) << length
 
 	}
 
@@ -119,15 +117,15 @@ fun rtlClearSetBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
 fun rtlDumpBitMap(bitMap PRTL_BITMAP) {
 	var index ULONG_PTR
 	if keDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
+		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
 	}
 
-	??? CompoundStmt NullStmt
-	??? CompoundStmt ForStmt
+	[unknown clang ast] CompoundStmt NullStmt
+	[unknown clang ast] CompoundStmt ForStmt
 }
 
 /// Searches the bit map for a contiguous region of clear bits.
@@ -181,8 +179,8 @@ fun rtlFindSetBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
 /// 
 /// @since NT 3.5
 fun rtlInitializeBitMap(bitMap PRTL_BITMAP, buffer PULONG_PTR, size ULONG) {
-	bitMap.Buffer = buffer
-	bitMap.Size = size
+	bitMap.buffer = buffer
+	bitMap.size = size
 }
 
 /// Sets all bits in the bit map.
@@ -194,7 +192,7 @@ fun rtlInitializeBitMap(bitMap PRTL_BITMAP, buffer PULONG_PTR, size ULONG) {
 /// 
 /// @since NT 3.5
 fun rtlSetAllBits(bitMap PRTL_BITMAP) {
-	rtlSetMemory(bitMap.Buffer, 255, ((bitMap.Size + 64 - 1) / 64) * ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlSetMemory(bitMap.buffer, 255, ((bitMap.size + 64 - 1) / 64) * sizeOf<Unsigned long long>())
 }
 
 /// Sets a single bit in the bit map.
@@ -209,12 +207,12 @@ fun rtlSetAllBits(bitMap PRTL_BITMAP) {
 /// 
 /// @since NT 5.1
 fun rtlSetBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
-	if bit >= bitMap.Size {
+	if bit >= bitMap.size {
 		return ??
 
 	}
 
-	??? CompoundStmt CompoundAssignOperator
+	bitMap.buffer[bit / 64] |= 1 << (bit & (64 - 1))
 }
 
 /// Sets a specified set of bits within a bit map.
@@ -240,30 +238,29 @@ fun rtlSetBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) {
 
 	}
 
-	buffer = ???? resolve ArraySubscriptExpr
+	buffer = bitMap.buffer[startingIndex / 64]
 	bitOffset = startingIndex & (64 - 1)
 	if bitOffset {
 		mask = (~(0 as! ULONG_PTR)) << bitOffset
 		bitOffset = 64 - bitOffset
 		if length < bitOffset {
-			??? CompoundStmt CompoundAssignOperator
+			bitOffset -= length
 			mask = mask << bitOffset >> bitOffset
-			??? CompoundStmt CompoundAssignOperator
+			buffer[0] |= mask
 			return ??
 
 		}
 
-		??? CompoundStmt CompoundAssignOperator
-		??? CompoundStmt UnaryOperator
-		??? CompoundStmt CompoundAssignOperator
+		buffer[0] |= mask
+		buffer++		length -= bitOffset
 
 	}
 
 	rtlSetMemory(buffer, 255, length >> 3)
-	??? CompoundStmt CompoundAssignOperator
-	??? CompoundStmt CompoundAssignOperator
+	buffer += length / 64
+	length &= 64 - 1
 	if length {
-		??? CompoundStmt CompoundAssignOperator
+		buffer[0] |= ~((~(0 as! ULONG_PTR)) << length)
 
 	}
 
@@ -306,12 +303,12 @@ fun rtlSetClearBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
 /// 
 /// @since NT 5.1
 fun rtlTestBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
-	if bit >= bitMap.Size {
+	if bit >= bitMap.size {
 		return fALSE
 
 	}
 
-	return ???? resolve ConditionalOperator
+	return [unknown clang ast] resolve ConditionalOperator
 }
 
 /// Counts the number of either set or clear bits in the contiguous region of the bit map.
@@ -337,12 +334,12 @@ fun rtlpCountBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR,
 	var bitOffset ULONG_PTR
 	var size ULONG_PTR
 	var value ULONGLONG
-	buffer = ???? resolve ArraySubscriptExpr
+	buffer = bitMap.buffer[startingIndex / 64]
 	bufferEnd = buffer + ((length + 64 - 1) / 64)
 	bitOffset = startingIndex & (64 - 1)
-	value = (???? resolve ConditionalOperator) >> bitOffset << bitOffset
+	value = ([unknown clang ast] resolve ConditionalOperator) >> bitOffset << bitOffset
 	while !value and buffer + 1 < bufferEnd {
-		value = ???? resolve ConditionalOperator
+		value = [unknown clang ast] resolve ConditionalOperator
 
 	}
 
@@ -351,8 +348,8 @@ fun rtlpCountBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR,
 
 	}
 
-	size = ((buffer - bitMap.Buffer) * 64) - startingIndex + rtlCountTrailingZeroes64(value) as! ULONG_PTR
-	return ???? resolve ConditionalOperator
+	size = ((buffer - bitMap.buffer) * 64) - startingIndex + rtlCountTrailingZeroes64(value) as! ULONG_PTR
+	return [unknown clang ast] resolve ConditionalOperator
 }
 
 /// Searches the bit map for a contiguous region of either set or clear bits.
@@ -377,29 +374,27 @@ fun rtlpFindBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, 
 	var bitOffset ULONG_PTR
 	var size ULONG_PTR
 	var tries ULONG
-	if length > bitMap.Size {
+	if length > bitMap.size {
 		return -1 as! ULONG_PTR
 
 	} else {
-		??? CompoundStmt UnaryOperator
-		??? CompoundStmt CompoundStmt
+		length!		[unknown clang ast] CompoundStmt CompoundStmt
 
 	}
 
-	if startingIndex >= bitMap.Size {
+	if startingIndex >= bitMap.size {
 		startingIndex = 0
 
 	}
 
 	bitOffset = startingIndex
-	bitMapEnd = bitMap.Size
+	bitMapEnd = bitMap.size
 	tries = (startingIndex != 0) + 2
 	while tries {
 		while bitOffset + length < bitMapEnd {
-			??? CompoundStmt CompoundAssignOperator
+			bitOffset += rtlpCountBits(bitMap, bitMap.size - bitOffset, bitOffset, !setBits)
 			if bitOffset + length > bitMapEnd {
-				??? CompoundStmt BreakStmt
-
+				break
 			}
 
 			size = rtlpCountBits(bitMap, length, bitOffset, setBits)
@@ -408,12 +403,11 @@ fun rtlpFindBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, 
 
 			}
 
-			??? CompoundStmt CompoundAssignOperator
+			bitOffset += size
 
 		}
 
-		??? CompoundStmt UnaryOperator
-		if tries {
+		tries--		if tries {
 			bitOffset = 0
 			bitMapEnd = startingIndex
 
