@@ -1,0 +1,83 @@
+// Hexa 2024 from clang 15.0.3
+fun hlComPortGetByte(port PCPPORT, byte PUCHAR, wait BOOLEAN, poll BOOLEAN) {
+	var lsr UCHAR
+	var retry ULONG
+	if Port.Address == 0 {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	Retry = ???? resolve ConditionalOperator
+	??? CompoundStmt WhileStmt
+	HlComPortReadLsr(Port, 0)
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlComPortPutByte(port PCPPORT, byte UCHAR) {
+	var lsr UCHAR
+	var msr UCHAR
+	if Port.Address == 0 {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	??? CompoundStmt WhileStmt
+	??? CompoundStmt WhileStmt
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), Byte)
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlComPortReadLsr(port PCPPORT, byte UCHAR) {
+	var lsr UCHAR
+	var msr UCHAR
+	var ringFlag UCHAR
+	Lsr = HlIoPortInByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr))
+	if (Lsr & Byte) == 0 {
+		Msr = HlIoPortInByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr))
+		??? CompoundStmt CompoundAssignOperator
+		if RingFlag == 3 {
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+
+	}
+
+	return Lsr
+}
+
+fun hlInitializeComPort(port PCPPORT, portAddress PUCHAR, baudRate ULONG) {
+	var flags USHORT
+	var byte UCHAR
+	var mode ULONG
+	Byte = 0
+	Flags = 0
+	if BaudRate == 0 {
+		BaudRate = 115200
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	if (Port.Address == PortAddress) and (Port.Baud == BaudRate) {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	??? CompoundStmt DoStmt
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 0)
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 0)
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 128)
+	Mode = 115200 / BaudRate
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr)
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr)
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 3 | 0 | 0)
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 1 | 2 | 8)
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 1 | 2 | 4)
+	??? CompoundStmt CompoundAssignOperator
+	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 15)
+	HlIoPortInByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr))
+	Port.Address = PortAddress
+	Port.Baud = BaudRate
+	Port.Flags = Flags
+	return (???? resolve CStyleCastExpr)
+}

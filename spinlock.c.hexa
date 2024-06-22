@@ -1,0 +1,22 @@
+// Hexa 2024 from clang 15.0.3
+fun keAcquireQueuedSpinLock(lockLevel KSPIN_LOCK_QUEUE_LEVEL) {
+	KeAcquireSpinLock(???? resolve ArraySubscriptExpr.Lock)
+}
+
+fun keAcquireSpinLock(spinLock PKSPIN_LOCK) {
+	??? CompoundStmt WhileStmt
+	ArReadWriteBarrier()
+}
+
+fun keInitializeSpinLock(spinLock PKSPIN_LOCK) {
+	???? resolve UnaryOperator = 0
+}
+
+fun keReleaseQueuedSpinLock(lockLevel KSPIN_LOCK_QUEUE_LEVEL) {
+	KeReleaseSpinLock(???? resolve ArraySubscriptExpr.Lock)
+}
+
+fun keReleaseSpinLock(spinLock PKSPIN_LOCK) {
+	RtlAtomicAnd32(???? resolve CStyleCastExpr, 0)
+	ArReadWriteBarrier()
+}

@@ -1,0 +1,41 @@
+// Hexa 2024 from clang 15.0.3
+fun kepInitializeThreadContext(thread PKTHREAD, systemRoutine PKSYSTEM_ROUTINE, startRoutine PKSTART_ROUTINE, startContext PVOID, contextRecord PCONTEXT) {
+	let threadFrame = new ByValue<PKTHREAD_INIT_FRAME>()
+
+	ThreadFrame = (???? resolve CStyleCastExpr) - 1
+	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
+	if ContextRecord {
+		RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
+		RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
+		??? CompoundStmt CompoundAssignOperator
+		ContextRecord.Rsp = (ContextRecord.Rsp & ???? resolve UnaryOperator) - 40
+		ContextRecord.SegCs = 48 | 3
+		ContextRecord.SegSs = 40 | 3
+		Thread.PreviousMode = UserMode
+		Thread.NpxState = 1
+		ThreadFrame.NpxFrame.ControlWord = 639
+		ThreadFrame.NpxFrame.TagWord = 65535
+		ThreadFrame.TrapFrame.Dr6 = 0
+		ThreadFrame.TrapFrame.Dr7 = 0
+		ThreadFrame.TrapFrame.MxCsr = 8064
+		ThreadFrame.ExceptionFrame.P1Home = ???? resolve CStyleCastExpr
+		ThreadFrame.ExceptionFrame.P2Home = ???? resolve CStyleCastExpr
+		ThreadFrame.ExceptionFrame.P3Home = ???? resolve CStyleCastExpr
+		ThreadFrame.ExceptionFrame.P4Home = ???? resolve CStyleCastExpr
+
+	} else {
+		Thread.PreviousMode = KernelMode
+		Thread.NpxState = 0
+		ThreadFrame.StartFrame.Return = ???? resolve CStyleCastExpr
+
+	}
+
+	ThreadFrame.StartFrame.P1Home = ???? resolve CStyleCastExpr
+	ThreadFrame.StartFrame.P2Home = ???? resolve CStyleCastExpr
+	ThreadFrame.StartFrame.P3Home = ???? resolve CStyleCastExpr
+	ThreadFrame.StartFrame.P4Home = ???? resolve CStyleCastExpr
+	ThreadFrame.SwitchFrame.ApcBypass = 1
+	ThreadFrame.SwitchFrame.MxCsr = 8064
+	ThreadFrame.SwitchFrame.Rbp = ???? resolve CStyleCastExpr
+	Thread.KernelStack = ???? resolve UnaryOperator
+}

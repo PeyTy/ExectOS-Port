@@ -1,0 +1,143 @@
+// Hexa 2024 from clang 15.0.3
+fun mmAllocateHardwareMemory(pageCount PFN_NUMBER, aligned BOOLEAN, buffer PULONG_PTR) {
+	let descriptor = new ByValue<PLOADER_MEMORY_DESCRIPTOR>()
+
+	let extraDescriptor = new ByValue<PLOADER_MEMORY_DESCRIPTOR>()
+
+	let hardwareDescriptor = new ByValue<PLOADER_MEMORY_DESCRIPTOR>()
+
+	var alignment PFN_NUMBER
+	var maxPage PFN_NUMBER
+	var physicalAddress ULONGLONG
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	???? resolve UnaryOperator = 0
+	MaxPage = 4294967295 >> 12
+	if (MmpUsedHardwareAllocationDescriptors + 2) > 64 {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	ListEntry = KeInitializationBlock.MemoryDescriptorListHead.Flink
+	??? CompoundStmt WhileStmt
+	if ListEntry == ???? resolve UnaryOperator {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	HardwareDescriptor = ???? resolve UnaryOperator
+	HardwareDescriptor.BasePage = Descriptor.BasePage + Alignment
+	HardwareDescriptor.MemoryType = LoaderHardwareCachedMemory
+	HardwareDescriptor.PageCount = PageCount
+	??? CompoundStmt UnaryOperator
+	if Alignment {
+		if Descriptor.PageCount > (PageCount + Alignment) {
+			ExtraDescriptor = ???? resolve UnaryOperator
+			ExtraDescriptor.BasePage = Descriptor.BasePage + Alignment + ???? resolve CStyleCastExpr
+			ExtraDescriptor.MemoryType = LoaderFree
+			ExtraDescriptor.PageCount = Descriptor.PageCount - (Alignment + ???? resolve CStyleCastExpr)
+			??? CompoundStmt UnaryOperator
+			RtlInsertHeadList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+
+		}
+
+		Descriptor.PageCount = Alignment
+		RtlInsertHeadList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+
+	} else {
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
+		RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+		if Descriptor.PageCount == 0 {
+			RtlRemoveEntryList(???? resolve UnaryOperator)
+
+		}
+
+
+	}
+
+	???? resolve UnaryOperator = PhysicalAddress
+	return (???? resolve CStyleCastExpr)
+}
+
+fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, flushTlb BOOLEAN, virtualAddress PVOID *) {
+	var baseAddress PVOID
+	var returnAddress PVOID
+	var mappedPages PFN_NUMBER
+	let ptePointer = new ByValue<PHARDWARE_PTE>()
+
+	BaseAddress = MmpHardwareHeapStart
+	MappedPages = 0
+	ReturnAddress = BaseAddress
+	???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+	??? CompoundStmt WhileStmt
+	ReturnAddress = ???? resolve CStyleCastExpr
+	if BaseAddress == MmpHardwareHeapStart {
+		MmpHardwareHeapStart = ???? resolve CStyleCastExpr
+
+	}
+
+	??? CompoundStmt WhileStmt
+	if FlushTlb {
+		MmFlushTlb()
+
+	}
+
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	???? resolve UnaryOperator = ReturnAddress
+	return (???? resolve CStyleCastExpr)
+}
+
+fun mmMarkHardwareMemoryWriteThrough(virtualAddress PVOID, pageCount PFN_NUMBER) {
+	let ptePointer = new ByValue<PHARDWARE_PTE>()
+
+	var page PFN_NUMBER
+	PtePointer = ???? resolve CStyleCastExpr
+	??? CompoundStmt ForStmt
+}
+
+fun mmRemapHardwareMemory(virtualAddress PVOID, physicalAddress PHYSICAL_ADDRESS, flushTlb BOOLEAN) {
+	let ptePointer = new ByValue<PHARDWARE_PTE>()
+
+	PtePointer = ???? resolve CStyleCastExpr
+	PtePointer.PageFrameNumber = ???? resolve CStyleCastExpr
+	PtePointer.Valid = 1
+	PtePointer.Writable = 1
+	if FlushTlb {
+		MmFlushTlb()
+
+	}
+
+}
+
+fun mmUnmapHardwareMemory(virtualAddress PVOID, pageCount PFN_NUMBER, flushTlb BOOLEAN) {
+	let ptePointer = new ByValue<PHARDWARE_PTE>()
+
+	var page PFN_NUMBER
+	if VirtualAddress < ???? resolve CStyleCastExpr {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	VirtualAddress = ???? resolve CStyleCastExpr
+	PtePointer = ???? resolve CStyleCastExpr
+	??? CompoundStmt ForStmt
+	if FlushTlb {
+		MmFlushTlb()
+
+	}
+
+	if MmpHardwareHeapStart > VirtualAddress {
+		MmpHardwareHeapStart = VirtualAddress
+
+	}
+
+	return (???? resolve CStyleCastExpr)
+}

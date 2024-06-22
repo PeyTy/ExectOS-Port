@@ -1,0 +1,335 @@
+// Hexa 2024 from clang 15.0.3
+fun hlGetAcpiSystemDescriptionPointer(rsdp PACPI_RSDP *) {
+	???? resolve UnaryOperator = HlpAcpiRsdp
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlGetAcpiTable(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
+	let table = new ByValue<PACPI_DESCRIPTION_HEADER>()
+
+	var status XTSTATUS
+	??? CompoundStmt CompoundStmt
+	???? resolve UnaryOperator = Table
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlpCacheAcpiTable(acpiTable PACPI_DESCRIPTION_HEADER) {
+	let acpiCache = new ByValue<PACPI_CACHE_LIST>()
+
+	AcpiCache = (???? resolve CStyleCastExpr)
+	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+}
+
+fun hlpInitializeAcpi() {
+	let fadt = new ByValue<PACPI_FADT>()
+
+	var status XTSTATUS
+	Status = HlpInitializeAcpiCache()
+	if Status != (???? resolve CStyleCastExpr) {
+		return Status
+
+	}
+
+	Status = HlGetAcpiTable(1346584902, ???? resolve CStyleCastExpr)
+	if Status != (???? resolve CStyleCastExpr) or ???? resolve UnaryOperator {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	HlpInitializeAcpiTimer()
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlpInitializeAcpiCache() {
+	let rsdt = new ByValue<PACPI_DESCRIPTION_HEADER>()
+
+	var status XTSTATUS
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	Status = HlpInitializeAcpiSystemDescriptionTable(???? resolve UnaryOperator)
+	if Status != (???? resolve CStyleCastExpr) {
+		return Status
+
+	}
+
+	HlpCacheAcpiTable(Rsdt)
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlpInitializeAcpiSystemDescriptionTable(acpiTable PACPI_DESCRIPTION_HEADER *) {
+	var rsdpAddress PHYSICAL_ADDRESS
+	var rsdtAddress PHYSICAL_ADDRESS
+	let resourceHeader = new ByValue<PSYSTEM_RESOURCE_HEADER>()
+
+	let acpiResource = new ByValue<PSYSTEM_RESOURCE_ACPI>()
+
+	var rsdtPages ULONG
+	let rsdt = new ByValue<PACPI_RSDT>()
+
+	var status XTSTATUS
+	Status = KeGetSystemResource(SystemResourceAcpi, ???? resolve UnaryOperator)
+	if Status != (???? resolve CStyleCastExpr) {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	AcpiResource = ???? resolve CStyleCastExpr
+	RsdpAddress.QuadPart = ???? resolve CStyleCastExpr
+	Status = MmMapHardwareMemory(RsdpAddress, 1, TRUE, ???? resolve CStyleCastExpr)
+	MmMarkHardwareMemoryWriteThrough(HlpAcpiRsdp, 1)
+	if Status != (???? resolve CStyleCastExpr) or HlpAcpiRsdp.Signature != 2329016660419433298 {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	if HlpAcpiRsdp.Revision >= 2 {
+		RsdtAddress.QuadPart = ???? resolve CStyleCastExpr
+
+	} else {
+		RsdtAddress.QuadPart = ???? resolve CStyleCastExpr
+
+	}
+
+	Status = MmMapHardwareMemory(RsdtAddress, 2, TRUE, ???? resolve CStyleCastExpr)
+	MmMarkHardwareMemoryWriteThrough(Rsdt, 2)
+	if (Status != (???? resolve CStyleCastExpr)) or (Rsdt.Header.Signature != 1413763922 and Rsdt.Header.Signature != 1413763928) {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	RsdtPages = ((RsdtAddress..LowPart & (4096 - 1)) + Rsdt.Header.Length + (4096 - 1)) >> 12
+	if RsdtPages != 2 {
+		MmUnmapHardwareMemory(Rsdt, 2, TRUE)
+		Status = MmMapHardwareMemory(RsdtAddress, RsdtPages, TRUE, ???? resolve CStyleCastExpr)
+		MmMarkHardwareMemoryWriteThrough(Rsdt, RsdtPages)
+		if Status != (???? resolve CStyleCastExpr) {
+			return (???? resolve CStyleCastExpr)
+
+		}
+
+
+	}
+
+	???? resolve UnaryOperator = ???? resolve UnaryOperator
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlpInitializeAcpiSystemInformation() {
+	var madtTable PUCHAR
+	let madt = new ByValue<PACPI_MADT>()
+
+	var status XTSTATUS
+	var cpuCount ULONG
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	Status = HlGetAcpiTable(1128878145, ???? resolve CStyleCastExpr)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	if Status != (???? resolve CStyleCastExpr) {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	MadtTable = ???? resolve CStyleCastExpr
+	CpuCount = 0
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt WhileStmt
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlpInitializeAcpiTimer() {
+	let fadt = new ByValue<PACPI_FADT>()
+
+	var status XTSTATUS
+	Status = HlGetAcpiTable(1346584902, ???? resolve CStyleCastExpr)
+	if Status != (???? resolve CStyleCastExpr) or ???? resolve UnaryOperator {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	HlpAcpiTimerInfo.TimerPort = Fadt.PmTmrBlkIoPort
+	if Fadt.Flags & (1 << 8) {
+		HlpAcpiTimerInfo.MsbMask = 2147483648
+
+	} else {
+		HlpAcpiTimerInfo.MsbMask = 8388608
+
+	}
+
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlpQueryAcpiCache(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
+	let acpiCache = new ByValue<PACPI_CACHE_LIST>()
+
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	ListEntry = HlpAcpiCacheList.Flink
+	??? CompoundStmt WhileStmt
+	if ???? resolve UnaryOperator == (???? resolve CStyleCastExpr) {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
+	var tableCount ULONG
+	var tableIndex ULONG
+	var tablePages ULONG
+	let tableHeader = new ByValue<PACPI_DESCRIPTION_HEADER>()
+
+	var tableAddress PHYSICAL_ADDRESS
+	let fadt = new ByValue<PACPI_FADT>()
+
+	let rsdt = new ByValue<PACPI_RSDT>()
+
+	let xsdt = new ByValue<PACPI_XSDT>()
+
+	var status XTSTATUS
+	if Signature == 1413763922 or Signature == 1413763928 {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	if Signature == 1413763908 or Signature == 1396916550 {
+		Status = HlGetAcpiTable(1346584902, ???? resolve CStyleCastExpr)
+		if Status != (???? resolve CStyleCastExpr) {
+			return Status
+
+		}
+
+		if Signature == 1413763908 {
+			TableAddress..LowPart = Fadt.Dsdt
+
+		} else {
+			TableAddress..LowPart = Fadt.FirmwareCtrl
+
+		}
+
+		TableAddress..HighPart = 0
+		Status = MmMapHardwareMemory(TableAddress, 2, TRUE, ???? resolve CStyleCastExpr)
+		if Status != (???? resolve CStyleCastExpr) {
+			return Status
+
+		}
+
+
+	} else {
+		Status = HlpQueryAcpiCache(1413763928, ???? resolve CStyleCastExpr)
+		if Status != (???? resolve CStyleCastExpr) {
+			Status = HlpQueryAcpiCache(1413763922, ???? resolve CStyleCastExpr)
+
+		}
+
+		if Status != (???? resolve CStyleCastExpr) {
+			return Status
+
+		}
+
+		if Xsdt != (???? resolve CStyleCastExpr) {
+			TableCount = (Xsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 8
+
+		} else {
+			TableCount = (Rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 4
+
+		}
+
+		??? CompoundStmt ForStmt
+
+	}
+
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	if TableHeader.Signature != Signature {
+		if TableHeader != (???? resolve CStyleCastExpr) {
+			MmUnmapHardwareMemory(TableHeader, 2, TRUE)
+
+		}
+
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	if TableHeader.Signature != 1346584902 or TableHeader.Revision > 2 {
+		if ???? resolve UnaryOperator {
+			MmUnmapHardwareMemory(TableHeader, 2, TRUE)
+			return (???? resolve CStyleCastExpr)
+
+		}
+
+
+	}
+
+	TablePages = ((???? resolve CStyleCastExpr & (4096 - 1)) + TableHeader.Length + (4096 - 1)) >> 12
+	if TablePages != 2 {
+		MmUnmapHardwareMemory(TableHeader, 2, FALSE)
+		Status = MmMapHardwareMemory(TableAddress, TablePages, TRUE, ???? resolve CStyleCastExpr)
+		if Status != (???? resolve CStyleCastExpr) {
+			return (???? resolve CStyleCastExpr)
+
+		}
+
+
+	}
+
+	MmMarkHardwareMemoryWriteThrough(TableHeader, TablePages)
+	HlpCacheAcpiTable(TableHeader)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	???? resolve UnaryOperator = TableHeader
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlpValidateAcpiTable(buffer PVOID, size UINT_PTR) {
+	var pointer PUCHAR
+	var sum UCHAR
+	Sum = 0
+	Pointer = Buffer
+	??? CompoundStmt WhileStmt
+	return ???? resolve ConditionalOperator
+}

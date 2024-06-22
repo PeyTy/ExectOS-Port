@@ -1,0 +1,41 @@
+// Hexa 2024 from clang 15.0.3
+fun keGetCurrentProcessorBlock() {
+	return ???? resolve CStyleCastExpr
+}
+
+fun keGetCurrentProcessorControlBlock() {
+	return ???? resolve CStyleCastExpr
+}
+
+fun keGetCurrentProcessorNumber() {
+	return ???? resolve CStyleCastExpr
+}
+
+fun keGetCurrentThread() {
+	return ???? resolve CStyleCastExpr
+}
+
+fun kepSaveProcessorState(cpuState PKPROCESSOR_STATE) {
+	CpuState.SpecialRegisters.Cr0 = ArReadControlRegister(0)
+	CpuState.SpecialRegisters.Cr2 = ArReadControlRegister(2)
+	CpuState.SpecialRegisters.Cr3 = ArReadControlRegister(3)
+	CpuState.SpecialRegisters.Cr4 = ArReadControlRegister(4)
+	CpuState.SpecialRegisters.Cr8 = ArReadControlRegister(8)
+	CpuState.SpecialRegisters.KernelDr0 = ArReadDebugRegister(0)
+	CpuState.SpecialRegisters.KernelDr1 = ArReadDebugRegister(1)
+	CpuState.SpecialRegisters.KernelDr2 = ArReadDebugRegister(2)
+	CpuState.SpecialRegisters.KernelDr3 = ArReadDebugRegister(3)
+	CpuState.SpecialRegisters.KernelDr6 = ArReadDebugRegister(6)
+	CpuState.SpecialRegisters.KernelDr7 = ArReadDebugRegister(7)
+	CpuState.SpecialRegisters.MsrGsBase = ArReadModelSpecificRegister(3221225729)
+	CpuState.SpecialRegisters.MsrGsSwap = ArReadModelSpecificRegister(3221225730)
+	CpuState.SpecialRegisters.MsrCStar = ArReadModelSpecificRegister(3221225603)
+	CpuState.SpecialRegisters.MsrLStar = ArReadModelSpecificRegister(3221225602)
+	CpuState.SpecialRegisters.MsrStar = ArReadModelSpecificRegister(3221225601)
+	CpuState.SpecialRegisters.MsrSyscallMask = ArReadModelSpecificRegister(3221225604)
+	CpuState.SpecialRegisters.MxCsr = ArReadMxCsrRegister()
+	ArStoreGlobalDescriptorTable(???? resolve UnaryOperator)
+	ArStoreInterruptDescriptorTable(???? resolve UnaryOperator)
+	ArStoreLocalDescriptorTable(???? resolve UnaryOperator)
+	ArStoreTaskRegister(???? resolve UnaryOperator)
+}

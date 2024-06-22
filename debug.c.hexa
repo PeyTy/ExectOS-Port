@@ -1,0 +1,108 @@
+// Hexa 2024 from clang 15.0.3
+fun blDebugPrint(format PUSHORT) {
+	let consolePrintContext = new ByValue<RTL_PRINT_CONTEXT>()
+
+	let serialPrintContext = new ByValue<RTL_PRINT_CONTEXT>()
+
+	var arguments VA_LIST
+	if 1 {
+		ConsolePrintContext.WriteWideCharacter = BlpConsolePutChar
+		SerialPrintContext.WriteWideCharacter = BlpDebugPutChar
+		__builtin_va_start(Arguments, Format)
+		if (BlpStatus.DebugPort & 2) and (BlpStatus.SerialPort.Flags & 1) {
+			RtlFormatWideString(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Arguments)
+
+		}
+
+		if (BlpStatus.DebugPort & 1) and (BlpStatus.BootServices == TRUE) {
+			RtlFormatWideString(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Arguments)
+
+		}
+
+		__builtin_va_end(Arguments)
+
+	}
+
+}
+
+fun blpDebugPutChar(character USHORT) {
+	var buffer USHORT[2]
+	???? resolve ArraySubscriptExpr = Character
+	???? resolve ArraySubscriptExpr = 0
+	HlComPortPutByte(???? resolve UnaryOperator, ???? resolve ArraySubscriptExpr)
+	return (9223372036854775808 & 0)
+}
+
+fun blpInitializeDebugConsole() {
+	var portAddress ULONG
+	var portNumber ULONG
+	var baudRate ULONG
+	var debugConfiguration PWCHAR
+	var debugPort PWCHAR
+	var lastPort PWCHAR
+	var status EFI_STATUS
+	PortAddress = 0
+	PortNumber = 0
+	BaudRate = 0
+	DebugConfiguration = BlGetConfigValue(???? resolve StringLiteral)
+	if DebugConfiguration and BlpStatus.DebugPort == 0 {
+		DebugPort = RtlTokenizeWideString(DebugConfiguration, ???? resolve StringLiteral, ???? resolve UnaryOperator)
+		??? CompoundStmt WhileStmt
+		if BlpStatus.DebugPort & 2 {
+			Status = BlpInitializeSerialPort(PortNumber, PortAddress, BaudRate)
+			if Status != (9223372036854775808 & 0) {
+				??? CompoundStmt CompoundAssignOperator
+				return Status
+
+			}
+
+
+		}
+
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun blpInitializeSerialPort(portNumber ULONG, portAddress ULONG, baudRate ULONG) {
+	var efiStatus EFI_STATUS
+	var status XTSTATUS
+	if ???? resolve UnaryOperator {
+		if PortNumber > 8 {
+			return (???? resolve CStyleCastExpr)
+
+		}
+
+		if PortNumber == 0 {
+			PortNumber = 1
+
+		}
+
+		PortAddress = ???? resolve ArraySubscriptExpr
+		BlConsolePrint(???? resolve StringLiteral, PortNumber)
+
+	} else {
+		BlConsolePrint(???? resolve StringLiteral, PortAddress)
+
+	}
+
+	Status = HlInitializeComPort(???? resolve UnaryOperator, (???? resolve CStyleCastExpr), BaudRate)
+	if Status == (???? resolve CStyleCastExpr) and PortAddress {
+		EfiStatus = BlpActivateSerialIOController()
+		if EfiStatus == (9223372036854775808 & 0) {
+			BlConsolePrint(???? resolve StringLiteral)
+			Status = HlInitializeComPort(???? resolve UnaryOperator, (???? resolve CStyleCastExpr), BaudRate)
+
+		}
+
+
+	}
+
+	if Status != (???? resolve CStyleCastExpr) {
+		return (9223372036854775808 | 6)
+
+	}
+
+	return (9223372036854775808 & 0)
+}

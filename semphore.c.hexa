@@ -1,0 +1,15 @@
+// Hexa 2024 from clang 15.0.3
+fun keInitializeSemaphore(semaphore PKSEMAPHORE, count LONG, limit LONG) {
+	Semaphore.Header.Type = SemaphoreObject
+	Semaphore.Header.SignalState = Count
+	Semaphore.Limit = Limit
+	RtlInitializeListHead(???? resolve UnaryOperator)
+}
+
+fun keReadSemaphoreState(semaphore PKSEMAPHORE) {
+	return Semaphore.Header.SignalState
+}
+
+fun keReleaseSemaphore(semaphore PKSEMAPHORE, increment KPRIORITY, adjustment LONG, wait BOOLEAN) {
+	return 0
+}

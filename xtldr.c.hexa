@@ -1,0 +1,202 @@
+// Hexa 2024 from clang 15.0.3
+fun blInitializeBootLoader() {
+	let lipGuid = new ByValue<EFI_GUID>()
+
+	let loadedImage = new ByValue<PEFI_LOADED_IMAGE_PROTOCOL>()
+
+	var handle EFI_HANDLE
+	var status EFI_STATUS
+	BlpStatus.BootServices = TRUE
+	BlInitializeConsole()
+	BlConsolePrint(???? resolve StringLiteral, ???? resolve StringLiteral)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	BlpStatus.SecureBoot = BlGetSecureBootStatus()
+	Status = BlOpenProtocol(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	if Status == (9223372036854775808 & 0) {
+		BlpStatus.LoaderBase = LoadedImage.ImageBase
+		BlpStatus.LoaderSize = LoadedImage.ImageSize
+		if 1 {
+			BlConsolePrint(???? resolve StringLiteral, ???? resolve UnaryExprOrTypeTraitExpr, LoadedImage.ImageBase, LoadedImage.ImageSize, LoadedImage.Revision)
+			BlSleepExecution(3000)
+
+		}
+
+		BlCloseProtocol(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+
+	}
+
+}
+
+fun blInitializeBootMenuList(menuEntries PXTBL_BOOTMENU_ITEM *, entriesCount PULONG, defaultId PULONG) {
+	let vendorGuid = new ByValue<EFI_GUID>()
+
+	var defaultMenuEntry PWCHAR
+	var lastBooted PWCHAR
+	var menuEntryName PWCHAR
+	let menuEntrySectionList = new ByValue<PLIST_ENTRY>()
+
+	let menuEntryList = new ByValue<PLIST_ENTRY>()
+
+	let menuEntrySection = new ByValue<PXTBL_CONFIG_SECTION>()
+
+	let menuEntryOption = new ByValue<PXTBL_CONFIG_ENTRY>()
+
+	var defaultOS ULONG
+	var numberOfEntries ULONG
+	let osList = new ByValue<PXTBL_BOOTMENU_ITEM>()
+
+	var status EFI_STATUS
+	DefaultOS = 0
+	NumberOfEntries = 0
+	DefaultMenuEntry = BlGetConfigValue(???? resolve StringLiteral)
+	if BlGetConfigBooleanValue(???? resolve StringLiteral) {
+		Status = BlGetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr)
+		if Status == (9223372036854775808 & 0) {
+			DefaultMenuEntry = LastBooted
+
+		}
+
+
+	}
+
+	MenuEntrySectionList = BlpMenuList.Flink
+	??? CompoundStmt WhileStmt
+	Status = BlAllocateMemoryPool(NumberOfEntries * ???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 9)
+
+	}
+
+	NumberOfEntries = 0
+	MenuEntrySectionList = BlpMenuList.Flink
+	??? CompoundStmt WhileStmt
+	???? resolve UnaryOperator = DefaultOS
+	???? resolve UnaryOperator = NumberOfEntries
+	???? resolve UnaryOperator = OsList
+	return (9223372036854775808 & 0)
+}
+
+fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
+	let vendorGuid = new ByValue<EFI_GUID>()
+
+	let bootParameters = new ByValue<XTBL_BOOT_PARAMETERS>()
+
+	let bootProtocol = new ByValue<PXTBL_BOOT_PROTOCOL>()
+
+	let optionsListEntry = new ByValue<PLIST_ENTRY>()
+
+	let option = new ByValue<PXTBL_CONFIG_ENTRY>()
+
+	let bootProtocolGuid = new ByValue<EFI_GUID>()
+
+	var moduleListLength SIZE_T
+	var modulesList PWCHAR
+	var handle EFI_HANDLE
+	var status EFI_STATUS
+	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
+	ModulesList = (???? resolve CStyleCastExpr)
+	OptionsListEntry = OptionsList.Flink
+	??? CompoundStmt WhileStmt
+	Status = BlLoadModules(ModulesList)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return (9223372036854775808 | 6)
+
+	}
+
+	Status = BlFindBootProtocol(BootParameters.SystemType, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return (9223372036854775808 | 3)
+
+	}
+
+	Status = BlOpenProtocol(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	if BlGetConfigBooleanValue(???? resolve StringLiteral) {
+		Status = BlSetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr, RtlWideStringLength(ShortName, 0) * ???? resolve UnaryExprOrTypeTraitExpr)
+		if Status != (9223372036854775808 & 0) {
+			BlDebugPrint(???? resolve StringLiteral, Status)
+
+		}
+
+
+	}
+
+	return BootProtocol.BootSystem(???? resolve UnaryOperator)
+}
+
+fun blStartXtLoader(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
+	var status EFI_STATUS
+	EfiImageHandle = ImageHandle
+	EfiSystemTable = SystemTable
+	BlInitializeBootLoader()
+	Status = BlpParseCommandLine()
+	if Status != (9223372036854775808 & 0) {
+		BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+
+	}
+
+	if 1 {
+		Status = BlpInitializeDebugConsole()
+		if Status != (9223372036854775808 & 0) {
+			BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+
+		}
+
+
+	}
+
+	Status = BlpLoadConfiguration()
+	if Status != (9223372036854775808 & 0) {
+		BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+
+	}
+
+	if 1 {
+		Status = BlpInitializeDebugConsole()
+		if Status != (9223372036854775808 & 0) {
+			BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+
+		}
+
+
+	}
+
+	Status = EfiSystemTable.BootServices.SetWatchdogTimer(0, 65536, 0, (???? resolve CStyleCastExpr))
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+
+	}
+
+	Status = BlpInstallXtLoaderProtocol()
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	Status = BlLoadModules(BlGetConfigValue(???? resolve StringLiteral))
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+
+	}
+
+	Status = BlEnumerateBlockDevices()
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	??? CompoundStmt WhileStmt
+	return (9223372036854775808 | 1)
+}

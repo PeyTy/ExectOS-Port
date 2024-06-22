@@ -1,0 +1,7 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlGetStackLimits(stackBase PULONG_PTR, stackLimit PULONG_PTR) {
+	let thread = new ByValue<PKTHREAD>()
+
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+}

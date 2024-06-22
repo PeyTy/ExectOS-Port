@@ -1,0 +1,206 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlClearAllBits(bitMap PRTL_BITMAP) {
+	RtlSetMemory(BitMap.Buffer, 0, ((BitMap.Size + 64 - 1) / 64) * ???? resolve UnaryExprOrTypeTraitExpr)
+}
+
+fun rtlClearBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
+	if Bit >= BitMap.Size {
+		return ??
+
+	}
+
+	??? CompoundStmt CompoundAssignOperator
+}
+
+fun rtlClearBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) {
+	var bitOffset ULONG_PTR
+	var mask ULONG_PTR
+	var buffer PULONG_PTR
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	Buffer = ???? resolve UnaryOperator
+	BitOffset = StartingIndex & (64 - 1)
+	if BitOffset {
+		Mask = (???? resolve UnaryOperator) << BitOffset
+		BitOffset = 64 - BitOffset
+		if Length < BitOffset {
+			??? CompoundStmt CompoundAssignOperator
+			Mask = Mask << BitOffset >> BitOffset
+			??? CompoundStmt CompoundAssignOperator
+			return ??
+
+		}
+
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	RtlSetMemory(Buffer, 0, Length >> 3)
+	??? CompoundStmt CompoundAssignOperator
+	??? CompoundStmt CompoundAssignOperator
+	if Length {
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+}
+
+fun rtlClearSetBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
+	var startingIndex ULONG_PTR
+	StartingIndex = RtlFindSetBits(BitMap, Length, Index)
+	if StartingIndex != (???? resolve UnaryOperator) {
+		RtlClearBits(BitMap, StartingIndex, Length)
+
+	}
+
+	return StartingIndex
+}
+
+fun rtlDumpBitMap(bitMap PRTL_BITMAP) {
+	var index ULONG_PTR
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun rtlFindClearBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
+	return RtlpFindBits(BitMap, Length, Index, FALSE)
+}
+
+fun rtlFindSetBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
+	return RtlpFindBits(BitMap, Length, Index, TRUE)
+}
+
+fun rtlInitializeBitMap(bitMap PRTL_BITMAP, buffer PULONG_PTR, size ULONG) {
+	BitMap.Buffer = Buffer
+	BitMap.Size = Size
+}
+
+fun rtlSetAllBits(bitMap PRTL_BITMAP) {
+	RtlSetMemory(BitMap.Buffer, 255, ((BitMap.Size + 64 - 1) / 64) * ???? resolve UnaryExprOrTypeTraitExpr)
+}
+
+fun rtlSetBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
+	if Bit >= BitMap.Size {
+		return ??
+
+	}
+
+	??? CompoundStmt CompoundAssignOperator
+}
+
+fun rtlSetBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) {
+	var bitOffset ULONG_PTR
+	var mask ULONG_PTR
+	var buffer PULONG_PTR
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	Buffer = ???? resolve UnaryOperator
+	BitOffset = StartingIndex & (64 - 1)
+	if BitOffset {
+		Mask = (???? resolve UnaryOperator) << BitOffset
+		BitOffset = 64 - BitOffset
+		if Length < BitOffset {
+			??? CompoundStmt CompoundAssignOperator
+			Mask = Mask << BitOffset >> BitOffset
+			??? CompoundStmt CompoundAssignOperator
+			return ??
+
+		}
+
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt UnaryOperator
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	RtlSetMemory(Buffer, 255, Length >> 3)
+	??? CompoundStmt CompoundAssignOperator
+	??? CompoundStmt CompoundAssignOperator
+	if Length {
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+}
+
+fun rtlSetClearBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
+	var startingIndex ULONG_PTR
+	StartingIndex = RtlFindClearBits(BitMap, Length, Index)
+	if StartingIndex != (???? resolve UnaryOperator) {
+		RtlSetBits(BitMap, StartingIndex, Length)
+
+	}
+
+	return StartingIndex
+}
+
+fun rtlTestBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
+	if Bit >= BitMap.Size {
+		return FALSE
+
+	}
+
+	return ???? resolve ConditionalOperator
+}
+
+fun rtlpCountBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, setBits BOOLEAN) {
+	var buffer PULONG_PTR
+	var bufferEnd PULONG_PTR
+	var bitOffset ULONG_PTR
+	var size ULONG_PTR
+	var value ULONGLONG
+	Buffer = ???? resolve UnaryOperator
+	BufferEnd = Buffer + ((Length + 64 - 1) / 64)
+	BitOffset = StartingIndex & (64 - 1)
+	Value = (???? resolve ConditionalOperator) >> BitOffset << BitOffset
+	??? CompoundStmt WhileStmt
+	if ???? resolve UnaryOperator {
+		return Length
+
+	}
+
+	Size = ((Buffer - BitMap.Buffer) * 64) - StartingIndex + ???? resolve CStyleCastExpr
+	return ???? resolve ConditionalOperator
+}
+
+fun rtlpFindBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, setBits BOOLEAN) {
+	var bitMapEnd ULONG_PTR
+	var bitOffset ULONG_PTR
+	var size ULONG_PTR
+	var tries ULONG
+	if Length > BitMap.Size {
+		return ???? resolve CStyleCastExpr
+
+	} else {
+		??? CompoundStmt UnaryOperator
+		??? CompoundStmt CompoundStmt
+
+	}
+
+	if StartingIndex >= BitMap.Size {
+		StartingIndex = 0
+
+	}
+
+	BitOffset = StartingIndex
+	BitMapEnd = BitMap.Size
+	Tries = (StartingIndex != 0) + 2
+	??? CompoundStmt WhileStmt
+	return ???? resolve CStyleCastExpr
+}

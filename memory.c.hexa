@@ -1,0 +1,83 @@
+// Hexa 2024 from clang 15.0.3
+fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
+	let pdeBase = new ByValue<PHARDWARE_PTE>()
+
+	let ppeBase = new ByValue<PHARDWARE_PTE>()
+
+	let pxeBase = new ByValue<PHARDWARE_PTE>()
+
+	var address EFI_PHYSICAL_ADDRESS
+	var status XTSTATUS
+	if PageMap.PageMapLevel > 4 {
+		return (9223372036854775808 | 3)
+
+	}
+
+	PxeBase = (???? resolve CStyleCastExpr)
+	if ???? resolve UnaryOperator {
+		Status = XtLdrProtocol.Memory.AllocatePages(1, ???? resolve UnaryOperator)
+		if Status != (9223372036854775808 & 0) {
+			return Status
+
+		}
+
+		RtlZeroMemory(???? resolve CStyleCastExpr, 4096)
+		???? resolve ArraySubscriptExpr.Valid = 1
+		???? resolve ArraySubscriptExpr.PageFrameNumber = Address / 4096
+		???? resolve ArraySubscriptExpr.Writable = 1
+		PpeBase = ???? resolve CStyleCastExpr
+
+	} else {
+		PpeBase = ???? resolve CStyleCastExpr
+
+	}
+
+	if ???? resolve UnaryOperator {
+		Status = XtLdrProtocol.Memory.AllocatePages(1, ???? resolve UnaryOperator)
+		if Status != (9223372036854775808 & 0) {
+			return Status
+
+		}
+
+		RtlZeroMemory(???? resolve CStyleCastExpr, 4096)
+		???? resolve ArraySubscriptExpr.Valid = 1
+		???? resolve ArraySubscriptExpr.PageFrameNumber = Address / 4096
+		???? resolve ArraySubscriptExpr.Writable = 1
+		PdeBase = ???? resolve CStyleCastExpr
+
+	} else {
+		PdeBase = ???? resolve CStyleCastExpr
+
+	}
+
+	??? CompoundStmt ForStmt
+	return (9223372036854775808 & 0)
+}
+
+fun xtEnablePaging(pageMap PXTBL_PAGE_MAPPING) {
+	var status EFI_STATUS
+	Status = XtLdrProtocol.Memory.BuildPageMap(PageMap, 18446734158739722240)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	Status = XtpMapHardwareMemoryPool(PageMap)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+	Status = XtLdrProtocol.Util.ExitBootServices()
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return (9223372036854775808 | 21)
+
+	}
+
+	ArWriteControlRegister(3, ???? resolve CStyleCastExpr)
+	return (9223372036854775808 & 0)
+}

@@ -1,0 +1,296 @@
+// Hexa 2024 from clang 15.0.3
+fun arpDispatchTrap(trapFrame PKTRAP_FRAME) {
+	??? CompoundStmt SwitchStmt
+}
+
+fun arpHandleSystemCall32() {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+}
+
+fun arpHandleSystemCall64() {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+}
+
+fun arpHandleTrap00(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap01(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap02(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap03(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap04(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap05(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap06(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap07(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap08(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap09(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap0A(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap0B(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap0C(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap0D(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap0E(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap10(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap11(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap12(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap13(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap1F(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+}
+
+fun arpHandleTrap2C(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap2D(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun arpHandleTrap2F(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+}
+
+fun arpHandleTrapE1(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+}
+
+fun arpHandleTrapFF(trapFrame PKTRAP_FRAME) {
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}

@@ -1,0 +1,98 @@
+// Hexa 2024 from clang 15.0.3
+fun blClearConsoleLine(lineNo ULONGLONG) {
+	var index UINT_PTR
+	var resX UINT_PTR
+	var resY UINT_PTR
+	BlQueryConsoleMode(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	BlSetCursorPosition(0, LineNo)
+	??? CompoundStmt ForStmt
+}
+
+fun blClearConsoleScreen() {
+	EfiSystemTable.ConOut.ClearScreen(EfiSystemTable.ConOut)
+}
+
+fun blDisableConsoleCursor() {
+	EfiSystemTable.ConOut.EnableCursor(EfiSystemTable.ConOut, FALSE)
+}
+
+fun blEnableConsoleCursor() {
+	EfiSystemTable.ConOut.EnableCursor(EfiSystemTable.ConOut, TRUE)
+}
+
+fun blConsolePrint(format PUSHORT) {
+	let consolePrintContext = new ByValue<RTL_PRINT_CONTEXT>()
+
+	let serialPrintContext = new ByValue<RTL_PRINT_CONTEXT>()
+
+	var arguments VA_LIST
+	ConsolePrintContext.WriteWideCharacter = BlpConsolePutChar
+	SerialPrintContext.WriteWideCharacter = BlpDebugPutChar
+	__builtin_va_start(Arguments, Format)
+	RtlFormatWideString(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Arguments)
+	if RtlCompareWideString(EfiSystemTable.FirmwareVendor, ???? resolve StringLiteral, 6) != 0 {
+		if 1 and (BlpStatus.SerialPort.Flags & 1) {
+			RtlFormatWideString(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Arguments)
+
+		}
+
+
+	}
+
+	__builtin_va_end(Arguments)
+}
+
+fun blConsoleWrite(string PUSHORT) {
+	EfiSystemTable.ConOut.OutputString(EfiSystemTable.ConOut, String)
+}
+
+fun blInitializeConsole() {
+	EfiSystemTable.ConIn.Reset(EfiSystemTable.ConIn, TRUE)
+	EfiSystemTable.ConOut.Reset(EfiSystemTable.ConOut, TRUE)
+	EfiSystemTable.StdErr.Reset(EfiSystemTable.StdErr, TRUE)
+	if EfiSystemTable.ConOut.Mode.Mode != 0 {
+		BlSetConsoleMode(0)
+
+	}
+
+	BlSetConsoleAttributes(0 | 7)
+	BlClearConsoleScreen()
+	BlEnableConsoleCursor()
+}
+
+fun blQueryConsoleMode(resX PUINT_PTR, resY PUINT_PTR) {
+	EfiSystemTable.ConOut.QueryMode(EfiSystemTable.ConOut, EfiSystemTable.ConOut.Mode.Mode, ResX, ResY)
+}
+
+fun blReadKeyStroke(key PEFI_INPUT_KEY) {
+	EfiSystemTable.ConIn.ReadKeyStroke(EfiSystemTable.ConIn, Key)
+}
+
+fun blResetConsoleInputBuffer() {
+	EfiSystemTable.ConIn.Reset(EfiSystemTable.ConIn, FALSE)
+}
+
+fun blSetConsoleAttributes(attributes ULONGLONG) {
+	EfiSystemTable.ConOut.SetAttribute(EfiSystemTable.ConOut, Attributes)
+}
+
+fun blSetConsoleMode(mode ULONGLONG) {
+	return EfiSystemTable.ConOut.SetMode(EfiSystemTable.ConOut, Mode)
+}
+
+fun blSetCursorPosition(posX ULONGLONG, posY ULONGLONG) {
+	EfiSystemTable.ConOut.SetCursorPosition(EfiSystemTable.ConOut, PosX, PosY)
+}
+
+fun blpConsolePutChar(character USHORT) {
+	var buffer USHORT[2]
+	if Character == ???? resolve CharacterLiteral {
+		BlpConsolePutChar(???? resolve CharacterLiteral)
+
+	}
+
+	???? resolve ArraySubscriptExpr = Character
+	???? resolve ArraySubscriptExpr = 0
+	EfiSystemTable.ConOut.OutputString(EfiSystemTable.ConOut, Buffer)
+	return (???? resolve CStyleCastExpr)
+}

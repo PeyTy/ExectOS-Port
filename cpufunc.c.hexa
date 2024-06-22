@@ -1,0 +1,159 @@
+// Hexa 2024 from clang 15.0.3
+fun arClearInterruptFlag() {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arCpuId(registers PCPUID_REGISTERS) {
+	var maxLeaf UINT32
+	??? CompoundStmt GCCAsmStmt
+	if Registers.Leaf > MaxLeaf {
+		return FALSE
+
+	}
+
+	??? CompoundStmt GCCAsmStmt
+	return TRUE
+}
+
+fun arFlushTlb() {
+	ArWriteControlRegister(3, ArReadControlRegister(3))
+}
+
+fun arGetCpuFlags() {
+	var flags ULONG_PTR
+	??? CompoundStmt GCCAsmStmt
+	return Flags
+}
+
+fun arGetStackPointer() {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arHalt() {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arInterruptsEnabled() {
+	var flags ULONG_PTR
+	Flags = ArGetCpuFlags()
+	return ???? resolve ConditionalOperator
+}
+
+fun arInvalidateTlbEntry(address PVOID) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arLoadGlobalDescriptorTable(source PVOID) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arLoadInterruptDescriptorTable(source PVOID) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arLoadLocalDescriptorTable(source USHORT) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arLoadMxcsrRegister(source ULONG) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arLoadSegment(segment USHORT, source ULONG) {
+	??? CompoundStmt SwitchStmt
+}
+
+fun arLoadTaskRegister(source USHORT) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arMemoryBarrier() {
+	var barrier LONG
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arReadControlRegister(controlRegister USHORT) {
+	var value ULONG_PTR
+	??? CompoundStmt SwitchStmt
+	return Value
+}
+
+fun arReadDebugRegister(debugRegister USHORT) {
+	var value ULONG_PTR
+	??? CompoundStmt SwitchStmt
+	return Value
+}
+
+fun arReadGSQuadWord(offset ULONG) {
+	var value ULONGLONG
+	??? CompoundStmt GCCAsmStmt
+	return Value
+}
+
+fun arReadModelSpecificRegister(register ULONG) {
+	var low ULONG
+	var high ULONG
+	??? CompoundStmt GCCAsmStmt
+	return (???? resolve CStyleCastExpr << 32) | Low
+}
+
+fun arReadMxCsrRegister() {
+	return __builtin_ia32_stmxcsr()
+}
+
+fun arReadTimeStampCounter() {
+	var low ULONGLONG
+	var high ULONGLONG
+	??? CompoundStmt GCCAsmStmt
+	return (???? resolve CStyleCastExpr << 32) | Low
+}
+
+fun arReadWriteBarrier() {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arSetInterruptFlag() {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arStoreGlobalDescriptorTable(destination PVOID) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arStoreInterruptDescriptorTable(destination PVOID) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arStoreLocalDescriptorTable(destination PVOID) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arStoreSegment(segment USHORT, destination PVOID) {
+	??? CompoundStmt SwitchStmt
+}
+
+fun arStoreTaskRegister(destination PVOID) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arWriteControlRegister(controlRegister USHORT, value UINT_PTR) {
+	??? CompoundStmt SwitchStmt
+}
+
+fun arWriteDebugRegister(debugRegister USHORT, value UINT_PTR) {
+	??? CompoundStmt SwitchStmt
+}
+
+fun arWriteEflagsRegister(value UINT_PTR) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arWriteModelSpecificRegister(register ULONG, value ULONGLONG) {
+	var low ULONG = Value & 4294967295
+	var high ULONG = Value >> 32
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun arYieldProcessor() {
+	??? CompoundStmt GCCAsmStmt
+}

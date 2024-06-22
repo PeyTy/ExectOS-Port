@@ -1,0 +1,253 @@
+// Hexa 2024 from clang 15.0.3
+fun arInitializeProcessor(processorStructures PVOID) {
+	let gdtDescriptor = new ByValue<KDESCRIPTOR>()
+
+	let idtDescriptor = new ByValue<KDESCRIPTOR>()
+
+	var kernelBootStack PVOID
+	var kernelFaultStack PVOID
+	let processorBlock = new ByValue<PKPROCESSOR_BLOCK>()
+
+	let gdt = new ByValue<PKGDTENTRY>()
+
+	let idt = new ByValue<PKIDTENTRY>()
+
+	let tss = new ByValue<PKTSS>()
+
+	if ProcessorStructures {
+		ArpInitializeProcessorStructures(ProcessorStructures, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+		Idt = ArInitialIdt
+
+	} else {
+		Gdt = ArInitialGdt
+		Idt = ArInitialIdt
+		Tss = ???? resolve UnaryOperator
+		KernelBootStack = ???? resolve UnaryOperator
+		KernelFaultStack = ???? resolve UnaryOperator
+		ProcessorBlock = ???? resolve UnaryOperator
+
+	}
+
+	ArpInitializeProcessorBlock(ProcessorBlock, Gdt, Idt, Tss, KernelFaultStack)
+	ArpInitializeGdt(ProcessorBlock)
+	ArpInitializeIdt(ProcessorBlock)
+	ArpInitializeTss(ProcessorBlock, KernelBootStack, KernelFaultStack)
+	GdtDescriptor.Base = Gdt
+	GdtDescriptor.Limit = (128 * ???? resolve UnaryExprOrTypeTraitExpr) - 1
+	IdtDescriptor.Base = Idt
+	IdtDescriptor.Limit = (256 * ???? resolve UnaryExprOrTypeTraitExpr) - 1
+	ArLoadGlobalDescriptorTable(???? resolve UnaryOperator)
+	ArLoadInterruptDescriptorTable(???? resolve UnaryOperator)
+	ArLoadTaskRegister(???? resolve CStyleCastExpr)
+	HlSetRunLevel(0)
+	ArpInitializeSegments()
+	ArWriteModelSpecificRegister(3221225729, ???? resolve CStyleCastExpr)
+	ArWriteModelSpecificRegister(3221225730, ???? resolve CStyleCastExpr)
+	ArpInitializeProcessorRegisters()
+	ArpIdentifyProcessor()
+}
+
+fun arSetGdtEntryBase(gdt PKGDTENTRY, selector USHORT, base ULONG_PTR) {
+	let gdtEntry = new ByValue<PKGDTENTRY>()
+
+	GdtEntry = ???? resolve CStyleCastExpr
+	GdtEntry.BaseLow = (Base & 65535)
+	GdtEntry..Bytes.BaseMiddle = ((Base >> 16) & 255)
+	GdtEntry..Bytes.BaseHigh = ((Base >> 24) & 255)
+	GdtEntry.BaseUpper = (Base >> 32)
+}
+
+fun arpIdentifyProcessor() {
+	let prcb = new ByValue<PKPROCESSOR_CONTROL_BLOCK>()
+
+	let cpuRegisters = new ByValue<CPUID_REGISTERS>()
+
+	let cpuSignature = new ByValue<CPUID_SIGNATURE>()
+
+	Prcb = KeGetCurrentProcessorControlBlock()
+	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
+	CpuRegisters.Leaf = CPUID_GET_VENDOR_STRING
+	ArCpuId(???? resolve UnaryOperator)
+	Prcb.CpuId.Vendor = CpuRegisters.Ebx
+	???? resolve UnaryOperator = CpuRegisters.Ebx
+	???? resolve UnaryOperator = CpuRegisters.Edx
+	???? resolve UnaryOperator = CpuRegisters.Ecx
+	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
+	CpuRegisters.Leaf = CPUID_GET_CPU_FEATURES
+	ArCpuId(???? resolve UnaryOperator)
+	CpuSignature = ???? resolve UnaryOperator
+	Prcb.CpuId.Family = CpuSignature.Family
+	Prcb.CpuId.Model = CpuSignature.Model
+	Prcb.CpuId.Stepping = CpuSignature.Stepping
+	if Prcb.CpuId.Vendor == CPU_VENDOR_AMD {
+		if Prcb.CpuId.Family >= 15 {
+			Prcb.CpuId.Family = Prcb.CpuId.Family + CpuSignature.ExtendedFamily
+			Prcb.CpuId.Model = Prcb.CpuId.Model + (CpuSignature.ExtendedModel << 4)
+
+		}
+
+
+	} else {
+		??? CompoundStmt CompoundStmt
+		??? CompoundStmt CompoundStmt
+
+	}
+
+}
+
+fun arpInitializeGdt(processorBlock PKPROCESSOR_BLOCK) {
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 0, 0, 0, 0, 0, 1)
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 16, 0, 0, (16 | 8 | 2), 0, 1)
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 24, 0, 0, (16 | 2), 0, 1)
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 32, 0, 4294967295, (16 | 8 | 2), 3, 2)
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 40, 0, 4294967295, (16 | 2), 3, 2)
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 48, 0, 0, (16 | 8 | 2), 3, 1)
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 64, ???? resolve CStyleCastExpr, ???? resolve UnaryExprOrTypeTraitExpr, 9, 0, 0)
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 80, 0, 4095, (16 | 2), 3, 2)
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 96, 0, 4294967295, (16 | 8 | 2), 0, 0)
+	ArpSetGdtEntry(ProcessorBlock...GdtBase, 112, ???? resolve CStyleCastExpr, (128 * ???? resolve UnaryExprOrTypeTraitExpr) - 1, (16 | 2), 0, 0)
+}
+
+fun arpInitializeIdt(processorBlock PKPROCESSOR_BLOCK) {
+	var vector UINT
+	??? CompoundStmt ForStmt
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 0, ArpTrap0x00, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 1, ArpTrap0x01, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 2, ArpTrap0x02, 16, 1, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 3, ArpTrap0x03, 16, 0, 3)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 4, ArpTrap0x04, 16, 0, 3)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 5, ArpTrap0x05, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 6, ArpTrap0x06, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 7, ArpTrap0x07, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 8, ArpTrap0x08, 16, 1, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 9, ArpTrap0x09, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 10, ArpTrap0x0A, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 11, ArpTrap0x0B, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 12, ArpTrap0x0C, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 13, ArpTrap0x0D, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 14, ArpTrap0x0E, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 16, ArpTrap0x10, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 17, ArpTrap0x11, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 18, ArpTrap0x12, 16, 2, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 19, ArpTrap0x13, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 31, ArpTrap0x1F, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 44, ArpTrap0x2C, 16, 0, 3)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 45, ArpTrap0x2D, 16, 0, 3)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 47, ArpTrap0x2F, 16, 0, 0)
+	ArpSetIdtGate(ProcessorBlock.IdtBase, 225, ArpTrap0xE1, 16, 0, 0)
+}
+
+fun arpInitializeProcessorBlock(processorBlock PKPROCESSOR_BLOCK, gdt PKGDTENTRY, idt PKIDTENTRY, tss PKTSS, dpcStack PVOID) {
+	ProcessorBlock...Self = ProcessorBlock
+	ProcessorBlock...CurrentPrcb = ???? resolve UnaryOperator
+	ProcessorBlock...GdtBase = ???? resolve CStyleCastExpr
+	ProcessorBlock.IdtBase = Idt
+	ProcessorBlock...TssBase = Tss
+	ProcessorBlock.Prcb.RspBase = Tss.Rsp0
+	ProcessorBlock.Prcb.DpcStack = DpcStack
+	ProcessorBlock.Prcb.CpuNumber = ProcessorBlock.CpuNumber
+	ProcessorBlock.Prcb.SetMember = 1 << ProcessorBlock.CpuNumber
+	ProcessorBlock.Prcb.MultiThreadProcessorSet = 1 << ProcessorBlock.CpuNumber
+	ProcessorBlock.Prcb.ProcessorState.SpecialRegisters.KernelDr6 = 0
+	ProcessorBlock.Prcb.ProcessorState.SpecialRegisters.KernelDr7 = 0
+	ProcessorBlock.Prcb.CurrentThread = ???? resolve UnaryOperator
+	ProcessorBlock.Prcb.CurrentThread..ApcState.Process = ???? resolve UnaryOperator
+	ProcessorBlock.Prcb.IdleThread = ???? resolve UnaryOperator
+	ProcessorBlock.Prcb.NextThread = (???? resolve CStyleCastExpr)
+	ProcessorBlock.Prcb.MxCsr = 8064
+	ProcessorBlock.RunLevel = 0
+}
+
+fun arpInitializeProcessorRegisters() {
+	var patAttributes ULONGLONG
+	ArWriteControlRegister(4, ArReadControlRegister(4) | 512)
+	ArWriteControlRegister(4, ArReadControlRegister(4) | 1024)
+	ArWriteControlRegister(4, ArReadControlRegister(4) | 8)
+	ArWriteControlRegister(4, ArReadControlRegister(4) | 16)
+	ArWriteControlRegister(0, ArReadControlRegister(0) | 65536)
+	ArWriteControlRegister(0, ArReadControlRegister(0) | 262144)
+	ArWriteControlRegister(0, ArReadControlRegister(0) & ???? resolve UnaryOperator)
+	ArWriteControlRegister(0, ArReadControlRegister(0) & ???? resolve UnaryOperator)
+	ArFlushTlb()
+	ArWriteModelSpecificRegister(3221225601, ((???? resolve CStyleCastExpr | 3) << 48) | (???? resolve CStyleCastExpr << 32))
+	ArWriteModelSpecificRegister(3221225603, ???? resolve CStyleCastExpr)
+	ArWriteModelSpecificRegister(3221225602, ???? resolve CStyleCastExpr)
+	ArWriteModelSpecificRegister(3221225604, 512 | 256)
+	ArWriteModelSpecificRegister(3221225600, ArReadModelSpecificRegister(3221225600) | (1 << 0))
+	ArWriteModelSpecificRegister(3221225600, ArReadModelSpecificRegister(3221225600) | (1 << 11))
+	PatAttributes = (6 << 0) | (1 << 8) | (7 << 16) | (0 << 24) | (6 << 32) | (1 << 40) | (7 << 48) | (0 << 56)
+	ArWriteModelSpecificRegister(631, PatAttributes)
+	ArLoadMxcsrRegister(8064)
+}
+
+fun arpInitializeProcessorStructures(processorStructures PVOID, gdt PKGDTENTRY *, tss PKTSS *, processorBlock PKPROCESSOR_BLOCK *, kernelBootStack PVOID *, kernelFaultStack PVOID *) {
+	var address UINT_PTR
+	Address = (((???? resolve CStyleCastExpr) + (4096 - 1)) & ???? resolve UnaryOperator) + 32768
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	??? CompoundStmt CompoundAssignOperator
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	??? CompoundStmt CompoundAssignOperator
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	??? CompoundStmt CompoundAssignOperator
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+}
+
+fun arpInitializeSegments() {
+	ArLoadSegment(46, 16)
+	ArLoadSegment(62, 40 | 3)
+	ArLoadSegment(38, 40 | 3)
+	ArLoadSegment(100, 80 | 3)
+	ArLoadSegment(101, 40 | 3)
+	ArLoadSegment(54, 24)
+}
+
+fun arpInitializeTss(processorBlock PKPROCESSOR_BLOCK, kernelBootStack PVOID, kernelFaultStack PVOID) {
+	RtlZeroMemory(ProcessorBlock...TssBase, ???? resolve UnaryExprOrTypeTraitExpr)
+	ProcessorBlock...TssBase.IoMapBase = ???? resolve UnaryExprOrTypeTraitExpr
+	ProcessorBlock...TssBase.Rsp0 = ???? resolve CStyleCastExpr
+	???? resolve ArraySubscriptExpr = ???? resolve CStyleCastExpr
+	???? resolve ArraySubscriptExpr = ???? resolve CStyleCastExpr
+}
+
+fun arpSetGdtEntry(gdt PKGDTENTRY, selector USHORT, base ULONG_PTR, limit ULONG, type UCHAR, dpl UCHAR, segmentMode UCHAR) {
+	let gdtEntry = new ByValue<PKGDTENTRY>()
+
+	var granularity UCHAR
+	if Limit < 1048576 {
+		Granularity = 0
+
+	} else {
+		Granularity = 1
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	GdtEntry = ???? resolve CStyleCastExpr
+	GdtEntry.BaseLow = (Base & 65535)
+	GdtEntry..Bytes.BaseMiddle = ((Base >> 16) & 255)
+	GdtEntry..Bytes.BaseHigh = ((Base >> 24) & 255)
+	GdtEntry.BaseUpper = (Base >> 32)
+	GdtEntry.LimitLow = (Limit & 65535)
+	GdtEntry..Bits.LimitHigh = ((Limit >> 16) & 15)
+	GdtEntry..Bits.DefaultBig = ???? resolve UnaryOperator
+	GdtEntry..Bits.Dpl = (Dpl & 3)
+	GdtEntry..Bits.Granularity = Granularity
+	GdtEntry..Bits.LongMode = ???? resolve UnaryOperator
+	GdtEntry..Bits.Present = (Type != 0)
+	GdtEntry..Bits.System = 0
+	GdtEntry..Bits.Type = (Type & 31)
+	GdtEntry.MustBeZero = 0
+}
+
+fun arpSetIdtGate(idt PKIDTENTRY, vector USHORT, handler PVOID, selector USHORT, ist USHORT, access USHORT) {
+	???? resolve ArraySubscriptExpr.OffsetLow = (???? resolve CStyleCastExpr & 65535)
+	???? resolve ArraySubscriptExpr.OffsetMiddle = ((???? resolve CStyleCastExpr >> 16) & 65535)
+	???? resolve ArraySubscriptExpr.OffsetHigh = ???? resolve CStyleCastExpr >> 32
+	???? resolve ArraySubscriptExpr.Dpl = Access
+	???? resolve ArraySubscriptExpr.IstIndex = Ist
+	???? resolve ArraySubscriptExpr.Present = 1
+	???? resolve ArraySubscriptExpr.Selector = Selector
+	???? resolve ArraySubscriptExpr.Type = 14
+}

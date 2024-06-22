@@ -1,0 +1,367 @@
+// Hexa 2024 from clang 15.0.3
+fun blDisplayBootMenu() {
+	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
+
+	let menuEntries = new ByValue<PXTBL_BOOTMENU_ITEM>()
+
+	var index ULONG
+	var numberOfEntries ULONG
+	var highligtedEntryId ULONG
+	var eventIndex UINT_PTR
+	var events EFI_EVENT[2]
+	let key = new ByValue<EFI_INPUT_KEY>()
+
+	var timerEvent EFI_EVENT
+	var status EFI_STATUS
+	var timeOut LONG
+	var timeOutString PWCHAR
+	Status = BlInitializeBootMenuList(???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return ??
+
+	}
+
+	TimeOutString = BlGetConfigValue(???? resolve StringLiteral)
+	TimeOut = ???? resolve UnaryOperator
+	if TimeOutString != (???? resolve CStyleCastExpr) {
+		TimeOut = 0
+		??? CompoundStmt WhileStmt
+
+	}
+
+	??? CompoundStmt WhileStmt
+}
+
+fun blDisplayErrorDialog(caption PWCHAR, message PWCHAR) {
+	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
+
+	let key = new ByValue<EFI_INPUT_KEY>()
+
+	var index UINT_PTR
+	Handle.Attributes = 2 | 4
+	BlpDetermineDialogBoxSize(???? resolve UnaryOperator, Message)
+	BlDisableConsoleCursor()
+	BlpDrawDialogBox(???? resolve UnaryOperator, Caption, Message)
+	BlpDrawDialogButton(???? resolve UnaryOperator)
+	Key.ScanCode = 0
+	Key.UnicodeChar = 0
+	??? CompoundStmt WhileStmt
+	BlSetConsoleAttributes(0 | 7)
+	BlClearConsoleScreen()
+}
+
+fun blDisplayInfoDialog(caption PWCHAR, message PWCHAR) {
+	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
+
+	let key = new ByValue<EFI_INPUT_KEY>()
+
+	var index UINT_PTR
+	Handle.Attributes = 1 | 4
+	BlpDetermineDialogBoxSize(???? resolve UnaryOperator, Message)
+	BlDisableConsoleCursor()
+	BlpDrawDialogBox(???? resolve UnaryOperator, Caption, Message)
+	BlpDrawDialogButton(???? resolve UnaryOperator)
+	Key.ScanCode = 0
+	Key.UnicodeChar = 0
+	??? CompoundStmt WhileStmt
+	BlSetConsoleAttributes(0 | 7)
+	BlClearConsoleScreen()
+}
+
+fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *) {
+	var inputFieldLength SIZE_T
+	var textCursorPosition SIZE_T
+	var textIndex SIZE_T
+	var textPosition SIZE_T
+	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
+
+	var inputFieldBuffer PWCHAR
+	var bufferLength SIZE_T
+	let key = new ByValue<EFI_INPUT_KEY>()
+
+	var status EFI_STATUS
+	var index UINT_PTR
+	Handle.Attributes = 1 | 16 | 8
+	BlpDetermineDialogBoxSize(???? resolve UnaryOperator, Message)
+	BlDisableConsoleCursor()
+	BlpDrawDialogBox(???? resolve UnaryOperator, Caption, Message)
+	BlpDrawDialogButton(???? resolve UnaryOperator)
+	BlpDrawDialogInputField(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	Key.ScanCode = 0
+	Key.UnicodeChar = 0
+	BufferLength = RtlWideStringLength(???? resolve UnaryOperator, 0)
+	Status = BlAllocateMemoryPool(BufferLength * ???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+		return ??
+
+	}
+
+	RtlCopyMemory(InputFieldBuffer, ???? resolve UnaryOperator, BufferLength * ???? resolve UnaryExprOrTypeTraitExpr)
+	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+	InputFieldLength = BufferLength
+	if InputFieldLength > Handle.Width - 8 {
+		InputFieldLength = Handle.Width - 8
+
+	}
+
+	TextPosition = 0
+	BlSetCursorPosition(Handle.PosX + 4 + TextPosition, Handle.PosY + Handle.Height - 4)
+	??? CompoundStmt WhileStmt
+	BlSetConsoleAttributes(0 | 7)
+	BlClearConsoleScreen()
+}
+
+fun blDisplayProgressDialog(caption PWCHAR, message PWCHAR, percentage UCHAR) {
+	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
+
+	Handle.Attributes = 1 | 64
+	BlpDetermineDialogBoxSize(???? resolve UnaryOperator, Message)
+	BlDisableConsoleCursor()
+	BlpDrawDialogBox(???? resolve UnaryOperator, Caption, Message)
+	BlpDrawDialogProgressBar(???? resolve UnaryOperator, Percentage)
+	return Handle
+}
+
+fun blUpdateProgressBar(handle PXTBL_DIALOG_HANDLE, message PWCHAR, percentage UCHAR) {
+	if Message != (???? resolve CStyleCastExpr) {
+		BlpDrawDialogMessage(Handle, Message)
+
+	}
+
+	BlpDrawDialogProgressBar(Handle, Percentage)
+}
+
+fun blpDetermineDialogBoxSize(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
+	var width UINT_PTR
+	var height UINT_PTR
+	var lineLength UINT_PTR
+	var index SIZE_T
+	var messageLength SIZE_T
+	var attributes UCHAR
+	var mask ULONG
+	Height = 4
+	Width = 36
+	LineLength = 0
+	Mask = 1
+	Attributes = Handle.Attributes
+	??? CompoundStmt WhileStmt
+	if Handle.Attributes & (16 | 32) {
+		Width = 100
+
+	}
+
+	MessageLength = RtlWideStringLength(Message, 0)
+	??? CompoundStmt ForStmt
+	??? CompoundStmt CompoundAssignOperator
+	BlQueryConsoleMode(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Width > 100 {
+		Width = 100
+
+	}
+
+	if Width > (Handle.ResX - 2) {
+		Width = Handle.ResX - 2
+
+	}
+
+	if Height > (Handle.ResY - 2) {
+		Height = Handle.ResY - 2
+
+	}
+
+	Handle.PosX = (Handle.ResX - Width) / 2
+	Handle.PosY = (Handle.ResY - Height) / 2
+	Handle.Width = Width
+	Handle.Height = Height
+}
+
+fun blpDrawBootMenu(handle PXTBL_DIALOG_HANDLE) {
+	BlQueryConsoleMode(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	Handle.Attributes = 0
+	Handle.DialogColor = 0
+	Handle.TextColor = 7
+	Handle.PosX = 3
+	Handle.PosY = 3
+	Handle.Width = Handle.ResX - 6
+	Handle.Height = Handle.ResY - 10
+	BlSetConsoleAttributes(Handle.DialogColor | Handle.TextColor)
+	BlClearConsoleScreen()
+	BlDisableConsoleCursor()
+	if 1 {
+		BlSetCursorPosition((Handle.ResX - 44) / 2, 1)
+		BlConsolePrint(???? resolve StringLiteral, 0, 1, ???? resolve StringLiteral, ???? resolve StringLiteral)
+
+	} else {
+		BlSetCursorPosition((Handle.ResX - 22) / 2, 1)
+		BlConsolePrint(???? resolve StringLiteral, 0, 1)
+
+	}
+
+	BlpDrawDialogBox(Handle, (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr))
+	BlSetCursorPosition(0, Handle.PosY + Handle.Height)
+	BlSetConsoleAttributes(0 | 7)
+	BlConsolePrint(???? resolve StringLiteral)
+}
+
+fun blpDrawBootMenuEntry(handle PXTBL_DIALOG_HANDLE, menuEntry PWCHAR, position UINT, highlighted BOOLEAN) {
+	var index UINT
+	BlSetCursorPosition(5, 4 + Position)
+	if Highlighted {
+		BlSetConsoleAttributes(112 | 0)
+
+	} else {
+		BlSetConsoleAttributes(0 | 7)
+
+	}
+
+	??? CompoundStmt ForStmt
+	BlSetCursorPosition(5, 4 + Position)
+	BlConsolePrint(???? resolve StringLiteral, MenuEntry)
+}
+
+fun blpDrawDialogBox(handle PXTBL_DIALOG_HANDLE, caption PWCHAR, message PWCHAR) {
+	var boxLine WCHAR[100]
+	var captionLength SIZE_T
+	var posX UINT_PTR
+	var posY UINT_PTR
+	if Handle.Attributes & 2 {
+		Handle.DialogColor = 64
+		Handle.TextColor = 15
+
+	} else {
+		??? CompoundStmt CompoundStmt
+
+	}
+
+	BlSetConsoleAttributes(Handle.DialogColor | 15)
+	??? CompoundStmt ForStmt
+	if Caption != (???? resolve CStyleCastExpr) {
+		BlSetCursorPosition(Handle.PosX + 3, Handle.PosY)
+		BlConsolePrint(???? resolve StringLiteral, Caption)
+
+	}
+
+	if Message != (???? resolve CStyleCastExpr) {
+		BlpDrawDialogMessage(Handle, Message)
+
+	}
+
+}
+
+fun blpDrawDialogButton(handle PXTBL_DIALOG_HANDLE) {
+	var buttonColor ULONG
+	var textColor ULONG
+	if Handle.Attributes & 4 {
+		if Handle.Attributes & 2 {
+			ButtonColor = 96
+			TextColor = 15
+
+		} else {
+			ButtonColor = 48
+			TextColor = 15
+
+		}
+
+
+	} else {
+		ButtonColor = 112
+		TextColor = 0
+
+	}
+
+	BlDisableConsoleCursor()
+	BlSetConsoleAttributes(ButtonColor | TextColor)
+	BlSetCursorPosition(Handle.ResX / 2 - 4, Handle.PosY + Handle.Height - 2)
+	BlConsolePrint(???? resolve StringLiteral)
+}
+
+fun blpDrawDialogInputField(handle PXTBL_DIALOG_HANDLE, inputFieldText PWCHAR) {
+	var inputField WCHAR[100]
+	var inputColor ULONG
+	var textColor ULONG
+	var index UINT_PTR
+	var position UINT_PTR
+	var length SIZE_T
+	if Handle.Attributes & 16 {
+		if Handle.Attributes & 2 {
+			InputColor = 96
+			TextColor = 15
+
+		} else {
+			InputColor = 48
+			TextColor = 15
+
+		}
+
+
+	} else {
+		InputColor = 112
+		TextColor = 0
+
+	}
+
+	BlSetConsoleAttributes(InputColor | TextColor)
+	Position = ???? resolve ConditionalOperator
+	BlSetCursorPosition(Handle.PosX + 4, Handle.PosY + Handle.Height - Position)
+	??? CompoundStmt ForStmt
+	BlDisableConsoleCursor()
+	BlConsoleWrite(InputField)
+	Length = RtlWideStringLength(InputFieldText, 0)
+	if Length > (Handle.Width - 9) {
+		Length = Handle.Width - 9
+
+	}
+
+	??? CompoundStmt ForStmt
+	???? resolve ArraySubscriptExpr = 0
+	BlSetCursorPosition(Handle.PosX + 4, Handle.PosY + Handle.Height - Position)
+	BlConsoleWrite(InputField)
+	if Handle.Attributes & 16 {
+		BlEnableConsoleCursor()
+
+	}
+
+}
+
+fun blpDrawDialogMessage(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
+	var msg PWCHAR
+	var msgLine PWCHAR
+	var lastMsgLine PWCHAR
+	var index SIZE_T
+	var length SIZE_T
+	var lineLength SIZE_T
+	var status EFI_STATUS
+	var line ULONG
+	Length = RtlWideStringLength(Message, 0)
+	Status = BlAllocateMemoryPool(Length * ???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return ??
+
+	}
+
+	RtlCopyMemory(Msg, Message, Length * ???? resolve UnaryExprOrTypeTraitExpr)
+	???? resolve ArraySubscriptExpr = 0
+	MsgLine = RtlTokenizeWideString(Msg, ???? resolve StringLiteral, ???? resolve UnaryOperator)
+	Line = 0
+	??? CompoundStmt WhileStmt
+}
+
+fun blpDrawDialogProgressBar(handle PXTBL_DIALOG_HANDLE, percentage UCHAR) {
+	var index UINT_PTR
+	var progressLength UINT_PTR
+	var progressBarLength UINT_PTR
+	var progressBar WCHAR[100]
+	var position UINT_PTR
+	ProgressBarLength = Handle.Width - 8
+	ProgressLength = (ProgressBarLength * Percentage) / 100
+	BlSetConsoleAttributes(14)
+	Position = ???? resolve ConditionalOperator
+	BlSetCursorPosition(Handle.PosX + 4, Handle.PosY + Handle.Height - Position)
+	??? CompoundStmt ForStmt
+	???? resolve ArraySubscriptExpr = 0
+	BlDisableConsoleCursor()
+	BlConsoleWrite(ProgressBar)
+}

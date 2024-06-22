@@ -1,0 +1,61 @@
+// Hexa 2024 from clang 15.0.3
+fun keAcquireSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
+	KepGetSystemResource(ResourceType, TRUE, ResourceHeader)
+	return ???? resolve ConditionalOperator
+}
+
+fun keGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
+	KepGetSystemResource(ResourceType, FALSE, ResourceHeader)
+	return ???? resolve ConditionalOperator
+}
+
+fun keReleaseSystemResource(resourceHeader PSYSTEM_RESOURCE_HEADER) {
+	ArClearInterruptFlag()
+	KeAcquireSpinLock(???? resolve UnaryOperator)
+	ResourceHeader.Acquired = FALSE
+	KeReleaseSpinLock(???? resolve UnaryOperator)
+	ArSetInterruptFlag()
+}
+
+fun kepGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, acquire BOOLEAN, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
+	let resource = new ByValue<PSYSTEM_RESOURCE_HEADER>()
+
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	var interrupts BOOLEAN
+	Interrupts = ArInterruptsEnabled()
+	ArClearInterruptFlag()
+	KeAcquireSpinLock(???? resolve UnaryOperator)
+	ListEntry = KepSystemResourcesListHead.Flink
+	??? CompoundStmt WhileStmt
+	if ListEntry == ???? resolve UnaryOperator {
+		Resource = (???? resolve CStyleCastExpr)
+
+	}
+
+	KeReleaseSpinLock(???? resolve UnaryOperator)
+	if Interrupts {
+		ArSetInterruptFlag()
+
+	}
+
+	???? resolve UnaryOperator = Resource
+}
+
+fun kepInitializeSystemResources() {
+	let resourceHeader = new ByValue<PSYSTEM_RESOURCE_HEADER>()
+
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	let nextListEntry = new ByValue<PLIST_ENTRY>()
+
+	var resourceSize ULONG
+	KeInitializeSpinLock(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	if ???? resolve UnaryOperator {
+		ListEntry = KeInitializationBlock.SystemResourcesListHead.Flink
+		??? CompoundStmt WhileStmt
+
+	}
+
+}

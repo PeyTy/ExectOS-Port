@@ -1,0 +1,31 @@
+// Hexa 2024 from clang 15.0.3
+fun exAcquireRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
+	var currentValue ULONG_PTR
+	var newValue ULONG_PTR
+	CurrentValue = Descriptor..Count
+	??? CompoundStmt WhileStmt
+}
+
+fun exCompleteRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
+	RtlAtomicExchangePointer(???? resolve UnaryOperator, ???? resolve CStyleCastExpr)
+}
+
+fun exInitializeRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
+	Descriptor..Count = 0
+}
+
+fun exReInitializeRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
+	RtlAtomicExchangePointer(???? resolve UnaryOperator, (???? resolve CStyleCastExpr))
+}
+
+fun exReleaseRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
+	var currentValue ULONG_PTR
+	var newValue ULONG_PTR
+	let waitBlock = new ByValue<PEX_RUNDOWN_WAIT_BLOCK>()
+
+	CurrentValue = Descriptor..Count
+	??? CompoundStmt WhileStmt
+}
+
+fun exWaitForRundownProtectionRelease(descriptor PEX_RUNDOWN_REFERENCE) {
+}

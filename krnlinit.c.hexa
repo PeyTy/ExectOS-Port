@@ -1,0 +1,35 @@
+// Hexa 2024 from clang 15.0.3
+fun keStartXtSystem(parameters PKERNEL_INITIALIZATION_BLOCK) {
+	KeInitializationBlock = Parameters
+	if KeInitializationBlock.BlockSize != ???? resolve UnaryExprOrTypeTraitExpr or KeInitializationBlock.BlockVersion != 1 or KeInitializationBlock.ProtocolVersion != 1 {
+		KeHaltSystem()
+
+	}
+
+	if 1 and KeInitializationBlock.LoaderInformation.DbgPrint {
+		KeDbgPrint = KeInitializationBlock.LoaderInformation.DbgPrint
+
+	}
+
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt IntegerLiteral
+		??? CompoundStmt IntegerLiteral
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	ArInitializeProcessor((???? resolve CStyleCastExpr))
+	KepInitializeSystemResources()
+	KepInitializeMachine()
+	KeRaiseRunLevel(15)
+	KepSwitchBootStack(???? resolve CStyleCastExpr & ???? resolve UnaryOperator)
+}

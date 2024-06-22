@@ -1,0 +1,49 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlInitializeListHead(listHead PLIST_ENTRY) {
+	ListHead.Blink = ListHead
+	ListHead.Flink = ListHead
+}
+
+fun rtlInitializeListHead32(listHead PLIST_ENTRY32) {
+	ListHead.Blink = (???? resolve CStyleCastExpr)
+	ListHead.Flink = (???? resolve CStyleCastExpr)
+}
+
+fun rtlInsertHeadList(listHead PLIST_ENTRY, entry PLIST_ENTRY) {
+	Entry.Flink = ListHead.Flink
+	Entry.Blink = ListHead
+	ListHead.Flink.Blink = Entry
+	ListHead.Flink = Entry
+}
+
+fun rtlInsertTailList(listHead PLIST_ENTRY, entry PLIST_ENTRY) {
+	Entry.Flink = ListHead
+	Entry.Blink = ListHead.Blink
+	ListHead.Blink.Flink = Entry
+	ListHead.Blink = Entry
+}
+
+fun rtlListEmpty(listHead PLIST_ENTRY) {
+	return (((ListHead.Flink == (???? resolve CStyleCastExpr)) and (ListHead.Blink == (???? resolve CStyleCastExpr))) or (ListHead.Flink == ListHead))
+}
+
+fun rtlListLoop(listHead PLIST_ENTRY) {
+	let slowEntry = new ByValue<PLIST_ENTRY>()
+
+	let fastEntry = new ByValue<PLIST_ENTRY>()
+
+	if ListHead == (???? resolve CStyleCastExpr) {
+		return FALSE
+
+	}
+
+	FastEntry = ListHead
+	SlowEntry = ListHead
+	??? CompoundStmt WhileStmt
+	return FALSE
+}
+
+fun rtlRemoveEntryList(entry PLIST_ENTRY) {
+	Entry.Flink.Blink = Entry.Blink
+	Entry.Blink.Flink = Entry.Flink
+}

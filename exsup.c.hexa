@@ -1,0 +1,8 @@
+// Hexa 2024 from clang 15.0.3
+fun __C_specific_handler(exceptionRecord PEXCEPTION_RECORD, establisherFrame PVOID, contextRecord PCONTEXT, dispatcherContext PVOID) {
+	return ExceptionContinueExecution
+}
+
+fun _except_handler3(exceptionRecord PEXCEPTION_RECORD, registration PVOID, context PCONTEXT, dispatcher PVOID) {
+	return 0
+}

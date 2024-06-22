@@ -1,0 +1,376 @@
+// Hexa 2024 from clang 15.0.3
+fun blCloseProtocol(handle PEFI_HANDLE, protocolGuid PEFI_GUID) {
+	return EfiSystemTable.BootServices.CloseProtocol(Handle, ProtocolGuid, EfiImageHandle, (???? resolve CStyleCastExpr))
+}
+
+fun blFindBootProtocol(systemType PWCHAR, bootProtocolGuid PEFI_GUID) {
+	let protocolEntry = new ByValue<PXTBL_KNOWN_BOOT_PROTOCOL>()
+
+	let protocolListEntry = new ByValue<PLIST_ENTRY>()
+
+	ProtocolListEntry = BlpBootProtocols.Flink
+	??? CompoundStmt WhileStmt
+	return (9223372036854775808 | 14)
+}
+
+fun blGetModulesList() {
+	return ???? resolve UnaryOperator
+}
+
+fun blInstallProtocol(interface PVOID, guid PEFI_GUID) {
+	var handle EFI_HANDLE = (???? resolve CStyleCastExpr)
+	return EfiSystemTable.BootServices.InstallProtocolInterface(???? resolve UnaryOperator, Guid, EFI_NATIVE_INTERFACE, Interface)
+}
+
+fun blLoadModule(moduleName PWCHAR) {
+	let lIPGuid = new ByValue<EFI_GUID>()
+
+	let depsListEntry = new ByValue<PLIST_ENTRY>()
+
+	let moduleListEntry = new ByValue<PLIST_ENTRY>()
+
+	var moduleDevicePath EFI_MEMMAP_DEVICE_PATH[2]
+	let loadedImage = new ByValue<PEFI_LOADED_IMAGE_PROTOCOL>()
+
+	let dirHandle = new ByValue<PEFI_FILE_HANDLE>()
+
+	let fsHandle = new ByValue<PEFI_FILE_HANDLE>()
+
+	var diskHandle EFI_HANDLE
+	var moduleHandle EFI_HANDLE
+	let sectionHeader = new ByValue<PPECOFF_IMAGE_SECTION_HEADER>()
+
+	let dosHeader = new ByValue<PPECOFF_IMAGE_DOS_HEADER>()
+
+	let peHeader = new ByValue<PPECOFF_IMAGE_PE_HEADER>()
+
+	let moduleDependency = new ByValue<PXTBL_MODULE_DEPS>()
+
+	let moduleInfo = new ByValue<PXTBL_MODULE_INFO>()
+
+	var moduleFileName WCHAR[24]
+	var sectionIndex USHORT
+	var sectionData PWCHAR
+	var moduleSize SIZE_T
+	var status EFI_STATUS
+	var moduleData PVOID
+	ModuleListEntry = BlpLoadedModules.Flink
+	??? CompoundStmt WhileStmt
+	BlDebugPrint(???? resolve StringLiteral, ModuleName)
+	RtlCopyMemory(ModuleFileName, ModuleName, ???? resolve UnaryExprOrTypeTraitExpr / ???? resolve UnaryExprOrTypeTraitExpr)
+	RtlConcatenateWideString(ModuleFileName, ???? resolve StringLiteral, 0)
+	Status = BlOpenVolume((???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = FsHandle.Open(FsHandle, ???? resolve UnaryOperator, ???? resolve StringLiteral, 1, 0)
+	if Status != (9223372036854775808 & 0) {
+		Status = FsHandle.Open(FsHandle, ???? resolve UnaryOperator, ???? resolve StringLiteral, 1, 0)
+
+	}
+
+	FsHandle.Close(FsHandle)
+	if Status != (9223372036854775808 & 0) {
+		BlCloseVolume(DiskHandle)
+		return Status
+
+	}
+
+	Status = BlReadFile(DirHandle, ModuleFileName, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	DirHandle.Close(DirHandle)
+	BlCloseVolume(DiskHandle)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	RtlZeroMemory(ModuleInfo, ???? resolve UnaryExprOrTypeTraitExpr)
+	DosHeader = ???? resolve CStyleCastExpr
+	PeHeader = ???? resolve CStyleCastExpr
+	if PeHeader..OptionalHeader32.Magic == 523 {
+		SectionHeader = ???? resolve CStyleCastExpr
+
+	} else {
+		SectionHeader = ???? resolve CStyleCastExpr
+
+	}
+
+	??? CompoundStmt ForStmt
+	DepsListEntry = ModuleInfo.Dependencies.Flink
+	??? CompoundStmt WhileStmt
+	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
+	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr >> 8
+	???? resolve ArraySubscriptExpr.Header.Type = 1
+	???? resolve ArraySubscriptExpr.Header.SubType = 3
+	???? resolve ArraySubscriptExpr.MemoryType = EfiLoaderData
+	???? resolve ArraySubscriptExpr.StartingAddress = ???? resolve CStyleCastExpr
+	???? resolve ArraySubscriptExpr.EndingAddress = ???? resolve CStyleCastExpr + ModuleSize
+	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
+	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr >> 8
+	???? resolve ArraySubscriptExpr.Header.Type = 127
+	???? resolve ArraySubscriptExpr.Header.SubType = 255
+	BlDebugPrint(???? resolve StringLiteral, ModuleName)
+	Status = BlLoadEfiImage(???? resolve CStyleCastExpr, ModuleData, ModuleSize, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		if Status == (9223372036854775808 | 15) and BlpStatus.SecureBoot >= 1 {
+			BlDebugPrint(???? resolve StringLiteral, ModuleName)
+
+		} else {
+			BlDebugPrint(???? resolve StringLiteral, ModuleName, Status)
+
+		}
+
+		return Status
+
+	}
+
+	Status = EfiSystemTable.BootServices.OpenProtocol(ModuleHandle, ???? resolve UnaryOperator, ???? resolve CStyleCastExpr, EfiImageHandle, (???? resolve CStyleCastExpr), 2)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	if LoadedImage.ImageCodeType != EfiBootServicesCode {
+		BlDebugPrint(???? resolve StringLiteral)
+		EfiSystemTable.BootServices.CloseProtocol(LoadedImage, ???? resolve UnaryOperator, LoadedImage, (???? resolve CStyleCastExpr))
+
+	}
+
+	ModuleInfo.ModuleName = ModuleName
+	ModuleInfo.ModuleBase = LoadedImage.ImageBase
+	ModuleInfo.ModuleSize = LoadedImage.ImageSize
+	ModuleInfo.Revision = LoadedImage.Revision
+	ModuleInfo.UnloadModule = LoadedImage.Unload
+	EfiSystemTable.BootServices.CloseProtocol(LoadedImage, ???? resolve UnaryOperator, LoadedImage, (???? resolve CStyleCastExpr))
+	Status = BlStartEfiImage(ModuleHandle)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, ModuleName, Status)
+		return Status
+
+	}
+
+	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	return (9223372036854775808 & 0)
+}
+
+fun blLoadModules(modulesList PWCHAR) {
+	var lastModule PWCHAR
+	var module PWCHAR
+	var returnStatus EFI_STATUS
+	var status EFI_STATUS
+	ReturnStatus = (9223372036854775808 & 0)
+	if ModulesList != (???? resolve CStyleCastExpr) {
+		Module = RtlTokenizeWideString(ModulesList, ???? resolve StringLiteral, ???? resolve UnaryOperator)
+		??? CompoundStmt WhileStmt
+
+	}
+
+	return ReturnStatus
+}
+
+fun blLocateProtocolHandles(handles PEFI_HANDLE *, count PUINT_PTR, protocolGuid PEFI_GUID) {
+	return EfiSystemTable.BootServices.LocateHandleBuffer(ByProtocol, ProtocolGuid, (???? resolve CStyleCastExpr), Count, Handles)
+}
+
+fun blOpenProtocol(handle PEFI_HANDLE, protocolHandler PVOID *, protocolGuid PEFI_GUID) {
+	var handles PEFI_HANDLE = (???? resolve CStyleCastExpr)
+	var status EFI_STATUS
+	var count UINT_PTR
+	var index UINT
+	Status = BlLocateProtocolHandles(???? resolve UnaryOperator, ???? resolve UnaryOperator, ProtocolGuid)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	if Count > 0 {
+		??? CompoundStmt ForStmt
+
+	}
+
+	EfiSystemTable.BootServices.FreePool(Handles)
+	if ???? resolve UnaryOperator == (???? resolve CStyleCastExpr) {
+		return (9223372036854775808 | 14)
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun blOpenProtocolHandle(handle EFI_HANDLE, protocolHandler PVOID *, protocolGuid PEFI_GUID) {
+	return EfiSystemTable.BootServices.OpenProtocol(Handle, ProtocolGuid, ProtocolHandler, EfiImageHandle, (???? resolve CStyleCastExpr), 1)
+}
+
+fun blRegisterBootMenu(bootMenuRoutine PVOID) {
+	BlpStatus.BootMenu = BootMenuRoutine
+}
+
+fun blRegisterBootProtocol(systemType PWCHAR, bootProtocolGuid PEFI_GUID) {
+	let protocolEntry = new ByValue<PXTBL_KNOWN_BOOT_PROTOCOL>()
+
+	let protocolListEntry = new ByValue<PLIST_ENTRY>()
+
+	var status EFI_STATUS
+	ProtocolListEntry = BlpBootProtocols.Flink
+	??? CompoundStmt WhileStmt
+	Status = BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return (9223372036854775808 | 9)
+
+	}
+
+	ProtocolEntry.SystemType = SystemType
+	ProtocolEntry.Guid = ???? resolve UnaryOperator
+	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	return (9223372036854775808 & 0)
+}
+
+fun blpGetModuleInformation(sectionData PWCHAR, sectionSize ULONG, moduleInfo PXTBL_MODULE_INFO) {
+	let moduleDependencies = new ByValue<PXTBL_MODULE_DEPS>()
+
+	let moduleAuthors = new ByValue<PXTBL_MODULE_AUTHORS>()
+
+	var dependency PWCHAR
+	var key PWCHAR
+	var lastStr PWCHAR
+	var index ULONG
+	var count ULONG
+	var status EFI_STATUS
+	var strings PWCHAR *
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	Status = BlpGetModuleInfoStrings(SectionData, SectionSize, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	??? CompoundStmt ForStmt
+	return (9223372036854775808 & 0)
+}
+
+fun blpGetModuleInfoStrings(sectionData PWCHAR, sectionSize ULONG, modInfo PWCHAR **, infoCount PULONG) {
+	var count ULONG
+	var index ULONG
+	var arrayIndex ULONG
+	var infoStrings PCWSTR
+	var status EFI_STATUS
+	var array PWCHAR *
+	var string PWCHAR
+	InfoStrings = SectionData
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	??? CompoundStmt WhileStmt
+	if SectionSize <= 1 {
+		return (9223372036854775808 | 31)
+
+	}
+
+	Index = 0
+	Count = 0
+	??? CompoundStmt WhileStmt
+	if ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral {
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	Status = BlAllocateMemoryPool(SectionSize + 1 + ???? resolve UnaryExprOrTypeTraitExpr * (Count + 1), ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return (9223372036854775808 | 9)
+
+	}
+
+	BlAllocateMemoryPool(SectionSize, ???? resolve CStyleCastExpr)
+	RtlCopyMemory(String, InfoStrings, SectionSize)
+	???? resolve ArraySubscriptExpr = (???? resolve CStyleCastExpr)
+	???? resolve ArraySubscriptExpr = String
+	Index = 0
+	ArrayIndex = 1
+	??? CompoundStmt WhileStmt
+	???? resolve UnaryOperator = Array
+	???? resolve UnaryOperator = Count
+	return (9223372036854775808 & 0)
+}
+
+fun blpInstallXtLoaderProtocol() {
+	let guid = new ByValue<EFI_GUID>()
+
+	BlpLdrProtocol.Boot.FindProtocol = BlFindBootProtocol
+	BlpLdrProtocol.Boot.InitializeMenuList = BlInitializeBootMenuList
+	BlpLdrProtocol.Boot.InvokeProtocol = BlInvokeBootProtocol
+	BlpLdrProtocol.Boot.RegisterMenu = BlRegisterBootMenu
+	BlpLdrProtocol.Boot.RegisterProtocol = BlRegisterBootProtocol
+	BlpLdrProtocol.Config.GetBooleanValue = BlGetConfigBooleanValue
+	BlpLdrProtocol.Config.GetValue = BlGetConfigValue
+	BlpLdrProtocol.Console.ClearLine = BlClearConsoleLine
+	BlpLdrProtocol.Console.ClearScreen = BlClearConsoleScreen
+	BlpLdrProtocol.Console.DisableCursor = BlDisableConsoleCursor
+	BlpLdrProtocol.Console.EnableCursor = BlEnableConsoleCursor
+	BlpLdrProtocol.Console.Print = BlConsolePrint
+	BlpLdrProtocol.Console.QueryMode = BlQueryConsoleMode
+	BlpLdrProtocol.Console.ReadKeyStroke = BlReadKeyStroke
+	BlpLdrProtocol.Console.ResetInputBuffer = BlResetConsoleInputBuffer
+	BlpLdrProtocol.Console.SetAttributes = BlSetConsoleAttributes
+	BlpLdrProtocol.Console.SetCursorPosition = BlSetCursorPosition
+	BlpLdrProtocol.Console.Write = BlConsoleWrite
+	BlpLdrProtocol.Debug.Print = BlDebugPrint
+	BlpLdrProtocol.Disk.CloseVolume = BlCloseVolume
+	BlpLdrProtocol.Disk.OpenVolume = BlOpenVolume
+	BlpLdrProtocol.Disk.ReadFile = BlReadFile
+	BlpLdrProtocol.Memory.AllocatePages = BlAllocateMemoryPages
+	BlpLdrProtocol.Memory.AllocatePool = BlAllocateMemoryPool
+	BlpLdrProtocol.Memory.BuildPageMap = BlBuildPageMap
+	BlpLdrProtocol.Memory.CopyMemory = RtlCopyMemory
+	BlpLdrProtocol.Memory.FreePages = BlFreeMemoryPages
+	BlpLdrProtocol.Memory.FreePool = BlFreeMemoryPool
+	BlpLdrProtocol.Memory.GetMappingsCount = BlGetMappingsCount
+	BlpLdrProtocol.Memory.GetMemoryMap = BlGetMemoryMap
+	BlpLdrProtocol.Memory.GetVirtualAddress = BlGetVirtualAddress
+	BlpLdrProtocol.Memory.InitializePageMap = BlInitializePageMap
+	BlpLdrProtocol.Memory.MapEfiMemory = BlMapEfiMemory
+	BlpLdrProtocol.Memory.MapPage = BlMapPage
+	BlpLdrProtocol.Memory.MapVirtualMemory = BlMapVirtualMemory
+	BlpLdrProtocol.Memory.PhysicalAddressToVirtual = BlPhysicalAddressToVirtual
+	BlpLdrProtocol.Memory.PhysicalListToVirtual = BlPhysicalListToVirtual
+	BlpLdrProtocol.Memory.SetMemory = RtlSetMemory
+	BlpLdrProtocol.Memory.ZeroMemory = RtlZeroMemory
+	BlpLdrProtocol.Protocol.Close = BlCloseProtocol
+	BlpLdrProtocol.Protocol.GetModulesList = BlGetModulesList
+	BlpLdrProtocol.Protocol.Install = BlInstallProtocol
+	BlpLdrProtocol.Protocol.LocateHandles = BlLocateProtocolHandles
+	BlpLdrProtocol.Protocol.Open = BlOpenProtocol
+	BlpLdrProtocol.Protocol.OpenHandle = BlOpenProtocolHandle
+	BlpLdrProtocol.Tui.DisplayErrorDialog = BlDisplayErrorDialog
+	BlpLdrProtocol.Tui.DisplayInfoDialog = BlDisplayInfoDialog
+	BlpLdrProtocol.Tui.DisplayInputDialog = BlDisplayInputDialog
+	BlpLdrProtocol.Tui.DisplayProgressDialog = BlDisplayProgressDialog
+	BlpLdrProtocol.Tui.UpdateProgressBar = BlUpdateProgressBar
+	BlpLdrProtocol.Util.EnterFirmwareSetup = BlEnterFirmwareSetup
+	BlpLdrProtocol.Util.ExitBootServices = BlExitBootServices
+	BlpLdrProtocol.Util.GetConfigurationTable = BlGetConfigurationTable
+	BlpLdrProtocol.Util.GetEfiVariable = BlGetEfiVariable
+	BlpLdrProtocol.Util.GetRandomValue = BlGetRandomValue
+	BlpLdrProtocol.Util.GetSecureBootStatus = BlGetSecureBootStatus
+	BlpLdrProtocol.Util.InitializeEntropy = BlInitializeEntropy
+	BlpLdrProtocol.Util.LoadEfiImage = BlLoadEfiImage
+	BlpLdrProtocol.Util.RebootSystem = BlRebootSystem
+	BlpLdrProtocol.Util.SetEfiVariable = BlSetEfiVariable
+	BlpLdrProtocol.Util.ShutdownSystem = BlShutdownSystem
+	BlpLdrProtocol.Util.SleepExecution = BlSleepExecution
+	BlpLdrProtocol.Util.StartEfiImage = BlStartEfiImage
+	BlpLdrProtocol.Util.WaitForEfiEvent = BlWaitForEfiEvent
+	BlDebugPrint(???? resolve StringLiteral)
+	return BlInstallProtocol(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+}

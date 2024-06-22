@@ -1,0 +1,14 @@
+// Hexa 2024 from clang 15.0.3
+fun keClearEvent(event PKEVENT) {
+	Event.Header.SignalState = FALSE
+}
+
+fun keInitializeEvent(event PKEVENT, eventType KEVENT_TYPE, initialState BOOLEAN) {
+	Event.Header.Type = EventType
+	Event.Header.SignalState = InitialState
+	RtlInitializeListHead(???? resolve UnaryOperator)
+}
+
+fun keSetEvent(event PKEVENT, increment KPRIORITY, wait BOOLEAN) {
+	return 0
+}

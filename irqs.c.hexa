@@ -1,0 +1,9 @@
+// Hexa 2024 from clang 15.0.3
+fun keSetInterruptHandler(vector ULONG, handler PVOID) {
+	let processorBlock = new ByValue<PKPROCESSOR_BLOCK>()
+
+	ProcessorBlock = KeGetCurrentProcessorBlock()
+	???? resolve ArraySubscriptExpr.OffsetLow = (???? resolve CStyleCastExpr & 65535)
+	???? resolve ArraySubscriptExpr.OffsetMiddle = ((???? resolve CStyleCastExpr >> 16) & 65535)
+	???? resolve ArraySubscriptExpr.OffsetHigh = ???? resolve CStyleCastExpr >> 32
+}

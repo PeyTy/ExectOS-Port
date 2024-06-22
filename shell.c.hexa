@@ -1,0 +1,12 @@
+// Hexa 2024 from clang 15.0.3
+fun blStartLoaderShell() {
+	BlInitializeConsole()
+	BlpPrintShellPrompt()
+	??? CompoundStmt ForStmt
+}
+
+fun blpPrintShellPrompt() {
+	BlSetConsoleAttributes(0 | 14)
+	BlConsolePrint(???? resolve StringLiteral)
+	BlSetConsoleAttributes(0 | 7)
+}

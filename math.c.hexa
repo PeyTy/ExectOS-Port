@@ -1,0 +1,262 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlConvertToLargeInteger32(value LONG) {
+	var largeInt LARGE_INTEGER
+	LargeInt.QuadPart = Value
+	return LargeInt
+}
+
+fun rtlConvertToLargeIntegerUnsigned32(value ULONG) {
+	var largeInt LARGE_INTEGER
+	LargeInt.QuadPart = Value
+	return LargeInt
+}
+
+fun rtlCountLeadingZeroes32(value ULONG) {
+	return __builtin_clzl(Value)
+}
+
+fun rtlCountLeadingZeroes64(value ULONGLONG) {
+	return __builtin_clzll(Value)
+}
+
+fun rtlCountTrailingZeroes32(value ULONG) {
+	return __builtin_ctzl(Value)
+}
+
+fun rtlCountTrailingZeroes64(value ULONGLONG) {
+	return __builtin_ctzll(Value)
+}
+
+fun rtlDivide32(dividend LONG, divisor LONG, remainder PLONG) {
+	var quotient LONG
+	Quotient = Dividend / Divisor
+	if Remainder {
+		???? resolve UnaryOperator = Dividend - (Quotient * Divisor)
+
+	}
+
+	return Quotient
+}
+
+fun rtlDivide64(dividend LONGLONG, divisor LONGLONG, remainder PLONGLONG) {
+	var dividendSign LONGLONG
+	var divisorSign LONGLONG
+	var quotient LONGLONG
+	var uDividend LONGLONG
+	var uDivisor LONGLONG
+	DividendSign = Dividend >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
+	DivisorSign = Divisor >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
+	UDividend = (Dividend ^ DividendSign) - DividendSign
+	UDivisor = (Divisor ^ DivisorSign) - DivisorSign
+	??? CompoundStmt CompoundAssignOperator
+	Quotient = (RtlDivideUnsigned64(UDividend, UDivisor, (???? resolve CStyleCastExpr)) ^ DividendSign) - DividendSign
+	if Remainder {
+		???? resolve UnaryOperator = Dividend - (Quotient * Divisor)
+
+	}
+
+	return Quotient
+}
+
+fun rtlDivideUnsigned32(dividend ULONG, divisor ULONG, remainder PULONG) {
+	if Remainder {
+		???? resolve UnaryOperator = Dividend % Divisor
+
+	}
+
+	return Dividend / Divisor
+}
+
+fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGLONG) {
+	var dividendParts ULARGE_INTEGER
+	var divisorParts ULARGE_INTEGER
+	var quotientParts ULARGE_INTEGER
+	var remainderParts ULARGE_INTEGER
+	var difference LONGLONG
+	var shift ULONGLONG
+	var carry ULONG
+	if Divisor == 0 {
+		return 0
+
+	}
+
+	DividendParts.QuadPart = Dividend
+	DivisorParts.QuadPart = Divisor
+	if DividendParts.u.HighPart == 0 {
+		if DivisorParts.u.HighPart == 0 {
+			if Remainder != (???? resolve CStyleCastExpr) {
+				???? resolve UnaryOperator = DividendParts.u.LowPart % DivisorParts.u.LowPart
+
+			}
+
+			return DividendParts.u.LowPart / DivisorParts.u.LowPart
+
+		}
+
+		if Remainder != (???? resolve CStyleCastExpr) {
+			???? resolve UnaryOperator = DividendParts.u.LowPart
+
+		}
+
+		return 0
+
+	}
+
+	if DivisorParts.u.LowPart != 0 {
+		if DivisorParts.u.HighPart != 0 {
+			Shift = RtlCountLeadingZeroes32(DivisorParts.u.HighPart) - RtlCountLeadingZeroes32(DividendParts.u.HighPart)
+			if Shift > ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1) {
+				if Remainder != (???? resolve CStyleCastExpr) {
+					???? resolve UnaryOperator = DividendParts.QuadPart
+
+				}
+
+				return 0
+
+			}
+
+			??? CompoundStmt UnaryOperator
+			QuotientParts.u.LowPart = 0
+			if Shift == (???? resolve UnaryExprOrTypeTraitExpr * 8) {
+				QuotientParts.u.HighPart = DividendParts.u.LowPart
+				RemainderParts.u.LowPart = DividendParts.u.HighPart
+				RemainderParts.u.HighPart = 0
+
+			} else {
+				QuotientParts.u.HighPart = DividendParts.u.LowPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - Shift)
+				RemainderParts.u.LowPart = (DividendParts.u.HighPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - Shift)) | (DividendParts.u.LowPart >> Shift)
+				RemainderParts.u.HighPart = DividendParts.u.HighPart >> Shift
+
+			}
+
+
+		} else {
+			Shift = (???? resolve UnaryExprOrTypeTraitExpr * 8) + 1 + RtlCountLeadingZeroes32(DivisorParts.u.LowPart) - RtlCountLeadingZeroes32(DividendParts.u.HighPart)
+			if Shift == (???? resolve UnaryExprOrTypeTraitExpr * 8) {
+				QuotientParts.u.LowPart = 0
+				QuotientParts.u.HighPart = DividendParts.u.LowPart
+				RemainderParts.u.LowPart = DividendParts.u.HighPart
+				RemainderParts.u.HighPart = 0
+
+			} else {
+				??? CompoundStmt CompoundStmt
+				??? CompoundStmt CompoundStmt
+
+			}
+
+
+		}
+
+
+	} else {
+		if DividendParts.u.LowPart == 0 {
+			if Remainder != (???? resolve CStyleCastExpr) {
+				RemainderParts.u.HighPart = DividendParts.u.HighPart % DivisorParts.u.HighPart
+				RemainderParts.u.LowPart = 0
+				???? resolve UnaryOperator = RemainderParts.QuadPart
+
+			}
+
+			return DividendParts.u.HighPart / DivisorParts.u.HighPart
+
+		}
+
+		Shift = RtlCountLeadingZeroes32(DivisorParts.u.HighPart) - RtlCountLeadingZeroes32(DividendParts.u.HighPart)
+		if Shift > ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 2) {
+			if Remainder != (???? resolve CStyleCastExpr) {
+				???? resolve UnaryOperator = DividendParts.QuadPart
+
+			}
+
+			return 0
+
+		}
+
+		??? CompoundStmt UnaryOperator
+		QuotientParts.u.LowPart = 0
+		QuotientParts.u.HighPart = DividendParts.u.LowPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - Shift)
+		RemainderParts.u.HighPart = DividendParts.u.HighPart >> Shift
+		RemainderParts.u.LowPart = (DividendParts.u.HighPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - Shift)) | (DividendParts.u.LowPart >> Shift)
+
+	}
+
+	Carry = 0
+	??? CompoundStmt WhileStmt
+	QuotientParts.QuadPart = (QuotientParts.QuadPart << 1) | Carry
+	if Remainder != (???? resolve CStyleCastExpr) {
+		???? resolve UnaryOperator = RemainderParts.QuadPart
+
+	}
+
+	return QuotientParts.QuadPart
+}
+
+fun rtlDivideLargeInteger(dividend LARGE_INTEGER, divisor ULONG, remainder PULONG) {
+	var dividendSign LONGLONG
+	var uDividend LONGLONG
+	var largeInt LARGE_INTEGER
+	DividendSign = Dividend.QuadPart >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
+	UDividend = (Dividend.QuadPart ^ DividendSign) - DividendSign
+	LargeInt.QuadPart = (RtlDivideUnsigned64(UDividend, Divisor, (???? resolve CStyleCastExpr)) ^ DividendSign) - DividendSign
+	if Remainder {
+		???? resolve UnaryOperator = Dividend.QuadPart - (LargeInt.QuadPart * Divisor)
+
+	}
+
+	return LargeInt
+}
+
+fun rtlGetBaseExponent(value DOUBLE, powerOfTen PDOUBLE) {
+	var baseExponent LONG
+	var currentExponent LONG
+	var exponent LONG
+	var exponentShift ULONG
+	var exponentMask ULONG
+	var parts LARGE_DOUBLE
+	var power DOUBLE
+	ExponentMask = 9218868437227405312 >> (???? resolve UnaryExprOrTypeTraitExpr * 8)
+	ExponentShift = 52 - (???? resolve UnaryExprOrTypeTraitExpr * 8)
+	if Value == ???? resolve FloatingLiteral {
+		???? resolve UnaryOperator = ???? resolve FloatingLiteral
+		return 0
+
+	}
+
+	Parts.DoublePart = Value
+	BaseExponent = ((Parts.u.HighPart & ExponentMask) >> ExponentShift) - 1023
+	Exponent = ???? resolve CStyleCastExpr + 1
+	CurrentExponent = 0
+	Power = ???? resolve FloatingLiteral
+	if Exponent > 0 {
+		??? CompoundStmt WhileStmt
+		??? CompoundStmt WhileStmt
+
+	} else {
+		??? CompoundStmt WhileStmt
+		??? CompoundStmt WhileStmt
+
+	}
+
+	??? CompoundStmt CompoundAssignOperator
+	??? CompoundStmt WhileStmt
+	???? resolve UnaryOperator = Power
+	return Exponent
+}
+
+fun rtlInfiniteDouble(value DOUBLE) {
+	var var Union (unnamed union at /home/Belliash/ExectOS/xtoskrnl/rtl/math.c:618:5)
+	Var.Double = ???? resolve UnaryOperator
+	return ((Var.DoubleS.Exponent & 2047) == 2047)
+}
+
+fun rtlMultiplyLargeInteger(multiplicand LARGE_INTEGER, multiplier LONG) {
+	var largeInt LARGE_INTEGER
+	LargeInt.QuadPart = ???? resolve CStyleCastExpr * Multiplier
+	return LargeInt
+}
+
+fun rtlNanDouble(value DOUBLE) {
+	var var Union (unnamed union at /home/Belliash/ExectOS/xtoskrnl/rtl/math.c:677:5)
+	Var.Double = ???? resolve UnaryOperator
+	return (Var.DoubleS.Exponent == 2047 and (Var.DoubleS.MantissaHigh != 0 or Var.DoubleS.MantissaLow != 0))
+}

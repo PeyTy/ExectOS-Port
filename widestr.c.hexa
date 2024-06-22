@@ -1,0 +1,1090 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlCompareWideString(string1 Const PWCHAR, string2 Const PWCHAR, length SIZE_T) {
+	var index SIZE_T
+	??? CompoundStmt ForStmt
+	return 0
+}
+
+fun rtlCompareWideStringInsensitive(string1 Const PWCHAR, string2 Const PWCHAR, length SIZE_T) {
+	var character1 WCHAR
+	var character2 WCHAR
+	var index ULONG = 0
+	??? CompoundStmt WhileStmt
+	return 0
+}
+
+fun rtlConcatenateWideString(destination PWCHAR, source PWCHAR, count SIZE_T) {
+	var destString PWCHAR = Destination
+	??? CompoundStmt WhileStmt
+	if Count > 0 {
+		??? CompoundStmt DoStmt
+		???? resolve UnaryOperator = ???? resolve CharacterLiteral
+
+	} else {
+		??? CompoundStmt WhileStmt
+
+	}
+
+	return DestString
+}
+
+fun rtlCopyWideString(destination PWCHAR, source Const PWCHAR, length ULONG) {
+	var index ULONG
+	??? CompoundStmt ForStmt
+	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+}
+
+fun rtlFormatWideString(context PRTL_PRINT_CONTEXT, format PCWSTR, argumentList VA_LIST) {
+	var localArgumentList VA_LIST
+	var status XTSTATUS
+	var index ULONG
+	if Context == (???? resolve CStyleCastExpr) or Context.WriteWideCharacter == (???? resolve CStyleCastExpr) {
+		return FALSE
+
+	}
+
+	if Format == (???? resolve CStyleCastExpr) {
+		Format = ???? resolve StringLiteral
+
+	}
+
+	__builtin_va_copy(LocalArgumentList, ArgumentList)
+	Index = 0
+	??? CompoundStmt WhileStmt
+	__builtin_va_end(LocalArgumentList)
+	return (???? resolve CStyleCastExpr)
+}
+
+fun rtlReverseWideString(string PWCHAR, length ULONG) {
+	var tempChar WCHAR
+	var index ULONG
+	??? CompoundStmt ForStmt
+}
+
+fun rtlTokenizeWideString(string PWCHAR, delimiter Const PWCHAR, savePtr PWCHAR *) {
+	var span PWCHAR
+	var token PWCHAR
+	var char WCHAR
+	var spanChar WCHAR
+	if String == (???? resolve CStyleCastExpr) and (String = ???? resolve UnaryOperator) == (???? resolve CStyleCastExpr) {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	Char = ???? resolve UnaryOperator
+	if Char == ???? resolve CharacterLiteral {
+		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	Token = String - 1
+	??? CompoundStmt ForStmt
+}
+
+fun rtlTrimLeftWideString(string Const PWCHAR) {
+	var start PWCHAR
+	Start = String
+	??? CompoundStmt WhileStmt
+	return Start
+}
+
+fun rtlTrimRightWideString(string Const PWCHAR) {
+	var end PWCHAR
+	End = String + RtlWideStringLength(String, 0)
+	??? CompoundStmt WhileStmt
+	???? resolve UnaryOperator = 0
+	return String
+}
+
+fun rtlTrimWideString(string Const PWCHAR) {
+	return RtlTrimLeftWideString(RtlTrimRightWideString(String))
+}
+
+fun rtlWideStringLength(string Const PWCHAR, maxLength SIZE_T) {
+	var length SIZE_T
+	if String == (???? resolve CStyleCastExpr) {
+		return 0
+
+	}
+
+	??? CompoundStmt ForStmt
+	return Length
+}
+
+fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCWSTR, argumentList PVA_LIST, index PULONG) {
+	let formatProperties = new ByValue<RTL_PRINT_FORMAT_PROPERTIES>()
+
+	let unicodeStrArg = new ByValue<PUNICODE_STRING>()
+
+	var specifier WCHAR
+	var wideCharArg WCHAR
+	let ansiStrArg = new ByValue<PANSI_STRING>()
+
+	var specifierValue LONGLONG
+	var argumentsCopy VA_LIST
+	var floatArg LARGE_DOUBLE
+	var formatIndex PCWSTR
+	var argPosition ULONG
+	var wideStrArg PWCHAR
+	var intArg ULONGLONG
+	var status XTSTATUS
+	let guidArg = new ByValue<PGUID>()
+
+	var strArg PCHAR
+	var charArg CHAR
+	FormatIndex = Format + ???? resolve UnaryOperator + 1
+	ArgPosition = 0
+	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
+	FormatProperties.IntegerSize = ???? resolve UnaryExprOrTypeTraitExpr
+	FormatProperties.Precision = ???? resolve UnaryOperator
+	__builtin_va_copy(ArgumentsCopy, ???? resolve UnaryOperator)
+	if (???? resolve UnaryOperator >= ???? resolve CharacterLiteral) and (???? resolve UnaryOperator <= ???? resolve CharacterLiteral) {
+		SpecifierValue = RtlpGetWideStringSpecifierValue(???? resolve CStyleCastExpr)
+		if ???? resolve UnaryOperator == ???? resolve CharacterLiteral {
+			ArgPosition = ???? resolve CStyleCastExpr
+			??? CompoundStmt UnaryOperator
+
+		} else {
+			FormatProperties.FieldWidth = ???? resolve CStyleCastExpr
+
+		}
+
+
+	}
+
+	??? CompoundStmt WhileStmt
+	if FormatProperties.Flags & 4 {
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	if FormatProperties.Flags & 1 {
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	if ???? resolve UnaryOperator == ???? resolve CharacterLiteral {
+		??? CompoundStmt UnaryOperator
+		FormatProperties.FieldWidth = (???? resolve ConditionalOperator)
+
+	} else {
+		??? CompoundStmt CompoundStmt
+
+	}
+
+	if FormatProperties.FieldWidth < 0 {
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	if ???? resolve UnaryOperator == ???? resolve CharacterLiteral {
+		??? CompoundStmt UnaryOperator
+		if ???? resolve UnaryOperator == ???? resolve CharacterLiteral {
+			??? CompoundStmt UnaryOperator
+			FormatProperties.Precision = (???? resolve ConditionalOperator)
+
+		} else {
+			??? CompoundStmt CompoundStmt
+			??? CompoundStmt CompoundStmt
+
+		}
+
+
+	}
+
+	if FormatProperties.Precision < 0 {
+		FormatProperties.Precision = ???? resolve UnaryOperator
+
+	}
+
+	Specifier = ???? resolve UnaryOperator
+	??? CompoundStmt SwitchStmt
+	Specifier = ???? resolve UnaryOperator
+	if FormatProperties.Flags & 64 {
+		if Specifier == ???? resolve CharacterLiteral {
+			Specifier = ???? resolve CharacterLiteral
+
+		} else {
+			??? CompoundStmt CompoundStmt
+
+		}
+
+
+	}
+
+	??? CompoundStmt CompoundAssignOperator
+	??? CompoundStmt SwitchStmt
+	if FormatProperties.VariableType == Unknown {
+		Status = RtlpWriteWideStringValue(Context, ???? resolve UnaryOperator, ???? resolve UnaryOperator, 1)
+
+	}
+
+	if FormatProperties.VariableType == Boolean {
+		if ArgPosition != 0 {
+			IntArg = RtlpGetWideStringArgument(???? resolve UnaryOperator, ArgPosition, FormatProperties.IntegerSize)
+
+		} else {
+			IntArg = (???? resolve ConditionalOperator)
+
+		}
+
+		if FormatProperties.Flags & 512 {
+			WideStrArg = ???? resolve ConditionalOperator
+
+		} else {
+			WideStrArg = ???? resolve ConditionalOperator
+
+		}
+
+		Status = RtlpWriteWideStringValue(Context, ???? resolve UnaryOperator, WideStrArg, RtlWideStringLength(WideStrArg, 0))
+
+	} else {
+		??? CompoundStmt CompoundStmt
+		if FormatProperties.VariableType == Char {
+			if ArgPosition != 0 {
+				CharArg = ???? resolve CStyleCastExpr
+
+			} else {
+				CharArg = (???? resolve ConditionalOperator)
+
+			}
+
+			Status = RtlpWriteWideStringStringValue(Context, ???? resolve UnaryOperator, ???? resolve UnaryOperator, 1)
+
+		} else {
+			??? CompoundStmt CompoundStmt
+			if FormatProperties.VariableType == Float {
+				if ArgPosition != 0 {
+					FloatArg.QuadPart = RtlpGetWideStringArgument(???? resolve UnaryOperator, ArgPosition, ???? resolve UnaryExprOrTypeTraitExpr)
+
+				} else {
+					if FormatProperties.Flags & 32 {
+						FloatArg.DoublePart = (???? resolve ConditionalOperator)
+
+					} else {
+						FloatArg.DoublePart = (???? resolve ConditionalOperator)
+
+					}
+
+
+				}
+
+				Status = RtlpWriteWideStringDoubleValue(Context, ???? resolve UnaryOperator, FloatArg.DoublePart)
+
+			} else {
+				??? CompoundStmt CompoundStmt
+				if FormatProperties.VariableType == String {
+					if ArgPosition != 0 {
+						IntArg = RtlpGetWideStringArgument(???? resolve UnaryOperator, ArgPosition, ???? resolve UnaryExprOrTypeTraitExpr)
+						StrArg = ???? resolve CStyleCastExpr
+
+					} else {
+						StrArg = (???? resolve ConditionalOperator)
+
+					}
+
+					Status = RtlpWriteWideStringStringValue(Context, ???? resolve UnaryOperator, StrArg, RtlStringLength(StrArg, 0))
+
+				} else {
+					??? CompoundStmt CompoundStmt
+					if FormatProperties.VariableType == AnsiString {
+						if ArgPosition != 0 {
+							IntArg = RtlpGetWideStringArgument(???? resolve UnaryOperator, ArgPosition, ???? resolve UnaryExprOrTypeTraitExpr)
+							AnsiStrArg = ???? resolve CStyleCastExpr
+
+						} else {
+							AnsiStrArg = (???? resolve ConditionalOperator)
+
+						}
+
+						if AnsiStrArg != (???? resolve CStyleCastExpr) {
+							Status = RtlpWriteWideStringStringValue(Context, ???? resolve UnaryOperator, AnsiStrArg.Buffer, AnsiStrArg.Length)
+
+						}
+
+
+					} else {
+						??? CompoundStmt CompoundStmt
+
+					}
+
+
+				}
+
+
+			}
+
+
+		}
+
+
+	}
+
+	__builtin_va_end(ArgumentsCopy)
+	??? CompoundStmt CompoundAssignOperator
+	return Status
+}
+
+fun rtlpGetWideStringArgument(argumentList PVA_LIST, argumentNumber ULONG, argumentSize LONG) {
+	var argumentsCopy VA_LIST
+	var value ULONGLONG
+	var index ULONG
+	__builtin_va_copy(ArgumentsCopy, ???? resolve UnaryOperator)
+	??? CompoundStmt ForStmt
+	Value = 0
+	??? CompoundStmt SwitchStmt
+	__builtin_va_end(ArgumentsCopy)
+	return Value
+}
+
+fun rtlpGetWideStringSpecifierValue(format PWCHAR *) {
+	var count ULONG
+	var fmt PWCHAR
+	Fmt = ???? resolve UnaryOperator
+	Count = 0
+	??? CompoundStmt ForStmt
+	return 0
+}
+
+fun rtlpWriteWideCharacter(context PRTL_PRINT_CONTEXT, character WCHAR) {
+	var status XTSTATUS
+	Status = Context.WriteWideCharacter(Character)
+	??? CompoundStmt UnaryOperator
+	return Status
+}
+
+fun rtlpWriteWideStringCustomValue(context PRTL_PRINT_CONTEXT, format PCWSTR) {
+	var arguments VA_LIST
+	var status XTSTATUS
+	__builtin_va_start(Arguments, Format)
+	Status = RtlFormatWideString(Context, Format, Arguments)
+	__builtin_va_end(Arguments)
+	return Status
+}
+
+fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties PRTL_PRINT_FORMAT_PROPERTIES, value DOUBLE) {
+	var currentExponent LONG
+	var digitCount LONG
+	var exponent LONG
+	var precision LONG
+	var precisionIndex LONG
+	var significantDigits LONG
+	var character WCHAR
+	var digit WCHAR
+	var exponentCharacter WCHAR
+	var signCharacter WCHAR
+	var fieldCount ULONG
+	var fieldIndex ULONG
+	var index ULONG
+	var numberLength ULONG
+	var buffer WCHAR[15]
+	var negativeValue BOOLEAN
+	var writeExponent BOOLEAN
+	var roundingAmount DOUBLE
+	var tenPower DOUBLE
+	var nonNumberString PWCHAR
+	var parts LARGE_DOUBLE
+	var status XTSTATUS
+	NegativeValue = FALSE
+	NumberLength = 0
+	Parts.DoublePart = Value
+	Precision = FormatProperties.Precision
+	SignCharacter = 0
+	if Precision == ???? resolve UnaryOperator {
+		Precision = 6
+
+	}
+
+	if (FormatProperties.Flags & 8192) and (Precision == 0) {
+		Precision = 1
+
+	}
+
+	if RtlInfiniteDouble(Value) {
+		if RtlNanDouble(Value) {
+			if FormatProperties.Flags & 512 {
+				NonNumberString = ???? resolve StringLiteral
+
+			} else {
+				NonNumberString = ???? resolve StringLiteral
+
+			}
+
+
+		} else {
+			if FormatProperties.Flags & 512 {
+				NonNumberString = ???? resolve StringLiteral
+
+			} else {
+				NonNumberString = ???? resolve StringLiteral
+
+			}
+
+			if Value < 0 {
+				NegativeValue = TRUE
+
+			}
+
+
+		}
+
+		Index = 0
+		if NegativeValue != FALSE {
+			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+			??? CompoundStmt UnaryOperator
+
+		} else {
+			??? CompoundStmt CompoundStmt
+			if FormatProperties.Flags & 2 {
+				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+				??? CompoundStmt UnaryOperator
+
+			}
+
+
+		}
+
+		RtlCopyWideString(Buffer + Index, NonNumberString, ???? resolve UnaryExprOrTypeTraitExpr - Index)
+		return RtlpWriteWideStringValue(Context, FormatProperties, Buffer, RtlWideStringLength(Buffer, 0))
+
+	}
+
+	if FormatProperties.Radix == 16 {
+		return RtlpWriteWideStringHexDoubleValue(Context, FormatProperties, Value)
+
+	}
+
+	if (Parts.u.HighPart & (9223372036854775808 >> 32)) != 0 {
+		??? CompoundStmt CompoundAssignOperator
+		NegativeValue = TRUE
+
+	}
+
+	Exponent = RtlGetBaseExponent(Value, ???? resolve UnaryOperator)
+	RoundingAmount = ???? resolve FloatingLiteral
+	WriteExponent = (FormatProperties.Flags & 4096)
+	if (WriteExponent == FALSE) and ???? resolve UnaryOperator {
+		if (Exponent < ???? resolve UnaryOperator) or (Exponent >= Precision) {
+			WriteExponent = TRUE
+
+		}
+
+
+	}
+
+	DigitCount = 0
+	if Value != ???? resolve FloatingLiteral {
+		if (WriteExponent != FALSE) or (FormatProperties.Flags & 8192) {
+			??? CompoundStmt CompoundAssignOperator
+			if FormatProperties.Flags & 8192 {
+				??? CompoundStmt CompoundAssignOperator
+
+			}
+
+
+		}
+
+		??? CompoundStmt ForStmt
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
+		if ???? resolve CStyleCastExpr > 9 {
+			??? CompoundStmt CompoundAssignOperator
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		??? CompoundStmt WhileStmt
+		if FormatProperties.Flags & 8192 {
+			if Precision > 0 {
+				if DigitCount > Precision {
+					DigitCount = Precision
+
+				}
+
+
+			}
+
+
+		}
+
+		??? CompoundStmt WhileStmt
+
+	}
+
+	if NegativeValue {
+		SignCharacter = ???? resolve CharacterLiteral
+
+	} else {
+		??? CompoundStmt CompoundStmt
+		if FormatProperties.Flags & 2 {
+			SignCharacter = ???? resolve CharacterLiteral
+
+		}
+
+
+	}
+
+	SignificantDigits = DigitCount
+	if FormatProperties.Flags & 8192 {
+		if SignificantDigits > Precision {
+			SignificantDigits = Precision
+
+		} else {
+			??? CompoundStmt CompoundStmt
+
+		}
+
+
+	}
+
+	NumberLength = Precision
+	if FormatProperties.Flags & 1024 {
+		??? CompoundStmt CompoundAssignOperator
+
+	} else {
+		??? CompoundStmt CompoundStmt
+		if Precision != 0 {
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+
+	}
+
+	if WriteExponent {
+		??? CompoundStmt CompoundAssignOperator
+		if ???? resolve UnaryOperator {
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		if Exponent < 0 {
+			if Exponent <= ???? resolve UnaryOperator {
+				??? CompoundStmt CompoundAssignOperator
+				if Exponent <= ???? resolve UnaryOperator {
+					??? CompoundStmt CompoundAssignOperator
+
+				}
+
+
+			}
+
+
+		} else {
+			if Exponent >= 100 {
+				??? CompoundStmt CompoundAssignOperator
+				if Exponent >= 1000 {
+					??? CompoundStmt CompoundAssignOperator
+
+				}
+
+
+			}
+
+
+		}
+
+
+	} else {
+		if Exponent >= 0 {
+			if ???? resolve UnaryOperator {
+				??? CompoundStmt CompoundAssignOperator
+
+			}
+
+
+		} else {
+			??? CompoundStmt CompoundAssignOperator
+			if FormatProperties.Flags & 8192 {
+				??? CompoundStmt CompoundAssignOperator
+				??? CompoundStmt CompoundAssignOperator
+
+			}
+
+
+		}
+
+
+	}
+
+	if SignCharacter != 0 {
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	FieldCount = 0
+	if NumberLength < FormatProperties.FieldWidth {
+		FieldCount = FormatProperties.FieldWidth - NumberLength
+
+	}
+
+	if (FormatProperties.Flags & 4) or (FormatProperties.Flags & 8) {
+		if SignCharacter != 0 {
+			Status = RtlpWriteWideCharacter(Context, SignCharacter)
+			if Status != (???? resolve CStyleCastExpr) {
+				return Status
+
+			}
+
+
+		}
+
+		SignCharacter = 0
+
+	}
+
+	if ???? resolve UnaryOperator or (FormatProperties.Flags & 8) {
+		if FormatProperties.Flags & 8 {
+			Character = ???? resolve CharacterLiteral
+
+		} else {
+			Character = ???? resolve CharacterLiteral
+
+		}
+
+		??? CompoundStmt ForStmt
+		FieldCount = 0
+
+	}
+
+	if SignCharacter != 0 {
+		Status = RtlpWriteWideCharacter(Context, SignCharacter)
+		if Status != (???? resolve CStyleCastExpr) {
+			return Status
+
+		}
+
+
+	}
+
+	Index = 0
+	if WriteExponent {
+		if DigitCount == 0 {
+			Digit = ???? resolve CharacterLiteral
+
+		} else {
+			Digit = ???? resolve ArraySubscriptExpr
+			??? CompoundStmt UnaryOperator
+
+		}
+
+		Status = RtlpWriteWideCharacter(Context, Digit)
+		if Status != (???? resolve CStyleCastExpr) {
+			return Status
+
+		}
+
+		if (FormatProperties.Flags & 8192) and (Precision != 0) {
+			??? CompoundStmt UnaryOperator
+
+		}
+
+		if (Precision != 0) or (FormatProperties.Flags & 1024) {
+			Status = RtlpWriteWideCharacter(Context, ???? resolve CharacterLiteral)
+			if Status != (???? resolve CStyleCastExpr) {
+				return Status
+
+			}
+
+
+		}
+
+		??? CompoundStmt ForStmt
+		if FormatProperties.Flags & 512 {
+			ExponentCharacter = ???? resolve CharacterLiteral
+
+		} else {
+			ExponentCharacter = ???? resolve CharacterLiteral
+
+		}
+
+		Status = RtlpWriteWideStringCustomValue(Context, ???? resolve StringLiteral, ExponentCharacter, Exponent)
+		if Status != (???? resolve CStyleCastExpr) {
+			return Status
+
+		}
+
+
+	} else {
+		if Exponent >= 0 {
+			CurrentExponent = Exponent
+			??? CompoundStmt WhileStmt
+
+		} else {
+			Status = RtlpWriteWideCharacter(Context, ???? resolve CharacterLiteral)
+			if Status != (???? resolve CStyleCastExpr) {
+				return Status
+
+			}
+
+			CurrentExponent = ???? resolve UnaryOperator
+
+		}
+
+		if (Precision != 0) or (FormatProperties.Flags & 1024) {
+			Status = RtlpWriteWideCharacter(Context, ???? resolve CharacterLiteral)
+			if Status != (???? resolve CStyleCastExpr) {
+				return Status
+
+			}
+
+
+		}
+
+		??? CompoundStmt ForStmt
+
+	}
+
+	??? CompoundStmt ForStmt
+	return (???? resolve CStyleCastExpr)
+}
+
+fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties PRTL_PRINT_FORMAT_PROPERTIES, double DOUBLE) {
+	var absoluteExponent LONG
+	var exponent LONG
+	var fieldCount LONG
+	var index LONG
+	var numberLength LONG
+	var character WCHAR
+	var digit WCHAR
+	var exponentCharacter WCHAR
+	var integerValue WCHAR
+	var precision LONG
+	var precisionIndex LONG
+	var prefixIndex LONG
+	var prefixSize LONG
+	var halfWay ULONGLONG
+	var roundingValue ULONGLONG
+	var significand ULONGLONG
+	var buffer WCHAR[15]
+	var negativeValue BOOLEAN
+	var parts LARGE_DOUBLE
+	var prefix WCHAR[4]
+	var status XTSTATUS
+	NegativeValue = FALSE
+	Parts.DoublePart = Double
+	Precision = FormatProperties.Precision
+	if Double == ???? resolve FloatingLiteral {
+		AbsoluteExponent = 0
+		Exponent = 0
+		IntegerValue = ???? resolve CharacterLiteral
+		Significand = 0
+		if Precision == ???? resolve UnaryOperator {
+			Precision = 0
+
+		}
+
+		??? CompoundStmt ForStmt
+
+	} else {
+		if (Parts.u.HighPart & (9223372036854775808 >> 32)) != 0 {
+			NegativeValue = TRUE
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		Exponent = (Parts.u.HighPart & (9218868437227405312 >> 32)) >> (52 - 32)
+		??? CompoundStmt CompoundAssignOperator
+		AbsoluteExponent = Exponent
+		if AbsoluteExponent < 0 {
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		Significand = Parts.u.LowPart | (???? resolve CStyleCastExpr << (???? resolve UnaryExprOrTypeTraitExpr * 8))
+		IntegerValue = ???? resolve CharacterLiteral
+		if Precision != ???? resolve UnaryOperator {
+			HalfWay = 1 << (52 - 1)
+			RoundingValue = HalfWay
+			if (Precision * 4) > (???? resolve UnaryExprOrTypeTraitExpr * 8) {
+				RoundingValue = 0
+
+			} else {
+				RoundingValue = RoundingValue >> (Precision * 4)
+
+			}
+
+			??? CompoundStmt CompoundAssignOperator
+			if Significand >= (1 << 52) {
+				??? CompoundStmt CompoundAssignOperator
+				??? CompoundStmt UnaryOperator
+
+			}
+
+
+		}
+
+		??? CompoundStmt ForStmt
+		if Precision == ???? resolve UnaryOperator {
+			Precision = 13
+			??? CompoundStmt WhileStmt
+
+		}
+
+
+	}
+
+	PrefixSize = 0
+	if NegativeValue {
+		???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+		??? CompoundStmt CompoundAssignOperator
+
+	} else {
+		??? CompoundStmt CompoundStmt
+		if FormatProperties.Flags & 2 {
+			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+
+	}
+
+	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+	??? CompoundStmt CompoundAssignOperator
+	NumberLength = Precision + 1
+	if (FormatProperties.Flags & 1024) or (Precision != 0) {
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	if FormatProperties.Flags & 512 {
+		ExponentCharacter = ???? resolve CharacterLiteral
+
+	} else {
+		ExponentCharacter = ???? resolve CharacterLiteral
+
+	}
+
+	??? CompoundStmt CompoundAssignOperator
+	if AbsoluteExponent > 10 {
+		??? CompoundStmt CompoundAssignOperator
+		if AbsoluteExponent > 100 {
+			??? CompoundStmt CompoundAssignOperator
+			if AbsoluteExponent > 1000 {
+				??? CompoundStmt CompoundAssignOperator
+
+			}
+
+
+		}
+
+
+	}
+
+	FieldCount = 0
+	if NumberLength + PrefixSize < FormatProperties.FieldWidth {
+		FieldCount = FormatProperties.FieldWidth - (NumberLength + PrefixSize)
+
+	}
+
+	if ???? resolve UnaryOperator or (FormatProperties.Flags & 8) {
+		if FormatProperties.Flags & 8 {
+			Character = ???? resolve CharacterLiteral
+			PrefixIndex = 0
+			??? CompoundStmt WhileStmt
+
+		} else {
+			Character = ???? resolve CharacterLiteral
+
+		}
+
+		??? CompoundStmt WhileStmt
+
+	}
+
+	??? CompoundStmt ForStmt
+	Status = RtlpWriteWideCharacter(Context, IntegerValue)
+	if Status != (???? resolve CStyleCastExpr) {
+		return Status
+
+	}
+
+	if (FormatProperties.Flags & 1024) or (Precision != 0) {
+		Status = RtlpWriteWideCharacter(Context, ???? resolve CharacterLiteral)
+		if Status != (???? resolve CStyleCastExpr) {
+			return Status
+
+		}
+
+
+	}
+
+	??? CompoundStmt ForStmt
+	Status = RtlpWriteWideStringCustomValue(Context, ???? resolve StringLiteral, ExponentCharacter, Exponent)
+	if Status != (???? resolve CStyleCastExpr) {
+		return Status
+
+	}
+
+	??? CompoundStmt WhileStmt
+	return (???? resolve CStyleCastExpr)
+}
+
+fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties PRTL_PRINT_FORMAT_PROPERTIES, integer ULONGLONG) {
+	var bufferIndex LONG
+	var fieldLength LONG
+	var integerLength LONG
+	var precisionLength LONG
+	var prefixIndex LONG
+	var prefixLength LONG
+	var buffer WCHAR[25]
+	var nextInteger ULONGLONG
+	var remainder ULONGLONG
+	var negative BOOLEAN
+	var prefix WCHAR[4]
+	var character WCHAR
+	var status XTSTATUS
+	IntegerLength = 0
+	Negative = FALSE
+	if ???? resolve UnaryOperator {
+		??? CompoundStmt SwitchStmt
+
+	}
+
+	if Integer == 0 {
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	if Integer != 0 or FormatProperties.Precision != 0 {
+		if ???? resolve UnaryOperator and ???? resolve CStyleCastExpr < 0 {
+			Negative = TRUE
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		RtlZeroMemory(Buffer, ???? resolve UnaryExprOrTypeTraitExpr)
+		??? CompoundStmt DoStmt
+		RtlReverseWideString(Buffer, IntegerLength)
+
+	}
+
+	PrefixLength = 0
+	if ???? resolve UnaryOperator and Negative {
+		???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+		??? CompoundStmt CompoundAssignOperator
+
+	} else {
+		??? CompoundStmt CompoundStmt
+		if FormatProperties.Flags & 2 {
+			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+
+	}
+
+	if FormatProperties.Flags & 1024 {
+		if FormatProperties.Radix == 8 {
+			if ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral {
+				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+				??? CompoundStmt CompoundAssignOperator
+
+			}
+
+
+		} else {
+			??? CompoundStmt CompoundStmt
+
+		}
+
+
+	}
+
+	PrecisionLength = 0
+	if IntegerLength < FormatProperties.Precision {
+		PrecisionLength = FormatProperties.Precision - IntegerLength
+
+	}
+
+	FieldLength = 0
+	if IntegerLength + PrefixLength + PrecisionLength < FormatProperties.FieldWidth {
+		FieldLength = FormatProperties.FieldWidth - (IntegerLength + PrefixLength + PrecisionLength)
+
+	}
+
+	if ???? resolve UnaryOperator or (FormatProperties.Flags & 8) {
+		Character = ???? resolve CharacterLiteral
+		if FormatProperties.Flags & 8 {
+			Character = ???? resolve CharacterLiteral
+			??? CompoundStmt ForStmt
+			PrefixLength = 0
+
+		}
+
+		??? CompoundStmt WhileStmt
+
+	}
+
+	??? CompoundStmt ForStmt
+	??? CompoundStmt WhileStmt
+	??? CompoundStmt ForStmt
+	??? CompoundStmt WhileStmt
+	return (???? resolve CStyleCastExpr)
+}
+
+fun rtlpWriteWideStringStringValue(context PRTL_PRINT_CONTEXT, formatProperties PRTL_PRINT_FORMAT_PROPERTIES, string PCHAR, stringLength SIZE_T) {
+	var wideCharacter WCHAR[2]
+	var paddingLength ULONG
+	var status XTSTATUS
+	if String == (???? resolve CStyleCastExpr) {
+		String = ???? resolve StringLiteral
+		StringLength = 6
+
+	}
+
+	if (FormatProperties.Precision >= 0) and (StringLength > FormatProperties.Precision) {
+		StringLength = FormatProperties.Precision
+
+	}
+
+	PaddingLength = 0
+	if FormatProperties.FieldWidth > StringLength {
+		PaddingLength = FormatProperties.FieldWidth - StringLength
+
+	}
+
+	if ???? resolve UnaryOperator {
+		??? CompoundStmt WhileStmt
+
+	}
+
+	??? CompoundStmt WhileStmt
+	??? CompoundStmt WhileStmt
+	return (???? resolve CStyleCastExpr)
+}
+
+fun rtlpWriteWideStringValue(context PRTL_PRINT_CONTEXT, formatProperties PRTL_PRINT_FORMAT_PROPERTIES, string PWCHAR, stringLength SIZE_T) {
+	var paddingLength ULONG
+	var status XTSTATUS
+	if String == (???? resolve CStyleCastExpr) {
+		String = ???? resolve StringLiteral
+		StringLength = 6
+
+	}
+
+	if (FormatProperties.Precision >= 0) and (StringLength > FormatProperties.Precision) {
+		StringLength = FormatProperties.Precision
+
+	}
+
+	PaddingLength = 0
+	if FormatProperties.FieldWidth > StringLength {
+		PaddingLength = FormatProperties.FieldWidth - StringLength
+
+	}
+
+	if ???? resolve UnaryOperator {
+		??? CompoundStmt WhileStmt
+
+	}
+
+	??? CompoundStmt WhileStmt
+	??? CompoundStmt WhileStmt
+	return (???? resolve CStyleCastExpr)
+}

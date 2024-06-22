@@ -1,0 +1,164 @@
+// Hexa 2024 from clang 15.0.3
+fun blGetConfigBooleanValue(configName Const PWCHAR) {
+	var value PWCHAR
+	Value = BlGetConfigValue(ConfigName)
+	if RtlCompareWideStringInsensitive(Value, ???? resolve StringLiteral, 0) == 0 or RtlCompareWideStringInsensitive(Value, ???? resolve StringLiteral, 0) == 0 or RtlCompareWideStringInsensitive(Value, ???? resolve StringLiteral, 0) == 0 or RtlCompareWideStringInsensitive(Value, ???? resolve StringLiteral, 0) == 0 {
+		return TRUE
+
+	}
+
+	return FALSE
+}
+
+fun blGetConfigValue(configName Const PWCHAR) {
+	let configEntry = new ByValue<PXTBL_CONFIG_ENTRY>()
+
+	let configListEntry = new ByValue<PLIST_ENTRY>()
+
+	var keyLength SIZE_T
+	var valueLength SIZE_T
+	var status EFI_STATUS
+	var value PWCHAR
+	KeyLength = RtlWideStringLength(ConfigName, 0)
+	ConfigListEntry = BlpConfig.Flink
+	??? CompoundStmt WhileStmt
+	return (???? resolve CStyleCastExpr)
+}
+
+fun blSetConfigValue(configName Const PWCHAR, configValue Const PWCHAR) {
+	let configEntry = new ByValue<PXTBL_CONFIG_ENTRY>()
+
+	let configListEntry = new ByValue<PLIST_ENTRY>()
+
+	var status EFI_STATUS
+	var length SIZE_T
+	Length = RtlWideStringLength(ConfigName, 0)
+	ConfigListEntry = BlpConfig.Flink
+	??? CompoundStmt WhileStmt
+	return (9223372036854775808 | 14)
+}
+
+fun blpLoadConfiguration() {
+	let sectionListEntry = new ByValue<PLIST_ENTRY>()
+
+	var status EFI_STATUS
+	var configData PCHAR
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	Status = BlpReadConfigFile(???? resolve StringLiteral, ???? resolve StringLiteral, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		Status = BlpReadConfigFile(???? resolve StringLiteral, ???? resolve StringLiteral, ???? resolve UnaryOperator)
+
+	}
+
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	Status = BlpParseConfigFile(ConfigData, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	SectionListEntry = BlpConfigSections.Flink
+	??? CompoundStmt WhileStmt
+	BlpMenuList = ???? resolve UnaryOperator
+	return (9223372036854775808 & 0)
+}
+
+fun blpParseCommandLine() {
+	let lIPGuid = new ByValue<EFI_GUID>()
+
+	let loadedImage = new ByValue<PEFI_LOADED_IMAGE_PROTOCOL>()
+
+	var argument PWCHAR
+	var key PWCHAR
+	var lastArg PWCHAR
+	var value PWCHAR
+	let option = new ByValue<PXTBL_CONFIG_ENTRY>()
+
+	var status EFI_STATUS
+	var keyLength SIZE_T
+	var valueLength SIZE_T
+	let config = new ByValue<LIST_ENTRY>()
+
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	Status = EfiSystemTable.BootServices.HandleProtocol(EfiImageHandle, ???? resolve UnaryOperator, ???? resolve CStyleCastExpr)
+	if Status == (9223372036854775808 & 0) {
+		if LoadedImage and LoadedImage.LoadOptions {
+			Argument = RtlTokenizeWideString(LoadedImage.LoadOptions, ???? resolve StringLiteral, ???? resolve UnaryOperator)
+			??? CompoundStmt WhileStmt
+			BlpUpdateConfiguration(???? resolve UnaryOperator)
+
+		}
+
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun blpParseConfigFile(rawConfig Const PCHAR, configuration PLIST_ENTRY) {
+	var sectionLength SIZE_T
+	var keyLength SIZE_T
+	var valueLength SIZE_T
+	var inputData PCHAR
+	var key PCHAR
+	var sectionName PCHAR
+	var value PCHAR
+	let section = new ByValue<PXTBL_CONFIG_SECTION>()
+
+	let option = new ByValue<PXTBL_CONFIG_ENTRY>()
+
+	var status EFI_STATUS
+	InputData = RawConfig
+	Section = (???? resolve CStyleCastExpr)
+	Option = (???? resolve CStyleCastExpr)
+	SectionName = (???? resolve CStyleCastExpr)
+	Key = (???? resolve CStyleCastExpr)
+	Value = (???? resolve CStyleCastExpr)
+	??? CompoundStmt WhileStmt
+	return (9223372036854775808 & 0)
+}
+
+fun blpReadConfigFile(configDirectory Const PWCHAR, configFile Const PWCHAR, configData PCHAR *) {
+	let dirHandle = new ByValue<PEFI_FILE_HANDLE>()
+
+	let fsHandle = new ByValue<PEFI_FILE_HANDLE>()
+
+	var diskHandle EFI_HANDLE
+	var status EFI_STATUS
+	var fileSize SIZE_T
+	Status = BlOpenVolume((???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = FsHandle.Open(FsHandle, ???? resolve UnaryOperator, ConfigDirectory, 1, 0)
+	FsHandle.Close(FsHandle)
+	if Status != (9223372036854775808 & 0) {
+		BlCloseVolume(DiskHandle)
+		return Status
+
+	}
+
+	Status = BlReadFile(DirHandle, ConfigFile, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	DirHandle.Close(DirHandle)
+	BlCloseVolume(DiskHandle)
+	return Status
+}
+
+fun blpUpdateConfiguration(newConfig PLIST_ENTRY) {
+	let configEntry = new ByValue<PXTBL_CONFIG_ENTRY>()
+
+	let configListEntry = new ByValue<PLIST_ENTRY>()
+
+	let nextListEntry = new ByValue<PLIST_ENTRY>()
+
+	ConfigListEntry = NewConfig.Flink
+	??? CompoundStmt WhileStmt
+}

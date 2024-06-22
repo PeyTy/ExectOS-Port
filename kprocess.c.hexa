@@ -1,0 +1,17 @@
+// Hexa 2024 from clang 15.0.3
+fun keInitializeProcess(process PKPROCESS, priority KPRIORITY, affinity KAFFINITY, directoryTable PULONG_PTR, alignment BOOLEAN) {
+	Process.Header.Type = ProcessObject
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	Process.BasePriority = Priority
+	Process.Affinity = Affinity
+	Process...AutoAlignment = Alignment
+	???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr
+	???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr
+	Process.StackCount = 32767
+	Process.Quantum = 6
+	Process.IopmOffset = ???? resolve UnaryExprOrTypeTraitExpr
+	Process.State = ProcessInMemory
+}

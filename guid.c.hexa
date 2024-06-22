@@ -1,0 +1,8 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlCompareGuids(guid1 PGUID, guid2 PGUID) {
+	var guid1Ptr PUINT
+	var guid2Ptr PUINT
+	Guid1Ptr = ???? resolve CStyleCastExpr
+	Guid2Ptr = ???? resolve CStyleCastExpr
+	return (???? resolve ArraySubscriptExpr == ???? resolve ArraySubscriptExpr and ???? resolve ArraySubscriptExpr == ???? resolve ArraySubscriptExpr and ???? resolve ArraySubscriptExpr == ???? resolve ArraySubscriptExpr and ???? resolve ArraySubscriptExpr == ???? resolve ArraySubscriptExpr)
+}

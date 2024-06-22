@@ -1,0 +1,407 @@
+// Hexa 2024 from clang 15.0.3
+fun kepCheckUbsanReport(location PKUBSAN_SOURCE_LOCATION) {
+	return ???? resolve UnaryOperator
+}
+
+fun kepEnterUbsanFrame(location PKUBSAN_SOURCE_LOCATION, reason PCCHAR) {
+	KepUbsanActiveFrame = TRUE
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+}
+
+fun kepGetSignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
+	var bitWidth ULONG
+	var extraBits ULONG
+	var longValue ULONG_PTR
+	BitWidth = 1 << (Type.TypeInfo >> 1)
+	if BitWidth <= ???? resolve UnaryExprOrTypeTraitExpr * 8 {
+		ExtraBits = ???? resolve UnaryExprOrTypeTraitExpr * 8 - BitWidth
+		LongValue = ???? resolve CStyleCastExpr
+		return (???? resolve CStyleCastExpr) << ExtraBits >> ExtraBits
+
+	}
+
+	return ???? resolve UnaryOperator
+}
+
+fun kepGetUbsanTypeKind(typeCheckKind UCHAR) {
+	??? CompoundStmt SwitchStmt
+}
+
+fun kepGetUnsignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
+	var bitWidth ULONG
+	BitWidth = 1 << (Type.TypeInfo >> 1)
+	if BitWidth <= ???? resolve UnaryExprOrTypeTraitExpr * 8 {
+		return ???? resolve CStyleCastExpr
+
+	}
+
+	return ???? resolve UnaryOperator
+}
+
+fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PVOID) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if (Data.Type.TypeInfo & 1) and (KepGetSignedUbsanValue(Data.Type, Rhs) == ???? resolve UnaryOperator) {
+		if KeDbgPrint {
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+
+		}
+
+		??? CompoundStmt NullStmt
+
+	} else {
+		if KeDbgPrint {
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+
+		}
+
+		??? CompoundStmt NullStmt
+
+	}
+
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt CStyleCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if Data.Kind == 0 or Data.Kind == 1 {
+		if KeDbgPrint {
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+
+		}
+
+		??? CompoundStmt NullStmt
+
+	} else {
+		if KeDbgPrint {
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+
+		}
+
+		??? CompoundStmt NullStmt
+
+	}
+
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		KepGetUbsanTypeKind(Data.TypeCheckKind)
+		??? CompoundStmt CStyleCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		KepGetUbsanTypeKind(Data.TypeCheckKind)
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		KepGetUbsanTypeKind(Data.TypeCheckKind)
+		??? CompoundStmt CStyleCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ConditionalOperator
+		??? CompoundStmt CStyleCastExpr
+		??? CompoundStmt CStyleCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	var lhsBitWidth ULONG
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
+	LhsBitWidth = 1 << (Data.LhsType.TypeInfo >> 1)
+	if (Data.RhsType.TypeInfo & 1) and (KepGetSignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr) < 0) {
+		if KeDbgPrint {
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+			KepGetSignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr)
+
+		}
+
+		??? CompoundStmt NullStmt
+
+	} else {
+		??? CompoundStmt CompoundStmt
+		if KepGetUnsignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr) >= LhsBitWidth {
+			if KeDbgPrint {
+				??? CompoundStmt ImplicitCastExpr
+				??? CompoundStmt ImplicitCastExpr
+				KepGetUnsignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr)
+				??? CompoundStmt ImplicitCastExpr
+				??? CompoundStmt ImplicitCastExpr
+
+			}
+
+			??? CompoundStmt NullStmt
+
+		} else {
+			if KeDbgPrint {
+				??? CompoundStmt ImplicitCastExpr
+				??? CompoundStmt ImplicitCastExpr
+				KepGetSignedUbsanValue(Data.LhsType, ???? resolve CStyleCastExpr)
+				KepGetSignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr)
+				??? CompoundStmt ImplicitCastExpr
+
+			}
+
+			??? CompoundStmt NullStmt
+
+		}
+
+
+	}
+
+	KepLeaveUbsanFrame()
+}
+
+fun kepHandleUbsanTypeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
+	if ???? resolve UnaryOperator {
+		KepHandleUbsanNullPointerDereference(Data)
+
+	} else {
+		??? CompoundStmt CompoundStmt
+		??? CompoundStmt CompoundStmt
+
+	}
+
+}
+
+fun kepLeaveUbsanFrame() {
+	KepUbsanActiveFrame = FALSE
+}
+
+fun __ubsan_handle_add_overflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	KepHandleUbsanIntegerOverflow(Data, Lhs, Rhs)
+}
+
+fun __ubsan_handle_divrem_overflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PVOID) {
+	KepHandleUbsanDivisionOverflow(Data, Lhs, Rhs)
+}
+
+fun __ubsan_handle_float_cast_overflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	KepHandleUbsanFloatCastOverflow(Data, Lhs, Rhs)
+}
+
+fun __ubsan_handle_function_type_mismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
+	KepHandleUbsanFunctionTypeMismatch(Data, Pointer)
+}
+
+fun __ubsan_handle_invalid_builtin(data PKUBSAN_INVALID_BUILTIN_DATA) {
+	KepHandleUbsanInvalidBuiltin(Data)
+}
+
+fun __ubsan_handle_mul_overflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	KepHandleUbsanIntegerOverflow(Data, Lhs, Rhs)
+}
+
+fun __ubsan_handle_negate_overflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR) {
+	KepHandleUbsanNegateOverflow(Data, OldValue)
+}
+
+fun __ubsan_handle_out_of_bounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) {
+	KepHandleUbsanOutOfBounds(Data, Index)
+}
+
+fun __ubsan_handle_pointer_overflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	KepHandleUbsanPointerOverflow(Data, Lhs, Rhs)
+}
+
+fun __ubsan_handle_shift_out_of_bounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	KepHandleUbsanShiftOutOfBounds(Data, Lhs, Rhs)
+}
+
+fun __ubsan_handle_sub_overflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
+	KepHandleUbsanIntegerOverflow(Data, Lhs, Rhs)
+}
+
+fun __ubsan_handle_type_mismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
+	KepHandleUbsanTypeMismatch(Data, Pointer)
+}
+
+fun __ubsan_handle_type_mismatch_v1(data PKUBSAN_TYPE_MISMATCH_DATA_V1, pointer ULONG_PTR) {
+	let mismatchData = new ByValue<KUBSAN_TYPE_MISMATCH_DATA>()
+
+	KepHandleUbsanTypeMismatch(???? resolve UnaryOperator, Pointer)
+}

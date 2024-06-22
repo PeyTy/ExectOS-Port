@@ -1,0 +1,104 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlCompareString(string1 Const PCHAR, string2 Const PCHAR, length SIZE_T) {
+	var index SIZE_T
+	??? CompoundStmt ForStmt
+	return 0
+}
+
+fun rtlCompareStringInsensitive(string1 Const PCHAR, string2 Const PCHAR, length SIZE_T) {
+	var character1 CHAR
+	var character2 CHAR
+	var index ULONG = 0
+	??? CompoundStmt WhileStmt
+	return 0
+}
+
+fun rtlConcatenateString(destination PCHAR, source PCHAR, count SIZE_T) {
+	var destString PCHAR = Destination
+	??? CompoundStmt WhileStmt
+	if Count > 0 {
+		??? CompoundStmt DoStmt
+		???? resolve UnaryOperator = ???? resolve CharacterLiteral
+
+	} else {
+		??? CompoundStmt WhileStmt
+
+	}
+
+	return DestString
+}
+
+fun rtlCopyString(destination PCHAR, source PCCHAR, length ULONG) {
+	var index ULONG
+	??? CompoundStmt ForStmt
+	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+}
+
+fun rtlReverseString(string PCHAR, length ULONG) {
+	var tempChar UCHAR
+	var index ULONG
+	??? CompoundStmt ForStmt
+}
+
+fun rtlStringLength(string Const PCHAR, maxLength SIZE_T) {
+	var length SIZE_T
+	if String == (???? resolve CStyleCastExpr) {
+		return 0
+
+	}
+
+	??? CompoundStmt ForStmt
+	return Length
+}
+
+fun rtlStringToWideString(destination PWCHAR, source Const PCHAR *, length SIZE_T) {
+	var localSource PCHAR = ???? resolve UnaryOperator
+	var count SIZE_T = Length
+	if Destination == (???? resolve CStyleCastExpr) {
+		return 0
+
+	}
+
+	??? CompoundStmt WhileStmt
+	return Length - Count
+}
+
+fun rtlTokenizeString(string PCHAR, delimiter Const PCHAR, savePtr PCHAR *) {
+	var span PCHAR
+	var token PCHAR
+	var char CHAR
+	var spanChar CHAR
+	if String == (???? resolve CStyleCastExpr) and (String = ???? resolve UnaryOperator) == (???? resolve CStyleCastExpr) {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	Char = ???? resolve UnaryOperator
+	if Char == ???? resolve CharacterLiteral {
+		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	Token = String - 1
+	??? CompoundStmt ForStmt
+}
+
+fun rtlTrimLeftString(string Const PCHAR) {
+	var start PCHAR
+	Start = String
+	??? CompoundStmt WhileStmt
+	return Start
+}
+
+fun rtlTrimRightString(string Const PCHAR) {
+	var end PCHAR
+	End = String + RtlStringLength(String, 0)
+	??? CompoundStmt WhileStmt
+	???? resolve UnaryOperator = 0
+	return String
+}
+
+fun rtlTrimString(string Const PCHAR) {
+	return RtlTrimLeftString(RtlTrimRightString(String))
+}

@@ -1,0 +1,30 @@
+// Hexa 2024 from clang 15.0.3
+fun hlIoPortInByte(port USHORT) {
+	var value UCHAR
+	??? CompoundStmt GCCAsmStmt
+	return Value
+}
+
+fun hlIoPortInLong(port USHORT) {
+	var value ULONG
+	??? CompoundStmt GCCAsmStmt
+	return Value
+}
+
+fun hlIoPortInShort(port USHORT) {
+	var value USHORT
+	??? CompoundStmt GCCAsmStmt
+	return Value
+}
+
+fun hlIoPortOutByte(port USHORT, value UCHAR) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun hlIoPortOutLong(port USHORT, value ULONG) {
+	??? CompoundStmt GCCAsmStmt
+}
+
+fun hlIoPortOutShort(port USHORT, value USHORT) {
+	??? CompoundStmt GCCAsmStmt
+}

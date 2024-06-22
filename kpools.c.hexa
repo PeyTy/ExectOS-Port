@@ -1,0 +1,24 @@
+// Hexa 2024 from clang 15.0.3
+fun mmAllocateKernelStack(stack PVOID *, largeStack BOOLEAN, systemNode UCHAR) {
+	return (???? resolve CStyleCastExpr)
+}
+
+fun mmAllocateProcessorStructures(cpuNumber ULONG, structuresData PVOID *) {
+	let processorBlock = new ByValue<PKPROCESSOR_BLOCK>()
+
+	var processorStructures PVOID
+	var address UINT_PTR
+	ProcessorStructures = ???? resolve UnaryOperator
+	RtlZeroMemory(ProcessorStructures, ((2 * 32768) + ???? resolve UnaryExprOrTypeTraitExpr + ???? resolve UnaryExprOrTypeTraitExpr + ???? resolve UnaryExprOrTypeTraitExpr + 4096))
+	Address = (((???? resolve CStyleCastExpr) + (4096 - 1)) & ???? resolve UnaryOperator)
+	ProcessorBlock = ???? resolve CStyleCastExpr
+	ProcessorBlock.CpuNumber = CpuNumber
+	???? resolve UnaryOperator = ProcessorStructures
+	return (???? resolve CStyleCastExpr)
+}
+
+fun mmFreeKernelStack(stack PVOID, largeStack BOOLEAN) {
+}
+
+fun mmFreeProcessorStructures(structuresData PVOID) {
+}

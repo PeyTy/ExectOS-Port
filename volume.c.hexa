@@ -1,0 +1,397 @@
+// Hexa 2024 from clang 15.0.3
+fun blCloseVolume(volumeHandle PEFI_HANDLE) {
+	let lIPGuid = new ByValue<EFI_GUID>()
+
+	if VolumeHandle != (???? resolve CStyleCastExpr) {
+		return EfiSystemTable.BootServices.CloseProtocol(VolumeHandle, ???? resolve UnaryOperator, EfiImageHandle, (???? resolve CStyleCastExpr))
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun blEnumerateBlockDevices() {
+	let lastNode = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	let parentNode = new ByValue<PEFI_BLOCK_DEVICE_DATA>()
+
+	let blockDeviceData = new ByValue<PEFI_BLOCK_DEVICE_DATA>()
+
+	let blockDevice = new ByValue<PEFI_BLOCK_DEVICE>()
+
+	let blockDevices = new ByValue<LIST_ENTRY>()
+
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	var status EFI_STATUS
+	let acpiDevice = new ByValue<PEFI_ACPI_HID_DEVICE_PATH>()
+
+	let hDPath = new ByValue<PEFI_HARDDRIVE_DEVICE_PATH>()
+
+	let media = new ByValue<PEFI_BLOCK_IO_MEDIA>()
+
+	let partitionGuid = new ByValue<PEFI_GUID>()
+
+	var driveNumber ULONG
+	var partitionNumber ULONG
+	var driveType USHORT
+	var cDCount ULONG = 0
+	var fDCount ULONG = 0
+	var hDCount ULONG = 0
+	var rDCount ULONG = 0
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	Status = BlpDiscoverEfiBlockDevices(???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	ListEntry = BlockDevices.Flink
+	??? CompoundStmt WhileStmt
+	return (9223372036854775808 & 0)
+}
+
+fun blFindVolumeDevicePath(fsHandle PEFI_DEVICE_PATH_PROTOCOL, fileSystemPath Const PWCHAR, devicePath PEFI_DEVICE_PATH_PROTOCOL *) {
+	var status EFI_STATUS
+	var fsPathLength SIZE_T
+	var devicePathLength SIZE_T = 0
+	let filePath = new ByValue<PEFI_FILEPATH_DEVICE_PATH>()
+
+	let endDevicePath = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	let devicePathHandle = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	DevicePathHandle = FsHandle
+	??? CompoundStmt WhileStmt
+	FsPathLength = RtlWideStringLength(FileSystemPath, 0) * ???? resolve UnaryExprOrTypeTraitExpr
+	Status = BlAllocateMemoryPool(FsPathLength + DevicePathLength + ???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	RtlCopyMemory(???? resolve UnaryOperator, FsHandle, DevicePathLength)
+	FilePath = ???? resolve CStyleCastExpr
+	FilePath.Header.Type = 4
+	FilePath.Header.SubType = 4
+	???? resolve ArraySubscriptExpr = ???? resolve CStyleCastExpr + ???? resolve OffsetOfExpr + ???? resolve UnaryExprOrTypeTraitExpr
+	???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr >> 8
+	RtlCopyMemory(FilePath.PathName, FileSystemPath, FsPathLength + ???? resolve UnaryExprOrTypeTraitExpr)
+	EndDevicePath = ???? resolve CStyleCastExpr
+	EndDevicePath.Type = 127
+	EndDevicePath.SubType = 255
+	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
+	???? resolve ArraySubscriptExpr = 0
+	return (9223372036854775808 & 0)
+}
+
+fun blGetEfiPath(systemPath PWCHAR, efiPath PWCHAR *) {
+	var index SIZE_T
+	var pathLength SIZE_T
+	var status EFI_STATUS
+	PathLength = RtlWideStringLength(SystemPath, 0)
+	Status = BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (PathLength + 1), ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return (9223372036854775808 | 9)
+
+	}
+
+	RtlCopyMemory(???? resolve UnaryOperator, SystemPath, ???? resolve UnaryExprOrTypeTraitExpr * (PathLength + 1))
+	??? CompoundStmt ForStmt
+	return (9223372036854775808 & 0)
+}
+
+fun blGetVolumeDevicePath(systemPath PWCHAR, devicePath PEFI_DEVICE_PATH_PROTOCOL *, arcName PWCHAR *, path PWCHAR *) {
+	let device = new ByValue<PEFI_BLOCK_DEVICE>()
+
+	var driveType USHORT
+	var driveNumber ULONG
+	var partNumber ULONG
+	var volume PWCHAR
+	var pathLength ULONG
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	var status EFI_STATUS
+	???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+	Volume = SystemPath
+	??? CompoundStmt WhileStmt
+	PathLength = Volume - SystemPath
+	if PathLength == 0 {
+		???? resolve UnaryOperator = SystemPath
+		return (9223372036854775808 | 14)
+
+	}
+
+	if ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral {
+		if PathLength == 38 {
+			BlDebugPrint(???? resolve StringLiteral)
+			return (9223372036854775808 | 3)
+
+		} else {
+			??? CompoundStmt CompoundStmt
+			??? CompoundStmt CompoundStmt
+
+		}
+
+
+	} else {
+		Status = BlpDissectVolumeArcPath(SystemPath, ArcName, Path, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+
+	}
+
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, SystemPath, Status)
+		return Status
+
+	}
+
+	ListEntry = EfiBlockDevices.Flink
+	??? CompoundStmt WhileStmt
+	if ???? resolve UnaryOperator == (???? resolve CStyleCastExpr) {
+		BlDebugPrint(???? resolve StringLiteral, DriveType, DriveNumber, PartNumber)
+		return (9223372036854775808 | 14)
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun blOpenVolume(devicePath PEFI_DEVICE_PATH_PROTOCOL, diskHandle PEFI_HANDLE, fsHandle PEFI_FILE_HANDLE *) {
+	let sFSGuid = new ByValue<EFI_GUID>()
+
+	let lIPGuid = new ByValue<EFI_GUID>()
+
+	let fileSystemProtocol = new ByValue<PEFI_SIMPLE_FILE_SYSTEM_PROTOCOL>()
+
+	let imageProtocol = new ByValue<PEFI_LOADED_IMAGE_PROTOCOL>()
+
+	var status EFI_STATUS
+	if DevicePath != (???? resolve CStyleCastExpr) {
+		Status = EfiSystemTable.BootServices.LocateDevicePath(???? resolve UnaryOperator, ???? resolve UnaryOperator, DiskHandle)
+		if Status != (9223372036854775808 & 0) {
+			return Status
+
+		}
+
+
+	} else {
+		Status = EfiSystemTable.BootServices.OpenProtocol(EfiImageHandle, ???? resolve UnaryOperator, ???? resolve CStyleCastExpr, EfiImageHandle, (???? resolve CStyleCastExpr), 1)
+		if Status != (9223372036854775808 & 0) {
+			return Status
+
+		}
+
+		???? resolve UnaryOperator = ImageProtocol.DeviceHandle
+
+	}
+
+	Status = EfiSystemTable.BootServices.OpenProtocol(???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve CStyleCastExpr, EfiImageHandle, (???? resolve CStyleCastExpr), 1)
+	if Status != (9223372036854775808 & 0) {
+		BlCloseVolume(???? resolve UnaryOperator)
+		return Status
+
+	}
+
+	Status = FileSystemProtocol.OpenVolume(FileSystemProtocol, FsHandle)
+	if Status != (9223372036854775808 & 0) {
+		BlCloseVolume(???? resolve UnaryOperator)
+		return Status
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun blReadFile(dirHandle PEFI_FILE_HANDLE, fileName Const PWCHAR, fileData PVOID *, fileSize PSIZE_T) {
+	let fileInfoGuid = new ByValue<EFI_GUID>()
+
+	var address EFI_PHYSICAL_ADDRESS
+	let fileHandle = new ByValue<PEFI_FILE_HANDLE>()
+
+	let fileInfo = new ByValue<PEFI_FILE_INFO>()
+
+	var status EFI_STATUS
+	var readSize UINT_PTR
+	var pages SIZE_T
+	Status = DirHandle.Open(DirHandle, ???? resolve UnaryOperator, FileName, 1, 1 | 2 | 4)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	ReadSize = ???? resolve UnaryExprOrTypeTraitExpr + 32
+	Status = BlAllocateMemoryPool(ReadSize, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		FileHandle.Close(FileHandle)
+		return Status
+
+	}
+
+	FileHandle.GetInfo(FileHandle, ???? resolve UnaryOperator, ???? resolve UnaryOperator, FileInfo)
+	if Status == (9223372036854775808 | 5) {
+		BlFreeMemoryPool(???? resolve UnaryOperator)
+		Status = BlAllocateMemoryPool(ReadSize, ???? resolve CStyleCastExpr)
+		if Status != (9223372036854775808 & 0) {
+			FileHandle.Close(FileHandle)
+			return Status
+
+		}
+
+		Status = FileHandle.GetInfo(FileHandle, ???? resolve UnaryOperator, ???? resolve UnaryOperator, FileInfo)
+
+	}
+
+	if Status != (9223372036854775808 & 0) {
+		FileHandle.Close(FileHandle)
+		BlFreeMemoryPool(???? resolve UnaryOperator)
+		return Status
+
+	}
+
+	???? resolve UnaryOperator = FileInfo.FileSize
+	Pages = (((FileInfo.FileSize) >> 12) + (???? resolve ConditionalOperator))
+	Status = BlAllocateMemoryPages(Pages, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		FileHandle.Close(FileHandle)
+		BlFreeMemoryPool(???? resolve UnaryOperator)
+		return Status
+
+	}
+
+	ReadSize = Pages * 4096
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	RtlZeroMemory(???? resolve UnaryOperator, ReadSize)
+	Status = FileHandle.Read(FileHandle, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		FileHandle.Close(FileHandle)
+		BlFreeMemoryPool(???? resolve UnaryOperator)
+		BlFreeMemoryPages(Pages, ???? resolve CStyleCastExpr)
+		return Status
+
+	}
+
+	FileHandle.Close(FileHandle)
+	BlFreeMemoryPool(FileInfo)
+	return (9223372036854775808 & 0)
+}
+
+fun blpDiscoverEfiBlockDevices(blockDevices PLIST_ENTRY) {
+	let devicePathGuid = new ByValue<EFI_GUID>()
+
+	let ioGuid = new ByValue<EFI_GUID>()
+
+	let devicePath = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	let blockDevice = new ByValue<PEFI_BLOCK_DEVICE_DATA>()
+
+	var handlesCount UINT_PTR
+	var index UINT_PTR
+	var handles PEFI_HANDLE = (???? resolve CStyleCastExpr)
+	let io = new ByValue<PEFI_BLOCK_IO_PROTOCOL>()
+
+	var status EFI_STATUS
+	Status = BlLocateProtocolHandles(???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	??? CompoundStmt ForStmt
+	BlFreeMemoryPool(Handles)
+	return (9223372036854775808 & 0)
+}
+
+fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, driveType PUSHORT, driveNumber PULONG, partNumber PULONG) {
+	var arcPath PWCHAR
+	var localArcName PWCHAR
+	var arcLength ULONG = 0
+	???? resolve UnaryOperator = 0
+	???? resolve UnaryOperator = 0
+	???? resolve UnaryOperator = 0
+	if RtlCompareWideStringInsensitive(SystemPath, ???? resolve StringLiteral, 0) == 0 {
+		ArcLength = 10
+		???? resolve UnaryOperator = 4
+
+	} else {
+		??? CompoundStmt CompoundStmt
+		??? CompoundStmt CompoundStmt
+
+	}
+
+	if Path {
+		???? resolve UnaryOperator = SystemPath + ArcLength
+
+	}
+
+	if ArcName {
+		BlAllocateMemoryPool(ArcLength * ???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+		RtlCopyMemory(LocalArcName, SystemPath, ArcLength * ???? resolve UnaryExprOrTypeTraitExpr)
+		???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+		???? resolve UnaryOperator = LocalArcName
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun blpDuplicateDevicePath(devicePath PEFI_DEVICE_PATH_PROTOCOL) {
+	let devicePathNode = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	let devicePathClone = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	var status EFI_STATUS
+	var length UINT = 0
+	DevicePathNode = DevicePath
+	??? CompoundStmt WhileStmt
+	if Length == 0 {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	Status = BlAllocateMemoryPool(Length, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	RtlCopyMemory(DevicePathClone, DevicePath, Length)
+	return DevicePathClone
+}
+
+fun blpFindLastBlockDeviceNode(devicePath PEFI_DEVICE_PATH_PROTOCOL, lastNode PEFI_DEVICE_PATH_PROTOCOL *) {
+	let endNode = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	let nextNode = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	if DevicePath.Type == 127 {
+		LastNode = (???? resolve CStyleCastExpr)
+		return (9223372036854775808 | 2)
+
+	}
+
+	EndNode = DevicePath
+	??? CompoundStmt WhileStmt
+	???? resolve UnaryOperator = NextNode
+	return (9223372036854775808 & 0)
+}
+
+fun blpFindParentBlockDevice(blockDevices PLIST_ENTRY, childNode PEFI_BLOCK_DEVICE_DATA, parentNode PEFI_BLOCK_DEVICE_DATA) {
+	let childDevicePath = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	let parentDevicePath = new ByValue<PEFI_DEVICE_PATH_PROTOCOL>()
+
+	let blockDeviceData = new ByValue<PEFI_BLOCK_DEVICE_DATA>()
+
+	var childLength UINT
+	var parentLength UINT
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	ListEntry = BlockDevices.Flink
+	??? CompoundStmt WhileStmt
+	return FALSE
+}

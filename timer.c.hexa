@@ -1,0 +1,59 @@
+// Hexa 2024 from clang 15.0.3
+fun keCancelTimer(timer PKTIMER) {
+	var result BOOLEAN
+	var runLevel KRUNLEVEL
+	Result = FALSE
+	RunLevel = KeRaiseRunLevel(12)
+	KeAcquireQueuedSpinLock(DispatcherLock)
+	if Timer.Header.Inserted {
+		KepRemoveTimer(Timer)
+		Result = TRUE
+
+	}
+
+	KeReleaseQueuedSpinLock(DispatcherLock)
+	KepExitDispatcher(RunLevel)
+	return Result
+}
+
+fun keClearTimer(timer PKTIMER) {
+	Timer.Header.SignalState = 0
+}
+
+fun keGetTimerState(timer PKTIMER) {
+	return ???? resolve CStyleCastExpr
+}
+
+fun keInitializeTimer(timer PKTIMER, type KTIMER_TYPE) {
+	Timer.Header.Type = TimerNotificationObject + Type
+	Timer.Header.Inserted = 0
+	Timer.Header.SignalState = 0
+	Timer.DueTime.QuadPart = 0
+	Timer.Period = 0
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+}
+
+fun keQueryTimer(timer PKTIMER) {
+	var runLevel KRUNLEVEL
+	var dueTime ULONGLONG
+	DueTime = 0
+	RunLevel = KeRaiseRunLevel(12)
+	KeAcquireQueuedSpinLock(DispatcherLock)
+	if Timer.Header.Inserted {
+		DueTime = Timer.DueTime.QuadPart
+
+	}
+
+	KeReleaseQueuedSpinLock(DispatcherLock)
+	KepExitDispatcher(RunLevel)
+	return DueTime
+}
+
+fun keSetTimer(timer PKTIMER, dueTime LARGE_INTEGER, period LONG, dpc PKDPC) {
+}
+
+fun kepRemoveTimer(timer PKTIMER) {
+	Timer.Header.Inserted = FALSE
+	RtlRemoveEntryList(???? resolve UnaryOperator)
+}

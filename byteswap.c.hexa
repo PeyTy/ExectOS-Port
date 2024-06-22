@@ -1,0 +1,12 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlByteSwap16(source USHORT) {
+	return ???? resolve CStyleCastExpr
+}
+
+fun rtlByteSwap32(source ULONG) {
+	return ???? resolve CStyleCastExpr
+}
+
+fun rtlByteSwap64(source ULONGLONG) {
+	return ???? resolve CStyleCastExpr
+}

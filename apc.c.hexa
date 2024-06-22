@@ -1,0 +1,27 @@
+// Hexa 2024 from clang 15.0.3
+fun keInitializeApc(apc PKAPC, thread PKTHREAD, environment KAPC_ENVIRONMENT, kernelRoutine PKKERNEL_ROUTINE, rundownRoutine PKRUNDOWN_ROUTINE, normalRoutine PKNORMAL_ROUTINE, apcMode KPROCESSOR_MODE, context PVOID) {
+	Apc.Type = ApcObject
+	Apc.Thread = Thread
+	Apc.KernelRoutine = KernelRoutine
+	Apc.RundownRoutine = RundownRoutine
+	Apc.NormalRoutine = NormalRoutine
+	if Environment == CurrentApcEnvironment {
+		Apc.ApcStateIndex = Thread.ApcStateIndex
+
+	} else {
+		Apc.ApcStateIndex = Environment
+
+	}
+
+	if NormalRoutine {
+		Apc.ApcMode = ApcMode
+		Apc.NormalContext = Context
+
+	} else {
+		Apc.ApcMode = KernelMode
+		Apc.NormalContext = (???? resolve CStyleCastExpr)
+
+	}
+
+	Apc.Inserted = FALSE
+}

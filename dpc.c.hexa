@@ -1,0 +1,33 @@
+// Hexa 2024 from clang 15.0.3
+fun keInitializeDpc(dpc PKDPC, dpcRoutine PKDEFERRED_ROUTINE, dpcContext PVOID) {
+	Dpc.Type = DpcObject
+	Dpc.Number = 0
+	Dpc.Importance = MediumImportance
+	Dpc.DeferredContext = DpcContext
+	Dpc.DeferredRoutine = DpcRoutine
+	Dpc.DpcData = (???? resolve CStyleCastExpr)
+}
+
+fun keInitializeThreadedDpc(dpc PKDPC, dpcRoutine PKDEFERRED_ROUTINE, dpcContext PVOID) {
+	Dpc.Type = ThreadedDpcObject
+	Dpc.Number = 0
+	Dpc.Importance = MediumImportance
+	Dpc.DeferredContext = DpcContext
+	Dpc.DeferredRoutine = DpcRoutine
+	Dpc.DpcData = (???? resolve CStyleCastExpr)
+}
+
+fun keSetTargetProcessorDpc(dpc PKDPC, number CCHAR) {
+	Dpc.Number = 256 + Number
+}
+
+fun keSignalCallDpcDone(systemArgument PVOID) {
+	RtlAtomicDecrement32(SystemArgument)
+}
+
+fun keSignalCallDpcSynchronize(systemArgument PVOID) {
+	return TRUE
+}
+
+fun kepRetireDpcList(prcb PKPROCESSOR_CONTROL_BLOCK) {
+}

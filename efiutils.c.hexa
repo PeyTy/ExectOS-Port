@@ -1,0 +1,155 @@
+// Hexa 2024 from clang 15.0.3
+fun blEnterFirmwareSetup() {
+	let guid = new ByValue<EFI_GUID>()
+
+	var setupSupport PULONGLONG
+	var indications ULONGLONG
+	var status EFI_STATUS
+	Status = BlGetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
+		BlDebugPrint(???? resolve StringLiteral)
+		return (9223372036854775808 | 3)
+
+	}
+
+	Indications = 0
+	Status = BlGetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr)
+	??? CompoundStmt CompoundAssignOperator
+	Status = BlSetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr, ???? resolve UnaryExprOrTypeTraitExpr)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	BlRebootSystem()
+	return (9223372036854775808 & 0)
+}
+
+fun blExitBootServices() {
+	let memoryMap = new ByValue<PEFI_MEMORY_MAP>()
+
+	var status EFI_STATUS
+	var counter ULONG
+	BlpStatus.BootServices = FALSE
+	Status = BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		BlDebugPrint(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	RtlZeroMemory(MemoryMap, ???? resolve UnaryExprOrTypeTraitExpr)
+	Counter = 255
+	??? CompoundStmt WhileStmt
+	return Status
+}
+
+fun blGetConfigurationTable(tableGuid PEFI_GUID, table PVOID *) {
+	var index SIZE_T
+	??? CompoundStmt ForStmt
+	???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+	return (9223372036854775808 | 14)
+}
+
+fun blGetEfiVariable(vendor PEFI_GUID, variableName PWCHAR, variableValue PVOID *) {
+	var status EFI_STATUS
+	var buffer PVOID
+	var size UINT_PTR
+	Size = 1024 * ???? resolve UnaryExprOrTypeTraitExpr
+	Status = BlAllocateMemoryPool(Size, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = EfiSystemTable.RuntimeServices.GetVariable(VariableName, Vendor, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, Buffer)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	???? resolve UnaryOperator = Buffer
+	return (9223372036854775808 & 0)
+}
+
+fun blGetRandomValue(rNGBuffer PULONGLONG) {
+	??? CompoundStmt CompoundAssignOperator
+	??? CompoundStmt CompoundAssignOperator
+	??? CompoundStmt CompoundAssignOperator
+	return ???? resolve UnaryOperator * 2685821657736338717
+}
+
+fun blGetSecureBootStatus() {
+	let varGuid = new ByValue<EFI_GUID>()
+
+	var secureBootStatus INT_PTR = 0
+	var varValue UCHAR = 0
+	var size UINT_PTR
+	Size = ???? resolve UnaryExprOrTypeTraitExpr
+	if EfiSystemTable.RuntimeServices.GetVariable(???? resolve StringLiteral, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator) == (9223372036854775808 & 0) {
+		SecureBootStatus = ???? resolve CStyleCastExpr
+		if (EfiSystemTable.RuntimeServices.GetVariable(???? resolve StringLiteral, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator) == (9223372036854775808 & 0)) and VarValue != 0 {
+			SecureBootStatus = ???? resolve UnaryOperator
+
+		}
+
+
+	}
+
+	return SecureBootStatus
+}
+
+fun blInitializeEntropy(rNGBuffer PULONGLONG) {
+	let rngGuid = new ByValue<EFI_GUID>()
+
+	let rng = new ByValue<PEFI_RNG_PROTOCOL>()
+
+	var status EFI_STATUS
+	var seed ULONGLONG
+	Rng = (???? resolve CStyleCastExpr)
+	Seed = 0
+	Status = EfiSystemTable.BootServices.LocateProtocol(???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = Rng.GetRNG(Rng, (???? resolve CStyleCastExpr), 8, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	???? resolve UnaryOperator = ???? resolve ConditionalOperator
+	return (9223372036854775808 & 0)
+}
+
+fun blLoadEfiImage(devicePath PEFI_DEVICE_PATH_PROTOCOL, imageData PVOID, imageSize SIZE_T, imageHandle PEFI_HANDLE) {
+	return EfiSystemTable.BootServices.LoadImage(FALSE, EfiImageHandle, DevicePath, ImageData, ImageSize, ImageHandle)
+}
+
+fun blRebootSystem() {
+	return EfiSystemTable.RuntimeServices.ResetSystem(EfiResetCold, (9223372036854775808 & 0), 0, (???? resolve CStyleCastExpr))
+}
+
+fun blSetEfiVariable(vendor PEFI_GUID, variableName PWCHAR, variableValue PVOID, size UINT_PTR) {
+	var attributes ULONG
+	Attributes = 1 | 2 | 4
+	return EfiSystemTable.RuntimeServices.SetVariable(VariableName, Vendor, Attributes, Size, VariableValue)
+}
+
+fun blShutdownSystem() {
+	return EfiSystemTable.RuntimeServices.ResetSystem(EfiResetShutdown, (9223372036854775808 & 0), 0, (???? resolve CStyleCastExpr))
+}
+
+fun blSleepExecution(milliseconds ULONG_PTR) {
+	EfiSystemTable.BootServices.Stall(Milliseconds * 1000)
+}
+
+fun blStartEfiImage(imageHandle EFI_HANDLE) {
+	return EfiSystemTable.BootServices.StartImage(ImageHandle, (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr))
+}
+
+fun blWaitForEfiEvent(numberOfEvents UINT_PTR, event PEFI_EVENT, index PUINT_PTR) {
+	return EfiSystemTable.BootServices.WaitForEvent(NumberOfEvents, Event, Index)
+}

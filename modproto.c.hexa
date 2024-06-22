@@ -1,0 +1,27 @@
+// Hexa 2024 from clang 15.0.3
+fun blGetXtLdrProtocol(systemTable PEFI_SYSTEM_TABLE, imageHandle EFI_HANDLE, protocolHandler PXTBL_LOADER_PROTOCOL *) {
+	let protocolGuid = new ByValue<EFI_GUID>()
+
+	var handles PEFI_HANDLE = (???? resolve CStyleCastExpr)
+	var status EFI_STATUS
+	var count UINT_PTR
+	var index UINT
+	Status = SystemTable.BootServices.LocateHandleBuffer(ByProtocol, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	if Count > 0 {
+		??? CompoundStmt ForStmt
+
+	}
+
+	SystemTable.BootServices.FreePool(Handles)
+	if ???? resolve UnaryOperator == (???? resolve CStyleCastExpr) {
+		return (9223372036854775808 | 14)
+
+	}
+
+	return (9223372036854775808 & 0)
+}

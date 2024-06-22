@@ -1,0 +1,25 @@
+// Hexa 2024 from clang 15.0.3
+fun keGetCurrentRunLevel() {
+	return HlGetRunLevel()
+}
+
+fun keLowerRunLevel(runLevel KRUNLEVEL) {
+	var oldRunLevel KRUNLEVEL
+	OldRunLevel = HlGetRunLevel()
+	if OldRunLevel > RunLevel {
+		HlSetRunLevel(RunLevel)
+
+	}
+
+}
+
+fun keRaiseRunLevel(runLevel KRUNLEVEL) {
+	var oldRunLevel KRUNLEVEL
+	OldRunLevel = HlGetRunLevel()
+	if OldRunLevel < RunLevel {
+		HlSetRunLevel(RunLevel)
+
+	}
+
+	return OldRunLevel
+}

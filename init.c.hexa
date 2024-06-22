@@ -1,0 +1,31 @@
+// Hexa 2024 from clang 15.0.3
+fun mmpGetPdeAddress(address PVOID) {
+	var offset ULONGLONG
+	Offset = (((???? resolve CStyleCastExpr & ((???? resolve CStyleCastExpr << 48) - 1)) >> 21) << 3)
+	return ???? resolve CStyleCastExpr
+}
+
+fun mmpGetPpeAddress(address PVOID) {
+	var offset ULONGLONG
+	Offset = (((???? resolve CStyleCastExpr & ((???? resolve CStyleCastExpr << 48) - 1)) >> 30) << 3)
+	return ???? resolve CStyleCastExpr
+}
+
+fun mmpGetPteAddress(address PVOID) {
+	var offset ULONGLONG
+	Offset = (((???? resolve CStyleCastExpr & ((???? resolve CStyleCastExpr << 48) - 1)) >> 12) << 3)
+	return ???? resolve CStyleCastExpr
+}
+
+fun mmpGetPxeAddress(address PVOID) {
+	var offset ULONGLONG
+	Offset = ((???? resolve CStyleCastExpr >> 39) & (512 - 1))
+	return ???? resolve CStyleCastExpr
+}
+
+fun mmpInitializeArchitecture() {
+}
+
+fun mmpMemoryExtensionEnabled() {
+	return ???? resolve ConditionalOperator
+}

@@ -1,0 +1,24 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlReadRegisterByte(register Volatile PVOID) {
+	return ???? resolve UnaryOperator
+}
+
+fun rtlReadRegisterLong(register Volatile PVOID) {
+	return ???? resolve UnaryOperator
+}
+
+fun rtlReadRegisterShort(register Volatile PVOID) {
+	return ???? resolve UnaryOperator
+}
+
+fun rtlWriteRegisterByte(register Volatile PVOID, value UCHAR) {
+	???? resolve UnaryOperator = Value
+}
+
+fun rtlWriteRegisterLong(register Volatile PVOID, value ULONG) {
+	???? resolve UnaryOperator = Value
+}
+
+fun rtlWriteRegisterShort(register Volatile PVOID, value USHORT) {
+	???? resolve UnaryOperator = Value
+}

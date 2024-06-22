@@ -1,0 +1,45 @@
+// Hexa 2024 from clang 15.0.3
+fun blpActivateSerialIOController() {
+	let pciGuid = new ByValue<EFI_GUID>()
+
+	let pciDev = new ByValue<PEFI_PCI_ROOT_BRIDGE_IO_PROTOCOL>()
+
+	var bus USHORT
+	var device USHORT
+	var function USHORT
+	var command USHORT
+	var index UINT_PTR
+	var pciHandleSize UINT_PTR
+	var pciHandle PEFI_HANDLE = (???? resolve CStyleCastExpr)
+	let pciHeader = new ByValue<PCI_COMMON_HEADER>()
+
+	var status EFI_STATUS
+	var address ULONGLONG
+	PciHandleSize = ???? resolve UnaryExprOrTypeTraitExpr
+	Status = BlAllocateMemoryPool(PciHandleSize, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = EfiSystemTable.BootServices.LocateHandle(ByProtocol, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, PciHandle)
+	if Status == (9223372036854775808 | 5) {
+		BlFreeMemoryPool(PciHandle)
+		Status = BlAllocateMemoryPool(PciHandleSize, ???? resolve CStyleCastExpr)
+		if Status != (9223372036854775808 & 0) {
+			return Status
+
+		}
+
+		Status = EfiSystemTable.BootServices.LocateHandle(ByProtocol, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, PciHandle)
+
+	}
+
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	??? CompoundStmt ForStmt
+	return (9223372036854775808 & 0)
+}

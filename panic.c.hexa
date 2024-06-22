@@ -1,0 +1,13 @@
+// Hexa 2024 from clang 15.0.3
+fun keHaltSystem() {
+	??? CompoundStmt ForStmt
+}
+
+fun kePanic(code ULONG) {
+	KePanicEx(Code, 0, 0, 0, 0)
+}
+
+fun kePanicEx(code ULONG, parameter1 ULONG_PTR, parameter2 ULONG_PTR, parameter3 ULONG_PTR, parameter4 ULONG_PTR) {
+	KeDbgPrint(???? resolve StringLiteral, Code)
+	KeHaltSystem()
+}

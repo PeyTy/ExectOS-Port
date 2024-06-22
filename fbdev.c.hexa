@@ -1,0 +1,139 @@
+// Hexa 2024 from clang 15.0.3
+fun hlGetFrameBufferDimensions(width PUINT, height PUINT) {
+	???? resolve UnaryOperator = HlpFrameBufferData.Width
+	???? resolve UnaryOperator = HlpFrameBufferData.Height
+}
+
+fun hlFrameBufferInitialized() {
+	return HlpFrameBufferData.Initialized
+}
+
+fun hlClearScreen(color ULONG) {
+	var line SIZE_T
+	var positionX SIZE_T
+	var positionY SIZE_T
+	var backgroundColor ULONG
+	var frameBuf PULONG
+	if HlpFrameBufferData.Initialized == FALSE {
+		return ??
+
+	}
+
+	FrameBuf = HlpFrameBufferData.Address
+	BackgroundColor = HlpRGBColor(Color)
+	??? CompoundStmt ForStmt
+}
+
+fun hlDrawPixel(positionX ULONG, positionY ULONG, color ULONG) {
+	var frameBufferIndex SIZE_T
+	if HlpFrameBufferData.Initialized == FALSE {
+		return ??
+
+	}
+
+	if PositionX >= HlpFrameBufferData.Width or PositionY >= HlpFrameBufferData.Height or Color > 4294967295 {
+		return ??
+
+	}
+
+	FrameBufferIndex = 4 * HlpFrameBufferData.PixelsPerScanLine * PositionY + 4 * PositionX
+	???? resolve UnaryOperator = HlpRGBColor(Color)
+}
+
+fun hlInitializeFrameBuffer() {
+	let frameBufferResource = new ByValue<PSYSTEM_RESOURCE_FRAMEBUFFER>()
+
+	let systemResource = new ByValue<PSYSTEM_RESOURCE_HEADER>()
+
+	var status XTSTATUS
+	if HlpFrameBufferData.Initialized {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	Status = KeGetSystemResource(SystemResourceFrameBuffer, ???? resolve UnaryOperator)
+	if Status != (???? resolve CStyleCastExpr) {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	FrameBufferResource = ???? resolve CStyleCastExpr
+	if ???? resolve UnaryOperator {
+		return (???? resolve CStyleCastExpr)
+
+	}
+
+	if FrameBufferResource.Font {
+		HlpFrameBufferData.Font = FrameBufferResource.Font
+
+	} else {
+		HlpFrameBufferData.Font = ???? resolve CStyleCastExpr
+
+	}
+
+	HlpFrameBufferData.Address = FrameBufferResource.Header.VirtualAddress
+	HlpFrameBufferData.Width = FrameBufferResource.Width
+	HlpFrameBufferData.Height = FrameBufferResource.Height
+	HlpFrameBufferData.BitsPerPixel = FrameBufferResource.BitsPerPixel
+	HlpFrameBufferData.PixelsPerScanLine = FrameBufferResource.PixelsPerScanLine
+	HlpFrameBufferData.Pitch = FrameBufferResource.Pitch
+	HlpFrameBufferData.Pixels.BlueShift = FrameBufferResource.Pixels.BlueShift
+	HlpFrameBufferData.Pixels.BlueSize = FrameBufferResource.Pixels.BlueSize
+	HlpFrameBufferData.Pixels.GreenShift = FrameBufferResource.Pixels.GreenShift
+	HlpFrameBufferData.Pixels.GreenSize = FrameBufferResource.Pixels.GreenSize
+	HlpFrameBufferData.Pixels.RedShift = FrameBufferResource.Pixels.RedShift
+	HlpFrameBufferData.Pixels.RedSize = FrameBufferResource.Pixels.RedSize
+	HlpFrameBufferData.Pixels.ReservedShift = FrameBufferResource.Pixels.ReservedShift
+	HlpFrameBufferData.Pixels.ReservedSize = FrameBufferResource.Pixels.ReservedSize
+	HlpFrameBufferData.Initialized = TRUE
+	HlClearScreen(0)
+	return (???? resolve CStyleCastExpr)
+}
+
+fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter WCHAR) {
+	var currentFragment UINT
+	var glyph UINT
+	var glyphLimit UINT
+	var index UINT
+	var line UINT
+	var mapping UINT
+	var character PUCHAR
+	var characterMapping PUCHAR
+	var fragment PUCHAR
+	var glyphPixel UINT_PTR
+	var pixel UINT_PTR
+	let fbFont = new ByValue<PSSFN_FONT_HEADER>()
+
+	var fontColor ULONG
+	if HlpFrameBufferData.Initialized == FALSE {
+		return ??
+
+	}
+
+	FbFont = ???? resolve CStyleCastExpr
+	CharacterMapping = ???? resolve CStyleCastExpr + FbFont.CharactersOffset
+	Character = 0
+	??? CompoundStmt ForStmt
+	if ???? resolve UnaryOperator {
+		return ??
+
+	}
+
+	GlyphPixel = ???? resolve CStyleCastExpr + PositionY * HlpFrameBufferData.Pitch + PositionX * 4
+	FontColor = HlpRGBColor(Color)
+	Mapping = 0
+	CharacterMapping = Character + 6
+	??? CompoundStmt ForStmt
+}
+
+fun hlpRGBColor(color ULONG) {
+	var blue USHORT
+	var green USHORT
+	var red USHORT
+	var reserved USHORT
+	Blue = ???? resolve CStyleCastExpr
+	Green = ???? resolve CStyleCastExpr
+	Red = ???? resolve CStyleCastExpr
+	Reserved = ???? resolve CStyleCastExpr
+	return ???? resolve CStyleCastExpr
+}
