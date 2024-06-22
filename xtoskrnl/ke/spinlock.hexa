@@ -1,22 +1,70 @@
 // Hexa 2024 from clang 15.0.3
+/// Acquires a specified queued spinlock.
+/// 
+/// @param LockLevel
+///        Supplies the queued spinlock level.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keAcquireQueuedSpinLock(lockLevel KSPIN_LOCK_QUEUE_LEVEL) {
-	KeAcquireSpinLock(???? resolve ArraySubscriptExpr.Lock)
+	keAcquireSpinLock(???? resolve ArraySubscriptExpr.Lock)
 }
 
+/// Acquires a kernel spin lock.
+/// 
+/// @param SpinLock
+///        Supplies a pointer to the kernel spin lock.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keAcquireSpinLock(spinLock PKSPIN_LOCK) {
-	??? CompoundStmt WhileStmt
-	ArReadWriteBarrier()
+	while rtlAtomicBitTestAndSet(spinLock as! PLONG, 0) {
+		while *spinLock as! PKSPIN_LOCK & 1 {
+			arYieldProcessor()
+
+		}
+
+
+	}
+
+	arReadWriteBarrier()
 }
 
+/// Initializes a kernel spinlock object.
+/// 
+/// @param SpinLock
+///        Supplies a pointer to a kernel spin lock.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun keInitializeSpinLock(spinLock PKSPIN_LOCK) {
-	???? resolve UnaryOperator = 0
+	*spinLock = 0
 }
 
+/// Releases a queued spinlock.
+/// 
+/// @param LockLevel
+///        Supplies the queued spinlock level.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keReleaseQueuedSpinLock(lockLevel KSPIN_LOCK_QUEUE_LEVEL) {
-	KeReleaseSpinLock(???? resolve ArraySubscriptExpr.Lock)
+	keReleaseSpinLock(???? resolve ArraySubscriptExpr.Lock)
 }
 
+/// Releases a kernel spin lock.
+/// 
+/// @param SpinLock
+///        Supplies a pointer to the kernel spin lock.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keReleaseSpinLock(spinLock PKSPIN_LOCK) {
-	RtlAtomicAnd32(???? resolve CStyleCastExpr, 0)
-	ArReadWriteBarrier()
+	rtlAtomicAnd32(spinLock as! PLONG, 0)
+	arReadWriteBarrier()
 }

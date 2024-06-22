@@ -1,24 +1,81 @@
 // Hexa 2024 from clang 15.0.3
+/// Reads a byte from a specified register address.
+/// 
+/// @param Register
+///        Supplies a pointer to register address holding data to read.
+/// 
+/// @return This routine returns UCHAR byte read from the register.
+/// 
+/// @since XT 1.0
 fun rtlReadRegisterByte(register Volatile PVOID) {
-	return ???? resolve UnaryOperator
+	return *(register as! PUCHAR)
 }
 
+/// Reads a byte from a specified register address.
+/// 
+/// @param Register
+///        Supplies a pointer to register address holding data to read.
+/// 
+/// @return This routine returns ULONG byte read from the register.
+/// 
+/// @since XT 1.0
 fun rtlReadRegisterLong(register Volatile PVOID) {
-	return ???? resolve UnaryOperator
+	return *(register as! PULONG)
 }
 
+/// Reads a byte from a specified register address.
+/// 
+/// @param Register
+///        Supplies a pointer to register address holding data to read.
+/// 
+/// @return This routine returns USHORT byte read from the register.
+/// 
+/// @since XT 1.0
 fun rtlReadRegisterShort(register Volatile PVOID) {
-	return ???? resolve UnaryOperator
+	return *(register as! PUSHORT)
 }
 
+/// Writes a byte into a specified register address.
+/// 
+/// @param Register
+///        Supplies a pointer to register address where data will be written.
+/// 
+/// @param Value
+///        Supplies a new UCHAR value that will be stored into a register.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlWriteRegisterByte(register Volatile PVOID, value UCHAR) {
-	???? resolve UnaryOperator = Value
+	*(register as! PUCHAR) = value
 }
 
+/// Writes a byte into a specified register address.
+/// 
+/// @param Register
+///        Supplies a pointer to register address where data will be written.
+/// 
+/// @param Value
+///        Supplies a new ULONG value that will be stored into a register.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlWriteRegisterLong(register Volatile PVOID, value ULONG) {
-	???? resolve UnaryOperator = Value
+	*(register as! PULONG) = value
 }
 
+/// Writes a byte into a specified register address.
+/// 
+/// @param Register
+///        Supplies a pointer to register address where data will be written.
+/// 
+/// @param Value
+///        Supplies a new USHORT value that will be stored into a register.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlWriteRegisterShort(register Volatile PVOID, value USHORT) {
-	???? resolve UnaryOperator = Value
+	*(register as! PUSHORT) = value
 }

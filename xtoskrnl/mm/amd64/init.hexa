@@ -1,31 +1,73 @@
 // Hexa 2024 from clang 15.0.3
+/// Gets the address of the PDE (Page Directory Entry), that maps given address.
+/// 
+/// @param Address
+///        Specifies the address to find the PDE for.
+/// 
+/// @return This routine returns the address of the PDE.
+/// 
+/// @since XT 1.0
 fun mmpGetPdeAddress(address PVOID) {
 	var offset ULONGLONG
-	Offset = (((???? resolve CStyleCastExpr & ((???? resolve CStyleCastExpr << 48) - 1)) >> 21) << 3)
-	return ???? resolve CStyleCastExpr
+	offset = (((address as! ULONGLONG & ((1 as! ULONGLONG << 48) - 1)) >> 21) << 3)
+	return (18446734157703806976 + offset) as! PMMPTE
 }
 
+/// Gets the address of the PPE (Page Directory Pointer Table Entry), that maps given address.
+/// 
+/// @param Address
+///        Specifies the address to find the PPE for.
+/// 
+/// @return This routine returns the address of the PPE.
+/// 
+/// @since XT 1.0
 fun mmpGetPpeAddress(address PVOID) {
 	var offset ULONGLONG
-	Offset = (((???? resolve CStyleCastExpr & ((???? resolve CStyleCastExpr << 48) - 1)) >> 30) << 3)
-	return ???? resolve CStyleCastExpr
+	offset = (((address as! ULONGLONG & ((1 as! ULONGLONG << 48) - 1)) >> 30) << 3)
+	return (18446734158737702912 + offset) as! PMMPTE
 }
 
+/// Gets the address of the PTE (Page Table Entry), that maps given address.
+/// 
+/// @param Address
+///        Specifies the address to find the PTE for.
+/// 
+/// @return This routine returns the address of the PTE.
+/// 
+/// @since XT 1.0
 fun mmpGetPteAddress(address PVOID) {
 	var offset ULONGLONG
-	Offset = (((???? resolve CStyleCastExpr & ((???? resolve CStyleCastExpr << 48) - 1)) >> 12) << 3)
-	return ???? resolve CStyleCastExpr
+	offset = (((address as! ULONGLONG & ((1 as! ULONGLONG << 48) - 1)) >> 12) << 3)
+	return (18446733628349087744 + offset) as! PMMPTE
 }
 
+/// Gets the address of the PXE (Extended Page Entry), that maps given address.
+/// 
+/// @param Address
+///        Specifies the address to find the PXE for.
+/// 
+/// @return This routine returns the address of the PXE.
+/// 
+/// @since XT 1.0
 fun mmpGetPxeAddress(address PVOID) {
 	var offset ULONGLONG
-	Offset = ((???? resolve CStyleCastExpr >> 39) & (512 - 1))
-	return ???? resolve CStyleCastExpr
+	offset = ((address as! ULONGLONG >> 39) & (512 - 1))
+	return (18446734158739722240 + offset) as! PMMPTE
 }
 
+/// Performs architecture specific initialization of the XTOS Memory Manager.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun mmpInitializeArchitecture() {
 }
 
+/// Checks if LA57 (PML5) is enabled.
+/// 
+/// @return This routine returns TRUE if LA57 is enabled, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun mmpMemoryExtensionEnabled() {
 	return ???? resolve ConditionalOperator
 }

@@ -1,31 +1,119 @@
 // Hexa 2024 from clang 15.0.3
+/// Acquires the rundown protection for given descriptor.
+/// 
+/// @param Descriptor
+///        Supplies a pointer to the rundown block descriptor.
+/// 
+/// @return This routine returns TRUE if protection acquired successfully, or FALSE otherwise.
+/// 
+/// @since NT 5.1
 fun exAcquireRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
 	var currentValue ULONG_PTR
 	var newValue ULONG_PTR
-	CurrentValue = Descriptor..Count
-	??? CompoundStmt WhileStmt
+	currentValue = descriptor..Count
+	while tRUE {
+		if currentValue & 1 {
+			return fALSE
+
+		}
+
+		newValue = currentValue + 2
+		newValue = rtlAtomicCompareExchangePointer(descriptor..Ptr, newValue as! PVOID, currentValue as! PVOID) as! ULONG_PTR
+		if newValue == currentValue {
+			return tRUE
+
+		}
+
+		currentValue = newValue
+
+	}
+
 }
 
+/// Marks the rundown descriptor as completed.
+/// 
+/// @param Descriptor
+///        Supplies a pointer to the descriptor to be completed.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun exCompleteRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
-	RtlAtomicExchangePointer(???? resolve UnaryOperator, ???? resolve CStyleCastExpr)
+	rtlAtomicExchangePointer(descriptor..Ptr, 1 as! PVOID)
 }
 
+/// Initializes the rundown protection descriptor.
+/// 
+/// @param Descriptor
+///        Supplies a pointer to the descriptor to be initialized.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun exInitializeRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
-	Descriptor..Count = 0
+	descriptor..Count = 0
 }
 
+/// Reinitializes the rundown protection structure after it has been completed.
+/// 
+/// @param Descriptor
+///        Supplies a pointer to the descriptor to be reinitialized.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun exReInitializeRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
-	RtlAtomicExchangePointer(???? resolve UnaryOperator, (???? resolve CStyleCastExpr))
+	rtlAtomicExchangePointer(descriptor..Ptr, (0 as! PVOID))
 }
 
+/// Releases the rundown protection for given descriptor.
+/// 
+/// @param Descriptor
+///        Supplies a pointer to the descriptor to be initialized.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun exReleaseRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
 	var currentValue ULONG_PTR
 	var newValue ULONG_PTR
 	let waitBlock = new ByValue<PEX_RUNDOWN_WAIT_BLOCK>()
 
-	CurrentValue = Descriptor..Count
-	??? CompoundStmt WhileStmt
+	currentValue = descriptor..Count
+	while tRUE {
+		if currentValue & 1 {
+			waitBlock = (currentValue & ~1) as! PEX_RUNDOWN_WAIT_BLOCK
+			if !rtlAtomicDecrement64(waitBlock.Count as! PLONG_PTR) {
+				keSetEvent(waitBlock.WakeEvent, 0, fALSE)
+
+			}
+
+			??? CompoundStmt BreakStmt
+
+		} else {
+			newValue = currentValue - 2
+			newValue = rtlAtomicCompareExchangePointer(descriptor..Ptr, newValue as! PVOID, currentValue as! PVOID) as! ULONG_PTR
+			if newValue == currentValue {
+				??? CompoundStmt BreakStmt
+
+			}
+
+			currentValue = newValue
+
+		}
+
+
+	}
+
 }
 
+/// Waits until rundown protection calls are completed.
+/// 
+/// @param Descriptor
+///        Supplies a pointer to the rundown block descriptor.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun exWaitForRundownProtectionRelease(descriptor PEX_RUNDOWN_REFERENCE) {
 }

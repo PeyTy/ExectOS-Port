@@ -1,72 +1,176 @@
 // Hexa 2024 from clang 15.0.3
+/// Converts the 32-bit signed value to a large integer.
+/// 
+/// @param Value
+///        Supplies the value to convert.
+/// 
+/// @return This routine returns the large integer representation of the given value.
+/// 
+/// @since XT 1.0
 fun rtlConvertToLargeInteger32(value LONG) {
 	var largeInt LARGE_INTEGER
-	LargeInt.QuadPart = Value
-	return LargeInt
+	LargeInt.QuadPart = value
+	return largeInt
 }
 
+/// Converts the 32-bit unsigned value to a large integer.
+/// 
+/// @param Value
+///        Supplies the value to convert.
+/// 
+/// @return This routine returns the large integer representation of the given value.
+/// 
+/// @since XT 1.0
 fun rtlConvertToLargeIntegerUnsigned32(value ULONG) {
 	var largeInt LARGE_INTEGER
-	LargeInt.QuadPart = Value
-	return LargeInt
+	LargeInt.QuadPart = value
+	return largeInt
 }
 
+/// Determines the number of leading zero bits in a 32-bit unsigned value.
+/// 
+/// @param Value
+///        Supplies the value whose leading zero bits are to be counted.
+/// 
+/// @return This routine returns the number of leading zero bits in the given value.
+/// 
+/// @since XT 1.0
 fun rtlCountLeadingZeroes32(value ULONG) {
-	return __builtin_clzl(Value)
+	return __builtin_clzl(value)
 }
 
+/// Determines the number of leading zero bits in a 64-bit unsigned value.
+/// 
+/// @param Value
+///        Supplies the value whose leading zero bits are to be counted.
+/// 
+/// @return This routine returns the number of leading zero bits in the given value.
+/// 
+/// @since XT 1.0
 fun rtlCountLeadingZeroes64(value ULONGLONG) {
-	return __builtin_clzll(Value)
+	return __builtin_clzll(value)
 }
 
+/// Determines the number of trailing zero bits in a 32-bit unsigned value.
+/// 
+/// @param Value
+///        Supplies the value whose trailing zero bits are to be counted.
+/// 
+/// @return This routine returns the number of trailing zero bits in the given value.
+/// 
+/// @since XT 1.0
 fun rtlCountTrailingZeroes32(value ULONG) {
-	return __builtin_ctzl(Value)
+	return __builtin_ctzl(value)
 }
 
+/// Determines the number of trailing zero bits in a 64-bit unsigned value.
+/// 
+/// @param Value
+///        Supplies the value whose trailing zero bits are to be counted.
+/// 
+/// @return This routine returns the number of trailing zero bits in the given value.
+/// 
+/// @since XT 1.0
 fun rtlCountTrailingZeroes64(value ULONGLONG) {
-	return __builtin_ctzll(Value)
+	return __builtin_ctzll(value)
 }
 
+/// Performs a 32-bit divide operation on signed integer numbers.
+/// 
+/// @param Dividend
+///        Supplies a number that is going to be divided.
+/// 
+/// @param Divisor
+///        Supplies a number by which the dividend is divided.
+/// 
+/// @param Remainder
+///        Supplies a pointer that receives the divide remainder.
+/// 
+/// @return This routine returns the quotient.
+/// 
+/// @since XT 1.0
 fun rtlDivide32(dividend LONG, divisor LONG, remainder PLONG) {
 	var quotient LONG
-	Quotient = Dividend / Divisor
-	if Remainder {
-		???? resolve UnaryOperator = Dividend - (Quotient * Divisor)
+	quotient = dividend / divisor
+	if remainder {
+		*remainder = dividend - (quotient * divisor)
 
 	}
 
-	return Quotient
+	return quotient
 }
 
+/// Performs a 64-bit divide operation on signed integer numbers.
+/// 
+/// @param Dividend
+///        Supplies a number that is going to be divided.
+/// 
+/// @param Divisor
+///        Supplies a number by which the dividend is divided.
+/// 
+/// @param Remainder
+///        Supplies a pointer that receives the divide remainder.
+/// 
+/// @return This routine returns the quotient.
+/// 
+/// @since XT 1.0
 fun rtlDivide64(dividend LONGLONG, divisor LONGLONG, remainder PLONGLONG) {
 	var dividendSign LONGLONG
 	var divisorSign LONGLONG
 	var quotient LONGLONG
 	var uDividend LONGLONG
 	var uDivisor LONGLONG
-	DividendSign = Dividend >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
-	DivisorSign = Divisor >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
-	UDividend = (Dividend ^ DividendSign) - DividendSign
-	UDivisor = (Divisor ^ DivisorSign) - DivisorSign
+	dividendSign = dividend >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
+	divisorSign = divisor >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
+	uDividend = (dividend ^ dividendSign) - dividendSign
+	uDivisor = (divisor ^ divisorSign) - divisorSign
 	??? CompoundStmt CompoundAssignOperator
-	Quotient = (RtlDivideUnsigned64(UDividend, UDivisor, (???? resolve CStyleCastExpr)) ^ DividendSign) - DividendSign
-	if Remainder {
-		???? resolve UnaryOperator = Dividend - (Quotient * Divisor)
+	quotient = (rtlDivideUnsigned64(uDividend, uDivisor, (0 as! PVOID)) ^ dividendSign) - dividendSign
+	if remainder {
+		*remainder = dividend - (quotient * divisor)
 
 	}
 
-	return Quotient
+	return quotient
 }
 
+/// Performs a 32-bit divide operation on unsigned integer numbers.
+/// 
+/// @param Dividend
+///        Supplies an unsigned number that is going to be divided.
+/// 
+/// @param Divisor
+///        Supplies an unsigned number by which the dividend is divided.
+/// 
+/// @param Remainder
+///        Supplies a pointer that receives the unsigned divide remainder.
+/// 
+/// @return This routine returns the quotient.
+/// 
+/// @since XT 1.0
 fun rtlDivideUnsigned32(dividend ULONG, divisor ULONG, remainder PULONG) {
-	if Remainder {
-		???? resolve UnaryOperator = Dividend % Divisor
+	if remainder {
+		*remainder = dividend % divisor
 
 	}
 
-	return Dividend / Divisor
+	return dividend / divisor
 }
 
+/// Performs a 64-bit divide operation on unsigned integer numbers.
+/// 
+/// @param Dividend
+///        Supplies an unsigned number that is going to be divided.
+/// 
+/// @param Divisor
+///        Supplies an unsigned number by which the dividend is divided.
+/// 
+/// @param Remainder
+///        Supplies a pointer that receives the unsigned divide remainder.
+/// 
+/// @return This routine returns the quotient.
+/// 
+/// @since XT 1.0
 fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGLONG) {
 	var dividendParts ULARGE_INTEGER
 	var divisorParts ULARGE_INTEGER
@@ -75,17 +179,17 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 	var difference LONGLONG
 	var shift ULONGLONG
 	var carry ULONG
-	if Divisor == 0 {
+	if divisor == 0 {
 		return 0
 
 	}
 
-	DividendParts.QuadPart = Dividend
-	DivisorParts.QuadPart = Divisor
+	DividendParts.QuadPart = dividend
+	DivisorParts.QuadPart = divisor
 	if DividendParts.u.HighPart == 0 {
 		if DivisorParts.u.HighPart == 0 {
-			if Remainder != (???? resolve CStyleCastExpr) {
-				???? resolve UnaryOperator = DividendParts.u.LowPart % DivisorParts.u.LowPart
+			if remainder != (0 as! PVOID) {
+				*remainder = DividendParts.u.LowPart % DivisorParts.u.LowPart
 
 			}
 
@@ -93,8 +197,8 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 
 		}
 
-		if Remainder != (???? resolve CStyleCastExpr) {
-			???? resolve UnaryOperator = DividendParts.u.LowPart
+		if remainder != (0 as! PVOID) {
+			*remainder = DividendParts.u.LowPart
 
 		}
 
@@ -104,10 +208,10 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 
 	if DivisorParts.u.LowPart != 0 {
 		if DivisorParts.u.HighPart != 0 {
-			Shift = RtlCountLeadingZeroes32(DivisorParts.u.HighPart) - RtlCountLeadingZeroes32(DividendParts.u.HighPart)
-			if Shift > ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1) {
-				if Remainder != (???? resolve CStyleCastExpr) {
-					???? resolve UnaryOperator = DividendParts.QuadPart
+			shift = rtlCountLeadingZeroes32(DivisorParts.u.HighPart) - rtlCountLeadingZeroes32(DividendParts.u.HighPart)
+			if shift > ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1) {
+				if remainder != (0 as! PVOID) {
+					*remainder = DividendParts.QuadPart
 
 				}
 
@@ -117,22 +221,22 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 
 			??? CompoundStmt UnaryOperator
 			QuotientParts.u.LowPart = 0
-			if Shift == (???? resolve UnaryExprOrTypeTraitExpr * 8) {
+			if shift == (???? resolve UnaryExprOrTypeTraitExpr * 8) {
 				QuotientParts.u.HighPart = DividendParts.u.LowPart
 				RemainderParts.u.LowPart = DividendParts.u.HighPart
 				RemainderParts.u.HighPart = 0
 
 			} else {
-				QuotientParts.u.HighPart = DividendParts.u.LowPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - Shift)
-				RemainderParts.u.LowPart = (DividendParts.u.HighPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - Shift)) | (DividendParts.u.LowPart >> Shift)
-				RemainderParts.u.HighPart = DividendParts.u.HighPart >> Shift
+				QuotientParts.u.HighPart = DividendParts.u.LowPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - shift)
+				RemainderParts.u.LowPart = (DividendParts.u.HighPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - shift)) | (DividendParts.u.LowPart >> shift)
+				RemainderParts.u.HighPart = DividendParts.u.HighPart >> shift
 
 			}
 
 
 		} else {
-			Shift = (???? resolve UnaryExprOrTypeTraitExpr * 8) + 1 + RtlCountLeadingZeroes32(DivisorParts.u.LowPart) - RtlCountLeadingZeroes32(DividendParts.u.HighPart)
-			if Shift == (???? resolve UnaryExprOrTypeTraitExpr * 8) {
+			shift = (???? resolve UnaryExprOrTypeTraitExpr * 8) + 1 + rtlCountLeadingZeroes32(DivisorParts.u.LowPart) - rtlCountLeadingZeroes32(DividendParts.u.HighPart)
+			if shift == (???? resolve UnaryExprOrTypeTraitExpr * 8) {
 				QuotientParts.u.LowPart = 0
 				QuotientParts.u.HighPart = DividendParts.u.LowPart
 				RemainderParts.u.LowPart = DividendParts.u.HighPart
@@ -150,10 +254,10 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 
 	} else {
 		if DividendParts.u.LowPart == 0 {
-			if Remainder != (???? resolve CStyleCastExpr) {
+			if remainder != (0 as! PVOID) {
 				RemainderParts.u.HighPart = DividendParts.u.HighPart % DivisorParts.u.HighPart
 				RemainderParts.u.LowPart = 0
-				???? resolve UnaryOperator = RemainderParts.QuadPart
+				*remainder = RemainderParts.QuadPart
 
 			}
 
@@ -161,10 +265,10 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 
 		}
 
-		Shift = RtlCountLeadingZeroes32(DivisorParts.u.HighPart) - RtlCountLeadingZeroes32(DividendParts.u.HighPart)
-		if Shift > ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 2) {
-			if Remainder != (???? resolve CStyleCastExpr) {
-				???? resolve UnaryOperator = DividendParts.QuadPart
+		shift = rtlCountLeadingZeroes32(DivisorParts.u.HighPart) - rtlCountLeadingZeroes32(DividendParts.u.HighPart)
+		if shift > ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 2) {
+			if remainder != (0 as! PVOID) {
+				*remainder = DividendParts.QuadPart
 
 			}
 
@@ -174,38 +278,74 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 
 		??? CompoundStmt UnaryOperator
 		QuotientParts.u.LowPart = 0
-		QuotientParts.u.HighPart = DividendParts.u.LowPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - Shift)
-		RemainderParts.u.HighPart = DividendParts.u.HighPart >> Shift
-		RemainderParts.u.LowPart = (DividendParts.u.HighPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - Shift)) | (DividendParts.u.LowPart >> Shift)
+		QuotientParts.u.HighPart = DividendParts.u.LowPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - shift)
+		RemainderParts.u.HighPart = DividendParts.u.HighPart >> shift
+		RemainderParts.u.LowPart = (DividendParts.u.HighPart << ((???? resolve UnaryExprOrTypeTraitExpr * 8) - shift)) | (DividendParts.u.LowPart >> shift)
 
 	}
 
-	Carry = 0
-	??? CompoundStmt WhileStmt
-	QuotientParts.QuadPart = (QuotientParts.QuadPart << 1) | Carry
-	if Remainder != (???? resolve CStyleCastExpr) {
-		???? resolve UnaryOperator = RemainderParts.QuadPart
+	carry = 0
+	while shift > 0 {
+		RemainderParts.u.HighPart = (RemainderParts.u.HighPart << 1) | (RemainderParts.u.LowPart >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1))
+		RemainderParts.u.LowPart = (RemainderParts.u.LowPart << 1) | (QuotientParts.u.HighPart >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1))
+		QuotientParts.u.HighPart = (QuotientParts.u.HighPart << 1) | (QuotientParts.u.LowPart >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1))
+		QuotientParts.u.LowPart = (QuotientParts.u.LowPart << 1) | carry
+		difference = (DivisorParts.QuadPart - RemainderParts.QuadPart - 1) as! LONGLONG >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
+		carry = difference & 1
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	QuotientParts.QuadPart = (QuotientParts.QuadPart << 1) | carry
+	if remainder != (0 as! PVOID) {
+		*remainder = RemainderParts.QuadPart
 
 	}
 
 	return QuotientParts.QuadPart
 }
 
+/// Divides a signed large integer by a 32-bit divisor.
+/// 
+/// @param Dividend
+///        Supplies a large integer to be divided.
+/// 
+/// @param Divisor
+///        Supplies a 32-bit divisor.
+/// 
+/// @param Remainder
+///        Supplies a pointer that receives the divide remainder.
+/// 
+/// @return This routine returns the quotient.
+/// 
+/// @since XT 1.0
 fun rtlDivideLargeInteger(dividend LARGE_INTEGER, divisor ULONG, remainder PULONG) {
 	var dividendSign LONGLONG
 	var uDividend LONGLONG
 	var largeInt LARGE_INTEGER
-	DividendSign = Dividend.QuadPart >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
-	UDividend = (Dividend.QuadPart ^ DividendSign) - DividendSign
-	LargeInt.QuadPart = (RtlDivideUnsigned64(UDividend, Divisor, (???? resolve CStyleCastExpr)) ^ DividendSign) - DividendSign
-	if Remainder {
-		???? resolve UnaryOperator = Dividend.QuadPart - (LargeInt.QuadPart * Divisor)
+	dividendSign = Dividend.QuadPart >> ((???? resolve UnaryExprOrTypeTraitExpr * 8) - 1)
+	uDividend = (Dividend.QuadPart ^ dividendSign) - dividendSign
+	LargeInt.QuadPart = (rtlDivideUnsigned64(uDividend, divisor, (0 as! PVOID)) ^ dividendSign) - dividendSign
+	if remainder {
+		*remainder = Dividend.QuadPart - (LargeInt.QuadPart * divisor)
 
 	}
 
-	return LargeInt
+	return largeInt
 }
 
+/// Gets the base exponent of a given floating point value.
+/// 
+/// @param Value
+///        Supplies the floating point value to get the base exponent of.
+/// 
+/// @param PowerOfTen
+///        Supplies a pointer that receives the power of ten associated with the base exponent.
+/// 
+/// @return This routine returns the base exponent value.
+/// 
+/// @since XT 1.0
 fun rtlGetBaseExponent(value DOUBLE, powerOfTen PDOUBLE) {
 	var baseExponent LONG
 	var currentExponent LONG
@@ -214,49 +354,102 @@ fun rtlGetBaseExponent(value DOUBLE, powerOfTen PDOUBLE) {
 	var exponentMask ULONG
 	var parts LARGE_DOUBLE
 	var power DOUBLE
-	ExponentMask = 9218868437227405312 >> (???? resolve UnaryExprOrTypeTraitExpr * 8)
-	ExponentShift = 52 - (???? resolve UnaryExprOrTypeTraitExpr * 8)
-	if Value == ???? resolve FloatingLiteral {
-		???? resolve UnaryOperator = ???? resolve FloatingLiteral
+	exponentMask = 9218868437227405312 >> (???? resolve UnaryExprOrTypeTraitExpr * 8)
+	exponentShift = 52 - (???? resolve UnaryExprOrTypeTraitExpr * 8)
+	if value == ???? resolve FloatingLiteral {
+		*powerOfTen = ???? resolve FloatingLiteral
 		return 0
 
 	}
 
-	Parts.DoublePart = Value
-	BaseExponent = ((Parts.u.HighPart & ExponentMask) >> ExponentShift) - 1023
-	Exponent = ???? resolve CStyleCastExpr + 1
-	CurrentExponent = 0
-	Power = ???? resolve FloatingLiteral
-	if Exponent > 0 {
-		??? CompoundStmt WhileStmt
-		??? CompoundStmt WhileStmt
+	Parts.DoublePart = value
+	baseExponent = ((Parts.u.HighPart & exponentMask) >> exponentShift) - 1023
+	exponent = (baseExponent as! DOUBLE * ???? resolve FloatingLiteral) as! LONG + 1
+	currentExponent = 0
+	power = ???? resolve FloatingLiteral
+	if exponent > 0 {
+		while currentExponent + 10 <= exponent {
+			??? CompoundStmt CompoundAssignOperator
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		while currentExponent + 1 <= exponent {
+			??? CompoundStmt CompoundAssignOperator
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
 
 	} else {
-		??? CompoundStmt WhileStmt
-		??? CompoundStmt WhileStmt
+		while currentExponent - 10 >= exponent {
+			??? CompoundStmt CompoundAssignOperator
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		while currentExponent - 1 >= exponent {
+			??? CompoundStmt CompoundAssignOperator
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
 
 	}
 
 	??? CompoundStmt CompoundAssignOperator
-	??? CompoundStmt WhileStmt
-	???? resolve UnaryOperator = Power
-	return Exponent
+	while (value != ???? resolve FloatingLiteral) and (value as! LONG == 0) {
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
+	*powerOfTen = power
+	return exponent
 }
 
+/// Determines whether a floating-point number is infinite.
+/// 
+/// @param Value
+///        Supplies the floating-point value to test.
+/// 
+/// @return This routine returns TRUE if the argument is infinite or a NaN, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun rtlInfiniteDouble(value DOUBLE) {
 	var var Union (unnamed union at /home/Belliash/ExectOS/xtoskrnl/rtl/math.c:618:5)
-	Var.Double = ???? resolve UnaryOperator
+	Var.Double = value
 	return ((Var.DoubleS.Exponent & 2047) == 2047)
 }
 
+/// Multiplies a signed large integer by a signed integer.
+/// 
+/// @param Multiplicand
+///        Supplies a large integer to be multiplied.
+/// 
+/// @param Multiplier
+///        Supplies an integer by which the large integer is multiplied.
+/// 
+/// @return This routine returns the result of the multiplication.
+/// 
+/// @since XT 1.0
 fun rtlMultiplyLargeInteger(multiplicand LARGE_INTEGER, multiplier LONG) {
 	var largeInt LARGE_INTEGER
-	LargeInt.QuadPart = ???? resolve CStyleCastExpr * Multiplier
-	return LargeInt
+	LargeInt.QuadPart = Multiplicand.QuadPart as! LONGLONG * multiplier
+	return largeInt
 }
 
+/// Determines whether a floating-point number is a NaN ("Not a Number").
+/// 
+/// @param Value
+///        Supplies the floating-point value to test.
+/// 
+/// @return This routine returns TRUE if the argument is a NaN, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun rtlNanDouble(value DOUBLE) {
 	var var Union (unnamed union at /home/Belliash/ExectOS/xtoskrnl/rtl/math.c:677:5)
-	Var.Double = ???? resolve UnaryOperator
+	Var.Double = value
 	return (Var.DoubleS.Exponent == 2047 and (Var.DoubleS.MantissaHigh != 0 or Var.DoubleS.MantissaLow != 0))
 }

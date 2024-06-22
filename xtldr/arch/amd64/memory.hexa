@@ -1,4 +1,15 @@
 // Hexa 2024 from clang 15.0.3
+/// Maps boot loader related code and builds page map.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param SelfMapAddress
+///        Supplies a virtual address of the page tables.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blBuildPageMap(pageMap PXTBL_PAGE_MAPPING, selfMapAddress ULONG_PTR) {
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
@@ -12,27 +23,38 @@ fun blBuildPageMap(pageMap PXTBL_PAGE_MAPPING, selfMapAddress ULONG_PTR) {
 
 	var address EFI_PHYSICAL_ADDRESS
 	var status EFI_STATUS
-	Status = BlAllocateMemoryPages(1, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = blAllocateMemoryPages(1, address)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	PageMap.PtePointer = ???? resolve CStyleCastExpr
-	RtlZeroMemory(PageMap.PtePointer, 4096)
-	Status = BlpSelfMapPml(PageMap, SelfMapAddress)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	pageMap.PtePointer = address as! UINT_PTR as! PVOID
+	rtlZeroMemory(pageMap.PtePointer, 4096)
+	status = blpSelfMapPml(pageMap, selfMapAddress)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	ModulesList = BlGetModulesList()
-	ModulesListEntry = ModulesList.Flink
-	??? CompoundStmt WhileStmt
+	modulesList = blGetModulesList()
+	modulesListEntry = modulesList.Flink
+	while modulesListEntry != modulesList {
+		moduleInfo = (((modulesListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_MODULE_INFO *)
+		status = blMapVirtualMemory(pageMap, moduleInfo.ModuleBase, moduleInfo.ModuleBase, (((moduleInfo.ModuleSize) >> 12) + (???? resolve ConditionalOperator)), loaderFirmwareTemporary)
+		if status != (9223372036854775808 & 0) {
+			return status
+
+		}
+
+		modulesListEntry = modulesListEntry.Flink
+
+	}
+
 	if BlpStatus.LoaderBase and BlpStatus.LoaderSize {
-		Status = BlMapVirtualMemory(PageMap, BlpStatus.LoaderBase, BlpStatus.LoaderBase, (((BlpStatus.LoaderSize) >> 12) + (???? resolve ConditionalOperator)), LoaderFirmwareTemporary)
-		if Status != (9223372036854775808 & 0) {
-			return Status
+		status = blMapVirtualMemory(pageMap, BlpStatus.LoaderBase, BlpStatus.LoaderBase, (((BlpStatus.LoaderSize) >> 12) + (???? resolve ConditionalOperator)), loaderFirmwareTemporary)
+		if status != (9223372036854775808 & 0) {
+			return status
 
 		}
 
@@ -42,12 +64,45 @@ fun blBuildPageMap(pageMap PXTBL_PAGE_MAPPING, selfMapAddress ULONG_PTR) {
 
 	}
 
-	BlDebugPrint(???? resolve StringLiteral)
-	ListEntry = PageMap.MemoryMap.Flink
-	??? CompoundStmt WhileStmt
+	blDebugPrint("Mapping and dumping EFI memory:\n")
+	listEntry = pageMap.MemoryMap.Flink
+	while listEntry != pageMap.MemoryMap {
+		mapping = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_MEMORY_MAPPING *)
+		if mapping.VirtualAddress {
+			blDebugPrint("   Type=%02lu, PhysicalBase=%.16P, VirtualBase=%.16P, Pages=%llu\n", mapping.MemoryType, mapping.PhysicalAddress, mapping.VirtualAddress, mapping.NumberOfPages)
+			status = blMapPage(pageMap, mapping.VirtualAddress as! UINT_PTR, mapping.PhysicalAddress as! UINT_PTR, mapping.NumberOfPages)
+			if status != (9223372036854775808 & 0) {
+				return status
+
+			}
+
+
+		}
+
+		listEntry = listEntry.Flink
+
+	}
+
 	return (9223372036854775808 & 0)
 }
 
+/// Does the actual virtual memory mapping.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param VirtualAddress
+///        Supplies a virtual address of the mapping.
+/// 
+/// @param PhysicalAddress
+///        Supplies a physical address of the mapping.
+/// 
+/// @param NumberOfPages
+///        Supplies a number of the pages of the mapping.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blMapPage(pageMap PXTBL_PAGE_MAPPING, virtualAddress UINT_PTR, physicalAddress UINT_PTR, numberOfPages UINT) {
 	var pml1Entry SIZE_T
 	var pml2Entry SIZE_T
@@ -66,20 +121,77 @@ fun blMapPage(pageMap PXTBL_PAGE_MAPPING, virtualAddress UINT_PTR, physicalAddre
 
 	var pageFrameNumber SIZE_T
 	var status EFI_STATUS
-	PageFrameNumber = PhysicalAddress >> 12
-	??? CompoundStmt WhileStmt
+	pageFrameNumber = physicalAddress >> 12
+	while numberOfPages > 0 {
+		pml5Entry = (virtualAddress & (511 as! ULONGLONG << 48)) >> 48
+		pml4Entry = (virtualAddress & (511 as! ULONGLONG << 39)) >> 39
+		pml3Entry = (virtualAddress & (511 as! ULONGLONG << 30)) >> 30
+		pml2Entry = (virtualAddress & (511 as! ULONGLONG << 21)) >> 21
+		pml1Entry = (virtualAddress & (511 as! ULONGLONG << 12)) >> 12
+		if pageMap.PageMapLevel == 5 {
+			pml5 = ((pageMap.PtePointer) as! PHARDWARE_PTE)
+			status = blpGetNextPageTable(pageMap, pml5, pml5Entry, pml4)
+			if status != (9223372036854775808 & 0) {
+				return status
+
+			}
+
+
+		} else {
+			pml4 = ((pageMap.PtePointer) as! PHARDWARE_PTE)
+
+		}
+
+		status = blpGetNextPageTable(pageMap, pml4, pml4Entry, pml3)
+		if status != (9223372036854775808 & 0) {
+			return status
+
+		}
+
+		status = blpGetNextPageTable(pageMap, pml3, pml3Entry, pml2)
+		if status != (9223372036854775808 & 0) {
+			return status
+
+		}
+
+		status = blpGetNextPageTable(pageMap, pml2, pml2Entry, pml1)
+		if status != (9223372036854775808 & 0) {
+			return status
+
+		}
+
+		???? resolve ArraySubscriptExpr.PageFrameNumber = pageFrameNumber
+		???? resolve ArraySubscriptExpr.Valid = 1
+		???? resolve ArraySubscriptExpr.Writable = 1
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt UnaryOperator
+		??? CompoundStmt UnaryOperator
+
+	}
+
 	return (9223372036854775808 & 0)
 }
 
+/// Creates a recursive self mapping for all PML levels.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param SelfMapAddress
+///        Supplies a virtual address of the page tables.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpSelfMapPml(pageMap PXTBL_PAGE_MAPPING, selfMapAddress ULONG_PTR) {
 	var pmlIndex ULONGLONG
-	if PageMap.PageMapLevel == 5 {
-		BlDebugPrint(???? resolve StringLiteral)
+	if pageMap.PageMapLevel == 5 {
+		blDebugPrint("PML5 self-mapping not supported yet!\n")
 		return (9223372036854775808 | 3)
 
 	} else {
-		PmlIndex = (SelfMapAddress >> 39) & 511
-		???? resolve ArraySubscriptExpr.PageFrameNumber = ???? resolve CStyleCastExpr / 4096
+		pmlIndex = (selfMapAddress >> 39) & 511
+		???? resolve ArraySubscriptExpr.PageFrameNumber = pageMap.PtePointer as! UINT_PTR / 4096
 		???? resolve ArraySubscriptExpr.Valid = 1
 		???? resolve ArraySubscriptExpr.Writable = 1
 

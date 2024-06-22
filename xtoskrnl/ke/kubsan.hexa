@@ -1,11 +1,30 @@
 // Hexa 2024 from clang 15.0.3
+/// Checks whether handled UBSAN error should be reported.
+/// 
+/// @param Location
+///        Supplies a pointer to the UBSAN location descriptor.
+/// 
+/// @return This routine returns TRUE if UBSAN error should be reported, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun kepCheckUbsanReport(location PKUBSAN_SOURCE_LOCATION) {
-	return ???? resolve UnaryOperator
+	return !kepUbsanActiveFrame
 }
 
+/// Enters UBSAN frame and marks it as active.
+/// 
+/// @param Location
+///        Supplies a pointer to the UBSAN location descriptor.
+/// 
+/// @param Reason
+///        Supplies a pointer to the reason of the UBSAN failure.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepEnterUbsanFrame(location PKUBSAN_SOURCE_LOCATION, reason PCCHAR) {
-	KepUbsanActiveFrame = TRUE
-	if KeDbgPrint {
+	kepUbsanActiveFrame = tRUE
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -18,45 +37,89 @@ fun kepEnterUbsanFrame(location PKUBSAN_SOURCE_LOCATION, reason PCCHAR) {
 	??? CompoundStmt NullStmt
 }
 
+/// Gets signed value from UBSAN.
+/// 
+/// @param Type
+///        Supplies a pointer to the UBSAN type descriptor.
+/// 
+/// @param Value
+///        Supplies a pointer to the UBSAN value.
+/// 
+/// @return This routine returns a 64-bit signed integer.
+/// 
+/// @since XT 1.0
 fun kepGetSignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 	var bitWidth ULONG
 	var extraBits ULONG
 	var longValue ULONG_PTR
-	BitWidth = 1 << (Type.TypeInfo >> 1)
-	if BitWidth <= ???? resolve UnaryExprOrTypeTraitExpr * 8 {
-		ExtraBits = ???? resolve UnaryExprOrTypeTraitExpr * 8 - BitWidth
-		LongValue = ???? resolve CStyleCastExpr
-		return (???? resolve CStyleCastExpr) << ExtraBits >> ExtraBits
+	bitWidth = 1 << (type.TypeInfo >> 1)
+	if bitWidth <= ???? resolve UnaryExprOrTypeTraitExpr * 8 {
+		extraBits = ???? resolve UnaryExprOrTypeTraitExpr * 8 - bitWidth
+		longValue = value as! ULONG_PTR
+		return (longValue as! LONGLONG) << extraBits >> extraBits
 
 	}
 
-	return ???? resolve UnaryOperator
+	return *value as! PLONGLONG
 }
 
+/// Gets a string representation of the UBSAN type kind.
+/// 
+/// @param TypeCheckKind
+///        Supplies a UBSAN type kind as a numeric value.
+/// 
+/// @return This routine returns a string representation of the UBSAN type.
+/// 
+/// @since XT 1.0
 fun kepGetUbsanTypeKind(typeCheckKind UCHAR) {
 	??? CompoundStmt SwitchStmt
 }
 
+/// Gets unsigned value from UBSAN.
+/// 
+/// @param Type
+///        Supplies a pointer to the UBSAN type descriptor.
+/// 
+/// @param Value
+///        Supplies a pointer to the UBSAN value.
+/// 
+/// @return This routine returns a 64-bit unsigned integer.
+/// 
+/// @since XT 1.0
 fun kepGetUnsignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 	var bitWidth ULONG
-	BitWidth = 1 << (Type.TypeInfo >> 1)
-	if BitWidth <= ???? resolve UnaryExprOrTypeTraitExpr * 8 {
-		return ???? resolve CStyleCastExpr
+	bitWidth = 1 << (type.TypeInfo >> 1)
+	if bitWidth <= ???? resolve UnaryExprOrTypeTraitExpr * 8 {
+		return value as! ULONG_PTR
 
 	}
 
-	return ???? resolve UnaryOperator
+	return *value as! PULONGLONG
 }
 
+/// Handles the division overflow error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PVOID) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if (Data.Type.TypeInfo & 1) and (KepGetSignedUbsanValue(Data.Type, Rhs) == ???? resolve UnaryOperator) {
-		if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if (data.Type.TypeInfo & 1) and (kepGetSignedUbsanValue(data.Type, rhs) == -1) {
+		if keDbgPrint {
 			??? CompoundStmt ImplicitCastExpr
 			??? CompoundStmt ImplicitCastExpr
 			??? CompoundStmt ImplicitCastExpr
@@ -66,7 +129,7 @@ fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PV
 		??? CompoundStmt NullStmt
 
 	} else {
-		if KeDbgPrint {
+		if keDbgPrint {
 			??? CompoundStmt ImplicitCastExpr
 			??? CompoundStmt ImplicitCastExpr
 
@@ -76,17 +139,31 @@ fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PV
 
 	}
 
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the float cast overflow error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN float cast overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -95,17 +172,28 @@ fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs U
 	}
 
 	??? CompoundStmt NullStmt
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the function type mismatch error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN function type mismatch data.
+/// 
+/// @param Pointer
+///        Supplies pointer operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt CStyleCastExpr
@@ -114,17 +202,31 @@ fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA,
 	}
 
 	??? CompoundStmt NullStmt
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the integer overflow error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -132,18 +234,26 @@ fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 	}
 
 	??? CompoundStmt NullStmt
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the invalid builtin error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN invalid builtin data.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if Data.Kind == 0 or Data.Kind == 1 {
-		if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if data.Kind == 0 or data.Kind == 1 {
+		if keDbgPrint {
 			??? CompoundStmt ImplicitCastExpr
 			??? CompoundStmt ImplicitCastExpr
 
@@ -152,7 +262,7 @@ fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
 		??? CompoundStmt NullStmt
 
 	} else {
-		if KeDbgPrint {
+		if keDbgPrint {
 			??? CompoundStmt ImplicitCastExpr
 			??? CompoundStmt ImplicitCastExpr
 			??? CompoundStmt ImplicitCastExpr
@@ -163,20 +273,31 @@ fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
 
 	}
 
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the misaligned access error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN type mismatch data.
+/// 
+/// @param Pointer
+///        Supplies a pointer operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
-		KepGetUbsanTypeKind(Data.TypeCheckKind)
+		kepGetUbsanTypeKind(data.TypeCheckKind)
 		??? CompoundStmt CStyleCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -184,17 +305,28 @@ fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULON
 	}
 
 	??? CompoundStmt NullStmt
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the negate overflow error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param OldValue
+///        Supplies old value.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -203,56 +335,89 @@ fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR)
 	}
 
 	??? CompoundStmt NullStmt
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the NULL pointer dereference error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN type mismatch data.
+/// 
+/// @param Pointer
+///        Supplies a pointer operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
-		KepGetUbsanTypeKind(Data.TypeCheckKind)
+		kepGetUbsanTypeKind(data.TypeCheckKind)
 		??? CompoundStmt ImplicitCastExpr
 
 	}
 
 	??? CompoundStmt NullStmt
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the object size mismatch error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN type mismatch data.
+/// 
+/// @param Pointer
+///        Supplies a pointer operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
-		KepGetUbsanTypeKind(Data.TypeCheckKind)
+		kepGetUbsanTypeKind(data.TypeCheckKind)
 		??? CompoundStmt CStyleCastExpr
 		??? CompoundStmt ImplicitCastExpr
 
 	}
 
 	??? CompoundStmt NullStmt
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the out of bounds error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN out of bounds data.
+/// 
+/// @param Index
+///        Supplies an index operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -260,17 +425,31 @@ fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) 
 	}
 
 	??? CompoundStmt NullStmt
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the pointer overflow error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ConditionalOperator
@@ -280,23 +459,37 @@ fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 	}
 
 	??? CompoundStmt NullStmt
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the shift out of bounds error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN shift out of bounds data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
 	var lhsBitWidth ULONG
-	if ???? resolve UnaryOperator {
+	if !kepCheckUbsanReport(data.Location) {
 		return ??
 
 	}
 
-	KepEnterUbsanFrame(???? resolve UnaryOperator, ???? resolve StringLiteral)
-	LhsBitWidth = 1 << (Data.LhsType.TypeInfo >> 1)
-	if (Data.RhsType.TypeInfo & 1) and (KepGetSignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr) < 0) {
-		if KeDbgPrint {
+	kepEnterUbsanFrame(data.Location, ???? resolve StringLiteral)
+	lhsBitWidth = 1 << (data.LhsType.TypeInfo >> 1)
+	if (data.RhsType.TypeInfo & 1) and (kepGetSignedUbsanValue(data.RhsType, rhs as! PVOID) < 0) {
+		if keDbgPrint {
 			??? CompoundStmt ImplicitCastExpr
 			??? CompoundStmt ImplicitCastExpr
-			KepGetSignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr)
+			kepGetSignedUbsanValue(data.RhsType, rhs as! PVOID)
 
 		}
 
@@ -304,11 +497,11 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 
 	} else {
 		??? CompoundStmt CompoundStmt
-		if KepGetUnsignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr) >= LhsBitWidth {
-			if KeDbgPrint {
+		if kepGetUnsignedUbsanValue(data.RhsType, rhs as! PVOID) >= lhsBitWidth {
+			if keDbgPrint {
 				??? CompoundStmt ImplicitCastExpr
 				??? CompoundStmt ImplicitCastExpr
-				KepGetUnsignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr)
+				kepGetUnsignedUbsanValue(data.RhsType, rhs as! PVOID)
 				??? CompoundStmt ImplicitCastExpr
 				??? CompoundStmt ImplicitCastExpr
 
@@ -317,11 +510,11 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 			??? CompoundStmt NullStmt
 
 		} else {
-			if KeDbgPrint {
+			if keDbgPrint {
 				??? CompoundStmt ImplicitCastExpr
 				??? CompoundStmt ImplicitCastExpr
-				KepGetSignedUbsanValue(Data.LhsType, ???? resolve CStyleCastExpr)
-				KepGetSignedUbsanValue(Data.RhsType, ???? resolve CStyleCastExpr)
+				kepGetSignedUbsanValue(data.LhsType, lhs as! PVOID)
+				kepGetSignedUbsanValue(data.RhsType, rhs as! PVOID)
 				??? CompoundStmt ImplicitCastExpr
 
 			}
@@ -333,12 +526,23 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 
 	}
 
-	KepLeaveUbsanFrame()
+	kepLeaveUbsanFrame()
 }
 
+/// Handles the type mismatch error reported by UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN type mismatch data.
+/// 
+/// @param Pointer
+///        Supplies a pointer operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepHandleUbsanTypeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if ???? resolve UnaryOperator {
-		KepHandleUbsanNullPointerDereference(Data)
+	if !pointer {
+		kepHandleUbsanNullPointerDereference(data)
 
 	} else {
 		??? CompoundStmt CompoundStmt
@@ -348,60 +552,252 @@ fun kepHandleUbsanTypeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PT
 
 }
 
+/// Leaves the UBSAN frame by marking it as inactive.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepLeaveUbsanFrame() {
-	KepUbsanActiveFrame = FALSE
+	kepUbsanActiveFrame = fALSE
 }
 
+/// Handles the addition overflow error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_add_overflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	KepHandleUbsanIntegerOverflow(Data, Lhs, Rhs)
+	kepHandleUbsanIntegerOverflow(data, lhs, rhs)
 }
 
+/// Handles the division overflow error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_divrem_overflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PVOID) {
-	KepHandleUbsanDivisionOverflow(Data, Lhs, Rhs)
+	kepHandleUbsanDivisionOverflow(data, lhs, rhs)
 }
 
+/// Handles the float cast overflow error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN float cast overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_float_cast_overflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	KepHandleUbsanFloatCastOverflow(Data, Lhs, Rhs)
+	kepHandleUbsanFloatCastOverflow(data, lhs, rhs)
 }
 
+/// Handles the function type mismatch error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN function type mismatch data.
+/// 
+/// @param Pointer
+///        Supplies pointer operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_function_type_mismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	KepHandleUbsanFunctionTypeMismatch(Data, Pointer)
+	kepHandleUbsanFunctionTypeMismatch(data, pointer)
 }
 
+/// Handles the invalid builtin error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN invalid builtin data.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_invalid_builtin(data PKUBSAN_INVALID_BUILTIN_DATA) {
-	KepHandleUbsanInvalidBuiltin(Data)
+	kepHandleUbsanInvalidBuiltin(data)
 }
 
+/// Handles the multiplication overflow error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_mul_overflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	KepHandleUbsanIntegerOverflow(Data, Lhs, Rhs)
+	kepHandleUbsanIntegerOverflow(data, lhs, rhs)
 }
 
+/// Handles the negate overflow error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param OldValue
+///        Supplies old value.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_negate_overflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR) {
-	KepHandleUbsanNegateOverflow(Data, OldValue)
+	kepHandleUbsanNegateOverflow(data, oldValue)
 }
 
+/// Handles the out of bounds error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN out of bounds data.
+/// 
+/// @param Index
+///        Supplies an index operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_out_of_bounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) {
-	KepHandleUbsanOutOfBounds(Data, Index)
+	kepHandleUbsanOutOfBounds(data, index)
 }
 
+/// Handles the pointer overflow error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_pointer_overflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	KepHandleUbsanPointerOverflow(Data, Lhs, Rhs)
+	kepHandleUbsanPointerOverflow(data, lhs, rhs)
 }
 
+/// Handles the shift out of bounds error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN shift out of bounds data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_shift_out_of_bounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	KepHandleUbsanShiftOutOfBounds(Data, Lhs, Rhs)
+	kepHandleUbsanShiftOutOfBounds(data, lhs, rhs)
 }
 
+/// Handles the subtraction overflow error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN overflow data.
+/// 
+/// @param Lhs
+///        Supplies LHS operand.
+/// 
+/// @param Rhs
+///        Supplies RHS operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_sub_overflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	KepHandleUbsanIntegerOverflow(Data, Lhs, Rhs)
+	kepHandleUbsanIntegerOverflow(data, lhs, rhs)
 }
 
+/// Handles the type mismatch error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN type mismatch data.
+/// 
+/// @param Pointer
+///        Supplies a pointer operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_type_mismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	KepHandleUbsanTypeMismatch(Data, Pointer)
+	kepHandleUbsanTypeMismatch(data, pointer)
 }
 
+/// Handles the type mismatch error. This is internal routine implementing ABI defined by CLANG UBSAN.
+/// 
+/// @param Data
+///        Supplies a pointer to the UBSAN type mismatch data.
+/// 
+/// @param Pointer
+///        Supplies a pointer operand.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://github.com/llvm/llvm-project/blob/release/18.x/clang/lib/CodeGen/CodeGenFunction.h#L113
 fun __ubsan_handle_type_mismatch_v1(data PKUBSAN_TYPE_MISMATCH_DATA_V1, pointer ULONG_PTR) {
 	let mismatchData = new ByValue<KUBSAN_TYPE_MISMATCH_DATA>()
 
-	KepHandleUbsanTypeMismatch(???? resolve UnaryOperator, Pointer)
+	kepHandleUbsanTypeMismatch(mismatchData, pointer)
 }

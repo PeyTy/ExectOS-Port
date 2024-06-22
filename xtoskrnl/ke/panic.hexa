@@ -1,13 +1,46 @@
 // Hexa 2024 from clang 15.0.3
+/// Halts the system.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keHaltSystem() {
 	??? CompoundStmt ForStmt
 }
 
+/// Crashes the system upon detecting a fatal error in which either it is unable to recover or continue to run system.
+/// 
+/// @param Code
+///        Specifies the reason for the kernel panic.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kePanic(code ULONG) {
-	KePanicEx(Code, 0, 0, 0, 0)
+	kePanicEx(code, 0, 0, 0, 0)
 }
 
+/// Crashes the system upon detecting a fatal error in which either it is unable to recover or continue to run system.
+/// 
+/// @param Code
+///        Specifies the reason for the kernel panic.
+/// 
+/// @param Parameter1
+///        Supplies additional information about the kernel panic.
+/// 
+/// @param Parameter2
+///        Supplies additional information about the kernel panic.
+/// 
+/// @param Parameter3
+///        Supplies additional information about the kernel panic.
+/// 
+/// @param Parameter4
+///        Supplies additional information about the kernel panic.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kePanicEx(code ULONG, parameter1 ULONG_PTR, parameter2 ULONG_PTR, parameter3 ULONG_PTR, parameter4 ULONG_PTR) {
-	KeDbgPrint(???? resolve StringLiteral, Code)
-	KeHaltSystem()
+	keDbgPrint("Fatal System Error: 0x%08lx\nKernel Panic!\n\n", code)
+	keHaltSystem()
 }

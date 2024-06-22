@@ -1,41 +1,130 @@
 // Hexa 2024 from clang 15.0.3
+/// This routine gets a byte from serial port.
+/// 
+/// @param Port
+///        Address of port object describing a port settings.
+/// 
+/// @param Byte
+///        Address of variable where to store the result.
+/// 
+/// @param Wait
+///        Specifies whether to wait for a data or not.
+/// 
+/// @param Poll
+///        Indicates whether to only poll, not reading the data.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlComPortGetByte(port PCPPORT, byte PUCHAR, wait BOOLEAN, poll BOOLEAN) {
 	var lsr UCHAR
 	var retry ULONG
-	if Port.Address == 0 {
-		return (???? resolve CStyleCastExpr)
+	if port.Address == 0 {
+		return (3221225635 as! XTSTATUS)
 
 	}
 
-	Retry = ???? resolve ConditionalOperator
-	??? CompoundStmt WhileStmt
-	HlComPortReadLsr(Port, 0)
-	return (???? resolve CStyleCastExpr)
+	retry = ???? resolve ConditionalOperator
+	while --retry {
+		lsr = hlComPortReadLsr(port, 1)
+		if (lsr & 1) == 1 {
+			if lsr & (8 | 2 | 4) {
+				*byte = 0
+				return (3221225861 as! XTSTATUS)
+
+			}
+
+			if poll {
+				return (0 as! XTSTATUS)
+
+			}
+
+			*byte = hlIoPortInByte((port.Address as! ULONG_PTR as! USHORT + 0 as! ULONG))
+			if port.Flags & 4 {
+				if (hlIoPortInByte((port.Address as! LONG_PTR as! SHORT + 6 as! ULONG)) & 128) == 0 {
+					??? CompoundStmt ContinueStmt
+
+				}
+
+
+			}
+
+			return (0 as! XTSTATUS)
+
+		}
+
+
+	}
+
+	hlComPortReadLsr(port, 0)
+	return (3221226021 as! XTSTATUS)
 }
 
+/// This routine writes a byte to the serial port.
+/// 
+/// @param Port
+///        Address of port object describing a port settings.
+/// 
+/// @param Byte
+///        Data to be written.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlComPortPutByte(port PCPPORT, byte UCHAR) {
 	var lsr UCHAR
 	var msr UCHAR
-	if Port.Address == 0 {
-		return (???? resolve CStyleCastExpr)
+	if port.Address == 0 {
+		return (3221225635 as! XTSTATUS)
 
 	}
 
-	??? CompoundStmt WhileStmt
-	??? CompoundStmt WhileStmt
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), Byte)
-	return (???? resolve CStyleCastExpr)
+	while port.Flags & 4 {
+		msr = hlIoPortInByte((port.Address as! ULONG_PTR as! USHORT + 6 as! ULONG)) & 176
+		if msr != 176 {
+			lsr = hlComPortReadLsr(port, 0)
+			if (msr & 128) == 0 and (lsr & 1) == 1 {
+				hlIoPortInByte((port.Address as! ULONG_PTR as! USHORT + 0 as! ULONG))
+
+			}
+
+
+		} else {
+			??? CompoundStmt BreakStmt
+
+		}
+
+
+	}
+
+	while (hlComPortReadLsr(port, 32) & 32) == 0 {
+
+	}
+
+	hlIoPortOutByte((port.Address as! ULONG_PTR as! USHORT + 0 as! ULONG), byte)
+	return (0 as! XTSTATUS)
 }
 
+/// Reads LSR from specified serial port.
+/// 
+/// @param Port
+///        Address of COM port.
+/// 
+/// @param Byte
+///        Value expected from the port.
+/// 
+/// @return Byte read from COM port.
+/// 
+/// @since XT 1.0
 fun hlComPortReadLsr(port PCPPORT, byte UCHAR) {
 	var lsr UCHAR
 	var msr UCHAR
 	var ringFlag UCHAR
-	Lsr = HlIoPortInByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr))
-	if (Lsr & Byte) == 0 {
-		Msr = HlIoPortInByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr))
+	lsr = hlIoPortInByte((port.Address as! ULONG_PTR as! USHORT + 5 as! ULONG))
+	if (lsr & byte) == 0 {
+		msr = hlIoPortInByte((port.Address as! ULONG_PTR as! USHORT + 6 as! ULONG))
 		??? CompoundStmt CompoundAssignOperator
-		if RingFlag == 3 {
+		if ringFlag == 3 {
 			??? CompoundStmt CompoundAssignOperator
 
 		}
@@ -43,41 +132,58 @@ fun hlComPortReadLsr(port PCPPORT, byte UCHAR) {
 
 	}
 
-	return Lsr
+	return lsr
 }
 
+/// This routine initializes the COM port.
+/// 
+/// @param Port
+///        Address of port object describing a port settings.
+/// 
+/// @param PortNumber
+///        Supplies a port number.
+/// 
+/// @param PortAddress
+///        Supplies an address of the COM port.
+/// 
+/// @param BaudRate
+///        Supplies an optional port baud rate.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlInitializeComPort(port PCPPORT, portAddress PUCHAR, baudRate ULONG) {
 	var flags USHORT
 	var byte UCHAR
 	var mode ULONG
-	Byte = 0
-	Flags = 0
-	if BaudRate == 0 {
-		BaudRate = 115200
+	byte = 0
+	flags = 0
+	if baudRate == 0 {
+		baudRate = 115200
 		??? CompoundStmt CompoundAssignOperator
 
 	}
 
-	if (Port.Address == PortAddress) and (Port.Baud == BaudRate) {
-		return (???? resolve CStyleCastExpr)
+	if (port.Address == portAddress) and (port.Baud == baudRate) {
+		return (0 as! XTSTATUS)
 
 	}
 
 	??? CompoundStmt DoStmt
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 0)
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 0)
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 128)
-	Mode = 115200 / BaudRate
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr)
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr)
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 3 | 0 | 0)
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 1 | 2 | 8)
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 1 | 2 | 4)
+	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 3 as! ULONG), 0)
+	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 1 as! ULONG), 0)
+	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 3 as! ULONG), 128)
+	mode = 115200 / baudRate
+	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 0 as! ULONG), (mode & 255) as! UCHAR)
+	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 1 as! ULONG), ((mode >> 8) & 255) as! UCHAR)
+	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 3 as! ULONG), 3 | 0 | 0)
+	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 4 as! ULONG), 1 | 2 | 8)
+	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 2 as! ULONG), 1 | 2 | 4)
 	??? CompoundStmt CompoundAssignOperator
-	HlIoPortOutByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr), 15)
-	HlIoPortInByte((???? resolve CStyleCastExpr + ???? resolve CStyleCastExpr))
-	Port.Address = PortAddress
-	Port.Baud = BaudRate
-	Port.Flags = Flags
-	return (???? resolve CStyleCastExpr)
+	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 4 as! ULONG), 15)
+	hlIoPortInByte((port.Address as! ULONG_PTR as! USHORT + 0 as! ULONG))
+	port.Address = portAddress
+	port.Baud = baudRate
+	port.Flags = flags
+	return (0 as! XTSTATUS)
 }

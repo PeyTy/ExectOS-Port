@@ -1,35 +1,95 @@
 // Hexa 2024 from clang 15.0.3
+/// This routine allocates one or more 4KB pages.
+/// 
+/// @param Pages
+///        The number of contiguous 4KB pages to allocate.
+/// 
+/// @param Memory
+///        The pointer to a physical address.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blAllocateMemoryPages(pages ULONGLONG, memory PEFI_PHYSICAL_ADDRESS) {
-	return EfiSystemTable.BootServices.AllocatePages(AllocateAnyPages, EfiLoaderData, Pages, Memory)
+	return efiSystemTable.BootServices.AllocatePages(allocateAnyPages, efiLoaderData, pages, memory)
 }
 
+/// This routine allocates a pool memory.
+/// 
+/// @param Size
+///        The number of bytes to allocate from the pool.
+/// 
+/// @param Memory
+///        The pointer to a physical address.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blAllocateMemoryPool(size UINT_PTR, memory PVOID *) {
-	return EfiSystemTable.BootServices.AllocatePool(EfiLoaderData, Size, Memory)
+	return efiSystemTable.BootServices.AllocatePool(efiLoaderData, size, memory)
 }
 
+/// This routine frees memory pages.
+/// 
+/// @param Pages
+///        The number of contiguous 4 KB pages to free.
+/// 
+/// @param Memory
+///        The base physical address of the pages to be freed.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blFreeMemoryPages(pages ULONGLONG, memory EFI_PHYSICAL_ADDRESS) {
-	return EfiSystemTable.BootServices.FreePages(Memory, Pages)
+	return efiSystemTable.BootServices.FreePages(memory, pages)
 }
 
+/// Returns pool memory to the system.
+/// 
+/// @param Memory
+///        The pointer to the buffer to free.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blFreeMemoryPool(memory PVOID) {
-	return EfiSystemTable.BootServices.FreePool(Memory)
+	return efiSystemTable.BootServices.FreePool(memory)
 }
 
+/// Returns the number of mappings in the page mapping structure.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param NumberOfMappings
+///        Supplies a pointer to memory area where the number of mappings is returned.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blGetMappingsCount(pageMap PXTBL_PAGE_MAPPING, numberOfMappings PULONG) {
-	???? resolve UnaryOperator = PageMap.MapSize
+	*numberOfMappings = pageMap.MapSize
 }
 
+/// Returns the memory descriptors which define a memory map of all the physical memory ranges reserved by the UEFI.
+/// 
+/// @param MemoryMap
+///        Supplies a pointer to the buffer where memory map will be written.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blGetMemoryMap(memoryMap PEFI_MEMORY_MAP) {
 	var status EFI_STATUS
-	if MemoryMap == (???? resolve CStyleCastExpr) {
+	if memoryMap == (0 as! PVOID) {
 		return (9223372036854775808 | 2)
 
 	}
 
-	MemoryMap.Map = (???? resolve CStyleCastExpr)
-	MemoryMap.MapSize = 0
+	memoryMap.Map = (0 as! PVOID)
+	memoryMap.MapSize = 0
 	??? CompoundStmt DoStmt
-	if MemoryMap.Map == (???? resolve CStyleCastExpr) {
+	if memoryMap.Map == (0 as! PVOID) {
 		return (9223372036854775808 | 17)
 
 	}
@@ -37,23 +97,76 @@ fun blGetMemoryMap(memoryMap PEFI_MEMORY_MAP) {
 	return (9223372036854775808 & 0)
 }
 
+/// Attempts to find a virtual address of the specified physical address in memory mappings.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param PhysicalAddress
+///        Supplies a physical address to search for in the mappings.
+/// 
+/// @return This routine returns a corresponding virtual address found in the mappings.
+/// 
+/// @since XT 1.0
 fun blGetVirtualAddress(pageMap PXTBL_PAGE_MAPPING, physicalAddress PVOID) {
 	let mapping = new ByValue<PXTBL_MEMORY_MAPPING>()
 
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
-	ListEntry = PageMap.MemoryMap.Flink
-	??? CompoundStmt WhileStmt
+	listEntry = pageMap.MemoryMap.Flink
+	while listEntry != pageMap.MemoryMap {
+		mapping = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_MEMORY_MAPPING *)
+		if mapping.VirtualAddress {
+			if (physicalAddress >= mapping.PhysicalAddress) and (physicalAddress < mapping.PhysicalAddress + (mapping.NumberOfPages * 4096)) {
+				return physicalAddress - mapping.PhysicalAddress + mapping.VirtualAddress
+
+			}
+
+
+		}
+
+		listEntry = listEntry.Flink
+
+	}
+
 	return 0
 }
 
+/// Initializes the page mapping structures.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param PageMapLevel
+///        Specifies a number of of paging structures levels.
+/// 
+/// @param PageSize
+///        Specifies a page size (currently it has no effect).
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blInitializePageMap(pageMap PXTBL_PAGE_MAPPING, pageMapLevel SHORT, pageSize PAGE_SIZE) {
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	PageMap.MapSize = 0
-	PageMap.PageMapLevel = PageMapLevel
-	PageMap.PageSize = PageSize
+	rtlInitializeListHead(pageMap.MemoryMap)
+	pageMap.MapSize = 0
+	pageMap.PageMapLevel = pageMapLevel
+	pageMap.PageSize = pageSize
 }
 
+/// Adds EFI memory mapping to the page mapping structure.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param MemoryMapAddress
+///        Supplies a virtual address, where EFI memory will be mapped.
+/// 
+/// @param GetMemoryTypeRoutine
+///        Supplies a pointer to the routine which will be used to match EFI memory type to the OS memory type.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blMapEfiMemory(pageMap PXTBL_PAGE_MAPPING, memoryMapAddress PVOID *, getMemoryTypeRoutine PBL_GET_MEMTYPE_ROUTINE) {
 	let descriptor = new ByValue<PEFI_MEMORY_DESCRIPTOR>()
 
@@ -64,39 +177,59 @@ fun blMapEfiMemory(pageMap PXTBL_PAGE_MAPPING, memoryMapAddress PVOID *, getMemo
 	var virtualAddress PUCHAR
 	var status EFI_STATUS
 	var index SIZE_T
-	VirtualAddress = ???? resolve UnaryOperator
-	if GetMemoryTypeRoutine == (???? resolve CStyleCastExpr) {
-		GetMemoryTypeRoutine = BlpGetLoaderMemoryType
+	virtualAddress = *memoryMapAddress
+	if getMemoryTypeRoutine == (0 as! PVOID) {
+		getMemoryTypeRoutine = blpGetLoaderMemoryType
 
 	}
 
-	BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
-	RtlZeroMemory(MemoryMap, ???? resolve UnaryExprOrTypeTraitExpr)
-	Status = BlGetMemoryMap(MemoryMap)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, memoryMap as! PVOID *)
+	rtlZeroMemory(memoryMap, ???? resolve UnaryExprOrTypeTraitExpr)
+	status = blGetMemoryMap(memoryMap)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	Descriptor = MemoryMap.Map
-	DescriptorCount = MemoryMap.MapSize / MemoryMap.DescriptorSize
+	descriptor = memoryMap.Map
+	descriptorCount = memoryMap.MapSize / memoryMap.DescriptorSize
 	??? CompoundStmt ForStmt
-	Status = BlMapVirtualMemory(PageMap, (???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr, 1, LoaderFirmwarePermanent)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = blMapVirtualMemory(pageMap, (0 as! PVOID), 0 as! PVOID, 1, loaderFirmwarePermanent)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	Status = BlMapVirtualMemory(PageMap, (???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr, 96, LoaderFirmwarePermanent)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = blMapVirtualMemory(pageMap, (0 as! PVOID), 655360 as! PVOID, 96, loaderFirmwarePermanent)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	???? resolve UnaryOperator = VirtualAddress
+	*memoryMapAddress = virtualAddress
 	return (9223372036854775808 & 0)
 }
 
+/// Adds a physical to virtual address mappings.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param VirtualAddress
+///        Supplies a virtual address where the physical address should be mapped.
+/// 
+/// @param PhysicalAddress
+///        Supplies a physical address which will be mapped.
+/// 
+/// @param NumberOfPages
+///        Supplies a number of pages that will be mapped.
+/// 
+/// @param MemoryType
+///        Supplies the type of mapped memory that will be assigned to the memory descriptor.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blMapVirtualMemory(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID, physicalAddress PVOID, numberOfPages ULONGLONG, memoryType LOADER_MEMORY_TYPE) {
 	let mapping1 = new ByValue<PXTBL_MEMORY_MAPPING>()
 
@@ -112,80 +245,246 @@ fun blMapVirtualMemory(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID, physica
 
 	var numberOfMappedPages SIZE_T
 	var status EFI_STATUS
-	Status = BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, mapping1 as! PVOID *)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	Mapping1.PhysicalAddress = PhysicalAddress
-	Mapping1.VirtualAddress = VirtualAddress
-	Mapping1.NumberOfPages = NumberOfPages
-	Mapping1.MemoryType = MemoryType
-	PhysicalAddressEnd = ???? resolve CStyleCastExpr
-	ListEntry = PageMap.MemoryMap.Flink
-	??? CompoundStmt WhileStmt
-	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	mapping1.PhysicalAddress = physicalAddress
+	mapping1.VirtualAddress = virtualAddress
+	mapping1.NumberOfPages = numberOfPages
+	mapping1.MemoryType = memoryType
+	physicalAddressEnd = (physicalAddress as! ULONG_PTR + (numberOfPages * 4096) - 1) as! PVOID
+	listEntry = pageMap.MemoryMap.Flink
+	while listEntry != pageMap.MemoryMap {
+		mapping2 = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_MEMORY_MAPPING *)
+		physicalAddress2End = (mapping2.PhysicalAddress as! ULONG_PTR + (mapping2.NumberOfPages * 4096) - 1) as! PVOID
+		if mapping1.PhysicalAddress >= mapping2.PhysicalAddress and physicalAddressEnd <= physicalAddress2End {
+			if mapping1.MemoryType == mapping2.MemoryType {
+				return (9223372036854775808 & 0)
+
+			}
+
+
+		}
+
+		if physicalAddressEnd > mapping2.PhysicalAddress and physicalAddressEnd <= physicalAddress2End {
+			if mapping2.MemoryType != loaderFree {
+				return (9223372036854775808 | 2)
+
+			}
+
+			numberOfMappedPages = (physicalAddress2End as! PUCHAR - physicalAddressEnd as! PUCHAR) / 4096
+			if numberOfMappedPages > 0 {
+				status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, mapping3 as! PVOID *)
+				if status != (9223372036854775808 & 0) {
+					return status
+
+				}
+
+				mapping3.PhysicalAddress = physicalAddressEnd as! PUCHAR + 1
+				mapping3.VirtualAddress = (0 as! PVOID)
+				mapping3.NumberOfPages = numberOfMappedPages
+				mapping3.MemoryType = mapping2.MemoryType
+				rtlInsertHeadList(mapping2.ListEntry, mapping3.ListEntry)
+
+			}
+
+			mapping2.NumberOfPages = (physicalAddressEnd as! PUCHAR + 1 - mapping2.PhysicalAddress as! PUCHAR) / 4096
+			physicalAddress2End = (mapping2.PhysicalAddress as! ULONG_PTR + (mapping2.NumberOfPages * 4096) - 1) as! PVOID
+
+		}
+
+		if mapping1.PhysicalAddress > mapping2.PhysicalAddress and mapping1.PhysicalAddress < physicalAddress2End {
+			if mapping2.MemoryType != loaderFree {
+				return (9223372036854775808 | 2)
+
+			}
+
+			numberOfMappedPages = (physicalAddress2End as! PUCHAR + 1 - mapping1.PhysicalAddress as! PUCHAR) / 4096
+			if numberOfMappedPages > 0 {
+				status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, mapping3 as! PVOID *)
+				if status != (9223372036854775808 & 0) {
+					return status
+
+				}
+
+				mapping3.PhysicalAddress = mapping1.PhysicalAddress
+				mapping3.VirtualAddress = (0 as! PVOID)
+				mapping3.NumberOfPages = numberOfMappedPages
+				mapping3.MemoryType = mapping2.MemoryType
+				rtlInsertHeadList(mapping2.ListEntry, mapping3.ListEntry)
+
+			}
+
+			mapping2.NumberOfPages = (mapping1.PhysicalAddress as! PUCHAR - mapping2.PhysicalAddress as! PUCHAR) / 4096
+			physicalAddress2End = (mapping2.PhysicalAddress as! ULONG_PTR + (mapping2.NumberOfPages * 4096) - 1) as! PVOID
+
+		}
+
+		if (mapping2.PhysicalAddress >= mapping1.PhysicalAddress and physicalAddress2End <= physicalAddressEnd) or (mapping2.NumberOfPages == 0) {
+			if mapping2.MemoryType != loaderFree {
+				return (9223372036854775808 | 2)
+
+			}
+
+			mappingListEntry = listEntry.Flink
+			rtlRemoveEntryList(mapping2.ListEntry)
+			status = blFreeMemoryPool(mapping2)
+			listEntry = mappingListEntry
+			??? CompoundStmt ContinueStmt
+
+		}
+
+		if mapping2.PhysicalAddress > mapping1.PhysicalAddress {
+			rtlInsertHeadList(mapping2.ListEntry.Blink, mapping1.ListEntry)
+			return (9223372036854775808 & 0)
+
+		}
+
+		listEntry = listEntry.Flink
+
+	}
+
+	rtlInsertTailList(pageMap.MemoryMap, mapping1.ListEntry)
 	??? CompoundStmt UnaryOperator
 	return (9223372036854775808 & 0)
 }
 
+/// Converts physical address to virtual address based on physical base and virtual base.
+/// 
+/// @param PhysicalAddress
+///        Specifies physical address that will be converted to virtual address.
+/// 
+/// @param PhysicalBase
+///        Supplies a physical base address.
+/// 
+/// @param VirtualBase
+///        Supplies a virtual base address.
+/// 
+/// @return This routine returns a mapped virtual address.
+/// 
+/// @since XT 1.0
 fun blPhysicalAddressToVirtual(physicalAddress PVOID, physicalBase PVOID, virtualBase PVOID) {
-	return ???? resolve CStyleCastExpr + (???? resolve CStyleCastExpr - ???? resolve CStyleCastExpr)
+	return virtualBase as! PUCHAR + (physicalAddress as! PUCHAR - physicalBase as! PUCHAR)
 }
 
+/// Converts whole linked list addressing from physical to virtual for future use after enabling paging.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param ListHead
+///        Supplies a pointer to a structure that serves as the list header.
+/// 
+/// @param PhysicalBase
+///        Supplies a physical base address.
+/// 
+/// @param VirtualBase
+///        Supplies a virtual base address.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blPhysicalListToVirtual(pageMap PXTBL_PAGE_MAPPING, listHead PLIST_ENTRY, physicalBase PVOID, virtualBase PVOID) {
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
 	let nextEntry = new ByValue<PLIST_ENTRY>()
 
-	if ListHead.Flink == 0 or ListHead.Blink == 0 {
+	if listHead.Flink == 0 or listHead.Blink == 0 {
 		return (9223372036854775808 | 2)
 
 	}
 
-	ListEntry = ListHead.Flink
-	??? CompoundStmt WhileStmt
-	ListHead.Blink = BlPhysicalAddressToVirtual(ListHead.Blink, ???? resolve CStyleCastExpr, VirtualBase)
-	ListHead.Flink = BlPhysicalAddressToVirtual(ListHead.Flink, ???? resolve CStyleCastExpr, VirtualBase)
+	listEntry = listHead.Flink
+	while listEntry != listHead {
+		nextEntry = listEntry.Flink
+		if listEntry.Blink == listHead {
+			listEntry.Blink = blGetVirtualAddress(pageMap, listEntry.Blink)
+
+		} else {
+			listEntry.Blink = blPhysicalAddressToVirtual(listEntry.Blink, physicalBase as! PVOID, virtualBase)
+
+		}
+
+		if listEntry.Flink == listHead {
+			listEntry.Flink = listHead.Flink.Blink
+
+		} else {
+			listEntry.Flink = blPhysicalAddressToVirtual(listEntry.Flink, physicalBase as! PVOID, virtualBase)
+
+		}
+
+		listEntry = nextEntry
+
+	}
+
+	listHead.Blink = blPhysicalAddressToVirtual(listHead.Blink, physicalBase as! PVOID, virtualBase)
+	listHead.Flink = blPhysicalAddressToVirtual(listHead.Flink, physicalBase as! PVOID, virtualBase)
 	return (9223372036854775808 & 0)
 }
 
+/// Converts EFI memory type to XTLDR memory type.
+/// 
+/// @param EfiMemoryType
+///        Specifies EFI memory type.
+/// 
+/// @return This routine returns a mapped XTLDR memory type.
+/// 
+/// @since XT 1.0
 fun blpGetLoaderMemoryType(efiMemoryType EFI_MEMORY_TYPE) {
 	var memoryType LOADER_MEMORY_TYPE
 	??? CompoundStmt SwitchStmt
-	return MemoryType
+	return memoryType
 }
 
+/// Returns next level of the Page Table.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @param PageTable
+///        Supplies a pointer to the current Page Table.
+/// 
+/// @param Entry
+///        Supplies an index of the current Page Table entry.
+/// 
+/// @param NextPageTable
+///        Supplies a pointer to the memory area where the next Page Table level is returned.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpGetNextPageTable(pageMap PXTBL_PAGE_MAPPING, pageTable PHARDWARE_PTE, entry SIZE_T, nextPageTable PHARDWARE_PTE *) {
 	var address EFI_PHYSICAL_ADDRESS
 	var pmlPointer ULONGLONG
 	var status EFI_STATUS
 	if ???? resolve ArraySubscriptExpr.Valid {
-		PmlPointer = ???? resolve ArraySubscriptExpr.PageFrameNumber
+		pmlPointer = ???? resolve ArraySubscriptExpr.PageFrameNumber
 		??? CompoundStmt CompoundAssignOperator
 
 	} else {
-		Status = BlAllocateMemoryPages(1, ???? resolve UnaryOperator)
-		if Status != (9223372036854775808 & 0) {
-			return Status
+		status = blAllocateMemoryPages(1, address)
+		if status != (9223372036854775808 & 0) {
+			return status
 
 		}
 
-		Status = BlMapVirtualMemory(PageMap, (???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr, 1, LoaderMemoryData)
-		if Status != (9223372036854775808 & 0) {
-			return Status
+		status = blMapVirtualMemory(pageMap, (0 as! PVOID), address as! UINT_PTR as! PVOID, 1, loaderMemoryData)
+		if status != (9223372036854775808 & 0) {
+			return status
 
 		}
 
-		RtlZeroMemory(???? resolve CStyleCastExpr, 4096)
-		???? resolve ArraySubscriptExpr.PageFrameNumber = Address / 4096
+		rtlZeroMemory(address as! ULONGLONG as! PVOID, 4096)
+		???? resolve ArraySubscriptExpr.PageFrameNumber = address / 4096
 		???? resolve ArraySubscriptExpr.Valid = 1
 		???? resolve ArraySubscriptExpr.Writable = 1
-		PmlPointer = ???? resolve CStyleCastExpr
+		pmlPointer = address as! ULONGLONG
 
 	}
 
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	*nextPageTable = pmlPointer as! ULONGLONG as! PHARDWARE_PTE
 	return (9223372036854775808 & 0)
 }

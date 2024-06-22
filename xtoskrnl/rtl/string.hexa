@@ -1,104 +1,292 @@
 // Hexa 2024 from clang 15.0.3
+/// Compares at most specified number of characters of two C strings.
+/// 
+/// @param String1
+///        String to be compared.
+/// 
+/// @param String2
+///        String to be compared.
+/// 
+/// @param Length
+///        Maximum number of characters to compare. If no limit set, it compares whole strings.
+/// 
+/// @return Integral value indicating the relationship between the strings.
+/// 
+/// @since XT 1.0
 fun rtlCompareString(string1 Const PCHAR, string2 Const PCHAR, length SIZE_T) {
 	var index SIZE_T
 	??? CompoundStmt ForStmt
 	return 0
 }
 
+/// Compares at most specified number of characters of two C strings, while ignoring differences in case.
+/// 
+/// @param String1
+///        String to be compared.
+/// 
+/// @param String2
+///        String to be compared.
+/// 
+/// @param Length
+///        Maximum number of characters to compare. If no limit set, it compares whole strings.
+/// 
+/// @return Integral value indicating the relationship between the strings.
+/// 
+/// @since XT 1.0
 fun rtlCompareStringInsensitive(string1 Const PCHAR, string2 Const PCHAR, length SIZE_T) {
 	var character1 CHAR
 	var character2 CHAR
 	var index ULONG = 0
-	??? CompoundStmt WhileStmt
-	return 0
-}
+	while ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral and ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral {
+		if index != 0 and index == length {
+			??? CompoundStmt BreakStmt
 
-fun rtlConcatenateString(destination PCHAR, source PCHAR, count SIZE_T) {
-	var destString PCHAR = Destination
-	??? CompoundStmt WhileStmt
-	if Count > 0 {
-		??? CompoundStmt DoStmt
-		???? resolve UnaryOperator = ???? resolve CharacterLiteral
+		}
 
-	} else {
-		??? CompoundStmt WhileStmt
+		character1 = ???? resolve ArraySubscriptExpr
+		character2 = ???? resolve ArraySubscriptExpr
+		if ???? resolve ArraySubscriptExpr >= ???? resolve CharacterLiteral and ???? resolve ArraySubscriptExpr <= ???? resolve CharacterLiteral {
+			character1 = ???? resolve ArraySubscriptExpr - ???? resolve CharacterLiteral + ???? resolve CharacterLiteral
+
+		}
+
+		if ???? resolve ArraySubscriptExpr >= ???? resolve CharacterLiteral and ???? resolve ArraySubscriptExpr <= ???? resolve CharacterLiteral {
+			character2 = ???? resolve ArraySubscriptExpr - ???? resolve CharacterLiteral + ???? resolve CharacterLiteral
+
+		}
+
+		if character1 != character2 {
+			return ???? resolve ConditionalOperator
+
+		}
+
+		??? CompoundStmt UnaryOperator
 
 	}
 
-	return DestString
+	return 0
 }
 
+/// Appends a copy of the source string to the end of the destination string.
+/// 
+/// @param Destination
+///        Supplies a pointer to the null-terminated string to append to.
+/// 
+/// @param Source
+///        Supplies a pointer to the null-terminated string to copy from.
+/// 
+/// @param Count
+///        Sets a maximum number of characters to copy. If no limit set, appends whole string.
+/// 
+/// @return This routine returns a copy of a destination string.
+/// 
+/// @since XT 1.0
+fun rtlConcatenateString(destination PCHAR, source PCHAR, count SIZE_T) {
+	var destString PCHAR = destination
+	while *destination {
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	if count > 0 {
+		??? CompoundStmt DoStmt
+		*destination = ???? resolve CharacterLiteral
+
+	} else {
+		while (*++destination = *++source) != 0 {
+
+		}
+
+
+	}
+
+	return destString
+}
+
+/// Copies a string from a buffer into another buffer, ensuring that the destination string is NULL-terminated.
+/// 
+/// @param Destination
+///        Supplies a pointer to the destination buffer.
+/// 
+/// @param Source
+///        Supplies a pointer to the source buffer.
+/// 
+/// @param Length
+///        Supplies the length of the string to copy.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlCopyString(destination PCHAR, source PCCHAR, length ULONG) {
 	var index ULONG
 	??? CompoundStmt ForStmt
 	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
 }
 
+/// Reverses a characters order in a string. It modifies the original, input variable.
+/// 
+/// @param String
+///        Supplies a pointer to the string to reverse.
+/// 
+/// @param Length
+///        Supplies the length of the string to reverse.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlReverseString(string PCHAR, length ULONG) {
 	var tempChar UCHAR
 	var index ULONG
 	??? CompoundStmt ForStmt
 }
 
+/// Calculates the length of a given string.
+/// 
+/// @param String
+///        Pointer to the null-terminated string to be examined.
+/// 
+/// @param MaxLength
+///        Maximum number of characters to examine. If no limit set, it examines whole string.
+/// 
+/// @return The length of the null-terminated string.
+/// 
+/// @since: XT 1.0
 fun rtlStringLength(string Const PCHAR, maxLength SIZE_T) {
 	var length SIZE_T
-	if String == (???? resolve CStyleCastExpr) {
+	if string == (0 as! PVOID) {
 		return 0
 
 	}
 
 	??? CompoundStmt ForStmt
-	return Length
+	return length
 }
 
+/// Converts a multibyte character string to its wide character representation.
+/// 
+/// @param Destination
+///        Pointer to wide character array where the wide string will be stored
+/// 
+/// @param Source
+///        Pointer to the first element of a multibyte string to convert.
+/// 
+/// @param Length
+///        Number of characters in the source string.
+/// 
+/// @return Returns the number of wide characters written to the destination array on success, or -1 on error.
+/// 
+/// @since XT 1.0
 fun rtlStringToWideString(destination PWCHAR, source Const PCHAR *, length SIZE_T) {
-	var localSource PCHAR = ???? resolve UnaryOperator
-	var count SIZE_T = Length
-	if Destination == (???? resolve CStyleCastExpr) {
+	var localSource PCHAR = *source
+	var count SIZE_T = length
+	if destination == (0 as! PVOID) {
 		return 0
 
 	}
 
-	??? CompoundStmt WhileStmt
-	return Length - Count
+	while count {
+		if (*destination = *localSource) == 0 {
+			localSource = (0 as! PVOID)
+			??? CompoundStmt BreakStmt
+
+		}
+
+		if *destination >= 128 {
+			return -1
+
+		}
+
+		??? CompoundStmt UnaryOperator
+		??? CompoundStmt UnaryOperator
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	return length - count
 }
 
+/// Finds the next token in a null-terminated string.
+/// 
+/// @param String
+///        Pointer to the null-terminated string to tokenize.
+/// 
+/// @param Delimiter
+///        Pointer to the null-terminated string identifying delimiters.
+/// 
+/// @param SavePtr
+///        Pointer to an object used to store routine internal state.
+/// 
+/// @return Pointer to the beginning of the next token or NULL if there are no more tokens.
+/// 
+/// @since: XT 1.0
 fun rtlTokenizeString(string PCHAR, delimiter Const PCHAR, savePtr PCHAR *) {
 	var span PCHAR
 	var token PCHAR
 	var char CHAR
 	var spanChar CHAR
-	if String == (???? resolve CStyleCastExpr) and (String = ???? resolve UnaryOperator) == (???? resolve CStyleCastExpr) {
-		return (???? resolve CStyleCastExpr)
+	if string == (0 as! PVOID) and (string = *savePtr) == (0 as! PVOID) {
+		return (0 as! PVOID)
 
 	}
 
-	Char = ???? resolve UnaryOperator
-	if Char == ???? resolve CharacterLiteral {
-		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
-		return (???? resolve CStyleCastExpr)
+	char = *++string
+	if char == ???? resolve CharacterLiteral {
+		*savePtr = (0 as! PVOID)
+		return (0 as! PVOID)
 
 	}
 
-	Token = String - 1
+	token = string - 1
 	??? CompoundStmt ForStmt
 }
 
+/// Removes certain characters from a beginning of the string.
+/// 
+/// @param String
+///        Pointer to the null-terminated string to be trimmed.
+/// 
+/// @return This routine returns a pointer to the left-trimmed string.
+/// 
+/// @since XT 1.0
 fun rtlTrimLeftString(string Const PCHAR) {
 	var start PCHAR
-	Start = String
-	??? CompoundStmt WhileStmt
-	return Start
+	start = string
+	while *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral or *start == ???? resolve CharacterLiteral {
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	return start
 }
 
+/// Removes certain characters from the end of the string.
+/// 
+/// @param String
+///        Pointer to the null-terminated string to be trimmed.
+/// 
+/// @return This routine returns a pointer to the right-trimmed string.
+/// 
+/// @since XT 1.0
 fun rtlTrimRightString(string Const PCHAR) {
 	var end PCHAR
-	End = String + RtlStringLength(String, 0)
-	??? CompoundStmt WhileStmt
-	???? resolve UnaryOperator = 0
-	return String
+	end = string + rtlStringLength(string, 0)
+	while (end != string) and (*end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral or *end == ???? resolve CharacterLiteral) {
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	*end = 0
+	return string
 }
 
+/// Removes certain characters from the beginning and the end of the string.
+/// 
+/// @param String
+///        Pointer to the null-terminated string to be trimmed.
+/// 
+/// @return This routine returns a pointer to the trimmed string.
+/// 
+/// @since XT 1.0
 fun rtlTrimString(string Const PCHAR) {
-	return RtlTrimLeftString(RtlTrimRightString(String))
+	return rtlTrimLeftString(rtlTrimRightString(string))
 }

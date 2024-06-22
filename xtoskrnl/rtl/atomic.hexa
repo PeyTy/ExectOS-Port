@@ -1,137 +1,496 @@
 // Hexa 2024 from clang 15.0.3
+/// Performs an atomic bitwise AND operation on the 8-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise AND operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise AND operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicAnd8(address Volatile PCHAR, mask CHAR) {
-	return __sync_fetch_and_and_1(Address, Mask)
+	return __sync_fetch_and_and_1(address, mask)
 }
 
+/// Performs an atomic bitwise AND operation on the 16-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise AND operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise AND operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicAnd16(address Volatile PSHORT, mask SHORT) {
-	return __sync_fetch_and_and_2(Address, Mask)
+	return __sync_fetch_and_and_2(address, mask)
 }
 
+/// Performs an atomic bitwise AND operation on the 32-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise AND operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise AND operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicAnd32(address Volatile PLONG, mask LONG) {
-	return __sync_fetch_and_and_4(Address, Mask)
+	return __sync_fetch_and_and_4(address, mask)
 }
 
+/// Performs an atomic bitwise AND operation on the 32-bit or 64-bit value depending or architecture.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise AND operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise AND operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicAnd64(address Volatile PLONG_PTR, mask LONG_PTR) {
-	return __sync_fetch_and_and_8(Address, Mask)
+	return __sync_fetch_and_and_8(address, mask)
 }
 
+/// Performs an atomic test of the specified bit of the specified long value and sets it to 1.
+/// 
+/// @param Base
+///        Specifies a pointer to the variable.
+/// 
+/// @param Offset
+///        Specifies the bit position to be tested.
+/// 
+/// @return Returns a value of the specified bit.
+/// 
+/// @since XT 1.0
 fun rtlAtomicBitTestAndSet(base Volatile PLONG, offset LONG) {
-	return (???? resolve AtomicExpr >> Offset) & 1
+	return (???? resolve AtomicExpr >> offset) & 1
 }
 
+/// Performs an atomic test of the specified bit of the specified 64-bit long value and sets it to 1.
+/// 
+/// @param Base
+///        Specifies a pointer to the variable.
+/// 
+/// @param Offset
+///        Specifies the bit position to be tested.
+/// 
+/// @return Returns a value of the specified bit.
+/// 
+/// @since XT 1.0
 fun rtlAtomicBitTestAndSet64(base Volatile PLONGLONG, offset LONGLONG) {
-	return (???? resolve AtomicExpr >> Offset) & 1
+	return (???? resolve AtomicExpr >> offset) & 1
 }
 
+/// Performs atomically compare exchange operation on the 8-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to compare and potentially exchange.
+/// 
+/// @param Comperand
+///        Supplies the value to compare against.
+/// 
+/// @param Exchange
+///        Supplies the value to write if the comparison returns equality.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicCompareExchange8(address Volatile PCHAR, comperand CHAR, exchange CHAR) {
-	return __sync_val_compare_and_swap_1(Address, Comperand, Exchange)
+	return __sync_val_compare_and_swap_1(address, comperand, exchange)
 }
 
+/// Performs atomically compare exchange operation on the 16-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to compare and potentially exchange.
+/// 
+/// @param Comperand
+///        Supplies the value to compare against.
+/// 
+/// @param Exchange
+///        Supplies the value to write if the comparison returns equality.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicCompareExchange16(address Volatile PSHORT, comperand SHORT, exchange SHORT) {
-	return __sync_val_compare_and_swap_2(Address, Comperand, Exchange)
+	return __sync_val_compare_and_swap_2(address, comperand, exchange)
 }
 
+/// Performs atomically compare exchange operation on the 32-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to compare and potentially exchange.
+/// 
+/// @param Comperand
+///        Supplies the value to compare against.
+/// 
+/// @param Exchange
+///        Supplies the value to write if the comparison returns equality.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicCompareExchange32(address Volatile PLONG, comperand LONG, exchange LONG) {
-	return __sync_val_compare_and_swap_4(Address, Comperand, Exchange)
+	return __sync_val_compare_and_swap_4(address, comperand, exchange)
 }
 
+/// Performs atomically compare exchange operation on the 32-bit or 64-bit value depending or architecture.
+/// 
+/// @param Address
+///        Supplies the address of the value to compare and potentially exchange.
+/// 
+/// @param Comperand
+///        Supplies the value to compare against.
+/// 
+/// @param Exchange
+///        Supplies the value to write if the comparison returns equality.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicCompareExchange64(address Volatile PLONG_PTR, comperand LONG_PTR, exchange LONG_PTR) {
-	return __sync_val_compare_and_swap_8(Address, Comperand, Exchange)
+	return __sync_val_compare_and_swap_8(address, comperand, exchange)
 }
 
+/// Performs atomically compare exchange operation.
+/// 
+/// @param Address
+///        Supplies the address of the value to compare and potentially exchange.
+/// 
+/// @param Comperand
+///        Supplies a pointer to the value to compare against.
+/// 
+/// @param Exchange
+///        Supplies a pointer to the value to write if the comparison returns equality.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicCompareExchangePointer(address Volatile PVOID *, comperand PVOID, exchange PVOID) {
-	return ???? resolve CStyleCastExpr
+	return __sync_val_compare_and_swap_8(address, comperand, exchange) as! PVOID
 }
 
+/// Performs atomically decrement of the 8-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to decrement.
+/// 
+/// @return This routine returns the decremented value.
+/// 
+/// @since XT 1.0
 fun rtlAtomicDecrement8(address Volatile PCHAR) {
-	return __sync_sub_and_fetch_1(Address, 1)
+	return __sync_sub_and_fetch_1(address, 1)
 }
 
+/// Performs atomically decrement of the 16-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to decrement.
+/// 
+/// @return This routine returns the decremented value.
+/// 
+/// @since XT 1.0
 fun rtlAtomicDecrement16(address Volatile PSHORT) {
-	return __sync_sub_and_fetch_2(Address, 1)
+	return __sync_sub_and_fetch_2(address, 1)
 }
 
+/// Performs atomically decrement of the 32-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to decrement.
+/// 
+/// @return This routine returns the decremented value.
+/// 
+/// @since XT 1.0
 fun rtlAtomicDecrement32(address Volatile PLONG) {
-	return __sync_sub_and_fetch_4(Address, 1)
+	return __sync_sub_and_fetch_4(address, 1)
 }
 
+/// Performs atomically decrement of the 32-bit or 64-bit value depending or architecture.
+/// 
+/// @param Address
+///        Supplies the address of the value to decrement.
+/// 
+/// @return This routine returns the decremented value.
+/// 
+/// @since XT 1.0
 fun rtlAtomicDecrement64(address Volatile PLONG_PTR) {
-	return __sync_sub_and_fetch_8(Address, 1)
+	return __sync_sub_and_fetch_8(address, 1)
 }
 
+/// Performs atomically operation on the 8-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to exchange with.
+/// 
+/// @param Exchange
+///        Supplies the value to write to the address.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicExchange8(address Volatile PCHAR, exchange CHAR) {
-	return __sync_lock_test_and_set_1(Address, Exchange)
+	return __sync_lock_test_and_set_1(address, exchange)
 }
 
+/// Performs atomically operation on the 16-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to exchange with.
+/// 
+/// @param Exchange
+///        Supplies the value to write to the address.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicExchange16(address Volatile PSHORT, exchange SHORT) {
-	return __sync_lock_test_and_set_2(Address, Exchange)
+	return __sync_lock_test_and_set_2(address, exchange)
 }
 
+/// Performs atomically operation on the 32-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to exchange with.
+/// 
+/// @param Exchange
+///        Supplies the value to write to the address.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicExchange32(address Volatile PLONG, exchange LONG) {
-	return __sync_lock_test_and_set_4(Address, Exchange)
+	return __sync_lock_test_and_set_4(address, exchange)
 }
 
+/// Performs atomically operation on the 32-bit or 64-bit value depending or architecture.
+/// 
+/// @param Address
+///        Supplies the address of the value to exchange with.
+/// 
+/// @param Exchange
+///        Supplies the value to write to the address.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicExchange64(address Volatile PLONG_PTR, exchange LONG_PTR) {
-	return __sync_lock_test_and_set_8(Address, Exchange)
+	return __sync_lock_test_and_set_8(address, exchange)
 }
 
+/// Performs atomically addition of the 8-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the original value.
+/// 
+/// @param Value
+///        Supplies a value, to be add to variable found at specified address.
+/// 
+/// @return Returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicExchangeAdd8(address Volatile PCHAR, value CHAR) {
-	return __sync_fetch_and_add_1(Address, Value)
+	return __sync_fetch_and_add_1(address, value)
 }
 
+/// Performs atomically addition of the 16-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the original value.
+/// 
+/// @param Value
+///        Supplies a value, to be add to variable found at specified address.
+/// 
+/// @return Returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicExchangeAdd16(address Volatile PSHORT, value SHORT) {
-	return __sync_fetch_and_add_2(Address, Value)
+	return __sync_fetch_and_add_2(address, value)
 }
 
+/// Performs atomically addition of the 32-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the original value.
+/// 
+/// @param Value
+///        Supplies a value, to be add to variable found at specified address.
+/// 
+/// @return Returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicExchangeAdd32(address Volatile PLONG, value LONG) {
-	return __sync_fetch_and_add_4(Address, Value)
+	return __sync_fetch_and_add_4(address, value)
 }
 
+/// Performs atomically addition of the 32-bit or 64-bit value depending or architecture.
+/// 
+/// @param Address
+///        Supplies the address of the original value.
+/// 
+/// @param Value
+///        Supplies a value, to be add to variable found at specified address.
+/// 
+/// @return Returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicExchangeAdd64(address Volatile PLONG_PTR, value LONG_PTR) {
-	return __sync_fetch_and_add_8(Address, Value)
+	return __sync_fetch_and_add_8(address, value)
 }
 
+/// Performs atomically exchange operation.
+/// 
+/// @param Address
+///        Supplies the address of the value to exchange with.
+/// 
+/// @param Exchange
+///        Supplies a pointer to the value to write to the address.
+/// 
+/// @return This routine returns the original value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicExchangePointer(address Volatile PVOID *, exchange PVOID) {
 	__sync_synchronize()
-	return ???? resolve CStyleCastExpr
+	return __sync_lock_test_and_set_8(address, exchange) as! PVOID
 }
 
+/// Removes all entries from single linked list.
+/// 
+/// @param Header
+///        Supplies a pointer to the header of linked list.
+/// 
+/// @return This routine returns a pointer to the original list, or NULL if the list was already empty.
+/// 
+/// @since XT 1.0
 fun rtlAtomicFlushSingleList(header PSINGLE_LIST_HEADER) {
-	return ???? resolve CStyleCastExpr
+	return rtlAtomicExchange64(header.Alignment as! PLONG_PTR, (0 as! PVOID) as! LONGLONG) as! PSINGLE_LIST_ENTRY
 }
 
+/// Performs atomically increment of the 8-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to increment.
+/// 
+/// @return This routine returns the incremented value.
+/// 
+/// @since XT 1.0
 fun rtlAtomicIncrement8(address Volatile PCHAR) {
-	return __sync_add_and_fetch_1(Address, 1)
+	return __sync_add_and_fetch_1(address, 1)
 }
 
+/// Performs atomically increment of the 16-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to increment.
+/// 
+/// @return This routine returns the incremented value.
+/// 
+/// @since XT 1.0
 fun rtlAtomicIncrement16(address Volatile PSHORT) {
-	return __sync_add_and_fetch_2(Address, 1)
+	return __sync_add_and_fetch_2(address, 1)
 }
 
+/// Performs atomically increment of the 32-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value to increment.
+/// 
+/// @return This routine returns the incremented value.
+/// 
+/// @since XT 1.0
 fun rtlAtomicIncrement32(address Volatile PLONG) {
-	return __sync_add_and_fetch_4(Address, 1)
+	return __sync_add_and_fetch_4(address, 1)
 }
 
+/// Performs atomically increment of the 32-bit or 64-bit value depending or architecture.
+/// 
+/// @param Address
+///        Supplies the address of the value to increment.
+/// 
+/// @return This routine returns the incremented value.
+/// 
+/// @since XT 1.0
 fun rtlAtomicIncrement64(address Volatile PLONG_PTR) {
-	return __sync_add_and_fetch_8(Address, 1)
+	return __sync_add_and_fetch_8(address, 1)
 }
 
+/// Performs an atomic bitwise OR operation on the 8-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise OR operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise OR operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicOr8(address Volatile PCHAR, mask CHAR) {
-	return __sync_fetch_and_or_1(Address, Mask)
+	return __sync_fetch_and_or_1(address, mask)
 }
 
+/// Performs an atomic bitwise OR operation on the 16-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise OR operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise OR operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicOr16(address Volatile PSHORT, mask SHORT) {
-	return __sync_fetch_and_or_2(Address, Mask)
+	return __sync_fetch_and_or_2(address, mask)
 }
 
+/// Performs an atomic bitwise OR operation on the 32-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise OR operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise OR operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicOr32(address Volatile PLONG, mask LONG) {
-	return __sync_fetch_and_or_4(Address, Mask)
+	return __sync_fetch_and_or_4(address, mask)
 }
 
+/// Performs an atomic bitwise OR operation on the 32-bit or 64-bit value depending or architecture.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise OR operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise OR operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicOr64(address Volatile PLONG_PTR, mask LONG_PTR) {
-	return __sync_fetch_and_or_8(Address, Mask)
+	return __sync_fetch_and_or_8(address, mask)
 }
 
+/// Removes and returns the first entry from single linked list.
+/// 
+/// @param Header
+///        Supplies a pointer to the header of a single linked list.
+/// 
+/// @return This routine returns a pointer to the removed element, or NULL if the list was empty.
+/// 
+/// @since XT 1.0
 fun rtlAtomicPopEntrySingleList(header PSINGLE_LIST_HEADER) {
 	let listHead = new ByValue<PSINGLE_LIST_ENTRY>()
 
@@ -139,12 +498,23 @@ fun rtlAtomicPopEntrySingleList(header PSINGLE_LIST_HEADER) {
 
 	let nextEntry = new ByValue<PSINGLE_LIST_ENTRY>()
 
-	ListHead = ???? resolve CStyleCastExpr
-	FirstEntry = ListHead.Next
+	listHead = header as! PVOID
+	firstEntry = listHead.Next
 	??? CompoundStmt DoStmt
-	return FirstEntry
+	return firstEntry
 }
 
+/// Inserts new entry at the beginning of single linked list.
+/// 
+/// @param Header
+///        Supplies a pointer to the header of linked list.
+/// 
+/// @param Entry
+///        Supplies a pointer to entry, that will be inserted into linked list.
+/// 
+/// @return This routine returns a pointer to original heading, or NULL if the list was originally empty.
+/// 
+/// @since XT 1.0
 fun rtlAtomicPushEntrySingleList(header PSINGLE_LIST_HEADER, entry PSINGLE_LIST_ENTRY) {
 	let listHead = new ByValue<PSINGLE_LIST_ENTRY>()
 
@@ -154,25 +524,69 @@ fun rtlAtomicPushEntrySingleList(header PSINGLE_LIST_HEADER, entry PSINGLE_LIST_
 
 	let nextEntry = new ByValue<PSINGLE_LIST_ENTRY>()
 
-	ListHead = ???? resolve CStyleCastExpr
-	ListEntry = ???? resolve CStyleCastExpr
-	FirstEntry = ListHead.Next
+	listHead = header as! PVOID
+	listEntry = entry as! PVOID
+	firstEntry = listHead.Next
 	??? CompoundStmt DoStmt
-	return FirstEntry
+	return firstEntry
 }
 
+/// Performs an atomic bitwise XOR operation on the 8-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise XOR operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise XOR operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicXor8(address Volatile PCHAR, mask CHAR) {
-	return __sync_fetch_and_xor_1(Address, Mask)
+	return __sync_fetch_and_xor_1(address, mask)
 }
 
+/// Performs an atomic bitwise XOR operation on the 16-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise XOR operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise XOR operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicXor16(address Volatile PSHORT, mask SHORT) {
-	return __sync_fetch_and_xor_2(Address, Mask)
+	return __sync_fetch_and_xor_2(address, mask)
 }
 
+/// Performs an atomic bitwise XOR operation on the 32-bit value.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise XOR operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise XOR operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicXor32(address Volatile PLONG, mask LONG) {
-	return __sync_fetch_and_xor_4(Address, Mask)
+	return __sync_fetch_and_xor_4(address, mask)
 }
 
+/// Performs an atomic bitwise XOR operation on the 32-bit or 64-bit value depending or architecture.
+/// 
+/// @param Address
+///        Supplies the address of the value on which the bitwise XOR operation is to be performed.
+/// 
+/// @param Mask
+///        Supplies the mask with which the bitwise XOR operation is to be performed
+/// 
+/// @return This routine returns the initial value at the given address.
+/// 
+/// @since XT 1.0
 fun rtlAtomicXor64(address Volatile PLONG_PTR, mask LONG_PTR) {
-	return __sync_fetch_and_xor_8(Address, Mask)
+	return __sync_fetch_and_xor_8(address, mask)
 }

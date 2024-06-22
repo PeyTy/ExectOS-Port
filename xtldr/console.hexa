@@ -1,98 +1,204 @@
 // Hexa 2024 from clang 15.0.3
+/// Clears a specified line on the UEFI text console.
+/// 
+/// @param LineNo
+///        Supplies a line number to clear.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blClearConsoleLine(lineNo ULONGLONG) {
 	var index UINT_PTR
 	var resX UINT_PTR
 	var resY UINT_PTR
-	BlQueryConsoleMode(???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	BlSetCursorPosition(0, LineNo)
+	blQueryConsoleMode(resX, resY)
+	blSetCursorPosition(0, lineNo)
 	??? CompoundStmt ForStmt
 }
 
+/// This routine clears the UEFI console screen.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blClearConsoleScreen() {
-	EfiSystemTable.ConOut.ClearScreen(EfiSystemTable.ConOut)
+	efiSystemTable.ConOut.ClearScreen(efiSystemTable.ConOut)
 }
 
+/// Disables the cursor on the UEFI console.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blDisableConsoleCursor() {
-	EfiSystemTable.ConOut.EnableCursor(EfiSystemTable.ConOut, FALSE)
+	efiSystemTable.ConOut.EnableCursor(efiSystemTable.ConOut, fALSE)
 }
 
+/// Enables the cursor on the UEFI console.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blEnableConsoleCursor() {
-	EfiSystemTable.ConOut.EnableCursor(EfiSystemTable.ConOut, TRUE)
+	efiSystemTable.ConOut.EnableCursor(efiSystemTable.ConOut, tRUE)
 }
 
+/// This routine formats the input string and prints it out to the stdout and serial console.
+/// 
+/// @param Format
+///        The formatted string that is to be written to the output.
+/// 
+/// @param ...
+///        Depending on the format string, this routine might expect a sequence of additional arguments.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blConsolePrint(format PUSHORT) {
 	let consolePrintContext = new ByValue<RTL_PRINT_CONTEXT>()
 
 	let serialPrintContext = new ByValue<RTL_PRINT_CONTEXT>()
 
 	var arguments VA_LIST
-	ConsolePrintContext.WriteWideCharacter = BlpConsolePutChar
-	SerialPrintContext.WriteWideCharacter = BlpDebugPutChar
-	__builtin_va_start(Arguments, Format)
-	RtlFormatWideString(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Arguments)
-	if RtlCompareWideString(EfiSystemTable.FirmwareVendor, ???? resolve StringLiteral, 6) != 0 {
+	ConsolePrintContext.WriteWideCharacter = blpConsolePutChar
+	SerialPrintContext.WriteWideCharacter = blpDebugPutChar
+	__builtin_va_start(arguments, format)
+	rtlFormatWideString(consolePrintContext, format as! PWCHAR, arguments)
+	if rtlCompareWideString(efiSystemTable.FirmwareVendor, "EDK II", 6) != 0 {
 		if 1 and (BlpStatus.SerialPort.Flags & 1) {
-			RtlFormatWideString(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Arguments)
+			rtlFormatWideString(serialPrintContext, format as! PWCHAR, arguments)
 
 		}
 
 
 	}
 
-	__builtin_va_end(Arguments)
+	__builtin_va_end(arguments)
 }
 
+/// Displays the string on the device at the current cursor location.
+/// 
+/// @param String
+///        The string to be displayed.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blConsoleWrite(string PUSHORT) {
-	EfiSystemTable.ConOut.OutputString(EfiSystemTable.ConOut, String)
+	efiSystemTable.ConOut.OutputString(efiSystemTable.ConOut, string)
 }
 
+/// This routine initializes the EFI console.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun blInitializeConsole() {
-	EfiSystemTable.ConIn.Reset(EfiSystemTable.ConIn, TRUE)
-	EfiSystemTable.ConOut.Reset(EfiSystemTable.ConOut, TRUE)
-	EfiSystemTable.StdErr.Reset(EfiSystemTable.StdErr, TRUE)
-	if EfiSystemTable.ConOut.Mode.Mode != 0 {
-		BlSetConsoleMode(0)
+	efiSystemTable.ConIn.Reset(efiSystemTable.ConIn, tRUE)
+	efiSystemTable.ConOut.Reset(efiSystemTable.ConOut, tRUE)
+	efiSystemTable.StdErr.Reset(efiSystemTable.StdErr, tRUE)
+	if efiSystemTable.ConOut.Mode.Mode != 0 {
+		blSetConsoleMode(0)
 
 	}
 
-	BlSetConsoleAttributes(0 | 7)
-	BlClearConsoleScreen()
-	BlEnableConsoleCursor()
+	blSetConsoleAttributes(0 | 7)
+	blClearConsoleScreen()
+	blEnableConsoleCursor()
 }
 
+/// Queries information concerning the output device’s supported text mode.
+/// 
+/// @param ResX
+///        Supplies a buffer to receive the horizontal resolution.
+/// 
+/// @param ResY
+///        Supplies a buffer to receive the vertical resolution.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blQueryConsoleMode(resX PUINT_PTR, resY PUINT_PTR) {
-	EfiSystemTable.ConOut.QueryMode(EfiSystemTable.ConOut, EfiSystemTable.ConOut.Mode.Mode, ResX, ResY)
+	efiSystemTable.ConOut.QueryMode(efiSystemTable.ConOut, efiSystemTable.ConOut.Mode.Mode, resX, resY)
 }
 
+/// Reads a keystroke from the input device.
+/// 
+/// @param Key
+///        Supplies a pointer to the EFI_INPUT_KEY structure that will receive the keystroke.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blReadKeyStroke(key PEFI_INPUT_KEY) {
-	EfiSystemTable.ConIn.ReadKeyStroke(EfiSystemTable.ConIn, Key)
+	efiSystemTable.ConIn.ReadKeyStroke(efiSystemTable.ConIn, key)
 }
 
+/// Resets the console input device and clears its input buffer.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blResetConsoleInputBuffer() {
-	EfiSystemTable.ConIn.Reset(EfiSystemTable.ConIn, FALSE)
+	efiSystemTable.ConIn.Reset(efiSystemTable.ConIn, fALSE)
 }
 
+/// Sets the foreground and background colors.
+/// 
+/// @param Attribute
+///        Specifies the foreground and background colors (bits 0..3 are fg, and bits 4..6 are bg color).
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blSetConsoleAttributes(attributes ULONGLONG) {
-	EfiSystemTable.ConOut.SetAttribute(EfiSystemTable.ConOut, Attributes)
+	efiSystemTable.ConOut.SetAttribute(efiSystemTable.ConOut, attributes)
 }
 
+/// Sets the output console device to the requested mode.
+/// 
+/// @param Mode
+///        Supplies a text mode number to set.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blSetConsoleMode(mode ULONGLONG) {
-	return EfiSystemTable.ConOut.SetMode(EfiSystemTable.ConOut, Mode)
+	return efiSystemTable.ConOut.SetMode(efiSystemTable.ConOut, mode)
 }
 
+/// Sets new coordinates of the console cursor position.
+/// 
+/// @param PosX
+///        Specifies the new X coordinate of the cursor.
+/// 
+/// @param PosY
+///        Specifies the new Y coordinate of the cursor.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blSetCursorPosition(posX ULONGLONG, posY ULONGLONG) {
-	EfiSystemTable.ConOut.SetCursorPosition(EfiSystemTable.ConOut, PosX, PosY)
+	efiSystemTable.ConOut.SetCursorPosition(efiSystemTable.ConOut, posX, posY)
 }
 
+/// Writes a character to the default EFI console.
+/// 
+/// @param Character
+///        The integer promotion of the character to be written.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpConsolePutChar(character USHORT) {
 	var buffer USHORT[2]
-	if Character == ???? resolve CharacterLiteral {
-		BlpConsolePutChar(???? resolve CharacterLiteral)
+	if character == ???? resolve CharacterLiteral {
+		blpConsolePutChar(???? resolve CharacterLiteral)
 
 	}
 
-	???? resolve ArraySubscriptExpr = Character
+	???? resolve ArraySubscriptExpr = character
 	???? resolve ArraySubscriptExpr = 0
-	EfiSystemTable.ConOut.OutputString(EfiSystemTable.ConOut, Buffer)
-	return (???? resolve CStyleCastExpr)
+	efiSystemTable.ConOut.OutputString(efiSystemTable.ConOut, buffer)
+	return (0 as! XTSTATUS)
 }

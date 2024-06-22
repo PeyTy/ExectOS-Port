@@ -1,15 +1,31 @@
 // Hexa 2024 from clang 15.0.3
+/// Returns a boolean value of the specified configuration key.
+/// 
+/// @param ConfigName
+///        Specifies the configuration key to return its boolean representation.
+/// 
+/// @return This routine returns a boolean representation of the configuration value.
+/// 
+/// @since XT 1.0
 fun blGetConfigBooleanValue(configName Const PWCHAR) {
 	var value PWCHAR
-	Value = BlGetConfigValue(ConfigName)
-	if RtlCompareWideStringInsensitive(Value, ???? resolve StringLiteral, 0) == 0 or RtlCompareWideStringInsensitive(Value, ???? resolve StringLiteral, 0) == 0 or RtlCompareWideStringInsensitive(Value, ???? resolve StringLiteral, 0) == 0 or RtlCompareWideStringInsensitive(Value, ???? resolve StringLiteral, 0) == 0 {
-		return TRUE
+	value = blGetConfigValue(configName)
+	if rtlCompareWideStringInsensitive(value, "ENABLED", 0) == 0 or rtlCompareWideStringInsensitive(value, "ON", 0) == 0 or rtlCompareWideStringInsensitive(value, "TRUE", 0) == 0 or rtlCompareWideStringInsensitive(value, "YES", 0) == 0 {
+		return tRUE
 
 	}
 
-	return FALSE
+	return fALSE
 }
 
+/// Returns a value of the specified configuration key.
+/// 
+/// @param ConfigName
+///        Specifies the configuration key to return its value.
+/// 
+/// @return This routine returns a pointer to the configuration value, or NULL if key was not found.
+/// 
+/// @since XT 1.0
 fun blGetConfigValue(configName Const PWCHAR) {
 	let configEntry = new ByValue<PXTBL_CONFIG_ENTRY>()
 
@@ -19,12 +35,43 @@ fun blGetConfigValue(configName Const PWCHAR) {
 	var valueLength SIZE_T
 	var status EFI_STATUS
 	var value PWCHAR
-	KeyLength = RtlWideStringLength(ConfigName, 0)
-	ConfigListEntry = BlpConfig.Flink
-	??? CompoundStmt WhileStmt
-	return (???? resolve CStyleCastExpr)
+	keyLength = rtlWideStringLength(configName, 0)
+	configListEntry = BlpConfig.Flink
+	while configListEntry != blpConfig {
+		configEntry = (((configListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		if rtlCompareWideStringInsensitive(configEntry.Name, configName, keyLength) == 0 {
+			valueLength = rtlWideStringLength(configEntry.Value, 0)
+			status = blAllocateMemoryPool((valueLength + 1) * ???? resolve UnaryExprOrTypeTraitExpr, value as! PVOID *)
+			if status != (9223372036854775808 & 0) {
+				blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
+				return (0 as! PVOID)
+
+			}
+
+			rtlCopyMemory(value, configEntry.Value, valueLength * ???? resolve UnaryExprOrTypeTraitExpr)
+			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+			return value
+
+		}
+
+		configListEntry = configListEntry.Flink
+
+	}
+
+	return (0 as! PVOID)
 }
 
+/// Updates existing configuration value.
+/// 
+/// @param ConfigName
+///        Specifies the configuration key to update.
+/// 
+/// @param ConfigValue
+///        Specifies the new configuration value.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun blSetConfigValue(configName Const PWCHAR, configValue Const PWCHAR) {
 	let configEntry = new ByValue<PXTBL_CONFIG_ENTRY>()
 
@@ -32,43 +79,90 @@ fun blSetConfigValue(configName Const PWCHAR, configValue Const PWCHAR) {
 
 	var status EFI_STATUS
 	var length SIZE_T
-	Length = RtlWideStringLength(ConfigName, 0)
-	ConfigListEntry = BlpConfig.Flink
-	??? CompoundStmt WhileStmt
+	length = rtlWideStringLength(configName, 0)
+	configListEntry = BlpConfig.Flink
+	while configListEntry != blpConfig {
+		configEntry = (((configListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		if rtlCompareWideStringInsensitive(configEntry.Name, configName, length) == 0 {
+			length = rtlWideStringLength(configValue, 0)
+			status = blFreeMemoryPool(configEntry.Value)
+			if status == (9223372036854775808 & 0) {
+				status = blAllocateMemoryPool((length + 1) * ???? resolve UnaryExprOrTypeTraitExpr, configEntry.Value as! PVOID *)
+
+			}
+
+			if status != (9223372036854775808 & 0) {
+				return status
+
+			}
+
+			rtlCopyMemory(configEntry.Value, configValue, length * ???? resolve UnaryExprOrTypeTraitExpr)
+			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+			return (9223372036854775808 & 0)
+
+		}
+
+		configListEntry = configListEntry.Flink
+
+	}
+
 	return (9223372036854775808 | 14)
 }
 
+/// Loads and parses XTLDR configuration file.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun blpLoadConfiguration() {
 	let sectionListEntry = new ByValue<PLIST_ENTRY>()
 
 	var status EFI_STATUS
 	var configData PCHAR
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	Status = BlpReadConfigFile(???? resolve StringLiteral, ???? resolve StringLiteral, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		Status = BlpReadConfigFile(???? resolve StringLiteral, ???? resolve StringLiteral, ???? resolve UnaryOperator)
+	rtlInitializeListHead(blpConfigSections)
+	status = blpReadConfigFile("\\EFI\\BOOT\\XTLDR\\", "XTLDR.INI", configData)
+	if status != (9223372036854775808 & 0) {
+		status = blpReadConfigFile("\\EFI\\BOOT\\XTLDR64\\", "XTLDR.INI", configData)
 
 	}
 
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
-		return Status
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("Failed to load FS0:/EFI/BOOT/XTLDR/XTLDR.INI configuration file (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
-	Status = BlpParseConfigFile(ConfigData, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
-		return Status
+	status = blpParseConfigFile(configData, blpConfigSections)
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("Failed to parse FS0:/EFI/BOOT/XTLDR/XTLDR.INI configuration file (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
-	SectionListEntry = BlpConfigSections.Flink
-	??? CompoundStmt WhileStmt
-	BlpMenuList = ???? resolve UnaryOperator
+	sectionListEntry = BlpConfigSections.Flink
+	while sectionListEntry != blpConfigSections {
+		let section = new ByValue<PXTBL_CONFIG_SECTION>()
+
+		if rtlCompareWideStringInsensitive(section.SectionName, "XTLDR", 5) == 0 {
+			blpUpdateConfiguration(section.Options)
+			rtlRemoveEntryList(sectionListEntry)
+			??? CompoundStmt BreakStmt
+
+		}
+
+		sectionListEntry = sectionListEntry.Flink
+
+	}
+
+	blpMenuList = blpConfigSections
 	return (9223372036854775808 & 0)
 }
 
+/// Parses command line arguments and updates global configuration.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpParseCommandLine() {
 	let lIPGuid = new ByValue<EFI_GUID>()
 
@@ -85,13 +179,61 @@ fun blpParseCommandLine() {
 	var valueLength SIZE_T
 	let config = new ByValue<LIST_ENTRY>()
 
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	Status = EfiSystemTable.BootServices.HandleProtocol(EfiImageHandle, ???? resolve UnaryOperator, ???? resolve CStyleCastExpr)
-	if Status == (9223372036854775808 & 0) {
-		if LoadedImage and LoadedImage.LoadOptions {
-			Argument = RtlTokenizeWideString(LoadedImage.LoadOptions, ???? resolve StringLiteral, ???? resolve UnaryOperator)
-			??? CompoundStmt WhileStmt
-			BlpUpdateConfiguration(???? resolve UnaryOperator)
+	rtlInitializeListHead(config)
+	status = efiSystemTable.BootServices.HandleProtocol(efiImageHandle, lIPGuid, loadedImage as! PVOID *)
+	if status == (9223372036854775808 & 0) {
+		if loadedImage and loadedImage.LoadOptions {
+			argument = rtlTokenizeWideString(loadedImage.LoadOptions, " ", lastArg)
+			while argument != (0 as! PVOID) {
+				key = argument
+				while *argument != ???? resolve CharacterLiteral and *argument != ???? resolve CharacterLiteral and *argument != ???? resolve CharacterLiteral {
+					??? CompoundStmt UnaryOperator
+
+				}
+
+				*argument = ???? resolve CharacterLiteral
+				??? CompoundStmt UnaryOperator
+				value = argument
+				while *argument != ???? resolve CharacterLiteral and *argument != ???? resolve CharacterLiteral {
+					??? CompoundStmt UnaryOperator
+
+				}
+
+				*argument = ???? resolve CharacterLiteral
+				??? CompoundStmt UnaryOperator
+				keyLength = rtlWideStringLength(key, 0)
+				valueLength = rtlWideStringLength(value, 0)
+				if keyLength == 0 or valueLength == 0 {
+					??? CompoundStmt ContinueStmt
+
+				}
+
+				status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, option as! PVOID *)
+				if status == (9223372036854775808 & 0) {
+					status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (keyLength + 1), option.Name as! PVOID *)
+					if status == (9223372036854775808 & 0) {
+						status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (valueLength + 1), option.Value as! PVOID *)
+
+					}
+
+
+				}
+
+				if status != (9223372036854775808 & 0) {
+					return status
+
+				}
+
+				rtlCopyMemory(option.Name, key, (keyLength * ???? resolve UnaryExprOrTypeTraitExpr))
+				rtlCopyMemory(option.Value, value, (valueLength * ???? resolve UnaryExprOrTypeTraitExpr))
+				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+				rtlInsertTailList(config, option.Flink)
+				argument = rtlTokenizeWideString((0 as! PVOID), " ", lastArg)
+
+			}
+
+			blpUpdateConfiguration(config)
 
 		}
 
@@ -101,6 +243,17 @@ fun blpParseCommandLine() {
 	return (9223372036854775808 & 0)
 }
 
+/// Parses configuration INI file.
+/// 
+/// @param RawConfig
+///        Suplies a pointer to configuration INI file to be parsed.
+/// 
+/// @param Configuration
+///        Supplies a pointer to memory region where parsed configuration will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpParseConfigFile(rawConfig Const PCHAR, configuration PLIST_ENTRY) {
 	var sectionLength SIZE_T
 	var keyLength SIZE_T
@@ -114,16 +267,143 @@ fun blpParseConfigFile(rawConfig Const PCHAR, configuration PLIST_ENTRY) {
 	let option = new ByValue<PXTBL_CONFIG_ENTRY>()
 
 	var status EFI_STATUS
-	InputData = RawConfig
-	Section = (???? resolve CStyleCastExpr)
-	Option = (???? resolve CStyleCastExpr)
-	SectionName = (???? resolve CStyleCastExpr)
-	Key = (???? resolve CStyleCastExpr)
-	Value = (???? resolve CStyleCastExpr)
-	??? CompoundStmt WhileStmt
+	inputData = rawConfig
+	section = (0 as! PVOID)
+	option = (0 as! PVOID)
+	sectionName = (0 as! PVOID)
+	key = (0 as! PVOID)
+	value = (0 as! PVOID)
+	while *inputData != ???? resolve CharacterLiteral {
+		if *inputData == ???? resolve CharacterLiteral or *inputData == ???? resolve CharacterLiteral {
+			while *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral {
+				??? CompoundStmt UnaryOperator
+
+			}
+
+
+		} else {
+			??? CompoundStmt CompoundStmt
+			if *inputData == ???? resolve CharacterLiteral {
+				??? CompoundStmt UnaryOperator
+				sectionName = inputData
+				while *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral {
+					??? CompoundStmt UnaryOperator
+
+				}
+
+				if *inputData != ???? resolve CharacterLiteral {
+					return (9223372036854775808 | 2)
+
+				}
+
+				*inputData = ???? resolve CharacterLiteral
+				??? CompoundStmt UnaryOperator
+				sectionName = rtlTrimString(sectionName)
+				sectionLength = rtlStringLength(sectionName, 0)
+				status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, section as! PVOID *)
+				if status == (9223372036854775808 & 0) {
+					status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (sectionLength + 1), section.SectionName as! PVOID *)
+
+				}
+
+				if status != (9223372036854775808 & 0) {
+					return status
+
+				}
+
+				rtlInitializeListHead(section.Options)
+				rtlStringToWideString(section.SectionName, sectionName, sectionLength)
+				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+				rtlInsertTailList(configuration, section.Flink)
+
+			} else {
+				key = inputData
+				while *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral {
+					??? CompoundStmt UnaryOperator
+
+				}
+
+				if *inputData != ???? resolve CharacterLiteral {
+					return (9223372036854775808 | 2)
+
+				}
+
+				*inputData = 0
+				??? CompoundStmt UnaryOperator
+				while *inputData == ???? resolve CharacterLiteral {
+					??? CompoundStmt UnaryOperator
+
+				}
+
+				value = inputData
+				while *inputData != ???? resolve CharacterLiteral and *inputData != ???? resolve CharacterLiteral {
+					??? CompoundStmt UnaryOperator
+
+				}
+
+				*inputData = 0
+				??? CompoundStmt UnaryOperator
+				key = rtlTrimString(key)
+				value = rtlTrimString(value)
+				keyLength = rtlStringLength(key, 0)
+				valueLength = rtlStringLength(value, 0)
+				status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, option as! PVOID *)
+				if status == (9223372036854775808 & 0) {
+					status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (keyLength + 1), option.Name as! PVOID *)
+					if status == (9223372036854775808 & 0) {
+						status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (valueLength + 1), option.Value as! PVOID *)
+
+					}
+
+
+				}
+
+				if status != (9223372036854775808 & 0) {
+					return status
+
+				}
+
+				if *value == ???? resolve CharacterLiteral or *value == ???? resolve CharacterLiteral {
+					??? CompoundStmt UnaryOperator
+
+				}
+
+				if ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral or ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral {
+					???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+
+				}
+
+				rtlStringToWideString(option.Name, key, rtlStringLength(key, 0) + 1)
+				rtlStringToWideString(option.Value, value, rtlStringLength(value, 0) + 1)
+				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+				???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+				rtlInsertTailList(section.Options, option.Flink)
+
+			}
+
+
+		}
+
+
+	}
+
 	return (9223372036854775808 & 0)
 }
 
+/// Loads configuration file from the specified directory on the FS0:/ drive.
+/// 
+/// @param ConfigDirectory
+///        Specifies a path to the directory containing the configuration file.
+/// 
+/// @param ConfigFile
+///        Specifies the name of the configuration file.
+/// 
+/// @param ConfigData
+///        Provides a buffer to store the data read from the configuration file.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun blpReadConfigFile(configDirectory Const PWCHAR, configFile Const PWCHAR, configData PCHAR *) {
 	let dirHandle = new ByValue<PEFI_FILE_HANDLE>()
 
@@ -132,26 +412,34 @@ fun blpReadConfigFile(configDirectory Const PWCHAR, configFile Const PWCHAR, con
 	var diskHandle EFI_HANDLE
 	var status EFI_STATUS
 	var fileSize SIZE_T
-	Status = BlOpenVolume((???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = blOpenVolume((0 as! PVOID), diskHandle, fsHandle)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	Status = FsHandle.Open(FsHandle, ???? resolve UnaryOperator, ConfigDirectory, 1, 0)
-	FsHandle.Close(FsHandle)
-	if Status != (9223372036854775808 & 0) {
-		BlCloseVolume(DiskHandle)
-		return Status
+	status = fsHandle.Open(fsHandle, dirHandle, configDirectory, 1, 0)
+	fsHandle.Close(fsHandle)
+	if status != (9223372036854775808 & 0) {
+		blCloseVolume(diskHandle)
+		return status
 
 	}
 
-	Status = BlReadFile(DirHandle, ConfigFile, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
-	DirHandle.Close(DirHandle)
-	BlCloseVolume(DiskHandle)
-	return Status
+	status = blReadFile(dirHandle, configFile, configData as! PVOID *, fileSize)
+	dirHandle.Close(dirHandle)
+	blCloseVolume(diskHandle)
+	return status
 }
 
+/// Adds new XTLDR configuration entries to the global configuration list. Existing entries are not overwritten.
+/// 
+/// @param NewConfig
+///        Supplies a pointer to a linked list containing new configuration entries.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpUpdateConfiguration(newConfig PLIST_ENTRY) {
 	let configEntry = new ByValue<PXTBL_CONFIG_ENTRY>()
 
@@ -159,6 +447,18 @@ fun blpUpdateConfiguration(newConfig PLIST_ENTRY) {
 
 	let nextListEntry = new ByValue<PLIST_ENTRY>()
 
-	ConfigListEntry = NewConfig.Flink
-	??? CompoundStmt WhileStmt
+	configListEntry = newConfig.Flink
+	while configListEntry != newConfig {
+		configEntry = (((configListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		nextListEntry = configListEntry.Flink
+		if blGetConfigValue(configEntry.Name) == (0 as! PVOID) {
+			rtlRemoveEntryList(configEntry.Flink)
+			rtlInsertTailList(blpConfig, configEntry.Flink)
+
+		}
+
+		configListEntry = nextListEntry
+
+	}
+
 }

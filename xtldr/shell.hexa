@@ -1,12 +1,22 @@
 // Hexa 2024 from clang 15.0.3
+/// Starts XTLDR shell.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blStartLoaderShell() {
-	BlInitializeConsole()
-	BlpPrintShellPrompt()
+	blInitializeConsole()
+	blpPrintShellPrompt()
 	??? CompoundStmt ForStmt
 }
 
+/// Prints XTLDR shell prompt.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpPrintShellPrompt() {
-	BlSetConsoleAttributes(0 | 14)
-	BlConsolePrint(???? resolve StringLiteral)
-	BlSetConsoleAttributes(0 | 7)
+	blSetConsoleAttributes(0 | 14)
+	blConsolePrint("XTLDR> ")
+	blSetConsoleAttributes(0 | 7)
 }

@@ -7,16 +7,24 @@ var __UNIQUE_ID_license2
 var __UNIQUE_ID_version3
 
 
+/// Attempts to get XSDP. If it is not found or checksum mismatch, it will try to get RSDP instead.
+/// 
+/// @param AcpiTable
+///        Suplies a pointer to memory area where XSDP or RSRP address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun acGetAcpiDescriptionPointer(acpiTable PVOID *) {
 	var rsdp PVOID
-	if AcGetXsdpTable(???? resolve UnaryOperator) == (9223372036854775808 & 0) {
-		???? resolve UnaryOperator = Rsdp
+	if acGetXsdpTable(rsdp) == (9223372036854775808 & 0) {
+		*acpiTable = rsdp
 		return (9223372036854775808 & 0)
 
 	}
 
-	if AcGetRsdpTable(???? resolve UnaryOperator) == (9223372036854775808 & 0) {
-		???? resolve UnaryOperator = Rsdp
+	if acGetRsdpTable(rsdp) == (9223372036854775808 & 0) {
+		*acpiTable = rsdp
 		return (9223372036854775808 & 0)
 
 	}
@@ -24,6 +32,20 @@ fun acGetAcpiDescriptionPointer(acpiTable PVOID *) {
 	return (9223372036854775808 | 14)
 }
 
+/// Finds ACPI description table with given signature.
+/// 
+/// @param Signature
+///        Supplies the signature of the desired ACPI table.
+/// 
+/// @param PreviousTable
+///        Supplies a pointer to the table to start searching from.
+/// 
+/// @param AcpiTable
+///        Supplies a pointer to memory area where ACPI table address will be stored, or NULL if not found.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *) {
 	let tableHeader = new ByValue<PACPI_DESCRIPTION_HEADER>()
 
@@ -36,33 +58,33 @@ fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *)
 	let rsdt = new ByValue<PACPI_RSDT>()
 
 	var xsdp BOOLEAN
-	???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
-	Status = AcGetAcpiDescriptionPointer(???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	*acpiTable = (0 as! PVOID)
+	status = acGetAcpiDescriptionPointer(rsdp as! PVOID)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	if Rsdp.Revision >= 2 and Rsdp.XsdtAddress {
-		Xsdp = TRUE
-		Rsdt = ???? resolve CStyleCastExpr
-		TableCount = (Rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 8
+	if rsdp.Revision >= 2 and rsdp.XsdtAddress {
+		xsdp = tRUE
+		rsdt = rsdp.XsdtAddress as! UINT_PTR as! PACPI_RSDT
+		tableCount = (rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 8
 
 	} else {
-		Xsdp = FALSE
-		Rsdt = ???? resolve CStyleCastExpr
-		TableCount = (Rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 4
+		xsdp = fALSE
+		rsdt = rsdp.RsdtAddress as! UINT_PTR as! PACPI_RSDT
+		tableCount = (rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 4
 
 	}
 
 	??? CompoundStmt ForStmt
-	if TableHeader.Signature != Signature {
+	if tableHeader.Signature != signature {
 		return (9223372036854775808 | 14)
 
 	}
 
-	if TableHeader.Signature != 1346584902 or TableHeader.Revision > 2 {
-		if ???? resolve UnaryOperator {
+	if tableHeader.Signature != 1346584902 or tableHeader.Revision > 2 {
+		if !acpValidateAcpiTable(tableHeader, tableHeader.Length) {
 			return (9223372036854775808 | 27)
 
 		}
@@ -70,120 +92,188 @@ fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *)
 
 	}
 
-	???? resolve UnaryOperator = TableHeader
+	*acpiTable = tableHeader
 	return (9223372036854775808 & 0)
 }
 
+/// Gets the Advanced Programmable Interrupt Controller (APIC) base address.
+/// 
+/// @param ApicBase
+///        Supplies a pointer to memory area where APIC base address will be stored.
+/// 
+/// @return This routine returns an EFI status code.
+/// 
+/// @since XT 1.0
 fun acGetApicBase(apicBase PVOID *) {
 	let cpuRegisters = new ByValue<PCPUID_REGISTERS>()
 
-	CpuRegisters.Leaf = CPUID_GET_CPU_FEATURES
-	CpuRegisters.SubLeaf = 0
-	CpuRegisters.Eax = 0
-	CpuRegisters.Ebx = 0
-	CpuRegisters.Ecx = 0
-	CpuRegisters.Edx = 0
-	ArCpuId(CpuRegisters)
-	if (CpuRegisters.Edx & CPUID_FEATURES_EDX_APIC) == 0 {
+	cpuRegisters.Leaf = cPUID_GET_CPU_FEATURES
+	cpuRegisters.SubLeaf = 0
+	cpuRegisters.Eax = 0
+	cpuRegisters.Ebx = 0
+	cpuRegisters.Ecx = 0
+	cpuRegisters.Edx = 0
+	arCpuId(cpuRegisters)
+	if (cpuRegisters.Edx & cPUID_FEATURES_EDX_APIC) == 0 {
 		return (9223372036854775808 | 3)
 
 	}
 
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	*apicBase = (arReadModelSpecificRegister(27) as! UINT_PTR & 4294963200) as! PVOID
 	return (9223372036854775808 & 0)
 }
 
+/// Gets RSDP (ACPI 1.0) from EFI system configuration
+/// 
+/// @param AcpiTable
+///        Suplies a pointer to memory area where RSDP address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun acGetRsdpTable(acpiTable PVOID *) {
 	let acpiGuid = new ByValue<EFI_GUID>()
 
 	var status EFI_STATUS
 	var rsdpTable PVOID
-	Status = XtLdrProtocol.Util.GetConfigurationTable(???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
-		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+	status = xtLdrProtocol.Util.GetConfigurationTable(acpiGuid, rsdpTable)
+	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(rsdpTable, 20) {
+		*acpiTable = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
 	}
 
-	???? resolve UnaryOperator = RsdpTable
+	*acpiTable = rsdpTable
 	return (9223372036854775808 & 0)
 }
 
+/// Gets SMBIOS from EFI system configuration
+/// 
+/// @param SmBiosTable
+///        Suplies a pointer to memory area where SMBIOS address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun acGetSMBiosTable(smBiosTable PVOID *) {
 	let smBiosGuid = new ByValue<EFI_GUID>()
 
 	let smBios = new ByValue<PSMBIOS_TABLE_HEADER>()
 
 	var status EFI_STATUS
-	Status = XtLdrProtocol.Util.GetConfigurationTable(???? resolve UnaryOperator, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
-		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+	status = xtLdrProtocol.Util.GetConfigurationTable(smBiosGuid, smBios as! PVOID)
+	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(smBios, smBios.Length) {
+		*smBiosTable = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
 	}
 
-	???? resolve UnaryOperator = SmBios
+	*smBiosTable = smBios
 	return (9223372036854775808 & 0)
 }
 
+/// Gets SMBIOS3 from EFI system configuration
+/// 
+/// @param SmBiosTable
+///        Suplies a pointer to memory area where SMBIOS3 address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun acGetSMBios3Table(smBiosTable PVOID *) {
 	let smBios3Guid = new ByValue<EFI_GUID>()
 
 	let smBios = new ByValue<PSMBIOS3_TABLE_HEADER>()
 
 	var status EFI_STATUS
-	Status = XtLdrProtocol.Util.GetConfigurationTable(???? resolve UnaryOperator, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
-		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+	status = xtLdrProtocol.Util.GetConfigurationTable(smBios3Guid, smBios as! PVOID)
+	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(smBios, smBios.Length) {
+		*smBiosTable = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
 	}
 
-	???? resolve UnaryOperator = SmBios
+	*smBiosTable = smBios
 	return (9223372036854775808 & 0)
 }
 
+/// Gets XSDP (ACPI 2.0) from EFI system configuration
+/// 
+/// @param AcpiTable
+///        Suplies a pointer to memory area where XSDP address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun acGetXsdpTable(acpiTable PVOID *) {
 	let acpiGuid = new ByValue<EFI_GUID>()
 
 	var status EFI_STATUS
 	var xsdpTable PVOID
-	Status = XtLdrProtocol.Util.GetConfigurationTable(???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
-		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+	status = xtLdrProtocol.Util.GetConfigurationTable(acpiGuid, xsdpTable)
+	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(xsdpTable, 36) {
+		*acpiTable = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
 	}
 
-	???? resolve UnaryOperator = XsdpTable
+	*acpiTable = xsdpTable
 	return (9223372036854775808 & 0)
 }
 
+/// Validates given ACPI table by calculating its checksum.
+/// 
+/// @param Buffer
+///        Supplies a pointer to the table to checksum.
+/// 
+/// @param Size
+///        Supplies the size of the table, in bytes.
+/// 
+/// @return This routine returns TRUE if the table is valid, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun acpValidateAcpiTable(buffer PVOID, size UINT_PTR) {
 	var pointer PUCHAR
 	var sum UCHAR
-	Sum = 0
-	Pointer = Buffer
-	??? CompoundStmt WhileStmt
+	sum = 0
+	pointer = buffer
+	while size != 0 {
+		sum = (sum + *pointer) as! UCHAR
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
 	return ???? resolve ConditionalOperator
 }
 
+/// This routine is the entry point of the XT EFI boot loader module.
+/// 
+/// @param ImageHandle
+///        Firmware-allocated handle that identifies the image.
+/// 
+/// @param SystemTable
+///        Provides the EFI system table.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	let guid = new ByValue<EFI_GUID>()
 
 	var status EFI_STATUS
-	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
+	status = blGetXtLdrProtocol(systemTable, imageHandle, xtLdrProtocol)
+	if status != (9223372036854775808 & 0) {
 		return (9223372036854775808 | 24)
 
 	}
 
-	AcpAcpiProtocol.GetAcpiDescriptionPointer = AcGetAcpiDescriptionPointer
-	AcpAcpiProtocol.GetAcpiTable = AcGetAcpiTable
-	AcpAcpiProtocol.GetApicBase = AcGetApicBase
-	AcpAcpiProtocol.GetRsdpTable = AcGetRsdpTable
-	AcpAcpiProtocol.GetSMBiosTable = AcGetSMBiosTable
-	AcpAcpiProtocol.GetSMBios3Table = AcGetSMBios3Table
-	AcpAcpiProtocol.GetXsdpTable = AcGetXsdpTable
-	return XtLdrProtocol.Protocol.Install(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	AcpAcpiProtocol.GetAcpiDescriptionPointer = acGetAcpiDescriptionPointer
+	AcpAcpiProtocol.GetAcpiTable = acGetAcpiTable
+	AcpAcpiProtocol.GetApicBase = acGetApicBase
+	AcpAcpiProtocol.GetRsdpTable = acGetRsdpTable
+	AcpAcpiProtocol.GetSMBiosTable = acGetSMBiosTable
+	AcpAcpiProtocol.GetSMBios3Table = acGetSMBios3Table
+	AcpAcpiProtocol.GetXsdpTable = acGetXsdpTable
+	return xtLdrProtocol.Protocol.Install(acpAcpiProtocol, guid)
 }

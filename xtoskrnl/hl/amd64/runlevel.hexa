@@ -1,16 +1,45 @@
 // Hexa 2024 from clang 15.0.3
+/// Gets the current run level from APIC for the current processor.
+/// 
+/// @return This routine returns the current run level.
+/// 
+/// @since XT 1.0
 fun hlGetRunLevel() {
-	return ???? resolve CStyleCastExpr
+	return arReadControlRegister(8) as! KRUNLEVEL
 }
 
+/// Sets new run level for the current processor.
+/// 
+/// @param RunLevel
+///        Supplies the new run level to store into APIC.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun hlSetRunLevel(runLevel KRUNLEVEL) {
-	ArWriteControlRegister(8, RunLevel)
+	arWriteControlRegister(8, runLevel)
 }
 
+/// Maps APIC interrupt vector to XT run level.
+/// 
+/// @param Tpr
+///        Supplies the interrupt vector rad from APIC Task Priority Register.
+/// 
+/// @return This routine returns the XT run level corresponding to the specified APIC interrupt vector.
+/// 
+/// @since XT 1.0
 fun hlpTransformApicTprToRunLevel(tpr UCHAR) {
-	return ???? resolve CStyleCastExpr
+	return (tpr >> 4) as! KRUNLEVEL
 }
 
+/// Maps XT run level to interrupt vector suitable for the APIC Task Priority Register.
+/// 
+/// @param RunLevel
+///        Supplies the XT run level.
+/// 
+/// @return This routine returns the APIC interrupt vector corresponding to the specified XT run level.
+/// 
+/// @since XT 1.0
 fun hlpTransformRunLevelToApicTpr(runLevel KRUNLEVEL) {
-	return (RunLevel << 4)
+	return (runLevel << 4)
 }

@@ -1,4 +1,12 @@
 // Hexa 2024 from clang 15.0.3
+/// Maps the page table for hardware layer addess space.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 	let pdeBase = new ByValue<PHARDWARE_PTE>()
 
@@ -8,45 +16,45 @@ fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 
 	var address EFI_PHYSICAL_ADDRESS
 	var status XTSTATUS
-	if PageMap.PageMapLevel > 4 {
+	if pageMap.PageMapLevel > 4 {
 		return (9223372036854775808 | 3)
 
 	}
 
-	PxeBase = (???? resolve CStyleCastExpr)
-	if ???? resolve UnaryOperator {
-		Status = XtLdrProtocol.Memory.AllocatePages(1, ???? resolve UnaryOperator)
-		if Status != (9223372036854775808 & 0) {
-			return Status
+	pxeBase = ((pageMap.PtePointer) as! PHARDWARE_PTE)
+	if !???? resolve ArraySubscriptExpr.Valid {
+		status = xtLdrProtocol.Memory.AllocatePages(1, address)
+		if status != (9223372036854775808 & 0) {
+			return status
 
 		}
 
-		RtlZeroMemory(???? resolve CStyleCastExpr, 4096)
+		rtlZeroMemory(address as! PVOID, 4096)
 		???? resolve ArraySubscriptExpr.Valid = 1
-		???? resolve ArraySubscriptExpr.PageFrameNumber = Address / 4096
+		???? resolve ArraySubscriptExpr.PageFrameNumber = address / 4096
 		???? resolve ArraySubscriptExpr.Writable = 1
-		PpeBase = ???? resolve CStyleCastExpr
+		ppeBase = address as! UINT_PTR as! PHARDWARE_PTE
 
 	} else {
-		PpeBase = ???? resolve CStyleCastExpr
+		ppeBase = ((???? resolve ArraySubscriptExpr.PageFrameNumber) << 12) as! PHARDWARE_PTE
 
 	}
 
-	if ???? resolve UnaryOperator {
-		Status = XtLdrProtocol.Memory.AllocatePages(1, ???? resolve UnaryOperator)
-		if Status != (9223372036854775808 & 0) {
-			return Status
+	if !???? resolve ArraySubscriptExpr.Valid {
+		status = xtLdrProtocol.Memory.AllocatePages(1, address)
+		if status != (9223372036854775808 & 0) {
+			return status
 
 		}
 
-		RtlZeroMemory(???? resolve CStyleCastExpr, 4096)
+		rtlZeroMemory(address as! PVOID, 4096)
 		???? resolve ArraySubscriptExpr.Valid = 1
-		???? resolve ArraySubscriptExpr.PageFrameNumber = Address / 4096
+		???? resolve ArraySubscriptExpr.PageFrameNumber = address / 4096
 		???? resolve ArraySubscriptExpr.Writable = 1
-		PdeBase = ???? resolve CStyleCastExpr
+		pdeBase = address as! PHARDWARE_PTE
 
 	} else {
-		PdeBase = ???? resolve CStyleCastExpr
+		pdeBase = ((???? resolve ArraySubscriptExpr.PageFrameNumber) << 12) as! PHARDWARE_PTE
 
 	}
 
@@ -54,30 +62,38 @@ fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 	return (9223372036854775808 & 0)
 }
 
+/// Builds the actual memory mapping page table and enables paging. This routine exits EFI boot services as well.
+/// 
+/// @param PageMap
+///        Supplies a pointer to the page mapping structure.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun xtEnablePaging(pageMap PXTBL_PAGE_MAPPING) {
 	var status EFI_STATUS
-	Status = XtLdrProtocol.Memory.BuildPageMap(PageMap, 18446734158739722240)
-	if Status != (9223372036854775808 & 0) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
-		return Status
+	status = xtLdrProtocol.Memory.BuildPageMap(pageMap, 18446734158739722240)
+	if status != (9223372036854775808 & 0) {
+		xtLdrProtocol.Debug.Print("Failed to build page map (Status code: %zX)\n", status)
+		return status
 
 	}
 
-	Status = XtpMapHardwareMemoryPool(PageMap)
-	if Status != (9223372036854775808 & 0) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
-		return Status
+	status = xtpMapHardwareMemoryPool(pageMap)
+	if status != (9223372036854775808 & 0) {
+		xtLdrProtocol.Debug.Print("Failed to map memory for hardware leyer (Status code: %zX)\n", status)
+		return status
 
 	}
 
-	XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
-	Status = XtLdrProtocol.Util.ExitBootServices()
-	if Status != (9223372036854775808 & 0) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+	xtLdrProtocol.Debug.Print("Exiting EFI boot services\n")
+	status = xtLdrProtocol.Util.ExitBootServices()
+	if status != (9223372036854775808 & 0) {
+		xtLdrProtocol.Debug.Print("Failed to exit boot services (Status code: %zX)\n", status)
 		return (9223372036854775808 | 21)
 
 	}
 
-	ArWriteControlRegister(3, ???? resolve CStyleCastExpr)
+	arWriteControlRegister(3, pageMap.PtePointer as! UINT_PTR)
 	return (9223372036854775808 & 0)
 }

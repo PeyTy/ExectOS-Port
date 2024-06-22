@@ -1,27 +1,86 @@
 // Hexa 2024 from clang 15.0.3
+/// Closes a protocol on a provided handle.
+/// 
+/// @param Handle
+///        Supplies a handle for the protocol interface that was previously opened.
+/// 
+/// @param ProtocolGuid
+///        Supplies a unique protocol GUID.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blCloseProtocol(handle PEFI_HANDLE, protocolGuid PEFI_GUID) {
-	return EfiSystemTable.BootServices.CloseProtocol(Handle, ProtocolGuid, EfiImageHandle, (???? resolve CStyleCastExpr))
+	return efiSystemTable.BootServices.CloseProtocol(handle, protocolGuid, efiImageHandle, (0 as! PVOID))
 }
 
+/// Finds a boot protocol for specified system type.
+/// 
+/// @param SystemType
+///        Specifies the system type to search for.
+/// 
+/// @param BootProtocolGuid
+///        Receives the GUID of the registered boot protocol, that supports specified system.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blFindBootProtocol(systemType PWCHAR, bootProtocolGuid PEFI_GUID) {
 	let protocolEntry = new ByValue<PXTBL_KNOWN_BOOT_PROTOCOL>()
 
 	let protocolListEntry = new ByValue<PLIST_ENTRY>()
 
-	ProtocolListEntry = BlpBootProtocols.Flink
-	??? CompoundStmt WhileStmt
+	protocolListEntry = BlpBootProtocols.Flink
+	while protocolListEntry != blpBootProtocols {
+		protocolEntry = (((protocolListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_KNOWN_BOOT_PROTOCOL *)
+		if rtlCompareWideStringInsensitive(protocolEntry.SystemType, systemType, 0) == 0 {
+			*bootProtocolGuid = protocolEntry.Guid
+			return (9223372036854775808 & 0)
+
+		}
+
+		protocolListEntry = protocolListEntry.Flink
+
+	}
+
 	return (9223372036854775808 | 14)
 }
 
+/// Returns a linked list of all loaded modules.
+/// 
+/// @return This routine returns a pointer to a linked list of all loaded modules.
+/// 
+/// @since XT 1.0
+/// 
+/// @todo This is a temporary solution and it should be replaced by a complex API allowing to map modules.
 fun blGetModulesList() {
-	return ???? resolve UnaryOperator
+	return blpLoadedModules
 }
 
+/// Installs XTLDR protocol interface.
+/// 
+/// @param Guid
+///        Specifies a unique protocol GUID.
+/// 
+/// @param Interface
+///        Supplies a pointer to the protocol interface, or NULL if there is no structure associated.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blInstallProtocol(interface PVOID, guid PEFI_GUID) {
-	var handle EFI_HANDLE = (???? resolve CStyleCastExpr)
-	return EfiSystemTable.BootServices.InstallProtocolInterface(???? resolve UnaryOperator, Guid, EFI_NATIVE_INTERFACE, Interface)
+	var handle EFI_HANDLE = (0 as! PVOID)
+	return efiSystemTable.BootServices.InstallProtocolInterface(handle, guid, eFI_NATIVE_INTERFACE, interface)
 }
 
+/// Loads a specified XTLDR module from disk.
+/// 
+/// @param ModuleName
+///        Specifies the name of the module to load.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blLoadModule(moduleName PWCHAR) {
 	let lIPGuid = new ByValue<EFI_GUID>()
 
@@ -54,151 +113,227 @@ fun blLoadModule(moduleName PWCHAR) {
 	var moduleSize SIZE_T
 	var status EFI_STATUS
 	var moduleData PVOID
-	ModuleListEntry = BlpLoadedModules.Flink
-	??? CompoundStmt WhileStmt
-	BlDebugPrint(???? resolve StringLiteral, ModuleName)
-	RtlCopyMemory(ModuleFileName, ModuleName, ???? resolve UnaryExprOrTypeTraitExpr / ???? resolve UnaryExprOrTypeTraitExpr)
-	RtlConcatenateWideString(ModuleFileName, ???? resolve StringLiteral, 0)
-	Status = BlOpenVolume((???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	moduleListEntry = BlpLoadedModules.Flink
+	while moduleListEntry != blpLoadedModules {
+		moduleInfo = (((moduleListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_MODULE_INFO *)
+		if rtlCompareWideStringInsensitive(moduleInfo.ModuleName, moduleName, 0) == 0 {
+			blDebugPrint("WARNING: Module '%S' already loaded!\n", moduleName)
+			return (9223372036854775808 & 0)
+
+		}
+
+		moduleListEntry = moduleListEntry.Flink
 
 	}
 
-	Status = FsHandle.Open(FsHandle, ???? resolve UnaryOperator, ???? resolve StringLiteral, 1, 0)
-	if Status != (9223372036854775808 & 0) {
-		Status = FsHandle.Open(FsHandle, ???? resolve UnaryOperator, ???? resolve StringLiteral, 1, 0)
+	blDebugPrint("Loading module '%S' ...\n", moduleName)
+	rtlCopyMemory(moduleFileName, moduleName, ???? resolve UnaryExprOrTypeTraitExpr / ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlConcatenateWideString(moduleFileName, ".EFI", 0)
+	status = blOpenVolume((0 as! PVOID), diskHandle, fsHandle)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	FsHandle.Close(FsHandle)
-	if Status != (9223372036854775808 & 0) {
-		BlCloseVolume(DiskHandle)
-		return Status
+	status = fsHandle.Open(fsHandle, dirHandle, "\\EFI\\BOOT\\XTLDR\\MODULES\\", 1, 0)
+	if status != (9223372036854775808 & 0) {
+		status = fsHandle.Open(fsHandle, dirHandle, "\\EFI\\BOOT\\XTLDR64\\MODULES\\", 1, 0)
 
 	}
 
-	Status = BlReadFile(DirHandle, ModuleFileName, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	DirHandle.Close(DirHandle)
-	BlCloseVolume(DiskHandle)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	fsHandle.Close(fsHandle)
+	if status != (9223372036854775808 & 0) {
+		blCloseVolume(diskHandle)
+		return status
 
 	}
 
-	Status = BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = blReadFile(dirHandle, moduleFileName, moduleData, moduleSize)
+	dirHandle.Close(dirHandle)
+	blCloseVolume(diskHandle)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	RtlZeroMemory(ModuleInfo, ???? resolve UnaryExprOrTypeTraitExpr)
-	DosHeader = ???? resolve CStyleCastExpr
-	PeHeader = ???? resolve CStyleCastExpr
-	if PeHeader..OptionalHeader32.Magic == 523 {
-		SectionHeader = ???? resolve CStyleCastExpr
+	status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, moduleInfo as! PVOID *)
+	if status != (9223372036854775808 & 0) {
+		return status
+
+	}
+
+	rtlZeroMemory(moduleInfo, ???? resolve UnaryExprOrTypeTraitExpr)
+	dosHeader = moduleData as! PPECOFF_IMAGE_DOS_HEADER
+	peHeader = (moduleData + dosHeader.PeHeaderOffset) as! PPECOFF_IMAGE_PE_HEADER
+	if peHeader..OptionalHeader32.Magic == 523 {
+		sectionHeader = (peHeader..OptionalHeader64 as! PUCHAR + peHeader.FileHeader.SizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
 
 	} else {
-		SectionHeader = ???? resolve CStyleCastExpr
+		sectionHeader = (peHeader..OptionalHeader32 as! PUCHAR + peHeader.FileHeader.SizeOfOptionalHeader) as! PPECOFF_IMAGE_SECTION_HEADER
 
 	}
 
 	??? CompoundStmt ForStmt
-	DepsListEntry = ModuleInfo.Dependencies.Flink
-	??? CompoundStmt WhileStmt
+	depsListEntry = moduleInfo.Dependencies.Flink
+	while depsListEntry != moduleInfo.Dependencies {
+		moduleDependency = (((depsListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_MODULE_DEPS *)
+		if moduleDependency.ModuleName == (0 as! PVOID) or ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral {
+			??? CompoundStmt BreakStmt
+
+		}
+
+		blDebugPrint("Module '%S' requires '%S' ...\n", moduleName, moduleDependency.ModuleName)
+		status = blLoadModule(moduleDependency.ModuleName)
+		if status != (9223372036854775808 & 0) {
+			blDebugPrint("Failed to load dependency module '%S' (Status Code: 0x%zX)\n", moduleDependency.ModuleName, status)
+			return (9223372036854775808 | 3)
+
+		}
+
+		depsListEntry = depsListEntry.Flink
+
+	}
+
 	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
 	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr >> 8
 	???? resolve ArraySubscriptExpr.Header.Type = 1
 	???? resolve ArraySubscriptExpr.Header.SubType = 3
-	???? resolve ArraySubscriptExpr.MemoryType = EfiLoaderData
-	???? resolve ArraySubscriptExpr.StartingAddress = ???? resolve CStyleCastExpr
-	???? resolve ArraySubscriptExpr.EndingAddress = ???? resolve CStyleCastExpr + ModuleSize
+	???? resolve ArraySubscriptExpr.MemoryType = efiLoaderData
+	???? resolve ArraySubscriptExpr.StartingAddress = moduleData as! UINT_PTR
+	???? resolve ArraySubscriptExpr.EndingAddress = moduleData as! UINT_PTR + moduleSize
 	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
 	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr >> 8
 	???? resolve ArraySubscriptExpr.Header.Type = 127
 	???? resolve ArraySubscriptExpr.Header.SubType = 255
-	BlDebugPrint(???? resolve StringLiteral, ModuleName)
-	Status = BlLoadEfiImage(???? resolve CStyleCastExpr, ModuleData, ModuleSize, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		if Status == (9223372036854775808 | 15) and BlpStatus.SecureBoot >= 1 {
-			BlDebugPrint(???? resolve StringLiteral, ModuleName)
+	blDebugPrint("Starting module '%S' ...\n", moduleName)
+	status = blLoadEfiImage(moduleDevicePath as! PEFI_DEVICE_PATH_PROTOCOL, moduleData, moduleSize, moduleHandle)
+	if status != (9223372036854775808 & 0) {
+		if status == (9223372036854775808 | 15) and BlpStatus.SecureBoot >= 1 {
+			blDebugPrint("ERROR: SecureBoot signature validation failed, module '%S' will not be loaded\n", moduleName)
 
 		} else {
-			BlDebugPrint(???? resolve StringLiteral, ModuleName, Status)
+			blDebugPrint("ERROR: Unable to load module '%S' (Status Code: 0x%zX)\n", moduleName, status)
 
 		}
 
-		return Status
+		return status
 
 	}
 
-	Status = EfiSystemTable.BootServices.OpenProtocol(ModuleHandle, ???? resolve UnaryOperator, ???? resolve CStyleCastExpr, EfiImageHandle, (???? resolve CStyleCastExpr), 2)
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
-		return Status
+	status = efiSystemTable.BootServices.OpenProtocol(moduleHandle, lIPGuid, loadedImage as! PVOID *, efiImageHandle, (0 as! PVOID), 2)
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Unable to access module interface (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
-	if LoadedImage.ImageCodeType != EfiBootServicesCode {
-		BlDebugPrint(???? resolve StringLiteral)
-		EfiSystemTable.BootServices.CloseProtocol(LoadedImage, ???? resolve UnaryOperator, LoadedImage, (???? resolve CStyleCastExpr))
+	if loadedImage.ImageCodeType != efiBootServicesCode {
+		blDebugPrint("ERROR: Loaded module is not a boot system driver\n")
+		efiSystemTable.BootServices.CloseProtocol(loadedImage, lIPGuid, loadedImage, (0 as! PVOID))
 
 	}
 
-	ModuleInfo.ModuleName = ModuleName
-	ModuleInfo.ModuleBase = LoadedImage.ImageBase
-	ModuleInfo.ModuleSize = LoadedImage.ImageSize
-	ModuleInfo.Revision = LoadedImage.Revision
-	ModuleInfo.UnloadModule = LoadedImage.Unload
-	EfiSystemTable.BootServices.CloseProtocol(LoadedImage, ???? resolve UnaryOperator, LoadedImage, (???? resolve CStyleCastExpr))
-	Status = BlStartEfiImage(ModuleHandle)
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, ModuleName, Status)
-		return Status
+	moduleInfo.ModuleName = moduleName
+	moduleInfo.ModuleBase = loadedImage.ImageBase
+	moduleInfo.ModuleSize = loadedImage.ImageSize
+	moduleInfo.Revision = loadedImage.Revision
+	moduleInfo.UnloadModule = loadedImage.Unload
+	efiSystemTable.BootServices.CloseProtocol(loadedImage, lIPGuid, loadedImage, (0 as! PVOID))
+	status = blStartEfiImage(moduleHandle)
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Failed to start module '%S' (Status Code: 0x%zX)\n", moduleName, status)
+		return status
 
 	}
 
-	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	rtlInsertTailList(blpLoadedModules, moduleInfo.Flink)
 	return (9223372036854775808 & 0)
 }
 
+/// Helper routine to load all modules supplied in the configuration file.
+/// 
+/// @param ModulesList
+///        Supplies a space separated list of XTLDR modules to load (mostly read from configuration file).
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blLoadModules(modulesList PWCHAR) {
 	var lastModule PWCHAR
 	var module PWCHAR
 	var returnStatus EFI_STATUS
 	var status EFI_STATUS
-	ReturnStatus = (9223372036854775808 & 0)
-	if ModulesList != (???? resolve CStyleCastExpr) {
-		Module = RtlTokenizeWideString(ModulesList, ???? resolve StringLiteral, ???? resolve UnaryOperator)
-		??? CompoundStmt WhileStmt
+	returnStatus = (9223372036854775808 & 0)
+	if modulesList != (0 as! PVOID) {
+		module = rtlTokenizeWideString(modulesList, " ", lastModule)
+		while module != (0 as! PVOID) {
+			status = blLoadModule(module)
+			if status != (9223372036854775808 & 0) {
+				blDebugPrint("ERROR: Failed to load module '%S' (Status Code: 0x%zX)\n", module, status)
+				returnStatus = (9223372036854775808 | 1)
+
+			}
+
+			module = rtlTokenizeWideString((0 as! PVOID), " ", lastModule)
+
+		}
+
 
 	}
 
-	return ReturnStatus
+	return returnStatus
 }
 
+/// Returns an array of handles that support the requested protocol.
+/// 
+/// @param Handles
+///        Supplies the address where a pointer to all handles found for the protocol interface.
+/// 
+/// @param Count
+///        Provides a number of the returned handles.
+/// 
+/// @param ProtocolGuid
+///        Supplies a pointer to the unique protocol GUID.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blLocateProtocolHandles(handles PEFI_HANDLE *, count PUINT_PTR, protocolGuid PEFI_GUID) {
-	return EfiSystemTable.BootServices.LocateHandleBuffer(ByProtocol, ProtocolGuid, (???? resolve CStyleCastExpr), Count, Handles)
+	return efiSystemTable.BootServices.LocateHandleBuffer(byProtocol, protocolGuid, (0 as! PVOID), count, handles)
 }
 
+/// Locates and opens the requested XT Boot Loader or EFI protocol.
+/// 
+/// @param Handle
+///        Supplies the address where a pointer to the handle for the protocol interface.
+/// 
+/// @param ProtocolHandler
+///        Supplies the address where a pointer to the opened protocol is returned.
+/// 
+/// @param ProtocolGuid
+///        Supplies a pointer to the unique protocol GUID.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blOpenProtocol(handle PEFI_HANDLE, protocolHandler PVOID *, protocolGuid PEFI_GUID) {
-	var handles PEFI_HANDLE = (???? resolve CStyleCastExpr)
+	var handles PEFI_HANDLE = (0 as! PVOID)
 	var status EFI_STATUS
 	var count UINT_PTR
 	var index UINT
-	Status = BlLocateProtocolHandles(???? resolve UnaryOperator, ???? resolve UnaryOperator, ProtocolGuid)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = blLocateProtocolHandles(handles, count, protocolGuid)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	if Count > 0 {
+	if count > 0 {
 		??? CompoundStmt ForStmt
 
 	}
 
-	EfiSystemTable.BootServices.FreePool(Handles)
-	if ???? resolve UnaryOperator == (???? resolve CStyleCastExpr) {
+	efiSystemTable.BootServices.FreePool(handles)
+	if *protocolHandler == (0 as! PVOID) {
 		return (9223372036854775808 | 14)
 
 	}
@@ -206,34 +341,91 @@ fun blOpenProtocol(handle PEFI_HANDLE, protocolHandler PVOID *, protocolGuid PEF
 	return (9223372036854775808 & 0)
 }
 
+/// Opens the requested XT Boot Loader or EFI protocol, if it is supported by the handle.
+/// 
+/// @param Handle
+///        Supplies a handle for the protocol interface that is being opened.
+/// 
+/// @param ProtocolHandler
+///        Supplies the address where a pointer to the opened protocol is returned.
+/// 
+/// @param ProtocolGuid
+///        Supplies a pointer to the unique protocol GUID.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blOpenProtocolHandle(handle EFI_HANDLE, protocolHandler PVOID *, protocolGuid PEFI_GUID) {
-	return EfiSystemTable.BootServices.OpenProtocol(Handle, ProtocolGuid, ProtocolHandler, EfiImageHandle, (???? resolve CStyleCastExpr), 1)
+	return efiSystemTable.BootServices.OpenProtocol(handle, protocolGuid, protocolHandler, efiImageHandle, (0 as! PVOID), 1)
 }
 
+/// Registers a boot menu callback routine, that will be used to display alternative boot menu.
+/// 
+/// @param BootMenuRoutine
+///        Supplies a pointer to the boot menu callback routine.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blRegisterBootMenu(bootMenuRoutine PVOID) {
-	BlpStatus.BootMenu = BootMenuRoutine
+	BlpStatus.BootMenu = bootMenuRoutine
 }
 
+/// Registers a known boot protocol for a specified OS.
+/// 
+/// @param SystemType
+///        Supplies the type of the OS, such as "LINUX", "XTOS", etc. that is supported by the boot protocol.
+/// 
+/// @param BootProtocolGuid
+///        Supplies a pointer to the unique protocol GUID.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blRegisterBootProtocol(systemType PWCHAR, bootProtocolGuid PEFI_GUID) {
 	let protocolEntry = new ByValue<PXTBL_KNOWN_BOOT_PROTOCOL>()
 
 	let protocolListEntry = new ByValue<PLIST_ENTRY>()
 
 	var status EFI_STATUS
-	ProtocolListEntry = BlpBootProtocols.Flink
-	??? CompoundStmt WhileStmt
-	Status = BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
+	protocolListEntry = BlpBootProtocols.Flink
+	while protocolListEntry != blpBootProtocols {
+		protocolEntry = (((protocolListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_KNOWN_BOOT_PROTOCOL *)
+		if rtlCompareWideStringInsensitive(protocolEntry.SystemType, systemType, 0) == 0 {
+			return (9223372036854775808 | 21)
+
+		}
+
+		protocolListEntry = protocolListEntry.Flink
+
+	}
+
+	status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, protocolEntry as! PVOID *)
+	if status != (9223372036854775808 & 0) {
 		return (9223372036854775808 | 9)
 
 	}
 
-	ProtocolEntry.SystemType = SystemType
-	ProtocolEntry.Guid = ???? resolve UnaryOperator
-	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	protocolEntry.SystemType = systemType
+	protocolEntry.Guid = *bootProtocolGuid
+	rtlInsertTailList(blpBootProtocols, protocolEntry.Flink)
 	return (9223372036854775808 & 0)
 }
 
+/// Reads information from the '.modinfo' section and populates the module information structure.
+/// 
+/// @param SectionData
+///        Supplies a pointer to the module's information section data.
+/// 
+/// @param SectionSize
+///        Supplies an expected size of the section data.
+/// 
+/// @param ModuleInfo
+///        Supplies a pointer to the module information structure that will be filled by data from module's info section.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpGetModuleInformation(sectionData PWCHAR, sectionSize ULONG, moduleInfo PXTBL_MODULE_INFO) {
 	let moduleDependencies = new ByValue<PXTBL_MODULE_DEPS>()
 
@@ -246,11 +438,11 @@ fun blpGetModuleInformation(sectionData PWCHAR, sectionSize ULONG, moduleInfo PX
 	var count ULONG
 	var status EFI_STATUS
 	var strings PWCHAR *
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	Status = BlpGetModuleInfoStrings(SectionData, SectionSize, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	rtlInitializeListHead(moduleInfo.Authors)
+	rtlInitializeListHead(moduleInfo.Dependencies)
+	status = blpGetModuleInfoStrings(sectionData, sectionSize, strings, count)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
@@ -258,6 +450,23 @@ fun blpGetModuleInformation(sectionData PWCHAR, sectionSize ULONG, moduleInfo PX
 	return (9223372036854775808 & 0)
 }
 
+/// Reads raw data from the '.modinfo' section and populates an array of strings.
+/// 
+/// @param SectionData
+///        Supplies a pointer to the module's information section data.
+/// 
+/// @param SectionSize
+///        Supplies an expected size of the section data.
+/// 
+/// @param ModInfo
+///        Supplies a pointer to memory area, where an array of strings read from the section will be stored.
+/// 
+/// @param InfoCount
+///        Supplies a pointer to variable that will receive the number of strings found in the section.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpGetModuleInfoStrings(sectionData PWCHAR, sectionSize ULONG, modInfo PWCHAR **, infoCount PULONG) {
 	var count ULONG
 	var index ULONG
@@ -266,111 +475,152 @@ fun blpGetModuleInfoStrings(sectionData PWCHAR, sectionSize ULONG, modInfo PWCHA
 	var status EFI_STATUS
 	var array PWCHAR *
 	var string PWCHAR
-	InfoStrings = SectionData
-	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+	infoStrings = sectionData
+	if !infoStrings or !sectionSize {
 		return (9223372036854775808 | 2)
 
 	}
 
-	??? CompoundStmt WhileStmt
-	if SectionSize <= 1 {
+	while ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral and sectionSize > 1 {
+		??? CompoundStmt UnaryOperator
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	if sectionSize <= 1 {
 		return (9223372036854775808 | 31)
 
 	}
 
-	Index = 0
-	Count = 0
-	??? CompoundStmt WhileStmt
+	index = 0
+	count = 0
+	while index < sectionSize {
+		if ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral {
+			??? CompoundStmt UnaryOperator
+			??? CompoundStmt ContinueStmt
+
+		}
+
+		while ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral and index < sectionSize {
+			??? CompoundStmt UnaryOperator
+
+		}
+
+		??? CompoundStmt UnaryOperator
+
+	}
+
 	if ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral {
 		??? CompoundStmt UnaryOperator
 
 	}
 
-	Status = BlAllocateMemoryPool(SectionSize + 1 + ???? resolve UnaryExprOrTypeTraitExpr * (Count + 1), ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
+	status = blAllocateMemoryPool(sectionSize + 1 + ???? resolve UnaryExprOrTypeTraitExpr * (count + 1), array as! PVOID *)
+	if status != (9223372036854775808 & 0) {
 		return (9223372036854775808 | 9)
 
 	}
 
-	BlAllocateMemoryPool(SectionSize, ???? resolve CStyleCastExpr)
-	RtlCopyMemory(String, InfoStrings, SectionSize)
-	???? resolve ArraySubscriptExpr = (???? resolve CStyleCastExpr)
-	???? resolve ArraySubscriptExpr = String
-	Index = 0
-	ArrayIndex = 1
-	??? CompoundStmt WhileStmt
-	???? resolve UnaryOperator = Array
-	???? resolve UnaryOperator = Count
+	blAllocateMemoryPool(sectionSize, string as! PVOID *)
+	rtlCopyMemory(string, infoStrings, sectionSize)
+	???? resolve ArraySubscriptExpr = (0 as! PVOID)
+	???? resolve ArraySubscriptExpr = string
+	index = 0
+	arrayIndex = 1
+	while index < sectionSize and arrayIndex < count {
+		if ???? resolve ArraySubscriptExpr != ???? resolve CharacterLiteral {
+			??? CompoundStmt UnaryOperator
+			??? CompoundStmt ContinueStmt
+
+		}
+
+		while ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral and index < sectionSize {
+			??? CompoundStmt UnaryOperator
+
+		}
+
+		???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	*modInfo = array
+	*infoCount = count
 	return (9223372036854775808 & 0)
 }
 
+/// This routine installs XTLDR protocol for further usage by modules.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpInstallXtLoaderProtocol() {
 	let guid = new ByValue<EFI_GUID>()
 
-	BlpLdrProtocol.Boot.FindProtocol = BlFindBootProtocol
-	BlpLdrProtocol.Boot.InitializeMenuList = BlInitializeBootMenuList
-	BlpLdrProtocol.Boot.InvokeProtocol = BlInvokeBootProtocol
-	BlpLdrProtocol.Boot.RegisterMenu = BlRegisterBootMenu
-	BlpLdrProtocol.Boot.RegisterProtocol = BlRegisterBootProtocol
-	BlpLdrProtocol.Config.GetBooleanValue = BlGetConfigBooleanValue
-	BlpLdrProtocol.Config.GetValue = BlGetConfigValue
-	BlpLdrProtocol.Console.ClearLine = BlClearConsoleLine
-	BlpLdrProtocol.Console.ClearScreen = BlClearConsoleScreen
-	BlpLdrProtocol.Console.DisableCursor = BlDisableConsoleCursor
-	BlpLdrProtocol.Console.EnableCursor = BlEnableConsoleCursor
-	BlpLdrProtocol.Console.Print = BlConsolePrint
-	BlpLdrProtocol.Console.QueryMode = BlQueryConsoleMode
-	BlpLdrProtocol.Console.ReadKeyStroke = BlReadKeyStroke
-	BlpLdrProtocol.Console.ResetInputBuffer = BlResetConsoleInputBuffer
-	BlpLdrProtocol.Console.SetAttributes = BlSetConsoleAttributes
-	BlpLdrProtocol.Console.SetCursorPosition = BlSetCursorPosition
-	BlpLdrProtocol.Console.Write = BlConsoleWrite
-	BlpLdrProtocol.Debug.Print = BlDebugPrint
-	BlpLdrProtocol.Disk.CloseVolume = BlCloseVolume
-	BlpLdrProtocol.Disk.OpenVolume = BlOpenVolume
-	BlpLdrProtocol.Disk.ReadFile = BlReadFile
-	BlpLdrProtocol.Memory.AllocatePages = BlAllocateMemoryPages
-	BlpLdrProtocol.Memory.AllocatePool = BlAllocateMemoryPool
-	BlpLdrProtocol.Memory.BuildPageMap = BlBuildPageMap
-	BlpLdrProtocol.Memory.CopyMemory = RtlCopyMemory
-	BlpLdrProtocol.Memory.FreePages = BlFreeMemoryPages
-	BlpLdrProtocol.Memory.FreePool = BlFreeMemoryPool
-	BlpLdrProtocol.Memory.GetMappingsCount = BlGetMappingsCount
-	BlpLdrProtocol.Memory.GetMemoryMap = BlGetMemoryMap
-	BlpLdrProtocol.Memory.GetVirtualAddress = BlGetVirtualAddress
-	BlpLdrProtocol.Memory.InitializePageMap = BlInitializePageMap
-	BlpLdrProtocol.Memory.MapEfiMemory = BlMapEfiMemory
-	BlpLdrProtocol.Memory.MapPage = BlMapPage
-	BlpLdrProtocol.Memory.MapVirtualMemory = BlMapVirtualMemory
-	BlpLdrProtocol.Memory.PhysicalAddressToVirtual = BlPhysicalAddressToVirtual
-	BlpLdrProtocol.Memory.PhysicalListToVirtual = BlPhysicalListToVirtual
-	BlpLdrProtocol.Memory.SetMemory = RtlSetMemory
-	BlpLdrProtocol.Memory.ZeroMemory = RtlZeroMemory
-	BlpLdrProtocol.Protocol.Close = BlCloseProtocol
-	BlpLdrProtocol.Protocol.GetModulesList = BlGetModulesList
-	BlpLdrProtocol.Protocol.Install = BlInstallProtocol
-	BlpLdrProtocol.Protocol.LocateHandles = BlLocateProtocolHandles
-	BlpLdrProtocol.Protocol.Open = BlOpenProtocol
-	BlpLdrProtocol.Protocol.OpenHandle = BlOpenProtocolHandle
-	BlpLdrProtocol.Tui.DisplayErrorDialog = BlDisplayErrorDialog
-	BlpLdrProtocol.Tui.DisplayInfoDialog = BlDisplayInfoDialog
-	BlpLdrProtocol.Tui.DisplayInputDialog = BlDisplayInputDialog
-	BlpLdrProtocol.Tui.DisplayProgressDialog = BlDisplayProgressDialog
-	BlpLdrProtocol.Tui.UpdateProgressBar = BlUpdateProgressBar
-	BlpLdrProtocol.Util.EnterFirmwareSetup = BlEnterFirmwareSetup
-	BlpLdrProtocol.Util.ExitBootServices = BlExitBootServices
-	BlpLdrProtocol.Util.GetConfigurationTable = BlGetConfigurationTable
-	BlpLdrProtocol.Util.GetEfiVariable = BlGetEfiVariable
-	BlpLdrProtocol.Util.GetRandomValue = BlGetRandomValue
-	BlpLdrProtocol.Util.GetSecureBootStatus = BlGetSecureBootStatus
-	BlpLdrProtocol.Util.InitializeEntropy = BlInitializeEntropy
-	BlpLdrProtocol.Util.LoadEfiImage = BlLoadEfiImage
-	BlpLdrProtocol.Util.RebootSystem = BlRebootSystem
-	BlpLdrProtocol.Util.SetEfiVariable = BlSetEfiVariable
-	BlpLdrProtocol.Util.ShutdownSystem = BlShutdownSystem
-	BlpLdrProtocol.Util.SleepExecution = BlSleepExecution
-	BlpLdrProtocol.Util.StartEfiImage = BlStartEfiImage
-	BlpLdrProtocol.Util.WaitForEfiEvent = BlWaitForEfiEvent
-	BlDebugPrint(???? resolve StringLiteral)
-	return BlInstallProtocol(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	BlpLdrProtocol.Boot.FindProtocol = blFindBootProtocol
+	BlpLdrProtocol.Boot.InitializeMenuList = blInitializeBootMenuList
+	BlpLdrProtocol.Boot.InvokeProtocol = blInvokeBootProtocol
+	BlpLdrProtocol.Boot.RegisterMenu = blRegisterBootMenu
+	BlpLdrProtocol.Boot.RegisterProtocol = blRegisterBootProtocol
+	BlpLdrProtocol.Config.GetBooleanValue = blGetConfigBooleanValue
+	BlpLdrProtocol.Config.GetValue = blGetConfigValue
+	BlpLdrProtocol.Console.ClearLine = blClearConsoleLine
+	BlpLdrProtocol.Console.ClearScreen = blClearConsoleScreen
+	BlpLdrProtocol.Console.DisableCursor = blDisableConsoleCursor
+	BlpLdrProtocol.Console.EnableCursor = blEnableConsoleCursor
+	BlpLdrProtocol.Console.Print = blConsolePrint
+	BlpLdrProtocol.Console.QueryMode = blQueryConsoleMode
+	BlpLdrProtocol.Console.ReadKeyStroke = blReadKeyStroke
+	BlpLdrProtocol.Console.ResetInputBuffer = blResetConsoleInputBuffer
+	BlpLdrProtocol.Console.SetAttributes = blSetConsoleAttributes
+	BlpLdrProtocol.Console.SetCursorPosition = blSetCursorPosition
+	BlpLdrProtocol.Console.Write = blConsoleWrite
+	BlpLdrProtocol.Debug.Print = blDebugPrint
+	BlpLdrProtocol.Disk.CloseVolume = blCloseVolume
+	BlpLdrProtocol.Disk.OpenVolume = blOpenVolume
+	BlpLdrProtocol.Disk.ReadFile = blReadFile
+	BlpLdrProtocol.Memory.AllocatePages = blAllocateMemoryPages
+	BlpLdrProtocol.Memory.AllocatePool = blAllocateMemoryPool
+	BlpLdrProtocol.Memory.BuildPageMap = blBuildPageMap
+	BlpLdrProtocol.Memory.CopyMemory = rtlCopyMemory
+	BlpLdrProtocol.Memory.FreePages = blFreeMemoryPages
+	BlpLdrProtocol.Memory.FreePool = blFreeMemoryPool
+	BlpLdrProtocol.Memory.GetMappingsCount = blGetMappingsCount
+	BlpLdrProtocol.Memory.GetMemoryMap = blGetMemoryMap
+	BlpLdrProtocol.Memory.GetVirtualAddress = blGetVirtualAddress
+	BlpLdrProtocol.Memory.InitializePageMap = blInitializePageMap
+	BlpLdrProtocol.Memory.MapEfiMemory = blMapEfiMemory
+	BlpLdrProtocol.Memory.MapPage = blMapPage
+	BlpLdrProtocol.Memory.MapVirtualMemory = blMapVirtualMemory
+	BlpLdrProtocol.Memory.PhysicalAddressToVirtual = blPhysicalAddressToVirtual
+	BlpLdrProtocol.Memory.PhysicalListToVirtual = blPhysicalListToVirtual
+	BlpLdrProtocol.Memory.SetMemory = rtlSetMemory
+	BlpLdrProtocol.Memory.ZeroMemory = rtlZeroMemory
+	BlpLdrProtocol.Protocol.Close = blCloseProtocol
+	BlpLdrProtocol.Protocol.GetModulesList = blGetModulesList
+	BlpLdrProtocol.Protocol.Install = blInstallProtocol
+	BlpLdrProtocol.Protocol.LocateHandles = blLocateProtocolHandles
+	BlpLdrProtocol.Protocol.Open = blOpenProtocol
+	BlpLdrProtocol.Protocol.OpenHandle = blOpenProtocolHandle
+	BlpLdrProtocol.Tui.DisplayErrorDialog = blDisplayErrorDialog
+	BlpLdrProtocol.Tui.DisplayInfoDialog = blDisplayInfoDialog
+	BlpLdrProtocol.Tui.DisplayInputDialog = blDisplayInputDialog
+	BlpLdrProtocol.Tui.DisplayProgressDialog = blDisplayProgressDialog
+	BlpLdrProtocol.Tui.UpdateProgressBar = blUpdateProgressBar
+	BlpLdrProtocol.Util.EnterFirmwareSetup = blEnterFirmwareSetup
+	BlpLdrProtocol.Util.ExitBootServices = blExitBootServices
+	BlpLdrProtocol.Util.GetConfigurationTable = blGetConfigurationTable
+	BlpLdrProtocol.Util.GetEfiVariable = blGetEfiVariable
+	BlpLdrProtocol.Util.GetRandomValue = blGetRandomValue
+	BlpLdrProtocol.Util.GetSecureBootStatus = blGetSecureBootStatus
+	BlpLdrProtocol.Util.InitializeEntropy = blInitializeEntropy
+	BlpLdrProtocol.Util.LoadEfiImage = blLoadEfiImage
+	BlpLdrProtocol.Util.RebootSystem = blRebootSystem
+	BlpLdrProtocol.Util.SetEfiVariable = blSetEfiVariable
+	BlpLdrProtocol.Util.ShutdownSystem = blShutdownSystem
+	BlpLdrProtocol.Util.SleepExecution = blSleepExecution
+	BlpLdrProtocol.Util.StartEfiImage = blStartEfiImage
+	BlpLdrProtocol.Util.WaitForEfiEvent = blWaitForEfiEvent
+	blDebugPrint("Registering XT loader protocol\n")
+	return blInstallProtocol(blpLdrProtocol, guid)
 }

@@ -1,4 +1,18 @@
 // Hexa 2024 from clang 15.0.3
+/// Allocates physical memory for kernel hardware layer before memory manager gets initialized.
+/// 
+/// @param PageCount
+///        Supplies the number of pages to be allocated.
+/// 
+/// @param Aligned
+///        Specifies whether allocated memory should be aligned to 64k boundary or not.
+/// 
+/// @param Buffer
+///        Supplies a buffer that receives the physical address.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun mmAllocateHardwareMemory(pageCount PFN_NUMBER, aligned BOOLEAN, buffer PULONG_PTR) {
 	let descriptor = new ByValue<PLOADER_MEMORY_DESCRIPTOR>()
 
@@ -11,79 +25,139 @@ fun mmAllocateHardwareMemory(pageCount PFN_NUMBER, aligned BOOLEAN, buffer PULON
 	var physicalAddress ULONGLONG
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
-	???? resolve UnaryOperator = 0
-	MaxPage = 4294967295 >> 12
-	if (MmpUsedHardwareAllocationDescriptors + 2) > 64 {
-		return (???? resolve CStyleCastExpr)
+	*buffer = 0
+	maxPage = 4294967295 >> 12
+	if (mmpUsedHardwareAllocationDescriptors + 2) > 64 {
+		return (3221225626 as! XTSTATUS)
 
 	}
 
-	ListEntry = KeInitializationBlock.MemoryDescriptorListHead.Flink
-	??? CompoundStmt WhileStmt
-	if ListEntry == ???? resolve UnaryOperator {
-		return (???? resolve CStyleCastExpr)
+	listEntry = keInitializationBlock.MemoryDescriptorListHead.Flink
+	while listEntry != keInitializationBlock.MemoryDescriptorListHead {
+		descriptor = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! LOADER_MEMORY_DESCRIPTOR *)
+		alignment = ???? resolve ConditionalOperator
+		if descriptor.MemoryType == loaderFree {
+			if descriptor.BasePage and ((descriptor.BasePage + pageCount + alignment) < maxPage) and (descriptor.PageCount >= (pageCount + alignment)) {
+				physicalAddress = (descriptor.BasePage + alignment) << 12
+				??? CompoundStmt BreakStmt
 
-	}
+			}
 
-	HardwareDescriptor = ???? resolve UnaryOperator
-	HardwareDescriptor.BasePage = Descriptor.BasePage + Alignment
-	HardwareDescriptor.MemoryType = LoaderHardwareCachedMemory
-	HardwareDescriptor.PageCount = PageCount
-	??? CompoundStmt UnaryOperator
-	if Alignment {
-		if Descriptor.PageCount > (PageCount + Alignment) {
-			ExtraDescriptor = ???? resolve UnaryOperator
-			ExtraDescriptor.BasePage = Descriptor.BasePage + Alignment + ???? resolve CStyleCastExpr
-			ExtraDescriptor.MemoryType = LoaderFree
-			ExtraDescriptor.PageCount = Descriptor.PageCount - (Alignment + ???? resolve CStyleCastExpr)
-			??? CompoundStmt UnaryOperator
-			RtlInsertHeadList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
 
 		}
 
-		Descriptor.PageCount = Alignment
-		RtlInsertHeadList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+		listEntry = listEntry.Flink
+
+	}
+
+	if listEntry == keInitializationBlock.MemoryDescriptorListHead {
+		return (3221225626 as! XTSTATUS)
+
+	}
+
+	hardwareDescriptor = ???? resolve ArraySubscriptExpr
+	hardwareDescriptor.BasePage = descriptor.BasePage + alignment
+	hardwareDescriptor.MemoryType = loaderHardwareCachedMemory
+	hardwareDescriptor.PageCount = pageCount
+	??? CompoundStmt UnaryOperator
+	if alignment {
+		if descriptor.PageCount > (pageCount + alignment) {
+			extraDescriptor = ???? resolve ArraySubscriptExpr
+			extraDescriptor.BasePage = descriptor.BasePage + alignment + pageCount as! ULONG
+			extraDescriptor.MemoryType = loaderFree
+			extraDescriptor.PageCount = descriptor.PageCount - (alignment + pageCount as! ULONG)
+			??? CompoundStmt UnaryOperator
+			rtlInsertHeadList(descriptor.ListEntry, extraDescriptor.ListEntry)
+
+		}
+
+		descriptor.PageCount = alignment
+		rtlInsertHeadList(descriptor.ListEntry, hardwareDescriptor.ListEntry)
 
 	} else {
 		??? CompoundStmt CompoundAssignOperator
 		??? CompoundStmt CompoundAssignOperator
-		RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
-		if Descriptor.PageCount == 0 {
-			RtlRemoveEntryList(???? resolve UnaryOperator)
+		rtlInsertTailList(descriptor.ListEntry, hardwareDescriptor.ListEntry)
+		if descriptor.PageCount == 0 {
+			rtlRemoveEntryList(descriptor.ListEntry)
 
 		}
 
 
 	}
 
-	???? resolve UnaryOperator = PhysicalAddress
-	return (???? resolve CStyleCastExpr)
+	*buffer = physicalAddress
+	return (0 as! XTSTATUS)
 }
 
+/// Maps physical address to the virtual memory area used by kernel hardware layer.
+/// 
+/// @param PhysicalAddress
+///        Supplies the physical address to map.
+/// 
+/// @param PageCount
+///        Supplies the number of pages to be mapped.
+/// 
+/// @param FlushTlb
+///        Specifies whether to flush the TLB or not.
+/// 
+/// @param VirtualAddress
+///        Supplies a buffer that receives the virtual address of the mapped pages.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, flushTlb BOOLEAN, virtualAddress PVOID *) {
 	var baseAddress PVOID
 	var returnAddress PVOID
 	var mappedPages PFN_NUMBER
 	let ptePointer = new ByValue<PHARDWARE_PTE>()
 
-	BaseAddress = MmpHardwareHeapStart
-	MappedPages = 0
-	ReturnAddress = BaseAddress
-	???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
-	??? CompoundStmt WhileStmt
-	ReturnAddress = ???? resolve CStyleCastExpr
-	if BaseAddress == MmpHardwareHeapStart {
-		MmpHardwareHeapStart = ???? resolve CStyleCastExpr
+	baseAddress = mmpHardwareHeapStart
+	mappedPages = 0
+	returnAddress = baseAddress
+	*virtualAddress = (0 as! PVOID)
+	while mappedPages < pageCount {
+		if baseAddress == (0 as! PVOID) {
+			return (3221225626 as! XTSTATUS)
+
+		}
+
+		ptePointer = mmpGetPteAddress(returnAddress) as! PHARDWARE_PTE
+		returnAddress = returnAddress as! ULONG_PTR as! PVOID + 4096
+		if ptePointer.Valid {
+			baseAddress = returnAddress
+			mappedPages = 0
+			??? CompoundStmt ContinueStmt
+
+		}
+
+		??? CompoundStmt UnaryOperator
 
 	}
 
-	??? CompoundStmt WhileStmt
-	if FlushTlb {
-		MmFlushTlb()
+	returnAddress = (baseAddress + ((PhysicalAddress..LowPart as! ULONG_PTR & (4096 - 1)) as! ULONG)) as! ULONG_PTR as! PVOID
+	if baseAddress == mmpHardwareHeapStart {
+		mmpHardwareHeapStart = (baseAddress as! ULONG_PTR + (pageCount as! ULONG_PTR << 12)) as! PVOID
 
 	}
 
-	if KeDbgPrint {
+	while --mappedPages {
+		ptePointer = mmpGetPteAddress(baseAddress) as! PHARDWARE_PTE
+		ptePointer.PageFrameNumber = (PhysicalAddress.QuadPart >> 12) as! PFN_NUMBER
+		ptePointer.Valid = 1
+		ptePointer.Writable = 1
+		??? CompoundStmt CompoundAssignOperator
+		baseAddress = (baseAddress as! ULONG_PTR + 4096) as! PVOID
+
+	}
+
+	if flushTlb {
+		mmFlushTlb()
+
+	}
+
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -91,53 +165,92 @@ fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, 
 	}
 
 	??? CompoundStmt NullStmt
-	???? resolve UnaryOperator = ReturnAddress
-	return (???? resolve CStyleCastExpr)
+	*virtualAddress = returnAddress
+	return (0 as! XTSTATUS)
 }
 
+/// Marks existing mapping as CD/WT to avoid delays in write-back cache.
+/// 
+/// @param VirtualAddress
+///        Supplies the virtual address region to mark as CD/WT.
+/// 
+/// @param PageCount
+///        Supplies the number of mapped pages.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun mmMarkHardwareMemoryWriteThrough(virtualAddress PVOID, pageCount PFN_NUMBER) {
 	let ptePointer = new ByValue<PHARDWARE_PTE>()
 
 	var page PFN_NUMBER
-	PtePointer = ???? resolve CStyleCastExpr
+	ptePointer = mmpGetPteAddress(virtualAddress) as! PHARDWARE_PTE
 	??? CompoundStmt ForStmt
 }
 
+/// Remaps the PTE to new physical address.
+/// 
+/// @param VirtualAddress
+///        Supplies the virtual address to remap.
+/// 
+/// @param PhysicalAddress
+///        Supplies a new physical address.
+/// 
+/// @param FlushTlb
+///        Specifies whether to flush the TLB or not.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun mmRemapHardwareMemory(virtualAddress PVOID, physicalAddress PHYSICAL_ADDRESS, flushTlb BOOLEAN) {
 	let ptePointer = new ByValue<PHARDWARE_PTE>()
 
-	PtePointer = ???? resolve CStyleCastExpr
-	PtePointer.PageFrameNumber = ???? resolve CStyleCastExpr
-	PtePointer.Valid = 1
-	PtePointer.Writable = 1
-	if FlushTlb {
-		MmFlushTlb()
+	ptePointer = mmpGetPteAddress(virtualAddress) as! PHARDWARE_PTE
+	ptePointer.PageFrameNumber = (PhysicalAddress.QuadPart >> 12) as! PFN_NUMBER
+	ptePointer.Valid = 1
+	ptePointer.Writable = 1
+	if flushTlb {
+		mmFlushTlb()
 
 	}
 
 }
 
+/// Unmaps a Page Table Entry corresponding to the given virtual address.
+/// 
+/// @param VirtualAddress
+///        Supplies the virtual address to unmap.
+/// 
+/// @param PageCount
+///        Supplies the number of mapped pages.
+/// 
+/// @param FlushTlb
+///        Specifies whether to flush the TLB or not.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun mmUnmapHardwareMemory(virtualAddress PVOID, pageCount PFN_NUMBER, flushTlb BOOLEAN) {
 	let ptePointer = new ByValue<PHARDWARE_PTE>()
 
 	var page PFN_NUMBER
-	if VirtualAddress < ???? resolve CStyleCastExpr {
-		return (???? resolve CStyleCastExpr)
+	if virtualAddress < 18446744073705357312 as! PVOID {
+		return (3221225485 as! XTSTATUS)
 
 	}
 
-	VirtualAddress = ???? resolve CStyleCastExpr
-	PtePointer = ???? resolve CStyleCastExpr
+	virtualAddress = (virtualAddress as! ULONG_PTR & ~(4096 - 1)) as! PVOID
+	ptePointer = mmpGetPteAddress(virtualAddress) as! PHARDWARE_PTE
 	??? CompoundStmt ForStmt
-	if FlushTlb {
-		MmFlushTlb()
+	if flushTlb {
+		mmFlushTlb()
 
 	}
 
-	if MmpHardwareHeapStart > VirtualAddress {
-		MmpHardwareHeapStart = VirtualAddress
+	if mmpHardwareHeapStart > virtualAddress {
+		mmpHardwareHeapStart = virtualAddress
 
 	}
 
-	return (???? resolve CStyleCastExpr)
+	return (0 as! XTSTATUS)
 }

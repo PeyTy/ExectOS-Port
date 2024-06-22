@@ -1,12 +1,36 @@
 // Hexa 2024 from clang 15.0.3
+/// This routine converts endianness on 16bit value.
+/// 
+/// @param Source
+///        Supplies a value to swap bytes.
+/// 
+/// @return Swapped 16bit value.
+/// 
+/// @since XT 1.0
 fun rtlByteSwap16(source USHORT) {
-	return ???? resolve CStyleCastExpr
+	return (((source >> 8) & 255) | ((source << 8) & 65280)) as! USHORT
 }
 
+/// This routine converts endianness on 32bit value.
+/// 
+/// @param Source
+///        Supplies a value to swap bytes.
+/// 
+/// @return Swapped 32bit value.
+/// 
+/// @since XT 1.0
 fun rtlByteSwap32(source ULONG) {
-	return ???? resolve CStyleCastExpr
+	return (((source >> 24) & 255) | ((source >> 8) & 65280) | ((source << 8) & 16711680) | ((source << 24) & 4278190080)) as! ULONG
 }
 
+/// This routine converts endianness on 64bit value.
+/// 
+/// @param Source
+///        Supplies a value to swap bytes.
+/// 
+/// @return Swapped 64bit value.
+/// 
+/// @since XT 1.0
 fun rtlByteSwap64(source ULONGLONG) {
-	return ???? resolve CStyleCastExpr
+	return (((source >> 56) & 255) | ((source >> 40) & 65280) | ((source >> 24) & 16711680) | ((source >> 8) & 4278190080) | ((source << 8) & 1095216660480) | ((source << 24) & 280375465082880) | ((source << 40) & 71776119061217280) | ((source << 56) & 18374686479671623680)) as! ULONGLONG
 }

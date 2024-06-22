@@ -1,65 +1,102 @@
 // Hexa 2024 from clang 15.0.3
+/// Initializes the thread.
+/// 
+/// @param Process
+///        Supplies a pointer to the process that owns the thread.
+/// 
+/// @param Thread
+///        Supplies a pointer to thread that will be initialized.
+/// 
+/// @param SystemRoutine
+///        Supplies a pointer to the routine called during first scheduling.
+/// 
+/// @param StartRoutine
+///        Supplies a pointer to the routine called during thread startup.
+/// 
+/// @param StartContext
+///        Supplies a pointer to a context data that will be passed to start routine.
+/// 
+/// @param Context
+///        Supplies a pointer to the context frame containing state of the user mode thread.
+/// 
+/// @param EnvironmentBlock
+///        Supplies a pointer to the environment block of the thread.
+/// 
+/// @param Stack
+///        Supplies a pointer to the stack of the thread.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since NT 3.5
 fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTEM_ROUTINE, startRoutine PKSTART_ROUTINE, startContext PVOID, context PCONTEXT, environmentBlock PVOID, stack PVOID, startThread BOOLEAN) {
 	let timerWaitBlock = new ByValue<PKWAIT_BLOCK>()
 
 	var allocation BOOLEAN
 	var status XTSTATUS
 	var index ULONG
-	Allocation = FALSE
-	Thread.Header.Type = ThreadObject
-	Thread.Header.SignalState = 0
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
+	allocation = fALSE
+	thread.Header.Type = threadObject
+	thread.Header.SignalState = 0
+	rtlInitializeListHead(thread.Header.WaitListHead)
+	rtlInitializeListHead(thread.MutantListHead)
 	??? CompoundStmt ForStmt
-	Thread.AutoAlignment = Process...AutoAlignment
-	Thread.StackResident = TRUE
-	Thread.StackSwap = TRUE
-	Thread.SwapBusy = FALSE
-	Thread...AdjustReason = AdjustNone
-	KeInitializeSpinLock(???? resolve UnaryOperator)
-	Thread.ServiceTable = KeServiceDescriptorTable
-	???? resolve ArraySubscriptExpr = ???? resolve UnaryOperator
-	???? resolve ArraySubscriptExpr = ???? resolve UnaryOperator
-	Thread...ApcQueueable = TRUE
-	Thread..ApcState.Process = Process
-	Thread.Process = Process
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	KeInitializeSpinLock(???? resolve UnaryOperator)
-	KeInitializeApc(???? resolve UnaryOperator, Thread, OriginalApcEnvironment, KepSuspendNop, KepSuspendRundown, KepSuspendThread, KernelMode, (???? resolve CStyleCastExpr))
-	KeInitializeSemaphore(???? resolve UnaryOperator, 0, 2)
-	KeInitializeTimer(???? resolve UnaryOperator, NotificationTimer)
-	TimerWaitBlock = ???? resolve UnaryOperator
-	TimerWaitBlock.Object = ???? resolve UnaryOperator
-	TimerWaitBlock.WaitKey = (???? resolve CStyleCastExpr)
-	TimerWaitBlock.WaitType = WaitAny
-	TimerWaitBlock.WaitListEntry.Flink = ???? resolve UnaryOperator
-	TimerWaitBlock.WaitListEntry.Blink = ???? resolve UnaryOperator
-	Thread.EnvironmentBlock = EnvironmentBlock
-	if ???? resolve UnaryOperator {
-		Status = MmAllocateKernelStack(???? resolve UnaryOperator, FALSE, 0)
-		if Status != (???? resolve CStyleCastExpr) or ???? resolve UnaryOperator {
-			return (???? resolve CStyleCastExpr)
+	thread.AutoAlignment = process...AutoAlignment
+	thread.StackResident = tRUE
+	thread.StackSwap = tRUE
+	thread.SwapBusy = fALSE
+	thread...AdjustReason = adjustNone
+	keInitializeSpinLock(thread.ThreadLock)
+	thread.ServiceTable = keServiceDescriptorTable
+	???? resolve ArraySubscriptExpr = thread..ApcState
+	???? resolve ArraySubscriptExpr = thread.SavedApcState
+	thread...ApcQueueable = tRUE
+	thread..ApcState.Process = process
+	thread.Process = process
+	rtlInitializeListHead(???? resolve ArraySubscriptExpr)
+	rtlInitializeListHead(???? resolve ArraySubscriptExpr)
+	keInitializeSpinLock(thread.ApcQueueLock)
+	keInitializeApc(thread.SuspendApc, thread, originalApcEnvironment, kepSuspendNop, kepSuspendRundown, kepSuspendThread, kernelMode, (0 as! PVOID))
+	keInitializeSemaphore(thread.SuspendSemaphore, 0, 2)
+	keInitializeTimer(thread.Timer, notificationTimer)
+	timerWaitBlock = ???? resolve ArraySubscriptExpr
+	timerWaitBlock.Object = thread.Timer
+	timerWaitBlock.WaitKey = (258 as! XTSTATUS)
+	timerWaitBlock.WaitType = waitAny
+	timerWaitBlock.WaitListEntry.Flink = (thread.Timer).Header.WaitListHead
+	timerWaitBlock.WaitListEntry.Blink = (thread.Timer).Header.WaitListHead
+	thread.EnvironmentBlock = environmentBlock
+	if !stack {
+		status = mmAllocateKernelStack(stack, fALSE, 0)
+		if status != (0 as! XTSTATUS) or !stack {
+			return (3221225626 as! XTSTATUS)
 
 		}
 
-		Allocation = TRUE
+		allocation = tRUE
 
 	}
 
-	Thread.InitialStack = Stack
-	Thread.StackBase = Stack
-	Thread.StackLimit = Stack - 32768
+	thread.InitialStack = stack
+	thread.StackBase = stack
+	thread.StackLimit = stack - 32768
 	??? CompoundStmt SEHTryStmt
-	Thread.State = Initialized
-	if StartThread {
-		KeStartThread(Thread)
+	thread.State = initialized
+	if startThread {
+		keStartThread(thread)
 
 	}
 
-	return (???? resolve CStyleCastExpr)
+	return (0 as! XTSTATUS)
 }
 
+/// Starts the thread.
+/// 
+/// @param Thread
+///        Supplies a pointer to the thread.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun keStartThread(thread PKTHREAD) {
 	let process = new ByValue<PKPROCESS>()
 
@@ -68,39 +105,89 @@ fun keStartThread(thread PKTHREAD) {
 
 	var processorAffinity KAFFINITY
 	var testAffinity KAFFINITY
-	Process = Thread..ApcState.Process
-	Thread.DisableBoost = Process...DisableBoost
-	Thread.Iopl = Thread..ApcState.Process.Iopl
-	Thread.Quantum = Process.Quantum
-	Thread.SystemAffinityActive = FALSE
-	KeAcquireSpinLock(???? resolve UnaryOperator)
-	RunLevel = KeRaiseRunLevel(12)
-	Thread.Affinity = Process.Affinity
-	Thread.UserAffinity = Process.Affinity
-	Thread.Priority = Process.BasePriority
-	Thread.BasePriority = Process.BasePriority
-	Process.ThreadSeed = 0
-	Thread.IdealProcessor = Process.ThreadSeed
-	Thread.UserIdealProcessor = Process.ThreadSeed
-	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Process.StackCount != 2147483647 {
+	process = thread..ApcState.Process
+	thread.DisableBoost = process...DisableBoost
+	thread.Iopl = thread..ApcState.Process.Iopl
+	thread.Quantum = process.Quantum
+	thread.SystemAffinityActive = fALSE
+	keAcquireSpinLock(thread..ApcState.Process.ProcessLock)
+	runLevel = keRaiseRunLevel(12)
+	thread.Affinity = process.Affinity
+	thread.UserAffinity = process.Affinity
+	thread.Priority = process.BasePriority
+	thread.BasePriority = process.BasePriority
+	process.ThreadSeed = 0
+	thread.IdealProcessor = process.ThreadSeed
+	thread.UserIdealProcessor = process.ThreadSeed
+	rtlInsertTailList(process.ThreadListHead, thread.ThreadListEntry)
+	if process.StackCount != 2147483647 {
 		??? CompoundStmt UnaryOperator
 
 	}
 
-	KeReleaseSpinLock(???? resolve UnaryOperator)
-	KeLowerRunLevel(RunLevel)
+	keReleaseSpinLock(thread..ApcState.Process.ProcessLock)
+	keLowerRunLevel(runLevel)
 }
 
+/// Exits the dispatcher, switches context to a new thread and lowers runlevel to its original state.
+/// 
+/// @param OldRunLevel
+///        Supplies the original runlevel state.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepExitDispatcher(oldRunLevel KRUNLEVEL) {
-	KeLowerRunLevel(OldRunLevel)
+	keLowerRunLevel(oldRunLevel)
 }
 
+/// Suspend APC-built thread NOP routine. It takes no actions.
+/// 
+/// @param Apc
+///        Supplies a pointer to the APC object.
+/// 
+/// @param NormalRoutine
+///        Supplies a pointer to the normal routine set during the APC initialization. Unused by this routine.
+/// 
+/// @param NormalContext
+///        Supplies a pointer a context data set during the APC initialization. Unused by this routine.
+/// 
+/// @param SystemArgument1
+///        Supplies a pointer to an unused system argument.
+/// 
+/// @param SystemArgument2
+///        Supplies a pointer to an unused system argument.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepSuspendNop(apc PKAPC, normalRoutine PKNORMAL_ROUTINE *, normalContext PVOID *, systemArgument1 PVOID *, systemArgument2 PVOID *) {
 }
 
+/// Suspend APC-built thread rundown routine. It takes no actions.
+/// 
+/// @param Apc
+///        Supplies a pointer to the APC object.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepSuspendRundown(apc PKAPC) {
 }
 
+/// Suspends thread execution by waiting on the thread's semaphore.
+/// 
+/// @param NormalContext
+///        Supplies a pointer a context data set during the APC initialization. Unused by this routine.
+/// 
+/// @param SystemArgument1
+///        Supplies a pointer to an unused system argument.
+/// 
+/// @param SystemArgument2
+///        Supplies a pointer to an unused system argument.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepSuspendThread(normalContext PVOID, systemArgument1 PVOID, systemArgument2 PVOID) {
 }

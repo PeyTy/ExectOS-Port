@@ -2,17 +2,22 @@
 fun hlpInitializeIOApic() {
 }
 
+/// Initializes the hardware layer subsystem
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlInitializeSystem() {
 	var runLevel KRUNLEVEL
 	var status XTSTATUS
-	Status = HlpInitializeAcpi()
-	if Status != (???? resolve CStyleCastExpr) {
-		return Status
+	status = hlpInitializeAcpi()
+	if status != (0 as! XTSTATUS) {
+		return status
 
 	}
 
-	RunLevel = KeGetCurrentRunLevel()
-	KeRaiseRunLevel(RunLevel)
-	HlpInitializeIOApic()
-	return (???? resolve CStyleCastExpr)
+	runLevel = keGetCurrentRunLevel()
+	keRaiseRunLevel(runLevel)
+	hlpInitializeIOApic()
+	return (0 as! XTSTATUS)
 }

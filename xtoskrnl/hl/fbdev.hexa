@@ -1,45 +1,72 @@
 // Hexa 2024 from clang 15.0.3
 fun hlGetFrameBufferDimensions(width PUINT, height PUINT) {
-	???? resolve UnaryOperator = HlpFrameBufferData.Width
-	???? resolve UnaryOperator = HlpFrameBufferData.Height
+	*width = HlpFrameBufferData.Width
+	*height = HlpFrameBufferData.Height
 }
 
 fun hlFrameBufferInitialized() {
 	return HlpFrameBufferData.Initialized
 }
 
+/// Clears the screen by drawing a box filled with specified color.
+/// 
+/// @param Color
+///        Specifies the color of the box used to fill the screen in (A)RGB format.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun hlClearScreen(color ULONG) {
 	var line SIZE_T
 	var positionX SIZE_T
 	var positionY SIZE_T
 	var backgroundColor ULONG
 	var frameBuf PULONG
-	if HlpFrameBufferData.Initialized == FALSE {
+	if HlpFrameBufferData.Initialized == fALSE {
 		return ??
 
 	}
 
-	FrameBuf = HlpFrameBufferData.Address
-	BackgroundColor = HlpRGBColor(Color)
+	frameBuf = HlpFrameBufferData.Address
+	backgroundColor = hlpRGBColor(color)
 	??? CompoundStmt ForStmt
 }
 
+/// Draw a pixel on the screen at the given position and color.
+/// 
+/// @param PositionX
+///        Supplies the X coordinate of the pixel.
+/// 
+/// @param PositionY
+///        Supplies the Y coordinate of the pixel.
+/// 
+/// @param Color
+///        Specifies the color of the pixel in (A)RGB format.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun hlDrawPixel(positionX ULONG, positionY ULONG, color ULONG) {
 	var frameBufferIndex SIZE_T
-	if HlpFrameBufferData.Initialized == FALSE {
+	if HlpFrameBufferData.Initialized == fALSE {
 		return ??
 
 	}
 
-	if PositionX >= HlpFrameBufferData.Width or PositionY >= HlpFrameBufferData.Height or Color > 4294967295 {
+	if positionX >= HlpFrameBufferData.Width or positionY >= HlpFrameBufferData.Height or color > 4294967295 {
 		return ??
 
 	}
 
-	FrameBufferIndex = 4 * HlpFrameBufferData.PixelsPerScanLine * PositionY + 4 * PositionX
-	???? resolve UnaryOperator = HlpRGBColor(Color)
+	frameBufferIndex = 4 * HlpFrameBufferData.PixelsPerScanLine * positionY + 4 * positionX
+	*((HlpFrameBufferData.Address + frameBufferIndex) as! PULONG) = hlpRGBColor(color)
 }
 
+/// Initializes frame buffer display.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlInitializeFrameBuffer() {
 	let frameBufferResource = new ByValue<PSYSTEM_RESOURCE_FRAMEBUFFER>()
 
@@ -47,49 +74,66 @@ fun hlInitializeFrameBuffer() {
 
 	var status XTSTATUS
 	if HlpFrameBufferData.Initialized {
-		return (???? resolve CStyleCastExpr)
+		return (0 as! XTSTATUS)
 
 	}
 
-	Status = KeGetSystemResource(SystemResourceFrameBuffer, ???? resolve UnaryOperator)
-	if Status != (???? resolve CStyleCastExpr) {
-		return (???? resolve CStyleCastExpr)
+	status = keGetSystemResource(systemResourceFrameBuffer, systemResource)
+	if status != (0 as! XTSTATUS) {
+		return (3221226021 as! XTSTATUS)
 
 	}
 
-	FrameBufferResource = ???? resolve CStyleCastExpr
-	if ???? resolve UnaryOperator {
-		return (???? resolve CStyleCastExpr)
+	frameBufferResource = systemResource as! PSYSTEM_RESOURCE_FRAMEBUFFER
+	if !frameBufferResource.Header.VirtualAddress {
+		return (3221225635 as! XTSTATUS)
 
 	}
 
-	if FrameBufferResource.Font {
-		HlpFrameBufferData.Font = FrameBufferResource.Font
+	if frameBufferResource.Font {
+		HlpFrameBufferData.Font = frameBufferResource.Font
 
 	} else {
-		HlpFrameBufferData.Font = ???? resolve CStyleCastExpr
+		HlpFrameBufferData.Font = xtFbDefaultFont as! PVOID
 
 	}
 
-	HlpFrameBufferData.Address = FrameBufferResource.Header.VirtualAddress
-	HlpFrameBufferData.Width = FrameBufferResource.Width
-	HlpFrameBufferData.Height = FrameBufferResource.Height
-	HlpFrameBufferData.BitsPerPixel = FrameBufferResource.BitsPerPixel
-	HlpFrameBufferData.PixelsPerScanLine = FrameBufferResource.PixelsPerScanLine
-	HlpFrameBufferData.Pitch = FrameBufferResource.Pitch
-	HlpFrameBufferData.Pixels.BlueShift = FrameBufferResource.Pixels.BlueShift
-	HlpFrameBufferData.Pixels.BlueSize = FrameBufferResource.Pixels.BlueSize
-	HlpFrameBufferData.Pixels.GreenShift = FrameBufferResource.Pixels.GreenShift
-	HlpFrameBufferData.Pixels.GreenSize = FrameBufferResource.Pixels.GreenSize
-	HlpFrameBufferData.Pixels.RedShift = FrameBufferResource.Pixels.RedShift
-	HlpFrameBufferData.Pixels.RedSize = FrameBufferResource.Pixels.RedSize
-	HlpFrameBufferData.Pixels.ReservedShift = FrameBufferResource.Pixels.ReservedShift
-	HlpFrameBufferData.Pixels.ReservedSize = FrameBufferResource.Pixels.ReservedSize
-	HlpFrameBufferData.Initialized = TRUE
-	HlClearScreen(0)
-	return (???? resolve CStyleCastExpr)
+	HlpFrameBufferData.Address = frameBufferResource.Header.VirtualAddress
+	HlpFrameBufferData.Width = frameBufferResource.Width
+	HlpFrameBufferData.Height = frameBufferResource.Height
+	HlpFrameBufferData.BitsPerPixel = frameBufferResource.BitsPerPixel
+	HlpFrameBufferData.PixelsPerScanLine = frameBufferResource.PixelsPerScanLine
+	HlpFrameBufferData.Pitch = frameBufferResource.Pitch
+	HlpFrameBufferData.Pixels.BlueShift = frameBufferResource.Pixels.BlueShift
+	HlpFrameBufferData.Pixels.BlueSize = frameBufferResource.Pixels.BlueSize
+	HlpFrameBufferData.Pixels.GreenShift = frameBufferResource.Pixels.GreenShift
+	HlpFrameBufferData.Pixels.GreenSize = frameBufferResource.Pixels.GreenSize
+	HlpFrameBufferData.Pixels.RedShift = frameBufferResource.Pixels.RedShift
+	HlpFrameBufferData.Pixels.RedSize = frameBufferResource.Pixels.RedSize
+	HlpFrameBufferData.Pixels.ReservedShift = frameBufferResource.Pixels.ReservedShift
+	HlpFrameBufferData.Pixels.ReservedSize = frameBufferResource.Pixels.ReservedSize
+	HlpFrameBufferData.Initialized = tRUE
+	hlClearScreen(0)
+	return (0 as! XTSTATUS)
 }
 
+/// Puts a wide character on the framebuffer at the given position and color using the SSFN font.
+/// 
+/// @param PositionX
+///        Supplies the X coordinate of the character.
+/// 
+/// @param PositionY
+///        Supplies the Y coordinate of the character.
+/// 
+/// @param Color
+///        Supplies the font color in (A)RGB format.
+/// 
+/// @param WideCharacter
+///        Supplies the wide character to be drawn on the framebuffer.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter WCHAR) {
 	var currentFragment UINT
 	var glyph UINT
@@ -105,35 +149,43 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 	let fbFont = new ByValue<PSSFN_FONT_HEADER>()
 
 	var fontColor ULONG
-	if HlpFrameBufferData.Initialized == FALSE {
+	if HlpFrameBufferData.Initialized == fALSE {
 		return ??
 
 	}
 
-	FbFont = ???? resolve CStyleCastExpr
-	CharacterMapping = ???? resolve CStyleCastExpr + FbFont.CharactersOffset
-	Character = 0
+	fbFont = HlpFrameBufferData.Font as! PSSFN_FONT_HEADER
+	characterMapping = fbFont as! PUCHAR + fbFont.CharactersOffset
+	character = 0
 	??? CompoundStmt ForStmt
-	if ???? resolve UnaryOperator {
+	if !character {
 		return ??
 
 	}
 
-	GlyphPixel = ???? resolve CStyleCastExpr + PositionY * HlpFrameBufferData.Pitch + PositionX * 4
-	FontColor = HlpRGBColor(Color)
-	Mapping = 0
-	CharacterMapping = Character + 6
+	glyphPixel = HlpFrameBufferData.Address as! UINT_PTR + positionY * HlpFrameBufferData.Pitch + positionX * 4
+	fontColor = hlpRGBColor(color)
+	mapping = 0
+	characterMapping = character + 6
 	??? CompoundStmt ForStmt
 }
 
+/// Converts color format from (A)RGB one expected by current FrameBuffer.
+/// 
+/// @param Color
+///        Specifies the color in (A)RGB format.
+/// 
+/// @return Returns the color in FrameBuffer format.
+/// 
+/// @since XT 1.0
 fun hlpRGBColor(color ULONG) {
 	var blue USHORT
 	var green USHORT
 	var red USHORT
 	var reserved USHORT
-	Blue = ???? resolve CStyleCastExpr
-	Green = ???? resolve CStyleCastExpr
-	Red = ???? resolve CStyleCastExpr
-	Reserved = ???? resolve CStyleCastExpr
-	return ???? resolve CStyleCastExpr
+	blue = (color & 255) as! USHORT
+	green = ((color >> 8) & 255) as! USHORT
+	red = ((color >> 16) & 255) as! USHORT
+	reserved = ((color >> 24) & 255) as! USHORT
+	return ((blue << HlpFrameBufferData.Pixels.BlueShift) | (green << HlpFrameBufferData.Pixels.GreenShift) | (red << HlpFrameBufferData.Pixels.RedShift) | (reserved << HlpFrameBufferData.Pixels.ReservedShift)) as! ULONG
 }

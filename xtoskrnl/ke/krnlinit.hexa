@@ -1,17 +1,25 @@
 // Hexa 2024 from clang 15.0.3
+/// This routine starts up the XT kernel. It is called by boot loader.
+/// 
+/// @param Parameters
+///        Supplies a pointer to memory area containing parameters passed to kernel by bootloader.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keStartXtSystem(parameters PKERNEL_INITIALIZATION_BLOCK) {
-	KeInitializationBlock = Parameters
-	if KeInitializationBlock.BlockSize != ???? resolve UnaryExprOrTypeTraitExpr or KeInitializationBlock.BlockVersion != 1 or KeInitializationBlock.ProtocolVersion != 1 {
-		KeHaltSystem()
+	keInitializationBlock = parameters
+	if keInitializationBlock.BlockSize != ???? resolve UnaryExprOrTypeTraitExpr or keInitializationBlock.BlockVersion != 1 or keInitializationBlock.ProtocolVersion != 1 {
+		keHaltSystem()
 
 	}
 
-	if 1 and KeInitializationBlock.LoaderInformation.DbgPrint {
-		KeDbgPrint = KeInitializationBlock.LoaderInformation.DbgPrint
+	if 1 and keInitializationBlock.LoaderInformation.DbgPrint {
+		keDbgPrint = keInitializationBlock.LoaderInformation.DbgPrint
 
 	}
 
-	if KeDbgPrint {
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt IntegerLiteral
@@ -27,9 +35,9 @@ fun keStartXtSystem(parameters PKERNEL_INITIALIZATION_BLOCK) {
 	}
 
 	??? CompoundStmt NullStmt
-	ArInitializeProcessor((???? resolve CStyleCastExpr))
-	KepInitializeSystemResources()
-	KepInitializeMachine()
-	KeRaiseRunLevel(15)
-	KepSwitchBootStack(???? resolve CStyleCastExpr & ???? resolve UnaryOperator)
+	arInitializeProcessor((0 as! PVOID))
+	kepInitializeSystemResources()
+	kepInitializeMachine()
+	keRaiseRunLevel(15)
+	kepSwitchBootStack(arKernelBootStack as! ULONG_PTR & ~3)
 }

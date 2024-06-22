@@ -1,27 +1,56 @@
 // Hexa 2024 from clang 15.0.3
+/// Initializes an APC object.
+/// 
+/// @param Apc
+///        Supplies a pointer to the APC object.
+/// 
+/// @param Thread
+///        Supplies a pointer to the thread object.
+/// 
+/// @param Environment
+///        Specifies an environment in which the APC will run.
+/// 
+/// @param KernelRoutine
+///        Supplies a pointer to routine called at APC_LEVEL.
+/// 
+/// @param RundownRoutine
+///        Supplies a pointer to routine called on thread exit.
+/// 
+/// @param NormalRoutine
+///        Supplies a pointer to routine called at IRQL 0.
+/// 
+/// @param ApcMode
+///        Specifies processor mode, in which NormalRoutine gets called.
+/// 
+/// @param Context
+///        Supplies a pointer to memory area containing data passed to NormalRoutine.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun keInitializeApc(apc PKAPC, thread PKTHREAD, environment KAPC_ENVIRONMENT, kernelRoutine PKKERNEL_ROUTINE, rundownRoutine PKRUNDOWN_ROUTINE, normalRoutine PKNORMAL_ROUTINE, apcMode KPROCESSOR_MODE, context PVOID) {
-	Apc.Type = ApcObject
-	Apc.Thread = Thread
-	Apc.KernelRoutine = KernelRoutine
-	Apc.RundownRoutine = RundownRoutine
-	Apc.NormalRoutine = NormalRoutine
-	if Environment == CurrentApcEnvironment {
-		Apc.ApcStateIndex = Thread.ApcStateIndex
+	apc.Type = apcObject
+	apc.Thread = thread
+	apc.KernelRoutine = kernelRoutine
+	apc.RundownRoutine = rundownRoutine
+	apc.NormalRoutine = normalRoutine
+	if environment == currentApcEnvironment {
+		apc.ApcStateIndex = thread.ApcStateIndex
 
 	} else {
-		Apc.ApcStateIndex = Environment
+		apc.ApcStateIndex = environment
 
 	}
 
-	if NormalRoutine {
-		Apc.ApcMode = ApcMode
-		Apc.NormalContext = Context
+	if normalRoutine {
+		apc.ApcMode = apcMode
+		apc.NormalContext = context
 
 	} else {
-		Apc.ApcMode = KernelMode
-		Apc.NormalContext = (???? resolve CStyleCastExpr)
+		apc.ApcMode = kernelMode
+		apc.NormalContext = (0 as! PVOID)
 
 	}
 
-	Apc.Inserted = FALSE
+	apc.Inserted = fALSE
 }

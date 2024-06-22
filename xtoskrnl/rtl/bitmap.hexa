@@ -1,10 +1,29 @@
 // Hexa 2024 from clang 15.0.3
+/// Clears all bits in the bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun rtlClearAllBits(bitMap PRTL_BITMAP) {
-	RtlSetMemory(BitMap.Buffer, 0, ((BitMap.Size + 64 - 1) / 64) * ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlSetMemory(bitMap.Buffer, 0, ((bitMap.Size + 64 - 1) / 64) * ???? resolve UnaryExprOrTypeTraitExpr)
 }
 
+/// Clears a single bit in the bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param Bit
+///        Specifies the number of the bit to be cleared.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun rtlClearBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
-	if Bit >= BitMap.Size {
+	if bit >= bitMap.Size {
 		return ??
 
 	}
@@ -12,23 +31,37 @@ fun rtlClearBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
 	??? CompoundStmt CompoundAssignOperator
 }
 
+/// Clears a specified set of bits within a bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param StartingIndex
+///        Supplies the starting index of the first bit to clear.
+/// 
+/// @param Length
+///        Supplies the length (number of bits) to clear.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun rtlClearBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) {
 	var bitOffset ULONG_PTR
 	var mask ULONG_PTR
 	var buffer PULONG_PTR
-	if ???? resolve UnaryOperator {
+	if !length {
 		return ??
 
 	}
 
-	Buffer = ???? resolve UnaryOperator
-	BitOffset = StartingIndex & (64 - 1)
-	if BitOffset {
-		Mask = (???? resolve UnaryOperator) << BitOffset
-		BitOffset = 64 - BitOffset
-		if Length < BitOffset {
+	buffer = ???? resolve ArraySubscriptExpr
+	bitOffset = startingIndex & (64 - 1)
+	if bitOffset {
+		mask = (~(0 as! ULONG_PTR)) << bitOffset
+		bitOffset = 64 - bitOffset
+		if length < bitOffset {
 			??? CompoundStmt CompoundAssignOperator
-			Mask = Mask << BitOffset >> BitOffset
+			mask = mask << bitOffset >> bitOffset
 			??? CompoundStmt CompoundAssignOperator
 			return ??
 
@@ -40,30 +73,52 @@ fun rtlClearBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) 
 
 	}
 
-	RtlSetMemory(Buffer, 0, Length >> 3)
+	rtlSetMemory(buffer, 0, length >> 3)
 	??? CompoundStmt CompoundAssignOperator
 	??? CompoundStmt CompoundAssignOperator
-	if Length {
+	if length {
 		??? CompoundStmt CompoundAssignOperator
 
 	}
 
 }
 
+/// Searches the bit map for a contiguous region of set bits and clears them.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param Length
+///        Supplies the length of contiguous region (number of set bits) to look for.
+/// 
+/// @param Index
+///        Supplies the index of the first bit to start the search at a given position.
+/// 
+/// @return This routine returns the bit map index position of the contiguous region found, or MAXULONG_PTR if not found.
+/// 
+/// @since XT 1.0
 fun rtlClearSetBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
 	var startingIndex ULONG_PTR
-	StartingIndex = RtlFindSetBits(BitMap, Length, Index)
-	if StartingIndex != (???? resolve UnaryOperator) {
-		RtlClearBits(BitMap, StartingIndex, Length)
+	startingIndex = rtlFindSetBits(bitMap, length, index)
+	if startingIndex != (~(0 as! ULONG_PTR)) {
+		rtlClearBits(bitMap, startingIndex, length)
 
 	}
 
-	return StartingIndex
+	return startingIndex
 }
 
+/// Dumps the contents of the bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlDumpBitMap(bitMap PRTL_BITMAP) {
 	var index ULONG_PTR
-	if KeDbgPrint {
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -75,25 +130,86 @@ fun rtlDumpBitMap(bitMap PRTL_BITMAP) {
 	??? CompoundStmt ForStmt
 }
 
+/// Searches the bit map for a contiguous region of clear bits.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param Length
+///        Supplies the length of contiguous region (number of clear bits) to look for.
+/// 
+/// @param Index
+///        Supplies the index of the first bit to start the search at a given position.
+/// 
+/// @return This routine returns the bit map index position of the contiguous region found, or MAXULONG_PTR if not found.
+/// 
+/// @since NT 3.5
 fun rtlFindClearBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
-	return RtlpFindBits(BitMap, Length, Index, FALSE)
+	return rtlpFindBits(bitMap, length, index, fALSE)
 }
 
+/// Searches the bit map for a contiguous region of set bits.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param Length
+///        Supplies the length of contiguous region (number of set bits) to look for.
+/// 
+/// @param Index
+///        Supplies the index of the first bit to start the search at a given position.
+/// 
+/// @return This routine returns the bit map index position of the contiguous region found, or MAXULONG_PTR if not found.
+/// 
+/// @since NT 3.5
 fun rtlFindSetBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
-	return RtlpFindBits(BitMap, Length, Index, TRUE)
+	return rtlpFindBits(bitMap, length, index, tRUE)
 }
 
+/// Initializes a bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map to initialize.
+/// 
+/// @param Buffer
+///        Supplies a pointer to the buffer that will be used as a bit map.
+/// 
+/// @param Size
+///        Supplies a size of the bit map.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun rtlInitializeBitMap(bitMap PRTL_BITMAP, buffer PULONG_PTR, size ULONG) {
-	BitMap.Buffer = Buffer
-	BitMap.Size = Size
+	bitMap.Buffer = buffer
+	bitMap.Size = size
 }
 
+/// Sets all bits in the bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun rtlSetAllBits(bitMap PRTL_BITMAP) {
-	RtlSetMemory(BitMap.Buffer, 255, ((BitMap.Size + 64 - 1) / 64) * ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlSetMemory(bitMap.Buffer, 255, ((bitMap.Size + 64 - 1) / 64) * ???? resolve UnaryExprOrTypeTraitExpr)
 }
 
+/// Sets a single bit in the bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param Bit
+///        Specifies the number of the bit to be set.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun rtlSetBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
-	if Bit >= BitMap.Size {
+	if bit >= bitMap.Size {
 		return ??
 
 	}
@@ -101,23 +217,37 @@ fun rtlSetBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
 	??? CompoundStmt CompoundAssignOperator
 }
 
+/// Sets a specified set of bits within a bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param StartingIndex
+///        Supplies the starting index of the first bit to set.
+/// 
+/// @param Length
+///        Supplies the length (number of bits) to set.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun rtlSetBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) {
 	var bitOffset ULONG_PTR
 	var mask ULONG_PTR
 	var buffer PULONG_PTR
-	if ???? resolve UnaryOperator {
+	if !length {
 		return ??
 
 	}
 
-	Buffer = ???? resolve UnaryOperator
-	BitOffset = StartingIndex & (64 - 1)
-	if BitOffset {
-		Mask = (???? resolve UnaryOperator) << BitOffset
-		BitOffset = 64 - BitOffset
-		if Length < BitOffset {
+	buffer = ???? resolve ArraySubscriptExpr
+	bitOffset = startingIndex & (64 - 1)
+	if bitOffset {
+		mask = (~(0 as! ULONG_PTR)) << bitOffset
+		bitOffset = 64 - bitOffset
+		if length < bitOffset {
 			??? CompoundStmt CompoundAssignOperator
-			Mask = Mask << BitOffset >> BitOffset
+			mask = mask << bitOffset >> bitOffset
 			??? CompoundStmt CompoundAssignOperator
 			return ??
 
@@ -129,63 +259,126 @@ fun rtlSetBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) {
 
 	}
 
-	RtlSetMemory(Buffer, 255, Length >> 3)
+	rtlSetMemory(buffer, 255, length >> 3)
 	??? CompoundStmt CompoundAssignOperator
 	??? CompoundStmt CompoundAssignOperator
-	if Length {
+	if length {
 		??? CompoundStmt CompoundAssignOperator
 
 	}
 
 }
 
+/// Searches the bit map for a contiguous region of clear bits and sets them.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param Length
+///        Supplies the length of contiguous region (number of clear bits) to look for.
+/// 
+/// @param Index
+///        Supplies the index of the first bit to start the search at a given position.
+/// 
+/// @return This routine returns the bit map index position of the contiguous region found, or MAXULONG_PTR if not found.
+/// 
+/// @since XT 1.0
 fun rtlSetClearBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
 	var startingIndex ULONG_PTR
-	StartingIndex = RtlFindClearBits(BitMap, Length, Index)
-	if StartingIndex != (???? resolve UnaryOperator) {
-		RtlSetBits(BitMap, StartingIndex, Length)
+	startingIndex = rtlFindClearBits(bitMap, length, index)
+	if startingIndex != (~(0 as! ULONG_PTR)) {
+		rtlSetBits(bitMap, startingIndex, length)
 
 	}
 
-	return StartingIndex
+	return startingIndex
 }
 
+/// Tests a state of a single bit in the bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param Bit
+///        Specifies the number of the bit to be tested.
+/// 
+/// @return This routine returns TRUE when bit is set, or FALSE otherwise.
+/// 
+/// @since NT 5.1
 fun rtlTestBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
-	if Bit >= BitMap.Size {
-		return FALSE
+	if bit >= bitMap.Size {
+		return fALSE
 
 	}
 
 	return ???? resolve ConditionalOperator
 }
 
+/// Counts the number of either set or clear bits in the contiguous region of the bit map.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param Length
+///        Supplies the maximum length (number of bits) to count.
+/// 
+/// @param StartingIndex
+///        Supplies the starting index of the first bit to count.
+/// 
+/// @param SetBits
+///        Specifies whether count bits that are set or clear.
+/// 
+/// @return This routine returns the number of equal bits found in the contiguous region.
+/// 
+/// @since XT 1.0
 fun rtlpCountBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, setBits BOOLEAN) {
 	var buffer PULONG_PTR
 	var bufferEnd PULONG_PTR
 	var bitOffset ULONG_PTR
 	var size ULONG_PTR
 	var value ULONGLONG
-	Buffer = ???? resolve UnaryOperator
-	BufferEnd = Buffer + ((Length + 64 - 1) / 64)
-	BitOffset = StartingIndex & (64 - 1)
-	Value = (???? resolve ConditionalOperator) >> BitOffset << BitOffset
-	??? CompoundStmt WhileStmt
-	if ???? resolve UnaryOperator {
-		return Length
+	buffer = ???? resolve ArraySubscriptExpr
+	bufferEnd = buffer + ((length + 64 - 1) / 64)
+	bitOffset = startingIndex & (64 - 1)
+	value = (???? resolve ConditionalOperator) >> bitOffset << bitOffset
+	while !value and buffer + 1 < bufferEnd {
+		value = ???? resolve ConditionalOperator
 
 	}
 
-	Size = ((Buffer - BitMap.Buffer) * 64) - StartingIndex + ???? resolve CStyleCastExpr
+	if !value {
+		return length
+
+	}
+
+	size = ((buffer - bitMap.Buffer) * 64) - startingIndex + rtlCountTrailingZeroes64(value) as! ULONG_PTR
 	return ???? resolve ConditionalOperator
 }
 
+/// Searches the bit map for a contiguous region of either set or clear bits.
+/// 
+/// @param BitMap
+///        Supplies a pointer to the bit map.
+/// 
+/// @param Length
+///        Supplies the length (number of equal bits) to look for.
+/// 
+/// @param StartingIndex
+///        Supplies the starting index of the first bit to start the search at a given position.
+/// 
+/// @param SetBits
+///        Specifies whether count bits that are set or clear.
+/// 
+/// @return This routine returns the bit map index position of the contiguous region found, or MAXULONG_PTR if not found.
+/// 
+/// @since XT 1.0
 fun rtlpFindBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, setBits BOOLEAN) {
 	var bitMapEnd ULONG_PTR
 	var bitOffset ULONG_PTR
 	var size ULONG_PTR
 	var tries ULONG
-	if Length > BitMap.Size {
-		return ???? resolve CStyleCastExpr
+	if length > bitMap.Size {
+		return -1 as! ULONG_PTR
 
 	} else {
 		??? CompoundStmt UnaryOperator
@@ -193,14 +386,41 @@ fun rtlpFindBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, 
 
 	}
 
-	if StartingIndex >= BitMap.Size {
-		StartingIndex = 0
+	if startingIndex >= bitMap.Size {
+		startingIndex = 0
 
 	}
 
-	BitOffset = StartingIndex
-	BitMapEnd = BitMap.Size
-	Tries = (StartingIndex != 0) + 2
-	??? CompoundStmt WhileStmt
-	return ???? resolve CStyleCastExpr
+	bitOffset = startingIndex
+	bitMapEnd = bitMap.Size
+	tries = (startingIndex != 0) + 2
+	while tries {
+		while bitOffset + length < bitMapEnd {
+			??? CompoundStmt CompoundAssignOperator
+			if bitOffset + length > bitMapEnd {
+				??? CompoundStmt BreakStmt
+
+			}
+
+			size = rtlpCountBits(bitMap, length, bitOffset, setBits)
+			if size >= length {
+				return bitOffset
+
+			}
+
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		??? CompoundStmt UnaryOperator
+		if tries {
+			bitOffset = 0
+			bitMapEnd = startingIndex
+
+		}
+
+
+	}
+
+	return -1 as! ULONG_PTR
 }

@@ -1,49 +1,121 @@
 // Hexa 2024 from clang 15.0.3
+/// This routine initializes a structure representing the head of a double-linked list.
+/// 
+/// @param ListHead
+///        Pointer to a structure that serves as the list header.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlInitializeListHead(listHead PLIST_ENTRY) {
-	ListHead.Blink = ListHead
-	ListHead.Flink = ListHead
+	listHead.Blink = listHead
+	listHead.Flink = listHead
 }
 
+/// This routine initializes a structure representing the head of a 32bit double-linked list.
+/// 
+/// @param ListHead
+///        Pointer to a structure that serves as the list header.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlInitializeListHead32(listHead PLIST_ENTRY32) {
-	ListHead.Blink = (???? resolve CStyleCastExpr)
-	ListHead.Flink = (???? resolve CStyleCastExpr)
+	listHead.Blink = (listHead as! ULONG_PTR as! ULONG)
+	listHead.Flink = (listHead as! ULONG_PTR as! ULONG)
 }
 
+/// This routine inserts an entry at the head of a doubly linked list.
+/// 
+/// @param ListHead
+///        Pointer to the head of the list.
+/// 
+/// @param Entry
+///        Pointer to the entry that will be inserted in the list.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlInsertHeadList(listHead PLIST_ENTRY, entry PLIST_ENTRY) {
-	Entry.Flink = ListHead.Flink
-	Entry.Blink = ListHead
-	ListHead.Flink.Blink = Entry
-	ListHead.Flink = Entry
+	entry.Flink = listHead.Flink
+	entry.Blink = listHead
+	listHead.Flink.Blink = entry
+	listHead.Flink = entry
 }
 
+/// This routine inserts an entry at the tail of a doubly linked list.
+/// 
+/// @param ListHead
+///        Pointer to the head of the list.
+/// 
+/// @param Entry
+///        Pointer to the entry that will be inserted in the list.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlInsertTailList(listHead PLIST_ENTRY, entry PLIST_ENTRY) {
-	Entry.Flink = ListHead
-	Entry.Blink = ListHead.Blink
-	ListHead.Blink.Flink = Entry
-	ListHead.Blink = Entry
+	entry.Flink = listHead
+	entry.Blink = listHead.Blink
+	listHead.Blink.Flink = entry
+	listHead.Blink = entry
 }
 
+/// Indicates whether a doubly linked list structure is empty, or not initialized at all.
+/// 
+/// @param ListHead
+///        Pointer to a structure that represents the head of the list.
+/// 
+/// @return TRUE if there are currently no entries in the list or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun rtlListEmpty(listHead PLIST_ENTRY) {
-	return (((ListHead.Flink == (???? resolve CStyleCastExpr)) and (ListHead.Blink == (???? resolve CStyleCastExpr))) or (ListHead.Flink == ListHead))
+	return (((listHead.Flink == (0 as! PVOID)) and (listHead.Blink == (0 as! PVOID))) or (listHead.Flink == listHead))
 }
 
+/// This routine detects a loop in a doubly linked list.
+/// 
+/// @param ListHead
+///        Pointer to a structure that represents the head of the list.
+/// 
+/// @return TRUE if linked list contains a loop or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun rtlListLoop(listHead PLIST_ENTRY) {
 	let slowEntry = new ByValue<PLIST_ENTRY>()
 
 	let fastEntry = new ByValue<PLIST_ENTRY>()
 
-	if ListHead == (???? resolve CStyleCastExpr) {
-		return FALSE
+	if listHead == (0 as! PVOID) {
+		return fALSE
 
 	}
 
-	FastEntry = ListHead
-	SlowEntry = ListHead
-	??? CompoundStmt WhileStmt
-	return FALSE
+	fastEntry = listHead
+	slowEntry = listHead
+	while slowEntry != (0 as! PVOID) and fastEntry != (0 as! PVOID) and fastEntry.Flink != (0 as! PVOID) {
+		slowEntry = slowEntry.Flink
+		fastEntry = fastEntry.Flink.Flink
+		if slowEntry == fastEntry {
+			return tRUE
+
+		}
+
+
+	}
+
+	return fALSE
 }
 
+/// This routine removes an entry from a doubly linked list.
+/// 
+/// @param Entry
+///        Pointer to the entry that will be removed from the list.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlRemoveEntryList(entry PLIST_ENTRY) {
-	Entry.Flink.Blink = Entry.Blink
-	Entry.Blink.Flink = Entry.Flink
+	entry.Flink.Blink = entry.Blink
+	entry.Blink.Flink = entry.Flink
 }

@@ -1,4 +1,9 @@
 // Hexa 2024 from clang 15.0.3
+/// Initializes EFI Boot Loader (XTLDR).
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blInitializeBootLoader() {
 	let lipGuid = new ByValue<EFI_GUID>()
 
@@ -6,29 +11,43 @@ fun blInitializeBootLoader() {
 
 	var handle EFI_HANDLE
 	var status EFI_STATUS
-	BlpStatus.BootServices = TRUE
-	BlInitializeConsole()
-	BlConsolePrint(???? resolve StringLiteral, ???? resolve StringLiteral)
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	BlpStatus.SecureBoot = BlGetSecureBootStatus()
-	Status = BlOpenProtocol(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
-	if Status == (9223372036854775808 & 0) {
-		BlpStatus.LoaderBase = LoadedImage.ImageBase
-		BlpStatus.LoaderSize = LoadedImage.ImageSize
+	BlpStatus.BootServices = tRUE
+	blInitializeConsole()
+	blConsolePrint("XTLDR boot loader v%s\n", ???? resolve StringLiteral)
+	rtlInitializeListHead(blpBootProtocols)
+	rtlInitializeListHead(blpConfig)
+	rtlInitializeListHead(blpLoadedModules)
+	BlpStatus.SecureBoot = blGetSecureBootStatus()
+	status = blOpenProtocol(handle, loadedImage as! PVOID *, lipGuid)
+	if status == (9223372036854775808 & 0) {
+		BlpStatus.LoaderBase = loadedImage.ImageBase
+		BlpStatus.LoaderSize = loadedImage.ImageSize
 		if 1 {
-			BlConsolePrint(???? resolve StringLiteral, ???? resolve UnaryExprOrTypeTraitExpr, LoadedImage.ImageBase, LoadedImage.ImageSize, LoadedImage.Revision)
-			BlSleepExecution(3000)
+			blConsolePrint("\n---------- BOOTLOADER DEBUG ----------\nPointer Size      : %d\nImage Base Address: %P\nImage Base Size   : 0x%lX\nImage Revision    : 0x%lX\n--------------------------------------\n", ???? resolve UnaryExprOrTypeTraitExpr, loadedImage.ImageBase, loadedImage.ImageSize, loadedImage.Revision)
+			blSleepExecution(3000)
 
 		}
 
-		BlCloseProtocol(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+		blCloseProtocol(handle, lipGuid)
 
 	}
 
 }
 
+/// Initializes a list of operating systems for XTLDR boot menu.
+/// 
+/// @param MenuEntries
+///        Supplies a pointer to memory area where operating systems list will be stored.
+/// 
+/// @param EntriesCount
+///        Supplies a pointer to memory area where number of menu entries will be stored.
+/// 
+/// @param DefaultId
+///        Supplies a pointer to memory area where ID of default menu entry will be stored.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blInitializeBootMenuList(menuEntries PXTBL_BOOTMENU_ITEM *, entriesCount PULONG, defaultId PULONG) {
 	let vendorGuid = new ByValue<EFI_GUID>()
 
@@ -48,36 +67,79 @@ fun blInitializeBootMenuList(menuEntries PXTBL_BOOTMENU_ITEM *, entriesCount PUL
 	let osList = new ByValue<PXTBL_BOOTMENU_ITEM>()
 
 	var status EFI_STATUS
-	DefaultOS = 0
-	NumberOfEntries = 0
-	DefaultMenuEntry = BlGetConfigValue(???? resolve StringLiteral)
-	if BlGetConfigBooleanValue(???? resolve StringLiteral) {
-		Status = BlGetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr)
-		if Status == (9223372036854775808 & 0) {
-			DefaultMenuEntry = LastBooted
+	defaultOS = 0
+	numberOfEntries = 0
+	defaultMenuEntry = blGetConfigValue("DEFAULT")
+	if blGetConfigBooleanValue("KEEPLASTBOOT") {
+		status = blGetEfiVariable(vendorGuid, "XtLdrLastBootOS", lastBooted as! PVOID *)
+		if status == (9223372036854775808 & 0) {
+			defaultMenuEntry = lastBooted
 
 		}
 
 
 	}
 
-	MenuEntrySectionList = BlpMenuList.Flink
-	??? CompoundStmt WhileStmt
-	Status = BlAllocateMemoryPool(NumberOfEntries * ???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
+	menuEntrySectionList = blpMenuList.Flink
+	while menuEntrySectionList != blpMenuList {
+		??? CompoundStmt UnaryOperator
+		menuEntrySectionList = menuEntrySectionList.Flink
+
+	}
+
+	status = blAllocateMemoryPool(numberOfEntries * ???? resolve UnaryExprOrTypeTraitExpr, osList as! PVOID *)
+	if status != (9223372036854775808 & 0) or !osList {
 		return (9223372036854775808 | 9)
 
 	}
 
-	NumberOfEntries = 0
-	MenuEntrySectionList = BlpMenuList.Flink
-	??? CompoundStmt WhileStmt
-	???? resolve UnaryOperator = DefaultOS
-	???? resolve UnaryOperator = NumberOfEntries
-	???? resolve UnaryOperator = OsList
+	numberOfEntries = 0
+	menuEntrySectionList = blpMenuList.Flink
+	while menuEntrySectionList != blpMenuList {
+		menuEntryName = (0 as! PVOID)
+		menuEntrySection = (((menuEntrySectionList) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_SECTION *)
+		if rtlCompareWideStringInsensitive(menuEntrySection.SectionName, defaultMenuEntry, 0) == 0 {
+			defaultOS = numberOfEntries
+
+		}
+
+		menuEntryList = menuEntrySection.Options.Flink
+		while menuEntryList != menuEntrySection.Options {
+			menuEntryOption = (((menuEntryList) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+			if rtlCompareWideStringInsensitive(menuEntryOption.Name, "SYSTEMNAME", 0) == 0 {
+				menuEntryName = menuEntryOption.Value
+
+			}
+
+			menuEntryList = menuEntryList.Flink
+
+		}
+
+		???? resolve ArraySubscriptExpr.EntryName = menuEntryName
+		???? resolve ArraySubscriptExpr.ShortName = menuEntrySection.SectionName
+		???? resolve ArraySubscriptExpr.Options = menuEntrySection.Options
+		menuEntrySectionList = menuEntrySectionList.Flink
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	*defaultId = defaultOS
+	*entriesCount = numberOfEntries
+	*menuEntries = osList
 	return (9223372036854775808 & 0)
 }
 
+/// Loads all necessary modules and invokes boot protocol.
+/// 
+/// @param ShortName
+///        Supplies a pointer to a short name of the chosen boot menu entry.
+/// 
+/// @param OptionsList
+///        Supplies a pointer to list of options associated with chosen boot menu entry.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 	let vendorGuid = new ByValue<EFI_GUID>()
 
@@ -95,108 +157,186 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 	var modulesList PWCHAR
 	var handle EFI_HANDLE
 	var status EFI_STATUS
-	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
-	ModulesList = (???? resolve CStyleCastExpr)
-	OptionsListEntry = OptionsList.Flink
-	??? CompoundStmt WhileStmt
-	Status = BlLoadModules(ModulesList)
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
+	rtlZeroMemory(bootParameters, ???? resolve UnaryExprOrTypeTraitExpr)
+	modulesList = (0 as! PVOID)
+	optionsListEntry = optionsList.Flink
+	while optionsListEntry != optionsList {
+		option = (((optionsListEntry) as! Char * - ???? resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		if rtlCompareWideStringInsensitive(option.Name, "BOOTMODULES", 0) == 0 {
+			moduleListLength = rtlWideStringLength(option.Value, 0)
+			status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr * (moduleListLength + 1), modulesList as! PVOID *)
+			if status != (9223372036854775808 & 0) {
+				blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
+				return (9223372036854775808 | 9)
+
+			}
+
+			rtlCopyMemory(modulesList, option.Value, ???? resolve UnaryExprOrTypeTraitExpr * (moduleListLength + 1))
+
+		} else {
+			??? CompoundStmt CompoundStmt
+			if rtlCompareWideStringInsensitive(option.Name, "SYSTEMPATH", 0) == 0 {
+				status = blGetVolumeDevicePath(option.Value, BootParameters.DevicePath, BootParameters.ArcName, BootParameters.SystemPath)
+				if status != (9223372036854775808 & 0) {
+					blDebugPrint("ERROR: Failed to find volume device path (Status Code: 0x%zX)\n", status)
+					return status
+
+				}
+
+				status = blGetEfiPath(BootParameters.SystemPath, BootParameters.EfiPath)
+				if status != (9223372036854775808 & 0) {
+					blDebugPrint("ERROR: Failed to get EFI path (Status Code: 0x%zX)\n", status)
+					return status
+
+				}
+
+
+			} else {
+				??? CompoundStmt CompoundStmt
+				if rtlCompareWideStringInsensitive(option.Name, "INITRDFILE", 0) == 0 {
+					BootParameters.InitrdFile = option.Value
+
+				} else {
+					??? CompoundStmt CompoundStmt
+					if rtlCompareWideStringInsensitive(option.Name, "PARAMETERS", 0) == 0 {
+						BootParameters.Parameters = option.Value
+
+					}
+
+
+				}
+
+
+			}
+
+
+		}
+
+		optionsListEntry = optionsListEntry.Flink
+
+	}
+
+	status = blLoadModules(modulesList)
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Failed to load XTLDR modules (Status Code: 0x%zX)\n", status)
 		return (9223372036854775808 | 6)
 
 	}
 
-	Status = BlFindBootProtocol(BootParameters.SystemType, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
+	status = blFindBootProtocol(BootParameters.SystemType, bootProtocolGuid)
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Unable to find appropriate boot protocol (Status Code: 0x%zX)\n", status)
 		return (9223372036854775808 | 3)
 
 	}
 
-	Status = BlOpenProtocol(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
-		return Status
+	status = blOpenProtocol(handle, bootProtocol as! PVOID *, bootProtocolGuid)
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Failed to open boot protocol (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
-	if BlGetConfigBooleanValue(???? resolve StringLiteral) {
-		Status = BlSetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr, RtlWideStringLength(ShortName, 0) * ???? resolve UnaryExprOrTypeTraitExpr)
-		if Status != (9223372036854775808 & 0) {
-			BlDebugPrint(???? resolve StringLiteral, Status)
+	if blGetConfigBooleanValue("KEEPLASTBOOT") {
+		status = blSetEfiVariable(vendorGuid, "XtLdrLastBootOS", shortName as! PVOID, rtlWideStringLength(shortName, 0) * ???? resolve UnaryExprOrTypeTraitExpr)
+		if status != (9223372036854775808 & 0) {
+			blDebugPrint("WARNING: Failed to save chosen Operating System in NVRAM (Status Code: 0x%zX)\n", status)
 
 		}
 
 
 	}
 
-	return BootProtocol.BootSystem(???? resolve UnaryOperator)
+	return bootProtocol.BootSystem(bootParameters)
 }
 
+/// This routine is the entry point of the XT EFI boot loader.
+/// 
+/// @param ImageHandle
+///        Firmware-allocated handle that identifies the image.
+/// 
+/// @param SystemTable
+///        Provides the EFI system table.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun blStartXtLoader(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	var status EFI_STATUS
-	EfiImageHandle = ImageHandle
-	EfiSystemTable = SystemTable
-	BlInitializeBootLoader()
-	Status = BlpParseCommandLine()
-	if Status != (9223372036854775808 & 0) {
-		BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+	efiImageHandle = imageHandle
+	efiSystemTable = systemTable
+	blInitializeBootLoader()
+	status = blpParseCommandLine()
+	if status != (9223372036854775808 & 0) {
+		blDisplayErrorDialog("XTLDR", "Failed to parse command line parameters.")
 
 	}
 
 	if 1 {
-		Status = BlpInitializeDebugConsole()
-		if Status != (9223372036854775808 & 0) {
-			BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+		status = blpInitializeDebugConsole()
+		if status != (9223372036854775808 & 0) {
+			blDisplayErrorDialog("XTLDR", "Failed to initialize debug console.")
 
 		}
 
 
 	}
 
-	Status = BlpLoadConfiguration()
-	if Status != (9223372036854775808 & 0) {
-		BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+	status = blpLoadConfiguration()
+	if status != (9223372036854775808 & 0) {
+		blDisplayErrorDialog("XTLDR", "Failed to load and parse configuration file ")
 
 	}
 
 	if 1 {
-		Status = BlpInitializeDebugConsole()
-		if Status != (9223372036854775808 & 0) {
-			BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+		status = blpInitializeDebugConsole()
+		if status != (9223372036854775808 & 0) {
+			blDisplayErrorDialog("XTLDR", "Failed to initialize debug console.")
 
 		}
 
 
 	}
 
-	Status = EfiSystemTable.BootServices.SetWatchdogTimer(0, 65536, 0, (???? resolve CStyleCastExpr))
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
+	status = efiSystemTable.BootServices.SetWatchdogTimer(0, 65536, 0, (0 as! PVOID))
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("WARNING: Failed to disable watchdog timer (Status Code: 0x%zX)\n", status)
 
 	}
 
-	Status = BlpInstallXtLoaderProtocol()
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
-		return Status
+	status = blpInstallXtLoaderProtocol()
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Failed to register XTLDR loader protocol (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
-	Status = BlLoadModules(BlGetConfigValue(???? resolve StringLiteral))
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
-		BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+	status = blLoadModules(blGetConfigValue("MODULES"))
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Failed to load XTLDR modules (Status Code: 0x%zX)\n", status)
+		blDisplayErrorDialog("XTLDR", "Failed to load some XTLDR modules.")
 
 	}
 
-	Status = BlEnumerateBlockDevices()
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
-		return Status
+	status = blEnumerateBlockDevices()
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Failed to discover and enumerate block devices (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
-	??? CompoundStmt WhileStmt
+	while tRUE {
+		if BlpStatus.BootMenu != (0 as! PVOID) {
+			BlpStatus.BootMenu()
+
+		} else {
+			blDisplayBootMenu()
+
+		}
+
+		blStartLoaderShell()
+
+	}
+
 	return (9223372036854775808 | 1)
 }

@@ -1,47 +1,111 @@
 // Hexa 2024 from clang 15.0.3
+/// Looks for an unacquired system resource of the specified type and acquires it.
+/// 
+/// @param ResourceType
+///        Supplies system resource type.
+/// 
+/// @param ResourceHeader
+///        Specifies a memory area where a pointer to the system resource header will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun keAcquireSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
-	KepGetSystemResource(ResourceType, TRUE, ResourceHeader)
+	kepGetSystemResource(resourceType, tRUE, resourceHeader)
 	return ???? resolve ConditionalOperator
 }
 
+/// Looks for an unacquired system resource of the specified type and returns it without acquiring an ownership.
+/// 
+/// @param ResourceType
+///        Supplies system resource type.
+/// 
+/// @param ResourceHeader
+///        Specifies a memory area where a pointer to the system resource header will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun keGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
-	KepGetSystemResource(ResourceType, FALSE, ResourceHeader)
+	kepGetSystemResource(resourceType, fALSE, resourceHeader)
 	return ???? resolve ConditionalOperator
 }
 
+/// Releases system resource.
+/// 
+/// @param ResourceHeader
+///        Specifies a pointer to the system resource header.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keReleaseSystemResource(resourceHeader PSYSTEM_RESOURCE_HEADER) {
-	ArClearInterruptFlag()
-	KeAcquireSpinLock(???? resolve UnaryOperator)
-	ResourceHeader.Acquired = FALSE
-	KeReleaseSpinLock(???? resolve UnaryOperator)
-	ArSetInterruptFlag()
+	arClearInterruptFlag()
+	keAcquireSpinLock(kepSystemResourcesLock)
+	resourceHeader.Acquired = fALSE
+	keReleaseSpinLock(kepSystemResourcesLock)
+	arSetInterruptFlag()
 }
 
+/// Looks for an unacquired system resource of the specified type.
+/// 
+/// @param ResourceType
+///        Supplies system resource type.
+/// 
+/// @param Acquire
+///        Specifies whether system resource should be acquired or not.
+/// 
+/// @param ResourceHeader
+///        Specifies a memory area where a pointer to the system resource header will be stored.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, acquire BOOLEAN, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
 	let resource = new ByValue<PSYSTEM_RESOURCE_HEADER>()
 
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
 	var interrupts BOOLEAN
-	Interrupts = ArInterruptsEnabled()
-	ArClearInterruptFlag()
-	KeAcquireSpinLock(???? resolve UnaryOperator)
-	ListEntry = KepSystemResourcesListHead.Flink
-	??? CompoundStmt WhileStmt
-	if ListEntry == ???? resolve UnaryOperator {
-		Resource = (???? resolve CStyleCastExpr)
+	interrupts = arInterruptsEnabled()
+	arClearInterruptFlag()
+	keAcquireSpinLock(kepSystemResourcesLock)
+	listEntry = KepSystemResourcesListHead.Flink
+	while listEntry != kepSystemResourcesListHead {
+		resource = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
+		if resource.ResourceType == resourceType and resource.Acquired == fALSE {
+			if acquire {
+				resource.Acquired = tRUE
+
+			}
+
+			??? CompoundStmt BreakStmt
+
+		}
+
+		listEntry = listEntry.Flink
 
 	}
 
-	KeReleaseSpinLock(???? resolve UnaryOperator)
-	if Interrupts {
-		ArSetInterruptFlag()
+	if listEntry == kepSystemResourcesListHead {
+		resource = (0 as! PVOID)
 
 	}
 
-	???? resolve UnaryOperator = Resource
+	keReleaseSpinLock(kepSystemResourcesLock)
+	if interrupts {
+		arSetInterruptFlag()
+
+	}
+
+	*resourceHeader = resource
 }
 
+/// Initializes system resource management.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun kepInitializeSystemResources() {
 	let resourceHeader = new ByValue<PSYSTEM_RESOURCE_HEADER>()
 
@@ -50,11 +114,24 @@ fun kepInitializeSystemResources() {
 	let nextListEntry = new ByValue<PLIST_ENTRY>()
 
 	var resourceSize ULONG
-	KeInitializeSpinLock(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	if ???? resolve UnaryOperator {
-		ListEntry = KeInitializationBlock.SystemResourcesListHead.Flink
-		??? CompoundStmt WhileStmt
+	keInitializeSpinLock(kepSystemResourcesLock)
+	rtlInitializeListHead(kepSystemResourcesListHead)
+	if !rtlListEmpty(keInitializationBlock.SystemResourcesListHead) {
+		listEntry = keInitializationBlock.SystemResourcesListHead.Flink
+		while listEntry != keInitializationBlock.SystemResourcesListHead {
+			resourceHeader = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
+			nextListEntry = listEntry.Flink
+			??? CompoundStmt SwitchStmt
+			if resourceSize != 0 and resourceSize == resourceHeader.ResourceSize {
+				rtlRemoveEntryList(resourceHeader.ListEntry)
+				rtlInsertTailList(kepSystemResourcesListHead, resourceHeader.ListEntry)
+
+			}
+
+			listEntry = nextListEntry
+
+		}
+
 
 	}
 

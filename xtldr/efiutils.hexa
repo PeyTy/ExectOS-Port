@@ -1,104 +1,178 @@
 // Hexa 2024 from clang 15.0.3
+/// Reboots into UEFI firmware setup interface.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blEnterFirmwareSetup() {
 	let guid = new ByValue<EFI_GUID>()
 
 	var setupSupport PULONGLONG
 	var indications ULONGLONG
 	var status EFI_STATUS
-	Status = BlGetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
-		BlDebugPrint(???? resolve StringLiteral)
+	status = blGetEfiVariable(guid, "OsIndicationsSupported", setupSupport as! PVOID *)
+	if status != (9223372036854775808 & 0) or !(*setupSupport & 1) {
+		blDebugPrint("WARNING: Reboot into firmware setup interface not supported\n")
 		return (9223372036854775808 | 3)
 
 	}
 
-	Indications = 0
-	Status = BlGetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr)
+	indications = 0
+	status = blGetEfiVariable(guid, "OsIndications", indications as! PVOID)
 	??? CompoundStmt CompoundAssignOperator
-	Status = BlSetEfiVariable(???? resolve UnaryOperator, ???? resolve StringLiteral, ???? resolve CStyleCastExpr, ???? resolve UnaryExprOrTypeTraitExpr)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = blSetEfiVariable(guid, "OsIndications", indications as! PVOID, ???? resolve UnaryExprOrTypeTraitExpr)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	BlRebootSystem()
+	blRebootSystem()
 	return (9223372036854775808 & 0)
 }
 
+/// Exits EFI boot services.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun blExitBootServices() {
 	let memoryMap = new ByValue<PEFI_MEMORY_MAP>()
 
 	var status EFI_STATUS
 	var counter ULONG
-	BlpStatus.BootServices = FALSE
-	Status = BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
-		return Status
+	BlpStatus.BootServices = fALSE
+	status = blAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, memoryMap as! PVOID *)
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
-	RtlZeroMemory(MemoryMap, ???? resolve UnaryExprOrTypeTraitExpr)
-	Counter = 255
-	??? CompoundStmt WhileStmt
-	return Status
+	rtlZeroMemory(memoryMap, ???? resolve UnaryExprOrTypeTraitExpr)
+	counter = 255
+	while counter > 0 {
+		status = blGetMemoryMap(memoryMap)
+		if status != (9223372036854775808 & 0) {
+			return status
+
+		}
+
+		status = efiSystemTable.BootServices.ExitBootServices(efiImageHandle, memoryMap.MapKey)
+		if status == (9223372036854775808 & 0) {
+			??? CompoundStmt BreakStmt
+
+		}
+
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	return status
 }
 
+/// Gets the address of a reqested system configuration table.
+/// 
+/// @param TableGuid
+///        Supplies a GUID of the configuration table.
+/// 
+/// @param Table
+///        Supplies a pointer to the memory area where the table address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blGetConfigurationTable(tableGuid PEFI_GUID, table PVOID *) {
 	var index SIZE_T
 	??? CompoundStmt ForStmt
-	???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+	*table = (0 as! PVOID)
 	return (9223372036854775808 | 14)
 }
 
+/// Gets the value of the EFI variable.
+/// 
+/// @param Vendor
+///        Supplies a pointer to the unique vendor GUID.
+/// 
+/// @param VariableName
+///        Supplies a pointer to tge NULL-terminated string containing the variable name.
+/// 
+/// @param VariableValue
+///        Supplies a pointer to the buffer, where the variable value will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blGetEfiVariable(vendor PEFI_GUID, variableName PWCHAR, variableValue PVOID *) {
 	var status EFI_STATUS
 	var buffer PVOID
 	var size UINT_PTR
-	Size = 1024 * ???? resolve UnaryExprOrTypeTraitExpr
-	Status = BlAllocateMemoryPool(Size, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	size = 1024 * ???? resolve UnaryExprOrTypeTraitExpr
+	status = blAllocateMemoryPool(size, buffer as! PVOID *)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	Status = EfiSystemTable.RuntimeServices.GetVariable(VariableName, Vendor, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, Buffer)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = efiSystemTable.RuntimeServices.GetVariable(variableName, vendor, (0 as! PVOID), size, buffer)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	???? resolve UnaryOperator = Buffer
+	*variableValue = buffer
 	return (9223372036854775808 & 0)
 }
 
+/// Returns a random value based on the initialized RNG buffer.
+/// 
+/// @param RNGBuffer
+///        Supplies a pointer to the RNG buffer.
+/// 
+/// @return This routine returns a random value.
+/// 
+/// @since XT 1.0
+/// 
+/// @see https://en.wikipedia.org/wiki/Xorshift
 fun blGetRandomValue(rNGBuffer PULONGLONG) {
 	??? CompoundStmt CompoundAssignOperator
 	??? CompoundStmt CompoundAssignOperator
 	??? CompoundStmt CompoundAssignOperator
-	return ???? resolve UnaryOperator * 2685821657736338717
+	return *rNGBuffer * 2685821657736338717
 }
 
+/// Checks whether SecureBoot is enabled or not.
+/// 
+/// @return Numeric representation of SecureBoot status (0 = Disabled, >0 = Enabled, <0 SetupMode).
+/// 
+/// @since XT 1.0
 fun blGetSecureBootStatus() {
 	let varGuid = new ByValue<EFI_GUID>()
 
 	var secureBootStatus INT_PTR = 0
 	var varValue UCHAR = 0
 	var size UINT_PTR
-	Size = ???? resolve UnaryExprOrTypeTraitExpr
-	if EfiSystemTable.RuntimeServices.GetVariable(???? resolve StringLiteral, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator) == (9223372036854775808 & 0) {
-		SecureBootStatus = ???? resolve CStyleCastExpr
-		if (EfiSystemTable.RuntimeServices.GetVariable(???? resolve StringLiteral, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator) == (9223372036854775808 & 0)) and VarValue != 0 {
-			SecureBootStatus = ???? resolve UnaryOperator
+	size = ???? resolve UnaryExprOrTypeTraitExpr
+	if efiSystemTable.RuntimeServices.GetVariable("SecureBoot", varGuid, (0 as! PVOID), size, varValue) == (9223372036854775808 & 0) {
+		secureBootStatus = varValue as! INT_PTR
+		if (efiSystemTable.RuntimeServices.GetVariable("SetupMode", varGuid, (0 as! PVOID), size, varValue) == (9223372036854775808 & 0)) and varValue != 0 {
+			secureBootStatus = -1
 
 		}
 
 
 	}
 
-	return SecureBootStatus
+	return secureBootStatus
 }
 
+/// Initializes the RNG buffer with random bytes from the default EFI RNG algorithm.
+/// 
+/// @param RNGBuffer
+///        Supplies a pointer to the RNG buffer.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blInitializeEntropy(rNGBuffer PULONGLONG) {
 	let rngGuid = new ByValue<EFI_GUID>()
 
@@ -106,50 +180,124 @@ fun blInitializeEntropy(rNGBuffer PULONGLONG) {
 
 	var status EFI_STATUS
 	var seed ULONGLONG
-	Rng = (???? resolve CStyleCastExpr)
-	Seed = 0
-	Status = EfiSystemTable.BootServices.LocateProtocol(???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	rng = (0 as! PVOID)
+	seed = 0
+	status = efiSystemTable.BootServices.LocateProtocol(rngGuid, (0 as! PVOID), rng as! PVOID *)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	Status = Rng.GetRNG(Rng, (???? resolve CStyleCastExpr), 8, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = rng.GetRNG(rng, (0 as! PVOID), 8, seed as! PUCHAR)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	???? resolve UnaryOperator = ???? resolve ConditionalOperator
+	*rNGBuffer = ???? resolve ConditionalOperator
 	return (9223372036854775808 & 0)
 }
 
+/// Loads an EFI image into memory.
+/// 
+/// @param DevicePath
+///        Specifies a device path from which the image is loaded.
+/// 
+/// @param ImageData
+///        Supplies a pointer to the memory are containing a copy of the EFI image.
+/// 
+/// @param ImageSize
+///        Supplies the size (in bytes) of the EFI image.
+/// 
+/// @param ImageHandle
+///        Supplies a pointer to the memory area, where an EFI_image handle will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blLoadEfiImage(devicePath PEFI_DEVICE_PATH_PROTOCOL, imageData PVOID, imageSize SIZE_T, imageHandle PEFI_HANDLE) {
-	return EfiSystemTable.BootServices.LoadImage(FALSE, EfiImageHandle, DevicePath, ImageData, ImageSize, ImageHandle)
+	return efiSystemTable.BootServices.LoadImage(fALSE, efiImageHandle, devicePath, imageData, imageSize, imageHandle)
 }
 
+/// Reboots the machine.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blRebootSystem() {
-	return EfiSystemTable.RuntimeServices.ResetSystem(EfiResetCold, (9223372036854775808 & 0), 0, (???? resolve CStyleCastExpr))
+	return efiSystemTable.RuntimeServices.ResetSystem(efiResetCold, (9223372036854775808 & 0), 0, (0 as! PVOID))
 }
 
+/// Sets a value of an EFI variable.
+/// 
+/// @param Vendor
+///        Supplies a pointer to the unique vendor GUID.
+/// 
+/// @param VariableName
+///        Supplies a pointer to tge NULL-terminated string containing the variable name.
+/// 
+/// @param VariableValue
+///        Supplies the contents of the variable.
+/// 
+/// @param Size
+///        Supplies the size of the variable data buffer.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blSetEfiVariable(vendor PEFI_GUID, variableName PWCHAR, variableValue PVOID, size UINT_PTR) {
 	var attributes ULONG
-	Attributes = 1 | 2 | 4
-	return EfiSystemTable.RuntimeServices.SetVariable(VariableName, Vendor, Attributes, Size, VariableValue)
+	attributes = 1 | 2 | 4
+	return efiSystemTable.RuntimeServices.SetVariable(variableName, vendor, attributes, size, variableValue)
 }
 
+/// Shuts down the machine.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blShutdownSystem() {
-	return EfiSystemTable.RuntimeServices.ResetSystem(EfiResetShutdown, (9223372036854775808 & 0), 0, (???? resolve CStyleCastExpr))
+	return efiSystemTable.RuntimeServices.ResetSystem(efiResetShutdown, (9223372036854775808 & 0), 0, (0 as! PVOID))
 }
 
+/// Puts the system to sleep for the specified number of milliseconds.
+/// 
+/// @param Milliseconds
+///        Supplies the number of milliseconds to sleep.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blSleepExecution(milliseconds ULONG_PTR) {
-	EfiSystemTable.BootServices.Stall(Milliseconds * 1000)
+	efiSystemTable.BootServices.Stall(milliseconds * 1000)
 }
 
+/// Executes a loaded EFI image entry point.
+/// 
+/// @param ImageHandle
+///        Provides a handle of loaded image, that will be started.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blStartEfiImage(imageHandle EFI_HANDLE) {
-	return EfiSystemTable.BootServices.StartImage(ImageHandle, (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr))
+	return efiSystemTable.BootServices.StartImage(imageHandle, (0 as! PVOID), (0 as! PVOID))
 }
 
+/// Waits for one or more EFI events.
+/// 
+/// @param NumberOfEvents
+///        Supplies the number of events to wait for.
+/// 
+/// @param Event
+///        Supplies the array of events to wait for.
+/// 
+/// @param Index
+///        Receives the index of the event that was signaled.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun blWaitForEfiEvent(numberOfEvents UINT_PTR, event PEFI_EVENT, index PUINT_PTR) {
-	return EfiSystemTable.BootServices.WaitForEvent(NumberOfEvents, Event, Index)
+	return efiSystemTable.BootServices.WaitForEvent(numberOfEvents, event, index)
 }

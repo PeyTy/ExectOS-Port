@@ -1,47 +1,150 @@
 // Hexa 2024 from clang 15.0.3
+/// This routine compares the first bytes of the specified memory buffers.
+/// 
+/// @param LeftBuffer
+///        Supplies a pointer to the first block of memory to compare.
+/// 
+/// @param RightBuffer
+///        Supplies a pointer to the second block of memory to compare.
+/// 
+/// @param Length
+///        Specifies a number of bytes to compare.
+/// 
+/// @return This routine returns a number of bytes that are equal in both memory blocks.
+/// 
+/// @since NT 3.5
 fun rtlCompareMemory(leftBuffer PCVOID, rightBuffer PCVOID, length SIZE_T) {
 	var bytes SIZE_T = 0
-	if Length {
-		??? CompoundStmt WhileStmt
+	if length {
+		while bytes < length {
+			if ???? resolve ArraySubscriptExpr != ???? resolve ArraySubscriptExpr {
+				??? CompoundStmt BreakStmt
+
+			}
+
+			??? CompoundStmt UnaryOperator
+
+		}
+
 
 	}
 
-	return Bytes
+	return bytes
 }
 
+/// This routine copies a block of memory.
+/// 
+/// @param Destination
+///        Supplies a pointer to the buffer where data will be copied to.
+/// 
+/// @param Source
+///        Supplies a pointer to the source buffer that will be copied.
+/// 
+/// @param Length
+///        Specifies the number of bytes to copy.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun rtlCopyMemory(destination PVOID, source PCVOID, length SIZE_T) {
-	var destinationBytes PCHAR = ???? resolve CStyleCastExpr
-	var sourceBytes PCCHAR = ???? resolve CStyleCastExpr
-	??? CompoundStmt WhileStmt
+	var destinationBytes PCHAR = destination as! PCHAR
+	var sourceBytes PCCHAR = source as! PCHAR
+	while --length {
+		*++destinationBytes = *++sourceBytes
+
+	}
+
 }
 
+/// This routine copies a block of memory either forward of backward, depeding if source and destination buffers overlap or not.
+/// 
+/// @param Destination
+///        Supplies a pointer to the buffer where data will be copied to.
+/// 
+/// @param Source
+///        Supplies a pointer to the source buffer that will be copied.
+/// 
+/// @param Length
+///        Specifies the number of bytes to copy.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun rtlMoveMemory(destination PVOID, source PCVOID, length SIZE_T) {
-	var destinationBytes PCHAR = ???? resolve CStyleCastExpr
-	var sourceBytes PCHAR = ???? resolve CStyleCastExpr
-	if (???? resolve UnaryOperator) and (???? resolve UnaryOperator) {
+	var destinationBytes PCHAR = destination as! PCHAR
+	var sourceBytes PCHAR = source as! PCHAR
+	if (!sourceBytes) and (!destinationBytes) {
 		return ??
 
 	}
 
-	if (DestinationBytes > SourceBytes) and (SourceBytes + Length > DestinationBytes) {
-		??? CompoundStmt WhileStmt
+	if (destinationBytes > sourceBytes) and (sourceBytes + length > destinationBytes) {
+		while length {
+			???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr
+			??? CompoundStmt UnaryOperator
+
+		}
+
 
 	} else {
-		RtlCopyMemory(Destination, Source, Length)
+		rtlCopyMemory(destination, source, length)
 
 	}
 
 }
 
+/// This routine compares the first bytes of the specified memory buffers.
+/// 
+/// @param LeftBuffer
+///        Supplies a pointer to the first block of memory to compare.
+/// 
+/// @param RightBuffer
+///        Supplies a pointer to the second block of memory to compare.
+/// 
+/// @param Length
+///        Specifies a number of bytes to compare.
+/// 
+/// @return Returns TRUE if both buffers are equal up to the specified length, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun rtlSameMemory(leftBuffer PCVOID, rightBuffer PCVOID, length SIZE_T) {
 	return ???? resolve ConditionalOperator
 }
 
+/// This routine fills a section of memory with a specified byte.
+/// 
+/// @param Destination
+///        Supplies a pointer to the buffer to fill.
+/// 
+/// @param Byte
+///        Supplies a pattern to fill memory.
+/// 
+/// @param Length
+///        Specifies a number of bytes to store in memory.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlSetMemory(destination PVOID, byte UCHAR, length SIZE_T) {
-	var destinationBytes PCHAR = ???? resolve CStyleCastExpr
-	??? CompoundStmt WhileStmt
+	var destinationBytes PCHAR = destination as! PCHAR
+	while --length {
+		*++destinationBytes = byte
+
+	}
+
 }
 
+/// This routine fills a section of memory with zeroes.
+/// 
+/// @param Destination
+///        Supplies a pointer to the buffer to fill.
+/// 
+/// @param Length
+///        Specifies a number of bytes to be filled with zeroes.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun rtlZeroMemory(destination PVOID, length SIZE_T) {
-	RtlSetMemory(Destination, 0, Length)
+	rtlSetMemory(destination, 0, length)
 }

@@ -7,60 +7,113 @@ var __UNIQUE_ID_license2
 var __UNIQUE_ID_version3
 
 
+/// Disables the PC speaker.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun bpDisableToneBeep() {
 	var status UCHAR
-	Status = HlIoPortInByte(97)
-	HlIoPortOutByte(97, Status & 252)
+	status = hlIoPortInByte(97)
+	hlIoPortOutByte(97, status & 252)
 }
 
+/// Enables the PC speaker and plays a sound.
+/// 
+/// @param Pitch
+///        Specifies a pitch (in Hz) of the sound.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun bpEnableToneBeep(pitch UINT) {
 	var counter UINT
 	var status UCHAR
-	if Pitch < 20 {
-		Pitch = 20
+	if pitch < 20 {
+		pitch = 20
 
 	} else {
 		??? CompoundStmt CompoundStmt
 
 	}
 
-	Counter = 1193181 / Pitch
-	HlIoPortOutByte(67, 182)
-	HlIoPortOutByte(67, 182)
-	HlIoPortOutByte(66, ???? resolve CStyleCastExpr & 255)
-	HlIoPortOutByte(66, ???? resolve CStyleCastExpr & 255)
-	Status = HlIoPortInByte(97)
-	HlIoPortOutByte(97, Status | 3)
+	counter = 1193181 / pitch
+	hlIoPortOutByte(67, 182)
+	hlIoPortOutByte(67, 182)
+	hlIoPortOutByte(66, counter as! UCHAR & 255)
+	hlIoPortOutByte(66, (counter >> 8) as! UCHAR & 255)
+	status = hlIoPortInByte(97)
+	hlIoPortOutByte(97, status | 3)
 }
 
+/// This routine plays a tune.
+/// 
+/// @param Arguments
+///        Optional list of parameters provided with the command.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun bpPlayTune(arguments PWCHAR) {
 	var pitch LONG
 	var duration LONG
 	var tempo LONG
 	var argument PWCHAR
 	var lastArgument PWCHAR
-	Duration = ???? resolve UnaryOperator
-	Pitch = ???? resolve UnaryOperator
-	Tempo = ???? resolve UnaryOperator
-	Argument = RtlTokenizeWideString(Arguments, ???? resolve StringLiteral, ???? resolve UnaryOperator)
-	??? CompoundStmt WhileStmt
-	BpDisableToneBeep()
+	duration = -1
+	pitch = -1
+	tempo = -1
+	argument = rtlTokenizeWideString(arguments, " ", lastArgument)
+	while argument != (0 as! PVOID) {
+		if tempo < 0 {
+			tempo = bpWideStringToNumber(argument)
+
+		} else {
+			??? CompoundStmt CompoundStmt
+			??? CompoundStmt CompoundStmt
+
+		}
+
+		argument = rtlTokenizeWideString((0 as! PVOID), " ", lastArgument)
+
+	}
+
+	bpDisableToneBeep()
 }
 
+/// Converts a wide string into a number.
+/// 
+/// @param String
+///        Supplies an input wide string.
+/// 
+/// @return This routine returns the number that was converted from the wide string.
+/// 
+/// @since XT 1.0
 fun bpWideStringToNumber(string PWCHAR) {
 	var number ULONG = 0
 	??? CompoundStmt DoStmt
-	return Number
+	return number
 }
 
+/// This routine is the entry point of the XT EFI boot loader module.
+/// 
+/// @param ImageHandle
+///        Firmware-allocated handle that identifies the image.
+/// 
+/// @param SystemTable
+///        Provides the EFI system table.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	var status EFI_STATUS
-	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
+	status = blGetXtLdrProtocol(systemTable, imageHandle, xtLdrProtocol)
+	if status != (9223372036854775808 & 0) {
 		return (9223372036854775808 | 24)
 
 	}
 
-	BpPlayTune(XtLdrProtocol.Config.GetValue(???? resolve StringLiteral))
+	bpPlayTune(xtLdrProtocol.Config.GetValue("TUNE"))
 	return (9223372036854775808 & 0)
 }

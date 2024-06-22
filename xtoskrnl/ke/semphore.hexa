@@ -1,15 +1,54 @@
 // Hexa 2024 from clang 15.0.3
+/// initializes a kernel semaphore object.
+/// 
+/// @param Semaphore
+///        Supplies a pointer to a semaphore object.
+/// 
+/// @param Count
+///        Specifies the initial count value of the semaphore.
+/// 
+/// @param Limit
+///        Specifies a maximum count value of the semaphore.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun keInitializeSemaphore(semaphore PKSEMAPHORE, count LONG, limit LONG) {
-	Semaphore.Header.Type = SemaphoreObject
-	Semaphore.Header.SignalState = Count
-	Semaphore.Limit = Limit
-	RtlInitializeListHead(???? resolve UnaryOperator)
+	semaphore.Header.Type = semaphoreObject
+	semaphore.Header.SignalState = count
+	semaphore.Limit = limit
+	rtlInitializeListHead(semaphore.Header.WaitListHead)
 }
 
+/// Reads semaphore's current signal state.
+/// 
+/// @param Semaphore
+///        Supplies a pointer to a semaphore object.
+/// 
+/// @return This routine returns the current signal state of the semaphore.
+/// 
+/// @since XT 1.0
 fun keReadSemaphoreState(semaphore PKSEMAPHORE) {
-	return Semaphore.Header.SignalState
+	return semaphore.Header.SignalState
 }
 
+/// Releases a semaphore.
+/// 
+/// @param Semaphore
+///        Supplies a pointer to a semaphore object.
+/// 
+/// @param Increment
+///        Specifies the priority increment value of the semaphore.
+/// 
+/// @param Adjustment
+///        Specifies adjustment value added to the semaphore's initial count value.
+/// 
+/// @param Wait
+///        Determines whether release of the semaphore will be followed by a kernel wait routine call or not.
+/// 
+/// @return This routine returns a previous signal state of the semaphore.
+/// 
+/// @since NT 3.5
 fun keReleaseSemaphore(semaphore PKSEMAPHORE, increment KPRIORITY, adjustment LONG, wait BOOLEAN) {
 	return 0
 }

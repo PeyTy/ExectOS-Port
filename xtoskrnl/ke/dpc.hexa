@@ -1,33 +1,96 @@
 // Hexa 2024 from clang 15.0.3
+/// Initializes Deferred Procedure Call (DPC) object.
+/// 
+/// @param Dpc
+///        Supplies a pointer to the DPC being initialized.
+/// 
+/// @param DpcRoutine
+///        Supplies a pointer to the DPC routine being called on object removal.
+/// 
+/// @param DpcContext
+///        Supplies a pointer to memory area containing context data for DPC routine.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun keInitializeDpc(dpc PKDPC, dpcRoutine PKDEFERRED_ROUTINE, dpcContext PVOID) {
-	Dpc.Type = DpcObject
-	Dpc.Number = 0
-	Dpc.Importance = MediumImportance
-	Dpc.DeferredContext = DpcContext
-	Dpc.DeferredRoutine = DpcRoutine
-	Dpc.DpcData = (???? resolve CStyleCastExpr)
+	dpc.Type = dpcObject
+	dpc.Number = 0
+	dpc.Importance = mediumImportance
+	dpc.DeferredContext = dpcContext
+	dpc.DeferredRoutine = dpcRoutine
+	dpc.DpcData = (0 as! PVOID)
 }
 
+/// Initializes Deferred Procedure Call (DPC) object.
+/// 
+/// @param Dpc
+///        Supplies a pointer to the DPC being initialized.
+/// 
+/// @param DpcRoutine
+///        Supplies a pointer to the DPC routine being called on object removal.
+/// 
+/// @param DpcContext
+///        Supplies a pointer to memory area containing context data for DPC routine.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.2
 fun keInitializeThreadedDpc(dpc PKDPC, dpcRoutine PKDEFERRED_ROUTINE, dpcContext PVOID) {
-	Dpc.Type = ThreadedDpcObject
-	Dpc.Number = 0
-	Dpc.Importance = MediumImportance
-	Dpc.DeferredContext = DpcContext
-	Dpc.DeferredRoutine = DpcRoutine
-	Dpc.DpcData = (???? resolve CStyleCastExpr)
+	dpc.Type = threadedDpcObject
+	dpc.Number = 0
+	dpc.Importance = mediumImportance
+	dpc.DeferredContext = dpcContext
+	dpc.DeferredRoutine = dpcRoutine
+	dpc.DpcData = (0 as! PVOID)
 }
 
+/// Sets the target processor number for DPC.
+/// 
+/// @param Dpc
+///        Supplies a pointer to the DPC object.
+/// 
+/// @param Number
+///        Supplies the target processor number.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 4.0
 fun keSetTargetProcessorDpc(dpc PKDPC, number CCHAR) {
-	Dpc.Number = 256 + Number
+	dpc.Number = 256 + number
 }
 
+/// Decrements the DPC call barier.
+/// 
+/// @param SystemArgument
+///        Supplies an address of the DPC call barrier.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.2
 fun keSignalCallDpcDone(systemArgument PVOID) {
-	RtlAtomicDecrement32(SystemArgument)
+	rtlAtomicDecrement32(systemArgument)
 }
 
+/// Decrements the DPC call reverse barier.
+/// 
+/// @param SystemArgument
+///        Supplies an address of the DPC call barrier.
+/// 
+/// @return This routine returns TRUE if just one processor is waiting on the barrier, FALSE if more.
+/// 
+/// @since NT 5.2
 fun keSignalCallDpcSynchronize(systemArgument PVOID) {
-	return TRUE
+	return tRUE
 }
 
+/// Retires the expired DPC objects found in the DPC list.
+/// 
+/// @param Prcb
+///        Supplies apointer to the Prcessor Control Block (PRCB).
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepRetireDpcList(prcb PKPROCESSOR_CONTROL_BLOCK) {
 }

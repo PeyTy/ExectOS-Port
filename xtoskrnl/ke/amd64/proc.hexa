@@ -1,41 +1,69 @@
 // Hexa 2024 from clang 15.0.3
+/// Gets the processor block for the currently executing processor.
+/// 
+/// @return This routine returns the current processor block read from the GS register.
+/// 
+/// @since XT 1.0
 fun keGetCurrentProcessorBlock() {
-	return ???? resolve CStyleCastExpr
+	return arReadGSQuadWord(???? resolve OffsetOfExpr) as! PKPROCESSOR_BLOCK
 }
 
+/// Gets the processor control block for the currently executing processor.
+/// 
+/// @return This routine returns the current processor control block read from the GS register.
+/// 
+/// @since XT 1.0
 fun keGetCurrentProcessorControlBlock() {
-	return ???? resolve CStyleCastExpr
+	return arReadGSQuadWord(???? resolve OffsetOfExpr) as! PKPROCESSOR_CONTROL_BLOCK
 }
 
+/// Gets the number of the currently executing processor.
+/// 
+/// @return This routine returns the zero-indexed processor number.
+/// 
+/// @since XT 1.0
 fun keGetCurrentProcessorNumber() {
-	return ???? resolve CStyleCastExpr
+	return arReadGSQuadWord(???? resolve OffsetOfExpr) as! ULONG
 }
 
+/// Gets the current thread running on the currently executing processor.
+/// 
+/// @return This routine returns the address of the current thread object.
+/// 
+/// @since NT 3.5
 fun keGetCurrentThread() {
-	return ???? resolve CStyleCastExpr
+	return arReadGSQuadWord(???? resolve OffsetOfExpr) as! PKTHREAD
 }
 
+/// Saves the current processor state.
+/// 
+/// @param State
+///        Supplies a pointer to the processor state structure.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepSaveProcessorState(cpuState PKPROCESSOR_STATE) {
-	CpuState.SpecialRegisters.Cr0 = ArReadControlRegister(0)
-	CpuState.SpecialRegisters.Cr2 = ArReadControlRegister(2)
-	CpuState.SpecialRegisters.Cr3 = ArReadControlRegister(3)
-	CpuState.SpecialRegisters.Cr4 = ArReadControlRegister(4)
-	CpuState.SpecialRegisters.Cr8 = ArReadControlRegister(8)
-	CpuState.SpecialRegisters.KernelDr0 = ArReadDebugRegister(0)
-	CpuState.SpecialRegisters.KernelDr1 = ArReadDebugRegister(1)
-	CpuState.SpecialRegisters.KernelDr2 = ArReadDebugRegister(2)
-	CpuState.SpecialRegisters.KernelDr3 = ArReadDebugRegister(3)
-	CpuState.SpecialRegisters.KernelDr6 = ArReadDebugRegister(6)
-	CpuState.SpecialRegisters.KernelDr7 = ArReadDebugRegister(7)
-	CpuState.SpecialRegisters.MsrGsBase = ArReadModelSpecificRegister(3221225729)
-	CpuState.SpecialRegisters.MsrGsSwap = ArReadModelSpecificRegister(3221225730)
-	CpuState.SpecialRegisters.MsrCStar = ArReadModelSpecificRegister(3221225603)
-	CpuState.SpecialRegisters.MsrLStar = ArReadModelSpecificRegister(3221225602)
-	CpuState.SpecialRegisters.MsrStar = ArReadModelSpecificRegister(3221225601)
-	CpuState.SpecialRegisters.MsrSyscallMask = ArReadModelSpecificRegister(3221225604)
-	CpuState.SpecialRegisters.MxCsr = ArReadMxCsrRegister()
-	ArStoreGlobalDescriptorTable(???? resolve UnaryOperator)
-	ArStoreInterruptDescriptorTable(???? resolve UnaryOperator)
-	ArStoreLocalDescriptorTable(???? resolve UnaryOperator)
-	ArStoreTaskRegister(???? resolve UnaryOperator)
+	cpuState.SpecialRegisters.Cr0 = arReadControlRegister(0)
+	cpuState.SpecialRegisters.Cr2 = arReadControlRegister(2)
+	cpuState.SpecialRegisters.Cr3 = arReadControlRegister(3)
+	cpuState.SpecialRegisters.Cr4 = arReadControlRegister(4)
+	cpuState.SpecialRegisters.Cr8 = arReadControlRegister(8)
+	cpuState.SpecialRegisters.KernelDr0 = arReadDebugRegister(0)
+	cpuState.SpecialRegisters.KernelDr1 = arReadDebugRegister(1)
+	cpuState.SpecialRegisters.KernelDr2 = arReadDebugRegister(2)
+	cpuState.SpecialRegisters.KernelDr3 = arReadDebugRegister(3)
+	cpuState.SpecialRegisters.KernelDr6 = arReadDebugRegister(6)
+	cpuState.SpecialRegisters.KernelDr7 = arReadDebugRegister(7)
+	cpuState.SpecialRegisters.MsrGsBase = arReadModelSpecificRegister(3221225729)
+	cpuState.SpecialRegisters.MsrGsSwap = arReadModelSpecificRegister(3221225730)
+	cpuState.SpecialRegisters.MsrCStar = arReadModelSpecificRegister(3221225603)
+	cpuState.SpecialRegisters.MsrLStar = arReadModelSpecificRegister(3221225602)
+	cpuState.SpecialRegisters.MsrStar = arReadModelSpecificRegister(3221225601)
+	cpuState.SpecialRegisters.MsrSyscallMask = arReadModelSpecificRegister(3221225604)
+	cpuState.SpecialRegisters.MxCsr = arReadMxCsrRegister()
+	arStoreGlobalDescriptorTable(cpuState.SpecialRegisters.Gdtr.Limit)
+	arStoreInterruptDescriptorTable(cpuState.SpecialRegisters.Idtr.Limit)
+	arStoreLocalDescriptorTable(cpuState.SpecialRegisters.Ldtr)
+	arStoreTaskRegister(cpuState.SpecialRegisters.Tr)
 }

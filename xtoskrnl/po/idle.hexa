@@ -1,20 +1,61 @@
 // Hexa 2024 from clang 15.0.3
+/// Initializes Processor Control Block's (PRCB) power state structures.
+/// 
+/// @param Prcb
+///        Supplies a pointer to the PRCB being initialized.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun poInitializeProcessorControlBlock(prcb PKPROCESSOR_CONTROL_BLOCK) {
-	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
-	Prcb.PowerState.Idle0TimeLimit = 4294967295
-	Prcb.PowerState.CurrentThrottle = 100
-	Prcb.PowerState.CurrentThrottleIndex = 0
-	Prcb.PowerState.IdleFunction = PopIdle0Function
-	KeInitializeDpc(???? resolve UnaryOperator, PopPerfIdleDpc, Prcb)
-	KeSetTargetProcessorDpc(???? resolve UnaryOperator, Prcb.CpuNumber)
-	KeInitializeTimer(???? resolve UnaryOperator, SynchronizationTimer)
+	rtlZeroMemory(prcb.PowerState, ???? resolve UnaryExprOrTypeTraitExpr)
+	prcb.PowerState.Idle0TimeLimit = 4294967295
+	prcb.PowerState.CurrentThrottle = 100
+	prcb.PowerState.CurrentThrottleIndex = 0
+	prcb.PowerState.IdleFunction = popIdle0Function
+	keInitializeDpc(prcb.PowerState.PerfDpc, popPerfIdleDpc, prcb)
+	keSetTargetProcessorDpc(prcb.PowerState.PerfDpc, prcb.CpuNumber)
+	keInitializeTimer(prcb.PowerState.PerfTimer, synchronizationTimer)
 }
 
+/// Processor idle loop routine.
+/// 
+/// @param PowerState
+///        Supplies a pointer to the structere containing current processor power state.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun popIdle0Function(powerState PPROCESSOR_POWER_STATE) {
 }
 
+/// Switches CPU between different performance levels.
+/// 
+/// @param PowerState
+///        Supplies a pointer to the structure containing IDLE processor power state.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun popPerfIdle(powerState PPROCESSOR_POWER_STATE) {
 }
 
+/// Checks if CPU is running at the maximum (performance) frequency.
+/// 
+/// @param Dpc
+///        Supplies a pointer to the DPC object.
+/// 
+/// @param DeferredContext
+///        Supplies a pointer to memory area containing current CPU's PRCB.
+/// 
+/// @param SystemArgument1
+///        Supplies a pointer to an unused system argument.
+/// 
+/// @param SystemArgument2
+///        Supplies a pointer to an unused system argument.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 5.1
 fun popPerfIdleDpc(dpc PKDPC, deferredContext PVOID, systemArgument1 PVOID, systemArgument2 PVOID) {
 }

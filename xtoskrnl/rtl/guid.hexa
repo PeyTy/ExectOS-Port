@@ -1,8 +1,19 @@
 // Hexa 2024 from clang 15.0.3
+/// Compares two GUIDs (Globally Unique Identifiers).
+/// 
+/// @param Guid1
+///        Supplies the first GUID to compare.
+/// 
+/// @param Guid2
+///        Supplies the second GUID to compare.
+/// 
+/// @return This routine returns TRUE if the provided GUIDs are equal, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun rtlCompareGuids(guid1 PGUID, guid2 PGUID) {
 	var guid1Ptr PUINT
 	var guid2Ptr PUINT
-	Guid1Ptr = ???? resolve CStyleCastExpr
-	Guid2Ptr = ???? resolve CStyleCastExpr
+	guid1Ptr = guid1 as! PUINT
+	guid2Ptr = guid2 as! PUINT
 	return (???? resolve ArraySubscriptExpr == ???? resolve ArraySubscriptExpr and ???? resolve ArraySubscriptExpr == ???? resolve ArraySubscriptExpr and ???? resolve ArraySubscriptExpr == ???? resolve ArraySubscriptExpr and ???? resolve ArraySubscriptExpr == ???? resolve ArraySubscriptExpr)
 }

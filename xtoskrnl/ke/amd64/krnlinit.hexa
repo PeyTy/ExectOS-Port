@@ -18,38 +18,53 @@ type PRTL_IMAGE_CONTEXT
 fun rtlInitializeImageContext(buffer PUCHAR, imageContext PRTL_IMAGE_CONTEXT) {
 }
 
+/// This routine initializes XT kernel.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepInitializeKernel() {
 	var status XTSTATUS
-	Status = HlInitializeSystem()
-	if Status != (???? resolve CStyleCastExpr) {
-		if KeDbgPrint {
+	status = hlInitializeSystem()
+	if status != (0 as! XTSTATUS) {
+		if keDbgPrint {
 			??? CompoundStmt ImplicitCastExpr
 			??? CompoundStmt ImplicitCastExpr
 
 		}
 
 		??? CompoundStmt NullStmt
-		KePanic(0)
+		kePanic(0)
 
 	}
 
-	ArSetInterruptFlag()
+	arSetInterruptFlag()
 }
 
+/// Performs architecture-specific initialization for the kernel executive.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepInitializeMachine() {
-	HlIoPortOutByte(886, 0)
-	HlIoPortOutByte(1014, 0)
-	HlInitializeFrameBuffer()
-	if KeDbgPrint {
+	hlIoPortOutByte(886, 0)
+	hlIoPortOutByte(1014, 0)
+	hlInitializeFrameBuffer()
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 
 	}
 
 	??? CompoundStmt NullStmt
-	HlInitializeProcessor()
+	hlInitializeProcessor()
 }
 
+/// This routine starts up the XT kernel. It is called after switching boot stack.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepStartKernel() {
 	let prcb = new ByValue<PKPROCESSOR_CONTROL_BLOCK>()
 
@@ -58,26 +73,26 @@ fun kepStartKernel() {
 
 	let currentThread = new ByValue<PKTHREAD>()
 
-	Prcb = KeGetCurrentProcessorControlBlock()
-	CurrentThread = KeGetCurrentThread()
-	CurrentProcess = CurrentThread..ApcState.Process
-	PoInitializeProcessorControlBlock(Prcb)
-	KepSaveProcessorState(???? resolve UnaryOperator)
-	KeLowerRunLevel(1)
-	KepInitializeKernel()
-	RtlInitializeListHead(???? resolve UnaryOperator)
+	prcb = keGetCurrentProcessorControlBlock()
+	currentThread = keGetCurrentThread()
+	currentProcess = currentThread..ApcState.Process
+	poInitializeProcessorControlBlock(prcb)
+	kepSaveProcessorState(prcb.ProcessorState)
+	keLowerRunLevel(1)
+	kepInitializeKernel()
+	rtlInitializeListHead(kepProcessListHead)
 	???? resolve ArraySubscriptExpr = 0
 	???? resolve ArraySubscriptExpr = 0
-	KeInitializeProcess(CurrentProcess, 0, 4294967295, PageDirectory, FALSE)
-	CurrentProcess.Quantum = 127
-	KeInitializeThread(CurrentProcess, CurrentThread, (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr), ArKernelBootStack, TRUE)
-	CurrentThread...NextProcessor = Prcb.CpuNumber
-	CurrentThread.Priority = 31
-	CurrentThread.State = Running
-	CurrentThread.Affinity = ???? resolve CStyleCastExpr << Prcb.CpuNumber
-	CurrentThread.WaitRunLevel = 2
+	keInitializeProcess(currentProcess, 0, 4294967295, pageDirectory, fALSE)
+	currentProcess.Quantum = 127
+	keInitializeThread(currentProcess, currentThread, (0 as! Void *), (0 as! Void *), (0 as! Void *), (0 as! Void *), (0 as! Void *), arKernelBootStack, tRUE)
+	currentThread...NextProcessor = prcb.CpuNumber
+	currentThread.Priority = 31
+	currentThread.State = running
+	currentThread.Affinity = 1 as! ULONG_PTR << prcb.CpuNumber
+	currentThread.WaitRunLevel = 2
 	??? CompoundStmt CompoundAssignOperator
-	if KeDbgPrint {
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 
@@ -87,6 +102,11 @@ fun kepStartKernel() {
 	??? CompoundStmt ForStmt
 }
 
+/// Switches to a new kernel boot stack.
+/// 
+/// @return This routine does not return any value
+/// 
+/// @since XT 1.0
 fun kepSwitchBootStack(stack ULONG_PTR) {
 	??? CompoundStmt GCCAsmStmt
 }

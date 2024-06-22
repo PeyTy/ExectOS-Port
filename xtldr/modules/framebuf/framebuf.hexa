@@ -7,37 +7,64 @@ var __UNIQUE_ID_license2
 var __UNIQUE_ID_version3
 
 
+/// Provides an EFI Frame Buffer protocol driver name used for initialization.
+/// 
+/// @param Protocol
+///        Supplies a pointer to the memory area where framebuffer driver information will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun fbGetDisplayDriver(protocol PEFI_GRAPHICS_PROTOCOL) {
-	if ???? resolve UnaryOperator {
+	if !FbpDisplayInfo.Initialized {
 		return (9223372036854775808 | 6)
 
 	}
 
-	???? resolve UnaryOperator = FbpDisplayInfo.Protocol
+	*protocol = FbpDisplayInfo.Protocol
 	return (9223372036854775808 & 0)
 }
 
+/// Returns information about EFI Frame Buffer.
+/// 
+/// @param FbInfo
+///        Supplies a pointer to the memory area where framebuffer information will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun fbGetDisplayInformation(frameBufferBase PEFI_PHYSICAL_ADDRESS, frameBufferSize PULONG_PTR, modeInfo PXTBL_FRAMEBUFFER_MODE_INFORMATION) {
-	if ???? resolve UnaryOperator {
+	if !FbpDisplayInfo.Initialized {
 		return (9223372036854775808 | 6)
 
 	}
 
-	???? resolve UnaryOperator = FbpDisplayInfo.FrameBufferBase
-	???? resolve UnaryOperator = FbpDisplayInfo.FrameBufferSize
-	ModeInfo.Width = FbpDisplayInfo.ModeInfo.Width
-	ModeInfo.Height = FbpDisplayInfo.ModeInfo.Height
-	ModeInfo.Depth = FbpDisplayInfo.ModeInfo.Depth
-	ModeInfo.RefreshRate = FbpDisplayInfo.ModeInfo.RefreshRate
-	ModeInfo.BitsPerPixel = FbpDisplayInfo.ModeInfo.BitsPerPixel
-	ModeInfo.BytesPerPixel = FbpDisplayInfo.ModeInfo.BytesPerPixel
-	ModeInfo.PixelsPerScanLine = FbpDisplayInfo.ModeInfo.PixelsPerScanLine
-	ModeInfo.Pitch = FbpDisplayInfo.ModeInfo.Pitch
-	ModeInfo.PixelFormat = FbpDisplayInfo.ModeInfo.PixelFormat
-	ModeInfo.PixelInformation = FbpDisplayInfo.ModeInfo.PixelInformation
+	*frameBufferBase = FbpDisplayInfo.FrameBufferBase
+	*frameBufferSize = FbpDisplayInfo.FrameBufferSize
+	modeInfo.Width = FbpDisplayInfo.ModeInfo.Width
+	modeInfo.Height = FbpDisplayInfo.ModeInfo.Height
+	modeInfo.Depth = FbpDisplayInfo.ModeInfo.Depth
+	modeInfo.RefreshRate = FbpDisplayInfo.ModeInfo.RefreshRate
+	modeInfo.BitsPerPixel = FbpDisplayInfo.ModeInfo.BitsPerPixel
+	modeInfo.BytesPerPixel = FbpDisplayInfo.ModeInfo.BytesPerPixel
+	modeInfo.PixelsPerScanLine = FbpDisplayInfo.ModeInfo.PixelsPerScanLine
+	modeInfo.Pitch = FbpDisplayInfo.ModeInfo.Pitch
+	modeInfo.PixelFormat = FbpDisplayInfo.ModeInfo.PixelFormat
+	modeInfo.PixelInformation = FbpDisplayInfo.ModeInfo.PixelInformation
 	return (9223372036854775808 & 0)
 }
 
+/// Determines the preferred (native) screen resolution from EDID. This works only with GOP.
+/// 
+/// @param PreferredWidth
+///        Supplies a pointer to the memory area where preferred screen width will be stored.
+/// 
+/// @param PreferredHeight
+///        Supplies a pointer to the memory area where preferred screen height will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun fbGetPreferredScreenResolution(preferredWidth PUINT, preferredHeight PUINT) {
 	let gopGuid = new ByValue<EFI_GUID>()
 
@@ -46,29 +73,34 @@ fun fbGetPreferredScreenResolution(preferredWidth PUINT, preferredHeight PUINT) 
 	let activeEdid = new ByValue<PEFI_EDID_ACTIVE_PROTOCOL>()
 
 	var status EFI_STATUS
-	if ???? resolve UnaryOperator {
+	if !FbpDisplayInfo.Initialized {
 		return (9223372036854775808 | 6)
 
 	}
 
-	if FbpDisplayInfo.Protocol != GOP {
+	if FbpDisplayInfo.Protocol != gOP {
 		return (9223372036854775808 | 3)
 
 	}
 
-	Status = XtLdrProtocol.Protocol.OpenHandle(FbpDisplayInfo.Handle, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
-		return Status
+	status = xtLdrProtocol.Protocol.OpenHandle(FbpDisplayInfo.Handle, activeEdid as! PVOID *, edidGuid)
+	if status != (9223372036854775808 & 0) {
+		xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
+		return status
 
 	}
 
-	???? resolve UnaryOperator = ???? resolve ArraySubscriptExpr | ((???? resolve ArraySubscriptExpr & 240) << 4)
-	???? resolve UnaryOperator = ???? resolve ArraySubscriptExpr | ((???? resolve ArraySubscriptExpr & 240) << 4)
-	XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+	*preferredWidth = ???? resolve ArraySubscriptExpr | ((???? resolve ArraySubscriptExpr & 240) << 4)
+	*preferredHeight = ???? resolve ArraySubscriptExpr | ((???? resolve ArraySubscriptExpr & 240) << 4)
+	xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, edidGuid)
 	return (9223372036854775808 & 0)
 }
 
+/// Initializes FrameBuffer device on GOP and UGA compatible adapters.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun fbInitializeDisplay() {
 	let gopGuid = new ByValue<EFI_GUID>()
 
@@ -81,95 +113,106 @@ fun fbInitializeDisplay() {
 	var refresh UINT
 	var infoSize UINT_PTR
 	var status EFI_STATUS
-	if ???? resolve UnaryOperator {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
-		Status = XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
-		if Status == (9223372036854775808 & 0) {
+	if !FbpDisplayInfo.Initialized {
+		xtLdrProtocol.Debug.Print("Initializing framebuffer device\n")
+		status = xtLdrProtocol.Protocol.Open(FbpDisplayInfo.Handle, FbpDisplayInfo.Driver.Gop as! PVOID *, gopGuid)
+		if status == (9223372036854775808 & 0) {
 			if FbpDisplayInfo.Driver.Gop.Mode.MaxMode == 0 {
-				XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
-				XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+				xtLdrProtocol.Debug.Print("ERROR: No GOP video mode available\n")
+				xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
 				return (9223372036854775808 | 3)
 
 			}
 
-			QueryMode = ???? resolve ConditionalOperator
-			Status = FbpDisplayInfo.Driver.Gop.QueryMode(FbpDisplayInfo.Driver.Gop, QueryMode, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-			if Status == (9223372036854775808 | 19) {
-				Status = FbpDisplayInfo.Driver.Gop.SetMode(FbpDisplayInfo.Driver.Gop, 0)
+			queryMode = ???? resolve ConditionalOperator
+			status = FbpDisplayInfo.Driver.Gop.QueryMode(FbpDisplayInfo.Driver.Gop, queryMode, infoSize, gopModeInfo)
+			if status == (9223372036854775808 | 19) {
+				status = FbpDisplayInfo.Driver.Gop.SetMode(FbpDisplayInfo.Driver.Gop, 0)
 
 			}
 
-			if Status != (9223372036854775808 & 0) {
-				XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
-				XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+			if status != (9223372036854775808 & 0) {
+				xtLdrProtocol.Debug.Print("ERROR: Failed to get GOP native mode (Status Code: 0x%zX)\n")
+				xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
 				return (9223372036854775808 | 3)
 
 			}
 
 			FbpDisplayInfo.FrameBufferBase = FbpDisplayInfo.Driver.Gop.Mode.FrameBufferBase
 			FbpDisplayInfo.DefaultMode = FbpDisplayInfo.Driver.Gop.Mode.Mode
-			FbpDisplayInfo.Protocol = GOP
-			Status = FbpGetModeInfo()
-			if Status != (9223372036854775808 & 0) {
-				XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
-				XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+			FbpDisplayInfo.Protocol = gOP
+			status = fbpGetModeInfo()
+			if status != (9223372036854775808 & 0) {
+				xtLdrProtocol.Debug.Print("ERROR: Failed to get GOP mode information (Status Code: 0x%zX)\n")
+				xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
 				return (9223372036854775808 | 3)
 
 			}
 
-			XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
-			Status = XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+			xtLdrProtocol.Debug.Print("Found EFI-GOP compatible display adapter @ %P (%zu bytes)\n", FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
+			status = xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, gopGuid)
 
 		} else {
-			Status = XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
-			if Status == (9223372036854775808 & 0) {
-				Status = FbpDisplayInfo.Driver.Uga.GetMode(FbpDisplayInfo.Driver.Uga, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-				if Status != (9223372036854775808 & 0) {
-					XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
-					XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+			status = xtLdrProtocol.Protocol.Open(FbpDisplayInfo.Handle, FbpDisplayInfo.Driver.Uga as! PVOID *, ugaGuid)
+			if status == (9223372036854775808 & 0) {
+				status = FbpDisplayInfo.Driver.Uga.GetMode(FbpDisplayInfo.Driver.Uga, FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, depth, refresh)
+				if status != (9223372036854775808 & 0) {
+					xtLdrProtocol.Debug.Print("ERROR: Failed to get current UGA mode (Status Code: 0x%zX)\n", status)
+					xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ugaGuid)
 					return (9223372036854775808 | 7)
 
 				}
 
-				Status = FbpFindFramebufferAddress(???? resolve UnaryOperator)
-				if Status != (9223372036854775808 & 0) {
-					XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
-					XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+				status = fbpFindFramebufferAddress(FbpDisplayInfo.FrameBufferBase)
+				if status != (9223372036854775808 & 0) {
+					xtLdrProtocol.Debug.Print("ERROR: Failed to get EFI FB address (Status Code: 0x%zX)\n", status)
+					xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ugaGuid)
 					return (9223372036854775808 | 7)
 
 				}
 
 				FbpDisplayInfo.DefaultMode = 0
-				FbpDisplayInfo.Protocol = UGA
-				Status = FbpGetModeInfo()
-				if Status != (9223372036854775808 & 0) {
-					XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+				FbpDisplayInfo.Protocol = uGA
+				status = fbpGetModeInfo()
+				if status != (9223372036854775808 & 0) {
+					xtLdrProtocol.Debug.Print("ERROR: Failed to get UGA mode information (Status Code: 0x%zX)\n")
 					return (9223372036854775808 | 3)
 
 				}
 
-				XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
-				XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+				xtLdrProtocol.Debug.Print("Found EFI-UGA compatible display adapter @ %P (%zu bytes)\n", FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
+				xtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ugaGuid)
 
 			}
 
 
 		}
 
-		if FbpDisplayInfo.Protocol == NONE {
-			XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		if FbpDisplayInfo.Protocol == nONE {
+			xtLdrProtocol.Debug.Print("WARNING: No display adapter found!\n")
 			return (9223372036854775808 | 14)
 
 		}
 
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, FbpDisplayInfo.ModeInfo.BitsPerPixel)
-		FbpDisplayInfo.Initialized = TRUE
+		xtLdrProtocol.Debug.Print("Current screen resolution is %ux%ux%u\n", FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, FbpDisplayInfo.ModeInfo.BitsPerPixel)
+		FbpDisplayInfo.Initialized = tRUE
 
 	}
 
-	return (???? resolve CStyleCastExpr)
+	return (0 as! XTSTATUS)
 }
 
+/// Sets custom screen resolution, based on the provided width and height.
+/// 
+/// @param Width
+///        Supplies the width of the screen.
+/// 
+/// @param Height
+///        Supplies the height of the screen.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun fbSetScreenResolution(width UINT, height UINT) {
 	let modeInfo = new ByValue<PEFI_GRAPHICS_OUTPUT_MODE_INFORMATION>()
 
@@ -177,28 +220,36 @@ fun fbSetScreenResolution(width UINT, height UINT) {
 	var status EFI_STATUS
 	var size UINT_PTR
 	var mode UINT
-	if ???? resolve UnaryOperator {
+	if !FbpDisplayInfo.Initialized {
 		return (9223372036854775808 | 6)
 
 	}
 
-	ModeChanged = FALSE
+	modeChanged = fALSE
 	??? CompoundStmt SwitchStmt
-	if ???? resolve UnaryOperator {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Width, Height, Status)
+	if !modeChanged {
+		xtLdrProtocol.Debug.Print("ERROR: Failed to change screen mode to %ux%u (Status Code: 0x%zX)\n", width, height, status)
 		return (9223372036854775808 | 3)
 
 	}
 
-	Status = FbpGetModeInfo()
-	if Status == (9223372036854775808 & 0) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, FbpDisplayInfo.ModeInfo.BitsPerPixel)
+	status = fbpGetModeInfo()
+	if status == (9223372036854775808 & 0) {
+		xtLdrProtocol.Debug.Print("Changed screen resolution to %ux%ux%u\n", FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, FbpDisplayInfo.ModeInfo.BitsPerPixel)
 
 	}
 
 	return (9223372036854775808 & 0)
 }
 
+/// Finds a PCI Display Adapter and returns its framebuffer address.
+/// 
+/// @param Address
+///        Supplies a pointer to the memory area where framebuffer address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun fbpFindFramebufferAddress(address PEFI_PHYSICAL_ADDRESS) {
 	let pciIoGuid = new ByValue<EFI_GUID>()
 
@@ -214,35 +265,64 @@ fun fbpFindFramebufferAddress(address PEFI_PHYSICAL_ADDRESS) {
 	var handles EFI_HANDLE *
 	var status EFI_STATUS
 	var index UINT
-	FramebufAddressLength = 0
-	Handles = (???? resolve CStyleCastExpr)
-	Status = XtLdrProtocol.Protocol.LocateHandles(???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
-		return Status
+	framebufAddressLength = 0
+	handles = (0 as! PVOID)
+	status = xtLdrProtocol.Protocol.LocateHandles(handles, handlesCount, pciIoGuid)
+	if status != (9223372036854775808 & 0) {
+		xtLdrProtocol.Debug.Print("ERROR: Failed to get handles (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
 	??? CompoundStmt ForStmt
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	*address = framebufAddress as! EFI_PHYSICAL_ADDRESS
 	return (9223372036854775808 & 0)
 }
 
+/// Calculates color mask and shift based upon pixel bit mask.
+/// 
+/// @param PixelBitMask
+///        Provides a pixel bit mask.
+/// 
+/// @param ColorSize
+///        Supplies a pointer to the memory area where the color size will be stored.
+/// 
+/// @param ColorShift
+///        Supplies a pointer to the memory area where the color shift (position) will be stored.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun fbpGetColorMask(pixelBitMask UINT, colorSize PUSHORT, colorShift PUSHORT) {
 	var shift UINT
 	var size UINT
-	Shift = 0
-	Size = 0
-	if PixelBitMask {
-		??? CompoundStmt WhileStmt
-		??? CompoundStmt WhileStmt
+	shift = 0
+	size = 0
+	if pixelBitMask {
+		while (pixelBitMask & 1) == 0 {
+			??? CompoundStmt UnaryOperator
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		while (pixelBitMask & 1) == 1 {
+			??? CompoundStmt UnaryOperator
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
 
 	}
 
-	???? resolve UnaryOperator = Shift
-	???? resolve UnaryOperator = Size
+	*colorShift = shift
+	*colorSize = size
 }
 
+/// Gets information about the current display mode and stores it in internal structure.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun fbpGetModeInfo() {
 	let modeInfo = new ByValue<PEFI_GRAPHICS_OUTPUT_MODE_INFORMATION>()
 
@@ -254,28 +334,50 @@ fun fbpGetModeInfo() {
 	return (9223372036854775808 & 0)
 }
 
+///  Gets pixel information based on the reported pixel format.
+/// 
+/// @param FrameBufferInfo
+///        Supplies a pointer to the framebuffer information structure.
+/// 
+/// @param PixelsBitMask
+///        Supplies a pointer to the pixel bit mask information provided by EFI graphics protocol.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun fbpGetPixelInformation(pixelsBitMask PEFI_PIXEL_BITMASK) {
 	var compoundMask UINT
 	??? CompoundStmt SwitchStmt
 	FbpDisplayInfo.ModeInfo.BytesPerPixel = FbpDisplayInfo.ModeInfo.BitsPerPixel >> 3
 }
 
+/// This routine is the entry point of the XT EFI boot loader module.
+/// 
+/// @param ImageHandle
+///        Firmware-allocated handle that identifies the image.
+/// 
+/// @param SystemTable
+///        Provides the EFI system table.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	let guid = new ByValue<EFI_GUID>()
 
 	var status EFI_STATUS
-	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
+	status = blGetXtLdrProtocol(systemTable, imageHandle, xtLdrProtocol)
+	if status != (9223372036854775808 & 0) {
 		return (9223372036854775808 | 24)
 
 	}
 
-	FbpDisplayInfo.Protocol = NONE
-	FbpDisplayInfo.Initialized = FALSE
-	FbpFrameBufferProtocol.GetDisplayDriver = FbGetDisplayDriver
-	FbpFrameBufferProtocol.GetDisplayInformation = FbGetDisplayInformation
-	FbpFrameBufferProtocol.GetPreferredScreenResolution = FbGetPreferredScreenResolution
-	FbpFrameBufferProtocol.Initialize = FbInitializeDisplay
-	FbpFrameBufferProtocol.SetScreenResolution = FbSetScreenResolution
-	return XtLdrProtocol.Protocol.Install(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	FbpDisplayInfo.Protocol = nONE
+	FbpDisplayInfo.Initialized = fALSE
+	FbpFrameBufferProtocol.GetDisplayDriver = fbGetDisplayDriver
+	FbpFrameBufferProtocol.GetDisplayInformation = fbGetDisplayInformation
+	FbpFrameBufferProtocol.GetPreferredScreenResolution = fbGetPreferredScreenResolution
+	FbpFrameBufferProtocol.Initialize = fbInitializeDisplay
+	FbpFrameBufferProtocol.SetScreenResolution = fbSetScreenResolution
+	return xtLdrProtocol.Protocol.Install(fbpFrameBufferProtocol, guid)
 }

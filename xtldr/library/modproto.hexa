@@ -1,24 +1,38 @@
 // Hexa 2024 from clang 15.0.3
+/// Finds and opens the XT Boot Loader protocol. This routine should be called by module to access XTLDR protocol.
+/// 
+/// @param SystemTable
+///        Provides the EFI system table.
+/// 
+/// @param ImageHandle
+///        Firmware-allocated handle that identifies the image.
+/// 
+/// @param ProtocolHandler
+///        Receives the pointer to the XT Boot Loader protocol.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blGetXtLdrProtocol(systemTable PEFI_SYSTEM_TABLE, imageHandle EFI_HANDLE, protocolHandler PXTBL_LOADER_PROTOCOL *) {
 	let protocolGuid = new ByValue<EFI_GUID>()
 
-	var handles PEFI_HANDLE = (???? resolve CStyleCastExpr)
+	var handles PEFI_HANDLE = (0 as! PVOID)
 	var status EFI_STATUS
 	var count UINT_PTR
 	var index UINT
-	Status = SystemTable.BootServices.LocateHandleBuffer(ByProtocol, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	status = systemTable.BootServices.LocateHandleBuffer(byProtocol, protocolGuid, (0 as! PVOID), count, handles)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	if Count > 0 {
+	if count > 0 {
 		??? CompoundStmt ForStmt
 
 	}
 
-	SystemTable.BootServices.FreePool(Handles)
-	if ???? resolve UnaryOperator == (???? resolve CStyleCastExpr) {
+	systemTable.BootServices.FreePool(handles)
+	if *protocolHandler == (0 as! PVOID) {
 		return (9223372036854775808 | 14)
 
 	}

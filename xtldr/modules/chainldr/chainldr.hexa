@@ -7,6 +7,14 @@ var __UNIQUE_ID_license2
 var __UNIQUE_ID_version3
 
 
+/// Chainloads another boot loader.
+/// 
+/// @param Parameters
+///        Input parameters with detailed system configuration.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun chBootSystem(parameters PXTBL_BOOT_PARAMETERS) {
 	let lIPGuid = new ByValue<EFI_GUID>()
 
@@ -22,77 +30,88 @@ fun chBootSystem(parameters PXTBL_BOOT_PARAMETERS) {
 	var status EFI_STATUS
 	var loaderSize SIZE_T
 	var loaderData PVOID
-	if Parameters.KernelFile == (???? resolve CStyleCastExpr) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+	if parameters.KernelFile == (0 as! PVOID) {
+		xtLdrProtocol.Debug.Print("ERROR: No EFI image filename provided\n")
 		return (9223372036854775808 | 2)
 
 	}
 
-	Status = XtLdrProtocol.Disk.OpenVolume((???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
-		return Status
+	status = xtLdrProtocol.Disk.OpenVolume((0 as! PVOID), diskHandle, fsHandle)
+	if status != (9223372036854775808 & 0) {
+		xtLdrProtocol.Debug.Print("ERROR: Unable to open boot volume (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
-	Status = FsHandle.Open(FsHandle, ???? resolve UnaryOperator, Parameters.EfiPath, 1, 0)
-	FsHandle.Close(FsHandle)
-	if Status != (9223372036854775808 & 0) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
-		XtLdrProtocol.Disk.CloseVolume(DiskHandle)
-		return Status
+	status = fsHandle.Open(fsHandle, bootDir, parameters.EfiPath, 1, 0)
+	fsHandle.Close(fsHandle)
+	if status != (9223372036854775808 & 0) {
+		xtLdrProtocol.Debug.Print("ERROR: Unable to open system boot directory (Status Code: 0x%zX)\n", status)
+		xtLdrProtocol.Disk.CloseVolume(diskHandle)
+		return status
 
 	}
 
-	Status = XtLdrProtocol.Disk.ReadFile(BootDir, Parameters.KernelFile, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	BootDir.Close(BootDir)
-	XtLdrProtocol.Disk.CloseVolume(DiskHandle)
+	status = xtLdrProtocol.Disk.ReadFile(bootDir, parameters.KernelFile, loaderData, loaderSize)
+	bootDir.Close(bootDir)
+	xtLdrProtocol.Disk.CloseVolume(diskHandle)
 	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
 	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr >> 8
 	???? resolve ArraySubscriptExpr.Header.Type = 1
 	???? resolve ArraySubscriptExpr.Header.SubType = 3
-	???? resolve ArraySubscriptExpr.MemoryType = EfiLoaderData
-	???? resolve ArraySubscriptExpr.StartingAddress = ???? resolve CStyleCastExpr
-	???? resolve ArraySubscriptExpr.EndingAddress = ???? resolve CStyleCastExpr + LoaderSize
+	???? resolve ArraySubscriptExpr.MemoryType = efiLoaderData
+	???? resolve ArraySubscriptExpr.StartingAddress = loaderData as! UINT_PTR
+	???? resolve ArraySubscriptExpr.EndingAddress = loaderData as! UINT_PTR + loaderSize
 	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr
 	???? resolve ArraySubscriptExpr = ???? resolve UnaryExprOrTypeTraitExpr >> 8
 	???? resolve ArraySubscriptExpr.Header.Type = 127
 	???? resolve ArraySubscriptExpr.Header.SubType = 255
-	Status = XtLdrProtocol.Util.LoadEfiImage(???? resolve CStyleCastExpr, LoaderData, LoaderSize, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Parameters.KernelFile, Status)
-		return Status
+	status = xtLdrProtocol.Util.LoadEfiImage(memoryDevicePath as! PEFI_DEVICE_PATH_PROTOCOL, loaderData, loaderSize, loaderHandle)
+	if status != (9223372036854775808 & 0) {
+		xtLdrProtocol.Debug.Print("ERROR: Unable to chainload '%S' (Status Code: 0x%zX)\n", parameters.KernelFile, status)
+		return status
 
 	}
 
-	Status = XtLdrProtocol.Protocol.OpenHandle(LoaderHandle, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
-		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
-		return Status
+	status = xtLdrProtocol.Protocol.OpenHandle(loaderHandle, loadedImage as! PVOID *, lIPGuid)
+	if status != (9223372036854775808 & 0) {
+		xtLdrProtocol.Debug.Print("ERROR: Unable to access binary interface (Status Code: 0x%zX)\n", status)
+		return status
 
 	}
 
-	if Parameters.Parameters {
-		LoadedImage.LoadOptionsSize = RtlWideStringLength(Parameters.Parameters, 0) * ???? resolve UnaryExprOrTypeTraitExpr
-		LoadedImage.LoadOptions = Parameters.Parameters
+	if parameters.Parameters {
+		loadedImage.LoadOptionsSize = rtlWideStringLength(parameters.Parameters, 0) * ???? resolve UnaryExprOrTypeTraitExpr
+		loadedImage.LoadOptions = parameters.Parameters
 
 	}
 
-	LoadedImage.DeviceHandle = DiskHandle
-	return XtLdrProtocol.Util.StartEfiImage(LoaderHandle)
+	loadedImage.DeviceHandle = diskHandle
+	return xtLdrProtocol.Util.StartEfiImage(loaderHandle)
 }
 
+/// This routine is the entry point of the XT EFI boot loader module.
+/// 
+/// @param ImageHandle
+///        Firmware-allocated handle that identifies the image.
+/// 
+/// @param SystemTable
+///        Provides the EFI system table.
+/// 
+/// @return This routine returns status code.
+/// 
+/// @since XT 1.0
 fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	let guid = new ByValue<EFI_GUID>()
 
 	var status EFI_STATUS
-	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
+	status = blGetXtLdrProtocol(systemTable, imageHandle, xtLdrProtocol)
+	if status != (9223372036854775808 & 0) {
 		return (9223372036854775808 | 24)
 
 	}
 
-	ChpBootProtocol.BootSystem = ChBootSystem
-	XtLdrProtocol.Boot.RegisterProtocol(???? resolve StringLiteral, ???? resolve UnaryOperator)
-	return XtLdrProtocol.Protocol.Install(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	ChpBootProtocol.BootSystem = chBootSystem
+	xtLdrProtocol.Boot.RegisterProtocol("CHAINLOADER", guid)
+	return xtLdrProtocol.Protocol.Install(chpBootProtocol, guid)
 }

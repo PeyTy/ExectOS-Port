@@ -1,4 +1,15 @@
 // Hexa 2024 from clang 15.0.3
+/// This routine formats the input string and prints it out to the debug ports.
+/// 
+/// @param Format
+///        The formatted string that is to be written to the output.
+/// 
+/// @param ...
+///        Depending on the format string, this routine might expect a sequence of additional arguments.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blDebugPrint(format PUSHORT) {
 	let consolePrintContext = new ByValue<RTL_PRINT_CONTEXT>()
 
@@ -6,33 +17,46 @@ fun blDebugPrint(format PUSHORT) {
 
 	var arguments VA_LIST
 	if 1 {
-		ConsolePrintContext.WriteWideCharacter = BlpConsolePutChar
-		SerialPrintContext.WriteWideCharacter = BlpDebugPutChar
-		__builtin_va_start(Arguments, Format)
+		ConsolePrintContext.WriteWideCharacter = blpConsolePutChar
+		SerialPrintContext.WriteWideCharacter = blpDebugPutChar
+		__builtin_va_start(arguments, format)
 		if (BlpStatus.DebugPort & 2) and (BlpStatus.SerialPort.Flags & 1) {
-			RtlFormatWideString(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Arguments)
+			rtlFormatWideString(serialPrintContext, format as! PWCHAR, arguments)
 
 		}
 
-		if (BlpStatus.DebugPort & 1) and (BlpStatus.BootServices == TRUE) {
-			RtlFormatWideString(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Arguments)
+		if (BlpStatus.DebugPort & 1) and (BlpStatus.BootServices == tRUE) {
+			rtlFormatWideString(consolePrintContext, format as! PWCHAR, arguments)
 
 		}
 
-		__builtin_va_end(Arguments)
+		__builtin_va_end(arguments)
 
 	}
 
 }
 
+/// Writes a character to the serial console.
+/// 
+/// @param Character
+///        The integer promotion of the character to be written.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpDebugPutChar(character USHORT) {
 	var buffer USHORT[2]
-	???? resolve ArraySubscriptExpr = Character
+	???? resolve ArraySubscriptExpr = character
 	???? resolve ArraySubscriptExpr = 0
-	HlComPortPutByte(???? resolve UnaryOperator, ???? resolve ArraySubscriptExpr)
+	hlComPortPutByte(BlpStatus.SerialPort, ???? resolve ArraySubscriptExpr)
 	return (9223372036854775808 & 0)
 }
 
+/// This routine initializes the XTLDR debug console.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpInitializeDebugConsole() {
 	var portAddress ULONG
 	var portNumber ULONG
@@ -41,18 +65,75 @@ fun blpInitializeDebugConsole() {
 	var debugPort PWCHAR
 	var lastPort PWCHAR
 	var status EFI_STATUS
-	PortAddress = 0
-	PortNumber = 0
-	BaudRate = 0
-	DebugConfiguration = BlGetConfigValue(???? resolve StringLiteral)
-	if DebugConfiguration and BlpStatus.DebugPort == 0 {
-		DebugPort = RtlTokenizeWideString(DebugConfiguration, ???? resolve StringLiteral, ???? resolve UnaryOperator)
-		??? CompoundStmt WhileStmt
-		if BlpStatus.DebugPort & 2 {
-			Status = BlpInitializeSerialPort(PortNumber, PortAddress, BaudRate)
-			if Status != (9223372036854775808 & 0) {
+	portAddress = 0
+	portNumber = 0
+	baudRate = 0
+	debugConfiguration = blGetConfigValue("DEBUG")
+	if debugConfiguration and BlpStatus.DebugPort == 0 {
+		debugPort = rtlTokenizeWideString(debugConfiguration, ";", lastPort)
+		while debugPort != (0 as! PVOID) {
+			if rtlCompareWideStringInsensitive(debugPort, "COM", 3) == 0 {
 				??? CompoundStmt CompoundAssignOperator
-				return Status
+				while *debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral {
+					??? CompoundStmt CompoundAssignOperator
+					??? CompoundStmt CompoundAssignOperator
+					??? CompoundStmt UnaryOperator
+
+				}
+
+				if portNumber == 0 and rtlCompareWideStringInsensitive(debugPort, ":0x", 3) == 0 {
+					??? CompoundStmt CompoundAssignOperator
+					while (*debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral) or (*debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral) or (*debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral) {
+						??? CompoundStmt CompoundAssignOperator
+						if *debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral {
+							??? CompoundStmt CompoundAssignOperator
+
+						} else {
+							??? CompoundStmt CompoundStmt
+							if *debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral {
+								??? CompoundStmt CompoundAssignOperator
+
+							}
+
+
+						}
+
+						??? CompoundStmt UnaryOperator
+
+					}
+
+
+				}
+
+				if *debugPort == ???? resolve CharacterLiteral {
+					??? CompoundStmt UnaryOperator
+					while *debugPort >= ???? resolve CharacterLiteral and *debugPort <= ???? resolve CharacterLiteral {
+						??? CompoundStmt CompoundAssignOperator
+						??? CompoundStmt CompoundAssignOperator
+						??? CompoundStmt UnaryOperator
+
+					}
+
+
+				}
+
+				??? CompoundStmt CompoundAssignOperator
+
+			} else {
+				??? CompoundStmt CompoundStmt
+				??? CompoundStmt CompoundStmt
+
+			}
+
+			debugPort = rtlTokenizeWideString((0 as! PVOID), ";", lastPort)
+
+		}
+
+		if BlpStatus.DebugPort & 2 {
+			status = blpInitializeSerialPort(portNumber, portAddress, baudRate)
+			if status != (9223372036854775808 & 0) {
+				??? CompoundStmt CompoundAssignOperator
+				return status
 
 			}
 
@@ -65,41 +146,55 @@ fun blpInitializeDebugConsole() {
 	return (9223372036854775808 & 0)
 }
 
+/// This routine initializes the serial debug console.
+/// 
+/// @param PortNumber
+///        Supplies a port number.
+/// 
+/// @param PortAddress
+///        Supplies an address of the COM port.
+/// 
+/// @param BaudRate
+///        Supplies an optional port baud rate.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpInitializeSerialPort(portNumber ULONG, portAddress ULONG, baudRate ULONG) {
 	var efiStatus EFI_STATUS
 	var status XTSTATUS
-	if ???? resolve UnaryOperator {
-		if PortNumber > 8 {
-			return (???? resolve CStyleCastExpr)
+	if !portAddress {
+		if portNumber > 8 {
+			return (3221225485 as! XTSTATUS)
 
 		}
 
-		if PortNumber == 0 {
-			PortNumber = 1
+		if portNumber == 0 {
+			portNumber = 1
 
 		}
 
-		PortAddress = ???? resolve ArraySubscriptExpr
-		BlConsolePrint(???? resolve StringLiteral, PortNumber)
+		portAddress = ???? resolve ArraySubscriptExpr
+		blConsolePrint("Initializing serial console at port COM%d\n", portNumber)
 
 	} else {
-		BlConsolePrint(???? resolve StringLiteral, PortAddress)
+		blConsolePrint("Initializing serial console at COM port address: 0x%lX\n", portAddress)
 
 	}
 
-	Status = HlInitializeComPort(???? resolve UnaryOperator, (???? resolve CStyleCastExpr), BaudRate)
-	if Status == (???? resolve CStyleCastExpr) and PortAddress {
-		EfiStatus = BlpActivateSerialIOController()
-		if EfiStatus == (9223372036854775808 & 0) {
-			BlConsolePrint(???? resolve StringLiteral)
-			Status = HlInitializeComPort(???? resolve UnaryOperator, (???? resolve CStyleCastExpr), BaudRate)
+	status = hlInitializeComPort(BlpStatus.SerialPort, (portAddress as! ULONG_PTR as! PVOID), baudRate)
+	if status == (3221226021 as! XTSTATUS) and portAddress {
+		efiStatus = blpActivateSerialIOController()
+		if efiStatus == (9223372036854775808 & 0) {
+			blConsolePrint("Enabled I/O space access for all PCI(E) serial controllers found\n")
+			status = hlInitializeComPort(BlpStatus.SerialPort, (portAddress as! ULONG_PTR as! PVOID), baudRate)
 
 		}
 
 
 	}
 
-	if Status != (???? resolve CStyleCastExpr) {
+	if status != (0 as! XTSTATUS) {
 		return (9223372036854775808 | 6)
 
 	}

@@ -1,7 +1,18 @@
 // Hexa 2024 from clang 15.0.3
+/// Returns the stack limits for the current thread.
+/// 
+/// @param StackBase
+///        Supplies a pointer to memory area, where the stack base will be stored.
+/// 
+/// @param StackLimit
+///        Suppliws a pointer to memory area, where the stack limit will be stored.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun rtlGetStackLimits(stackBase PULONG_PTR, stackLimit PULONG_PTR) {
 	let thread = new ByValue<PKTHREAD>()
 
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	*stackBase = thread.StackBase as! ULONG_PTR
+	*stackLimit = thread.StackLimit as! ULONG_PTR
 }

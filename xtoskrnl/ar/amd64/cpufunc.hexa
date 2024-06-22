@@ -1,159 +1,402 @@
 // Hexa 2024 from clang 15.0.3
+/// Instructs the processor to clear the interrupt flag.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arClearInterruptFlag() {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Retrieves a various amount of information about the CPU.
+/// 
+/// @param Registers
+///        Supplies a pointer to the structure containing all the necessary registers and leafs for CPUID.
+/// 
+/// @return TRUE if CPUID function could be executed, FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun arCpuId(registers PCPUID_REGISTERS) {
 	var maxLeaf UINT32
 	??? CompoundStmt GCCAsmStmt
-	if Registers.Leaf > MaxLeaf {
-		return FALSE
+	if registers.Leaf > maxLeaf {
+		return fALSE
 
 	}
 
 	??? CompoundStmt GCCAsmStmt
-	return TRUE
+	return tRUE
 }
 
+/// Partially flushes the Translation Lookaside Buffer (TLB)
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arFlushTlb() {
-	ArWriteControlRegister(3, ArReadControlRegister(3))
+	arWriteControlRegister(3, arReadControlRegister(3))
 }
 
+/// Gets the RFLAGS register.
+/// 
+/// @return This routine returns the RFLAGS register.
+/// 
+/// @since XT 1.0
 fun arGetCpuFlags() {
 	var flags ULONG_PTR
 	??? CompoundStmt GCCAsmStmt
-	return Flags
+	return flags
 }
 
+/// Gets the address of the current stack register.
+/// 
+/// @return This routine returns the current stack pointer.
+/// 
+/// @since XT 1.0
 fun arGetStackPointer() {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Halts the central processing unit (CPU).
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arHalt() {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Checks whether interrupts are enabled or not.
+/// 
+/// @return This routine returns TRUE if interrupts are enabled, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun arInterruptsEnabled() {
 	var flags ULONG_PTR
-	Flags = ArGetCpuFlags()
+	flags = arGetCpuFlags()
 	return ???? resolve ConditionalOperator
 }
 
+/// Invalidates the TLB (Translation Lookaside Buffer) for specified virtual address.
+/// 
+/// @param Address
+///        Suuplies a virtual address whose associated TLB entry will be invalidated.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arInvalidateTlbEntry(address PVOID) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Loads the value in the source operand into the global descriptor table register (GDTR).
+/// 
+/// @param Source
+///        Specifies a memory location that contains the base address of GDT.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arLoadGlobalDescriptorTable(source PVOID) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Loads the value in the source operand into the interrupt descriptor table register (IDTR).
+/// 
+/// @param Source
+///        Specifies a memory location that contains the base address of IDT.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arLoadInterruptDescriptorTable(source PVOID) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Loads the value in the source operand into the local descriptor table register (LDTR).
+/// 
+/// @param Source
+///        Specifies a selector value.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arLoadLocalDescriptorTable(source USHORT) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Loads the value in the source operand into the MXCSR register
+/// 
+/// @param Source
+///        Supplies a source value to be loaded into the MXCSR register.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arLoadMxcsrRegister(source ULONG) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Loads source data into specified segment.
+/// 
+/// @param Segment
+///        Supplies a segment identification.
+/// 
+/// @param Source
+///        Supplies a pointer to the memory area containing data that will be loaded into specified segment.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arLoadSegment(segment USHORT, source ULONG) {
 	??? CompoundStmt SwitchStmt
 }
 
+/// Loads Task Register (TR) with a segment selector that points to TSS.
+/// 
+/// @param Source
+///        Supplies the segment selector in the GDT describing the TSS.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arLoadTaskRegister(source USHORT) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Orders memory accesses as seen by other processors.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arMemoryBarrier() {
 	var barrier LONG
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Reads the specified CPU control register and returns its value.
+/// 
+/// @param ControlRegister
+///        Supplies a number of a control register which controls the general behavior of a CPU.
+/// 
+/// @return The value stored in the control register.
+/// 
+/// @since XT 1.0
 fun arReadControlRegister(controlRegister USHORT) {
 	var value ULONG_PTR
 	??? CompoundStmt SwitchStmt
-	return Value
+	return value
 }
 
+/// Reads the specified CPU debug register and returns its value.
+/// 
+/// @param DebugRegister
+///        Supplies a number of a debug register to read from.
+/// 
+/// @return The value stored in the specified debug register.
+/// 
+/// @since XT 1.0
 fun arReadDebugRegister(debugRegister USHORT) {
 	var value ULONG_PTR
 	??? CompoundStmt SwitchStmt
-	return Value
+	return value
 }
 
+/// Reads quadword from a memory location specified by an offset relative to the beginning of the GS segment.
+/// 
+/// @param Offset
+///        Specifies the offset from the beginning of GS segment.
+/// 
+/// @return Returns the value read from the specified memory location relative to GS segment.
+/// 
+/// @since XT 1.0
 fun arReadGSQuadWord(offset ULONG) {
 	var value ULONGLONG
 	??? CompoundStmt GCCAsmStmt
-	return Value
+	return value
 }
 
+/// Reads a 64-bit value from the requested Model Specific Register (MSR).
+/// 
+/// @param Register
+///        Supplies the MSR to read.
+/// 
+/// @return This routine returns the 64-bit MSR value.
+/// 
+/// @since XT 1.0
 fun arReadModelSpecificRegister(register ULONG) {
 	var low ULONG
 	var high ULONG
 	??? CompoundStmt GCCAsmStmt
-	return (???? resolve CStyleCastExpr << 32) | Low
+	return (high as! ULONGLONG << 32) | low
 }
 
+/// Reads the contents of the MXCSR control/status register.
+/// 
+/// @return This routine returns the contents of the MXCSR register as a 32-bit unsigned integer value.
+/// 
+/// @since XT 1.0
 fun arReadMxCsrRegister() {
 	return __builtin_ia32_stmxcsr()
 }
 
+/// Reads the current value of the CPU's time-stamp counter.
+/// 
+/// @return This routine returns the current instruction cycle count since the processor was started.
+/// 
+/// @since XT 1.0
 fun arReadTimeStampCounter() {
 	var low ULONGLONG
 	var high ULONGLONG
 	??? CompoundStmt GCCAsmStmt
-	return (???? resolve CStyleCastExpr << 32) | Low
+	return (high as! ULONGLONG << 32) | low
 }
 
+/// Orders memory accesses as seen by other processors, without fence.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arReadWriteBarrier() {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Instructs the processor to set the interrupt flag.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arSetInterruptFlag() {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Stores GDT register into the given memory area.
+/// 
+/// @param Destination
+///        Supplies a pointer to the memory area where GDT will be stored.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arStoreGlobalDescriptorTable(destination PVOID) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Stores IDT register into the given memory area.
+/// 
+/// @param Destination
+///        Supplies a pointer to the memory area where IDT will be stored.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arStoreInterruptDescriptorTable(destination PVOID) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Stores LDT register into the given memory area.
+/// 
+/// @param Destination
+///        Supplies a pointer to the memory area where LDT will be stored.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arStoreLocalDescriptorTable(destination PVOID) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Stores specified segment into the given memory area.
+/// 
+/// @param Segment
+///        Supplies a segment identification.
+/// 
+/// @param Destination
+///        Supplies a pointer to the memory area where segment data will be stored.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arStoreSegment(segment USHORT, destination PVOID) {
 	??? CompoundStmt SwitchStmt
 }
 
+/// Stores TR into the given memory area.
+/// 
+/// @param Destination
+///        Supplies a pointer to the memory area where TR will be stores.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arStoreTaskRegister(destination PVOID) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Writes a value to the specified CPU control register.
+/// 
+/// @param ControlRegister
+///        Supplies a number of a control register which controls the general behavior of a CPU.
+/// 
+/// @param Value
+///        Suplies a value to write to the CR register.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arWriteControlRegister(controlRegister USHORT, value UINT_PTR) {
 	??? CompoundStmt SwitchStmt
 }
 
+/// Writes a value to the specified CPU debug register.
+/// 
+/// @param DebugRegister
+///        Supplies a number of a debug register for write operation.
+/// 
+/// @param Value
+///        Suplies a value to write to the specified DR register.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arWriteDebugRegister(debugRegister USHORT, value UINT_PTR) {
 	??? CompoundStmt SwitchStmt
 }
 
+/// Writes the specified value to the program status and control (EFLAGS) register.
+/// 
+/// @param Value
+///        The value to write to the EFLAGS register.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arWriteEflagsRegister(value UINT_PTR) {
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Writes a 64-bit value to the requested Model Specific Register (MSR).
+/// 
+/// @param Register
+///        Supplies the MSR register to write.
+/// 
+/// @param Value
+///        Supplies the 64-bit value to write.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arWriteModelSpecificRegister(register ULONG, value ULONGLONG) {
-	var low ULONG = Value & 4294967295
-	var high ULONG = Value >> 32
+	var low ULONG = value & 4294967295
+	var high ULONG = value >> 32
 	??? CompoundStmt GCCAsmStmt
 }
 
+/// Yields a current thread running on the processor.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arYieldProcessor() {
 	??? CompoundStmt GCCAsmStmt
 }

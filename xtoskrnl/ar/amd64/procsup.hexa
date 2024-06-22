@@ -1,4 +1,9 @@
 // Hexa 2024 from clang 15.0.3
+/// Initializes AMD64 processor specific structures.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arInitializeProcessor(processorStructures PVOID) {
 	let gdtDescriptor = new ByValue<KDESCRIPTOR>()
 
@@ -14,49 +19,68 @@ fun arInitializeProcessor(processorStructures PVOID) {
 
 	let tss = new ByValue<PKTSS>()
 
-	if ProcessorStructures {
-		ArpInitializeProcessorStructures(ProcessorStructures, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-		Idt = ArInitialIdt
+	if processorStructures {
+		arpInitializeProcessorStructures(processorStructures, gdt, tss, processorBlock, kernelBootStack, kernelFaultStack)
+		idt = arInitialIdt
 
 	} else {
-		Gdt = ArInitialGdt
-		Idt = ArInitialIdt
-		Tss = ???? resolve UnaryOperator
-		KernelBootStack = ???? resolve UnaryOperator
-		KernelFaultStack = ???? resolve UnaryOperator
-		ProcessorBlock = ???? resolve UnaryOperator
+		gdt = arInitialGdt
+		idt = arInitialIdt
+		tss = arInitialTss
+		kernelBootStack = arKernelBootStack
+		kernelFaultStack = arKernelFaultStack
+		processorBlock = arInitialProcessorBlock
 
 	}
 
-	ArpInitializeProcessorBlock(ProcessorBlock, Gdt, Idt, Tss, KernelFaultStack)
-	ArpInitializeGdt(ProcessorBlock)
-	ArpInitializeIdt(ProcessorBlock)
-	ArpInitializeTss(ProcessorBlock, KernelBootStack, KernelFaultStack)
-	GdtDescriptor.Base = Gdt
+	arpInitializeProcessorBlock(processorBlock, gdt, idt, tss, kernelFaultStack)
+	arpInitializeGdt(processorBlock)
+	arpInitializeIdt(processorBlock)
+	arpInitializeTss(processorBlock, kernelBootStack, kernelFaultStack)
+	GdtDescriptor.Base = gdt
 	GdtDescriptor.Limit = (128 * ???? resolve UnaryExprOrTypeTraitExpr) - 1
-	IdtDescriptor.Base = Idt
+	IdtDescriptor.Base = idt
 	IdtDescriptor.Limit = (256 * ???? resolve UnaryExprOrTypeTraitExpr) - 1
-	ArLoadGlobalDescriptorTable(???? resolve UnaryOperator)
-	ArLoadInterruptDescriptorTable(???? resolve UnaryOperator)
-	ArLoadTaskRegister(???? resolve CStyleCastExpr)
-	HlSetRunLevel(0)
-	ArpInitializeSegments()
-	ArWriteModelSpecificRegister(3221225729, ???? resolve CStyleCastExpr)
-	ArWriteModelSpecificRegister(3221225730, ???? resolve CStyleCastExpr)
-	ArpInitializeProcessorRegisters()
-	ArpIdentifyProcessor()
+	arLoadGlobalDescriptorTable(GdtDescriptor.Limit)
+	arLoadInterruptDescriptorTable(IdtDescriptor.Limit)
+	arLoadTaskRegister(64 as! UINT)
+	hlSetRunLevel(0)
+	arpInitializeSegments()
+	arWriteModelSpecificRegister(3221225729, processorBlock as! ULONGLONG)
+	arWriteModelSpecificRegister(3221225730, processorBlock as! ULONGLONG)
+	arpInitializeProcessorRegisters()
+	arpIdentifyProcessor()
 }
 
+/// Updates an existing AMD64 GDT entry with new base address.
+/// 
+/// @param Gdt
+///        Supplies a pointer to the GDT.
+/// 
+/// @param Selector
+///        Specifies a segment selector of the GDT entry.
+/// 
+/// @param Base
+///        Specifies a base address value of the descriptor.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arSetGdtEntryBase(gdt PKGDTENTRY, selector USHORT, base ULONG_PTR) {
 	let gdtEntry = new ByValue<PKGDTENTRY>()
 
-	GdtEntry = ???? resolve CStyleCastExpr
-	GdtEntry.BaseLow = (Base & 65535)
-	GdtEntry..Bytes.BaseMiddle = ((Base >> 16) & 255)
-	GdtEntry..Bytes.BaseHigh = ((Base >> 24) & 255)
-	GdtEntry.BaseUpper = (Base >> 32)
+	gdtEntry = (gdt as! ULONG_PTR + (selector & ~3)) as! PKGDTENTRY
+	gdtEntry.BaseLow = (base & 65535)
+	gdtEntry..Bytes.BaseMiddle = ((base >> 16) & 255)
+	gdtEntry..Bytes.BaseHigh = ((base >> 24) & 255)
+	gdtEntry.BaseUpper = (base >> 32)
 }
 
+/// Identifies processor type (vendor, model, stepping) as well as looks for available CPU features and stores them in Processor Control Block (PRCB).
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arpIdentifyProcessor() {
 	let prcb = new ByValue<PKPROCESSOR_CONTROL_BLOCK>()
 
@@ -64,26 +88,26 @@ fun arpIdentifyProcessor() {
 
 	let cpuSignature = new ByValue<CPUID_SIGNATURE>()
 
-	Prcb = KeGetCurrentProcessorControlBlock()
-	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
-	CpuRegisters.Leaf = CPUID_GET_VENDOR_STRING
-	ArCpuId(???? resolve UnaryOperator)
-	Prcb.CpuId.Vendor = CpuRegisters.Ebx
-	???? resolve UnaryOperator = CpuRegisters.Ebx
-	???? resolve UnaryOperator = CpuRegisters.Edx
-	???? resolve UnaryOperator = CpuRegisters.Ecx
+	prcb = keGetCurrentProcessorControlBlock()
+	rtlZeroMemory(cpuRegisters, ???? resolve UnaryExprOrTypeTraitExpr)
+	CpuRegisters.Leaf = cPUID_GET_VENDOR_STRING
+	arCpuId(cpuRegisters)
+	prcb.CpuId.Vendor = CpuRegisters.Ebx
+	*???? resolve ArraySubscriptExpr as! PULONG = CpuRegisters.Ebx
+	*???? resolve ArraySubscriptExpr as! PULONG = CpuRegisters.Edx
+	*???? resolve ArraySubscriptExpr as! PULONG = CpuRegisters.Ecx
 	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
-	CpuRegisters.Leaf = CPUID_GET_CPU_FEATURES
-	ArCpuId(???? resolve UnaryOperator)
-	CpuSignature = ???? resolve UnaryOperator
-	Prcb.CpuId.Family = CpuSignature.Family
-	Prcb.CpuId.Model = CpuSignature.Model
-	Prcb.CpuId.Stepping = CpuSignature.Stepping
-	if Prcb.CpuId.Vendor == CPU_VENDOR_AMD {
-		if Prcb.CpuId.Family >= 15 {
-			Prcb.CpuId.Family = Prcb.CpuId.Family + CpuSignature.ExtendedFamily
-			Prcb.CpuId.Model = Prcb.CpuId.Model + (CpuSignature.ExtendedModel << 4)
+	rtlZeroMemory(cpuRegisters, ???? resolve UnaryExprOrTypeTraitExpr)
+	CpuRegisters.Leaf = cPUID_GET_CPU_FEATURES
+	arCpuId(cpuRegisters)
+	cpuSignature = *CpuRegisters.Eax as! PCPUID_SIGNATURE
+	prcb.CpuId.Family = CpuSignature.Family
+	prcb.CpuId.Model = CpuSignature.Model
+	prcb.CpuId.Stepping = CpuSignature.Stepping
+	if prcb.CpuId.Vendor == cPU_VENDOR_AMD {
+		if prcb.CpuId.Family >= 15 {
+			prcb.CpuId.Family = prcb.CpuId.Family + CpuSignature.ExtendedFamily
+			prcb.CpuId.Model = prcb.CpuId.Model + (CpuSignature.ExtendedModel << 4)
 
 		}
 
@@ -96,158 +120,284 @@ fun arpIdentifyProcessor() {
 
 }
 
+/// Initializes the kernel's Global Descriptor Table (GDT).
+/// 
+/// @param Gdt
+///        Supplies a pointer to the GDT to use.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arpInitializeGdt(processorBlock PKPROCESSOR_BLOCK) {
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 0, 0, 0, 0, 0, 1)
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 16, 0, 0, (16 | 8 | 2), 0, 1)
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 24, 0, 0, (16 | 2), 0, 1)
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 32, 0, 4294967295, (16 | 8 | 2), 3, 2)
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 40, 0, 4294967295, (16 | 2), 3, 2)
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 48, 0, 0, (16 | 8 | 2), 3, 1)
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 64, ???? resolve CStyleCastExpr, ???? resolve UnaryExprOrTypeTraitExpr, 9, 0, 0)
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 80, 0, 4095, (16 | 2), 3, 2)
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 96, 0, 4294967295, (16 | 8 | 2), 0, 0)
-	ArpSetGdtEntry(ProcessorBlock...GdtBase, 112, ???? resolve CStyleCastExpr, (128 * ???? resolve UnaryExprOrTypeTraitExpr) - 1, (16 | 2), 0, 0)
+	arpSetGdtEntry(processorBlock...GdtBase, 0, 0, 0, 0, 0, 1)
+	arpSetGdtEntry(processorBlock...GdtBase, 16, 0, 0, (16 | 8 | 2), 0, 1)
+	arpSetGdtEntry(processorBlock...GdtBase, 24, 0, 0, (16 | 2), 0, 1)
+	arpSetGdtEntry(processorBlock...GdtBase, 32, 0, 4294967295, (16 | 8 | 2), 3, 2)
+	arpSetGdtEntry(processorBlock...GdtBase, 40, 0, 4294967295, (16 | 2), 3, 2)
+	arpSetGdtEntry(processorBlock...GdtBase, 48, 0, 0, (16 | 8 | 2), 3, 1)
+	arpSetGdtEntry(processorBlock...GdtBase, 64, processorBlock...TssBase as! ULONG_PTR, ???? resolve UnaryExprOrTypeTraitExpr, 9, 0, 0)
+	arpSetGdtEntry(processorBlock...GdtBase, 80, 0, 4095, (16 | 2), 3, 2)
+	arpSetGdtEntry(processorBlock...GdtBase, 96, 0, 4294967295, (16 | 8 | 2), 0, 0)
+	arpSetGdtEntry(processorBlock...GdtBase, 112, processorBlock...GdtBase as! ULONG_PTR, (128 * ???? resolve UnaryExprOrTypeTraitExpr) - 1, (16 | 2), 0, 0)
 }
 
+/// Initializes the kernel's Interrupt Descriptor Table (IDT).
+/// 
+/// @param ProcessorBlock
+///        Supplies a pointer to the processor block to use.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arpInitializeIdt(processorBlock PKPROCESSOR_BLOCK) {
 	var vector UINT
 	??? CompoundStmt ForStmt
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 0, ArpTrap0x00, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 1, ArpTrap0x01, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 2, ArpTrap0x02, 16, 1, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 3, ArpTrap0x03, 16, 0, 3)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 4, ArpTrap0x04, 16, 0, 3)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 5, ArpTrap0x05, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 6, ArpTrap0x06, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 7, ArpTrap0x07, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 8, ArpTrap0x08, 16, 1, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 9, ArpTrap0x09, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 10, ArpTrap0x0A, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 11, ArpTrap0x0B, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 12, ArpTrap0x0C, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 13, ArpTrap0x0D, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 14, ArpTrap0x0E, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 16, ArpTrap0x10, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 17, ArpTrap0x11, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 18, ArpTrap0x12, 16, 2, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 19, ArpTrap0x13, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 31, ArpTrap0x1F, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 44, ArpTrap0x2C, 16, 0, 3)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 45, ArpTrap0x2D, 16, 0, 3)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 47, ArpTrap0x2F, 16, 0, 0)
-	ArpSetIdtGate(ProcessorBlock.IdtBase, 225, ArpTrap0xE1, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 0, arpTrap0x00, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 1, arpTrap0x01, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 2, arpTrap0x02, 16, 1, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 3, arpTrap0x03, 16, 0, 3)
+	arpSetIdtGate(processorBlock.IdtBase, 4, arpTrap0x04, 16, 0, 3)
+	arpSetIdtGate(processorBlock.IdtBase, 5, arpTrap0x05, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 6, arpTrap0x06, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 7, arpTrap0x07, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 8, arpTrap0x08, 16, 1, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 9, arpTrap0x09, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 10, arpTrap0x0A, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 11, arpTrap0x0B, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 12, arpTrap0x0C, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 13, arpTrap0x0D, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 14, arpTrap0x0E, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 16, arpTrap0x10, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 17, arpTrap0x11, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 18, arpTrap0x12, 16, 2, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 19, arpTrap0x13, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 31, arpTrap0x1F, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 44, arpTrap0x2C, 16, 0, 3)
+	arpSetIdtGate(processorBlock.IdtBase, 45, arpTrap0x2D, 16, 0, 3)
+	arpSetIdtGate(processorBlock.IdtBase, 47, arpTrap0x2F, 16, 0, 0)
+	arpSetIdtGate(processorBlock.IdtBase, 225, arpTrap0xE1, 16, 0, 0)
 }
 
+/// Initializes processor block.
+/// 
+/// @param ProcessorBlock
+///        Supplies a pointer to the processor block to initialize.
+/// 
+/// @param Gdt
+///        Supplies a pointer to the GDT for this processor block.
+/// 
+/// @param Idt
+///        Supplies a pointer to the IDT for this processor block.
+/// 
+/// @param Tss
+///        Supplies a pointer to the TSS for this processor block.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arpInitializeProcessorBlock(processorBlock PKPROCESSOR_BLOCK, gdt PKGDTENTRY, idt PKIDTENTRY, tss PKTSS, dpcStack PVOID) {
-	ProcessorBlock...Self = ProcessorBlock
-	ProcessorBlock...CurrentPrcb = ???? resolve UnaryOperator
-	ProcessorBlock...GdtBase = ???? resolve CStyleCastExpr
-	ProcessorBlock.IdtBase = Idt
-	ProcessorBlock...TssBase = Tss
-	ProcessorBlock.Prcb.RspBase = Tss.Rsp0
-	ProcessorBlock.Prcb.DpcStack = DpcStack
-	ProcessorBlock.Prcb.CpuNumber = ProcessorBlock.CpuNumber
-	ProcessorBlock.Prcb.SetMember = 1 << ProcessorBlock.CpuNumber
-	ProcessorBlock.Prcb.MultiThreadProcessorSet = 1 << ProcessorBlock.CpuNumber
-	ProcessorBlock.Prcb.ProcessorState.SpecialRegisters.KernelDr6 = 0
-	ProcessorBlock.Prcb.ProcessorState.SpecialRegisters.KernelDr7 = 0
-	ProcessorBlock.Prcb.CurrentThread = ???? resolve UnaryOperator
-	ProcessorBlock.Prcb.CurrentThread..ApcState.Process = ???? resolve UnaryOperator
-	ProcessorBlock.Prcb.IdleThread = ???? resolve UnaryOperator
-	ProcessorBlock.Prcb.NextThread = (???? resolve CStyleCastExpr)
-	ProcessorBlock.Prcb.MxCsr = 8064
-	ProcessorBlock.RunLevel = 0
+	processorBlock...Self = processorBlock
+	processorBlock...CurrentPrcb = processorBlock.Prcb
+	processorBlock...GdtBase = gdt as! PVOID
+	processorBlock.IdtBase = idt
+	processorBlock...TssBase = tss
+	processorBlock.Prcb.RspBase = tss.Rsp0
+	processorBlock.Prcb.DpcStack = dpcStack
+	processorBlock.Prcb.CpuNumber = processorBlock.CpuNumber
+	processorBlock.Prcb.SetMember = 1 << processorBlock.CpuNumber
+	processorBlock.Prcb.MultiThreadProcessorSet = 1 << processorBlock.CpuNumber
+	processorBlock.Prcb.ProcessorState.SpecialRegisters.KernelDr6 = 0
+	processorBlock.Prcb.ProcessorState.SpecialRegisters.KernelDr7 = 0
+	processorBlock.Prcb.CurrentThread = KeInitialThread.ThreadControlBlock
+	processorBlock.Prcb.CurrentThread..ApcState.Process = KeInitialProcess.ProcessControlBlock
+	processorBlock.Prcb.IdleThread = KeInitialThread.ThreadControlBlock
+	processorBlock.Prcb.NextThread = (0 as! PVOID)
+	processorBlock.Prcb.MxCsr = 8064
+	processorBlock.RunLevel = 0
 }
 
+/// Initializes processor registers and other boot structures.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arpInitializeProcessorRegisters() {
 	var patAttributes ULONGLONG
-	ArWriteControlRegister(4, ArReadControlRegister(4) | 512)
-	ArWriteControlRegister(4, ArReadControlRegister(4) | 1024)
-	ArWriteControlRegister(4, ArReadControlRegister(4) | 8)
-	ArWriteControlRegister(4, ArReadControlRegister(4) | 16)
-	ArWriteControlRegister(0, ArReadControlRegister(0) | 65536)
-	ArWriteControlRegister(0, ArReadControlRegister(0) | 262144)
-	ArWriteControlRegister(0, ArReadControlRegister(0) & ???? resolve UnaryOperator)
-	ArWriteControlRegister(0, ArReadControlRegister(0) & ???? resolve UnaryOperator)
-	ArFlushTlb()
-	ArWriteModelSpecificRegister(3221225601, ((???? resolve CStyleCastExpr | 3) << 48) | (???? resolve CStyleCastExpr << 32))
-	ArWriteModelSpecificRegister(3221225603, ???? resolve CStyleCastExpr)
-	ArWriteModelSpecificRegister(3221225602, ???? resolve CStyleCastExpr)
-	ArWriteModelSpecificRegister(3221225604, 512 | 256)
-	ArWriteModelSpecificRegister(3221225600, ArReadModelSpecificRegister(3221225600) | (1 << 0))
-	ArWriteModelSpecificRegister(3221225600, ArReadModelSpecificRegister(3221225600) | (1 << 11))
-	PatAttributes = (6 << 0) | (1 << 8) | (7 << 16) | (0 << 24) | (6 << 32) | (1 << 40) | (7 << 48) | (0 << 56)
-	ArWriteModelSpecificRegister(631, PatAttributes)
-	ArLoadMxcsrRegister(8064)
+	arWriteControlRegister(4, arReadControlRegister(4) | 512)
+	arWriteControlRegister(4, arReadControlRegister(4) | 1024)
+	arWriteControlRegister(4, arReadControlRegister(4) | 8)
+	arWriteControlRegister(4, arReadControlRegister(4) | 16)
+	arWriteControlRegister(0, arReadControlRegister(0) | 65536)
+	arWriteControlRegister(0, arReadControlRegister(0) | 262144)
+	arWriteControlRegister(0, arReadControlRegister(0) & ~2)
+	arWriteControlRegister(0, arReadControlRegister(0) & ~32)
+	arFlushTlb()
+	arWriteModelSpecificRegister(3221225601, ((32 as! ULONG64 | 3) << 48) | (16 as! ULONG64 << 32))
+	arWriteModelSpecificRegister(3221225603, arpHandleSystemCall32 as! ULONG64)
+	arWriteModelSpecificRegister(3221225602, arpHandleSystemCall64 as! ULONG64)
+	arWriteModelSpecificRegister(3221225604, 512 | 256)
+	arWriteModelSpecificRegister(3221225600, arReadModelSpecificRegister(3221225600) | (1 << 0))
+	arWriteModelSpecificRegister(3221225600, arReadModelSpecificRegister(3221225600) | (1 << 11))
+	patAttributes = (6 << 0) | (1 << 8) | (7 << 16) | (0 << 24) | (6 << 32) | (1 << 40) | (7 << 48) | (0 << 56)
+	arWriteModelSpecificRegister(631, patAttributes)
+	arLoadMxcsrRegister(8064)
 }
 
+/// Initializes i686 processor specific structures with provided memory buffer.
+/// 
+/// @param ProcessorStructures
+///        Supplies a pointer to the allocated buffer with processor structures.
+/// 
+/// @param Gdt
+///        Supplies a pointer to the GDT.
+/// 
+/// @param Tss
+///        Supplies a pointer to the TSS.
+/// 
+/// @param ProcessorBlock
+///        Supplies a pointer to the processor block.
+/// 
+/// @param KernelBootStack
+///        Supplies a pointer to the kernel boot stack.
+/// 
+/// @param KernelFaultStack
+///        Supplies a pointer to the kernel fault stack.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arpInitializeProcessorStructures(processorStructures PVOID, gdt PKGDTENTRY *, tss PKTSS *, processorBlock PKPROCESSOR_BLOCK *, kernelBootStack PVOID *, kernelFaultStack PVOID *) {
 	var address UINT_PTR
-	Address = (((???? resolve CStyleCastExpr) + (4096 - 1)) & ???? resolve UnaryOperator) + 32768
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	address = (((processorStructures as! UINT_PTR) + (4096 - 1)) & ~((4096) - 1)) + 32768
+	*kernelBootStack = address as! PVOID
 	??? CompoundStmt CompoundAssignOperator
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	*kernelFaultStack = address as! PVOID
+	*gdt = address as! PVOID
 	??? CompoundStmt CompoundAssignOperator
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	*processorBlock = address as! PVOID
 	??? CompoundStmt CompoundAssignOperator
-	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	*tss = address as! PVOID
 }
 
+/// Initializes segment registers.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arpInitializeSegments() {
-	ArLoadSegment(46, 16)
-	ArLoadSegment(62, 40 | 3)
-	ArLoadSegment(38, 40 | 3)
-	ArLoadSegment(100, 80 | 3)
-	ArLoadSegment(101, 40 | 3)
-	ArLoadSegment(54, 24)
+	arLoadSegment(46, 16)
+	arLoadSegment(62, 40 | 3)
+	arLoadSegment(38, 40 | 3)
+	arLoadSegment(100, 80 | 3)
+	arLoadSegment(101, 40 | 3)
+	arLoadSegment(54, 24)
 }
 
+/// Initializes the kernel's Task State Segment (TSS).
+/// 
+/// @param Tss
+///        Supplies a pointer to the TSS to use.
+/// 
+/// @param Gdt
+///        Supplies a pointer to the GDT to use.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arpInitializeTss(processorBlock PKPROCESSOR_BLOCK, kernelBootStack PVOID, kernelFaultStack PVOID) {
-	RtlZeroMemory(ProcessorBlock...TssBase, ???? resolve UnaryExprOrTypeTraitExpr)
-	ProcessorBlock...TssBase.IoMapBase = ???? resolve UnaryExprOrTypeTraitExpr
-	ProcessorBlock...TssBase.Rsp0 = ???? resolve CStyleCastExpr
-	???? resolve ArraySubscriptExpr = ???? resolve CStyleCastExpr
-	???? resolve ArraySubscriptExpr = ???? resolve CStyleCastExpr
+	rtlZeroMemory(processorBlock...TssBase, ???? resolve UnaryExprOrTypeTraitExpr)
+	processorBlock...TssBase.IoMapBase = ???? resolve UnaryExprOrTypeTraitExpr
+	processorBlock...TssBase.Rsp0 = kernelBootStack as! ULONG_PTR
+	???? resolve ArraySubscriptExpr = kernelFaultStack as! ULONG_PTR
+	???? resolve ArraySubscriptExpr = kernelFaultStack as! ULONG_PTR
 }
 
+/// Fills in an AMD64 GDT entry.
+/// 
+/// @param Gdt
+///        Supplies a pointer to the GDT.
+/// 
+/// @param Selector
+///        Specifies a segment selector of the GDT entry.
+/// 
+/// @param Base
+///        Specifies a base address value of the descriptor.
+/// 
+/// @param Limit
+///        Specifies a descriptor limit.
+/// 
+/// @param Type
+///        Specifies a type of the descriptor.
+/// 
+/// @param Dpl
+///        Specifies the descriptor privilege level.
+/// 
+/// @param SegmentMode
+///        Specifies a segment mode of the descriptor.
+/// 
+/// @return This routine does not return any value
+/// 
+/// @since XT 1.0
 fun arpSetGdtEntry(gdt PKGDTENTRY, selector USHORT, base ULONG_PTR, limit ULONG, type UCHAR, dpl UCHAR, segmentMode UCHAR) {
 	let gdtEntry = new ByValue<PKGDTENTRY>()
 
 	var granularity UCHAR
-	if Limit < 1048576 {
-		Granularity = 0
+	if limit < 1048576 {
+		granularity = 0
 
 	} else {
-		Granularity = 1
+		granularity = 1
 		??? CompoundStmt CompoundAssignOperator
 
 	}
 
-	GdtEntry = ???? resolve CStyleCastExpr
-	GdtEntry.BaseLow = (Base & 65535)
-	GdtEntry..Bytes.BaseMiddle = ((Base >> 16) & 255)
-	GdtEntry..Bytes.BaseHigh = ((Base >> 24) & 255)
-	GdtEntry.BaseUpper = (Base >> 32)
-	GdtEntry.LimitLow = (Limit & 65535)
-	GdtEntry..Bits.LimitHigh = ((Limit >> 16) & 15)
-	GdtEntry..Bits.DefaultBig = ???? resolve UnaryOperator
-	GdtEntry..Bits.Dpl = (Dpl & 3)
-	GdtEntry..Bits.Granularity = Granularity
-	GdtEntry..Bits.LongMode = ???? resolve UnaryOperator
-	GdtEntry..Bits.Present = (Type != 0)
-	GdtEntry..Bits.System = 0
-	GdtEntry..Bits.Type = (Type & 31)
-	GdtEntry.MustBeZero = 0
+	gdtEntry = (gdt as! ULONG_PTR + (selector & ~3)) as! PKGDTENTRY
+	gdtEntry.BaseLow = (base & 65535)
+	gdtEntry..Bytes.BaseMiddle = ((base >> 16) & 255)
+	gdtEntry..Bytes.BaseHigh = ((base >> 24) & 255)
+	gdtEntry.BaseUpper = (base >> 32)
+	gdtEntry.LimitLow = (limit & 65535)
+	gdtEntry..Bits.LimitHigh = ((limit >> 16) & 15)
+	gdtEntry..Bits.DefaultBig = !!(segmentMode & 2)
+	gdtEntry..Bits.Dpl = (dpl & 3)
+	gdtEntry..Bits.Granularity = granularity
+	gdtEntry..Bits.LongMode = !!(segmentMode & 1)
+	gdtEntry..Bits.Present = (type != 0)
+	gdtEntry..Bits.System = 0
+	gdtEntry..Bits.Type = (type & 31)
+	gdtEntry.MustBeZero = 0
 }
 
+/// Fills in a call, interrupt, task or trap gate entry.
+/// 
+/// @param Idt
+///        Supplies a pointer to IDT structure, where gate is located.
+/// 
+/// @param Vector
+///        Supplies a gate vector pointing to the interrupt gate in the IDT
+/// 
+/// @param Handler
+///        Supplies a pointer to the interrupt handler of the specified gate.
+/// 
+/// @param Selector
+///        Supplies the code selector the gate should run in.
+/// 
+/// @param Ist
+///        Supplies the interrupt stack table entry the gate should run in.
+/// 
+/// @param Access
+///        Supplies the gate access rights.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun arpSetIdtGate(idt PKIDTENTRY, vector USHORT, handler PVOID, selector USHORT, ist USHORT, access USHORT) {
-	???? resolve ArraySubscriptExpr.OffsetLow = (???? resolve CStyleCastExpr & 65535)
-	???? resolve ArraySubscriptExpr.OffsetMiddle = ((???? resolve CStyleCastExpr >> 16) & 65535)
-	???? resolve ArraySubscriptExpr.OffsetHigh = ???? resolve CStyleCastExpr >> 32
-	???? resolve ArraySubscriptExpr.Dpl = Access
-	???? resolve ArraySubscriptExpr.IstIndex = Ist
+	???? resolve ArraySubscriptExpr.OffsetLow = (handler as! ULONG_PTR & 65535)
+	???? resolve ArraySubscriptExpr.OffsetMiddle = ((handler as! ULONG_PTR >> 16) & 65535)
+	???? resolve ArraySubscriptExpr.OffsetHigh = handler as! ULONG_PTR >> 32
+	???? resolve ArraySubscriptExpr.Dpl = access
+	???? resolve ArraySubscriptExpr.IstIndex = ist
 	???? resolve ArraySubscriptExpr.Present = 1
-	???? resolve ArraySubscriptExpr.Selector = Selector
+	???? resolve ArraySubscriptExpr.Selector = selector
 	???? resolve ArraySubscriptExpr.Type = 14
 }

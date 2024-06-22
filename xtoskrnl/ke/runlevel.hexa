@@ -1,25 +1,46 @@
 // Hexa 2024 from clang 15.0.3
+/// Gets the current running level of the current processor.
+/// 
+/// @return This routine returns the current running level.
+/// 
+/// @since XT 1.0
 fun keGetCurrentRunLevel() {
-	return HlGetRunLevel()
+	return hlGetRunLevel()
 }
 
+/// Lowers the running level of the current processor.
+/// 
+/// @param RunLevel
+///        Supplies the new running level to lower to.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keLowerRunLevel(runLevel KRUNLEVEL) {
 	var oldRunLevel KRUNLEVEL
-	OldRunLevel = HlGetRunLevel()
-	if OldRunLevel > RunLevel {
-		HlSetRunLevel(RunLevel)
+	oldRunLevel = hlGetRunLevel()
+	if oldRunLevel > runLevel {
+		hlSetRunLevel(runLevel)
 
 	}
 
 }
 
+/// Raises the running level of the current processor.
+/// 
+/// @param RunLevel
+///        Supplies the new running level to raise to.
+/// 
+/// @return This routine returns the old running level.
+/// 
+/// @since XT 1.0
 fun keRaiseRunLevel(runLevel KRUNLEVEL) {
 	var oldRunLevel KRUNLEVEL
-	OldRunLevel = HlGetRunLevel()
-	if OldRunLevel < RunLevel {
-		HlSetRunLevel(RunLevel)
+	oldRunLevel = hlGetRunLevel()
+	if oldRunLevel < runLevel {
+		hlSetRunLevel(runLevel)
 
 	}
 
-	return OldRunLevel
+	return oldRunLevel
 }

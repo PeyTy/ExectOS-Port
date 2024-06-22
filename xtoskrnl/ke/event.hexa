@@ -1,14 +1,50 @@
 // Hexa 2024 from clang 15.0.3
+/// Clears the signal state of the event.
+/// 
+/// @param Event
+///        Supplies a pointer to the event object.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun keClearEvent(event PKEVENT) {
-	Event.Header.SignalState = FALSE
+	event.Header.SignalState = fALSE
 }
 
+/// Initializes a kernel event.
+/// 
+/// @param Event
+///        Supplies a pointer to the event object.
+/// 
+/// @param EventType
+///        Specifies an event type.
+/// 
+/// @param InitialState
+///        Specifies the initial signal state of the event.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun keInitializeEvent(event PKEVENT, eventType KEVENT_TYPE, initialState BOOLEAN) {
-	Event.Header.Type = EventType
-	Event.Header.SignalState = InitialState
-	RtlInitializeListHead(???? resolve UnaryOperator)
+	event.Header.Type = eventType
+	event.Header.SignalState = initialState
+	rtlInitializeListHead(event.Header.WaitListHead)
 }
 
+/// Sets new signal state and satisfy waits if possible.
+/// 
+/// @param Event
+///        Supplies a pointer to the event object.
+/// 
+/// @param Increment
+///        Specifies an event priority boost value.
+/// 
+/// @param Wait
+///        Specifies whether to call kernel wait routines or not.
+/// 
+/// @return This routine returns the previous signal state of the event.
+/// 
+/// @since NT 3.5
 fun keSetEvent(event PKEVENT, increment KPRIORITY, wait BOOLEAN) {
 	return 0
 }

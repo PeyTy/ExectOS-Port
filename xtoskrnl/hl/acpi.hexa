@@ -1,60 +1,105 @@
 // Hexa 2024 from clang 15.0.3
+/// Gets a pointer to the ACPI system description pointer (RSDP).
+/// 
+/// @param Rsdp
+///        Supplies a pointer to the memory area, where RSDP virtual address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlGetAcpiSystemDescriptionPointer(rsdp PACPI_RSDP *) {
-	???? resolve UnaryOperator = HlpAcpiRsdp
-	return (???? resolve CStyleCastExpr)
+	*rsdp = hlpAcpiRsdp
+	return (0 as! XTSTATUS)
 }
 
+/// Gets an ACPI description table with given signature, available in the XSDT/RSDT.
+/// 
+/// @param Signature
+///        Supplies the signature of the desired ACPI table.
+/// 
+/// @param AcpiTable
+///        Supplies a pointer to memory area where ACPI table virtual address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlGetAcpiTable(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 	let table = new ByValue<PACPI_DESCRIPTION_HEADER>()
 
 	var status XTSTATUS
 	??? CompoundStmt CompoundStmt
-	???? resolve UnaryOperator = Table
-	return (???? resolve CStyleCastExpr)
+	*acpiTable = table
+	return (0 as! XTSTATUS)
 }
 
+/// Stores given ACPI table in the kernel local cache.
+/// 
+/// @param AcpiTable
+///        Supplies a pointer to ACPI table that will be stored in the cache.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun hlpCacheAcpiTable(acpiTable PACPI_DESCRIPTION_HEADER) {
 	let acpiCache = new ByValue<PACPI_CACHE_LIST>()
 
-	AcpiCache = (???? resolve CStyleCastExpr)
-	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	acpiCache = (((acpiTable) as! Char * - ???? resolve OffsetOfExpr) as! ACPI_CACHE_LIST *)
+	rtlInsertTailList(hlpAcpiCacheList, acpiCache.ListEntry)
 }
 
+/// Performs an initialization of the ACPI subsystem.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlpInitializeAcpi() {
 	let fadt = new ByValue<PACPI_FADT>()
 
 	var status XTSTATUS
-	Status = HlpInitializeAcpiCache()
-	if Status != (???? resolve CStyleCastExpr) {
-		return Status
+	status = hlpInitializeAcpiCache()
+	if status != (0 as! XTSTATUS) {
+		return status
 
 	}
 
-	Status = HlGetAcpiTable(1346584902, ???? resolve CStyleCastExpr)
-	if Status != (???? resolve CStyleCastExpr) or ???? resolve UnaryOperator {
-		return (???? resolve CStyleCastExpr)
+	status = hlGetAcpiTable(1346584902, fadt as! PACPI_DESCRIPTION_HEADER *)
+	if status != (0 as! XTSTATUS) or !fadt {
+		return (3221226021 as! XTSTATUS)
 
 	}
 
-	HlpInitializeAcpiTimer()
-	return (???? resolve CStyleCastExpr)
+	hlpInitializeAcpiTimer()
+	return (0 as! XTSTATUS)
 }
 
+/// Initializes the kernel's local ACPI cache storage.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlpInitializeAcpiCache() {
 	let rsdt = new ByValue<PACPI_DESCRIPTION_HEADER>()
 
 	var status XTSTATUS
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	Status = HlpInitializeAcpiSystemDescriptionTable(???? resolve UnaryOperator)
-	if Status != (???? resolve CStyleCastExpr) {
-		return Status
+	rtlInitializeListHead(hlpAcpiCacheList)
+	status = hlpInitializeAcpiSystemDescriptionTable(rsdt)
+	if status != (0 as! XTSTATUS) {
+		return status
 
 	}
 
-	HlpCacheAcpiTable(Rsdt)
-	return (???? resolve CStyleCastExpr)
+	hlpCacheAcpiTable(rsdt)
+	return (0 as! XTSTATUS)
 }
 
+/// Initializes ACPI System Description Table (XSDT/RSDT) by finding proper table and mapping its virtual address.
+/// 
+/// @param AcpiTable
+///        Supplies a pointer to memory area where ACPI table virtual address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlpInitializeAcpiSystemDescriptionTable(acpiTable PACPI_DESCRIPTION_HEADER *) {
 	var rsdpAddress PHYSICAL_ADDRESS
 	var rsdtAddress PHYSICAL_ADDRESS
@@ -66,99 +111,95 @@ fun hlpInitializeAcpiSystemDescriptionTable(acpiTable PACPI_DESCRIPTION_HEADER *
 	let rsdt = new ByValue<PACPI_RSDT>()
 
 	var status XTSTATUS
-	Status = KeGetSystemResource(SystemResourceAcpi, ???? resolve UnaryOperator)
-	if Status != (???? resolve CStyleCastExpr) {
-		return (???? resolve CStyleCastExpr)
+	status = keGetSystemResource(systemResourceAcpi, resourceHeader)
+	if status != (0 as! XTSTATUS) {
+		return (3221226021 as! XTSTATUS)
 
 	}
 
-	AcpiResource = ???? resolve CStyleCastExpr
-	RsdpAddress.QuadPart = ???? resolve CStyleCastExpr
-	Status = MmMapHardwareMemory(RsdpAddress, 1, TRUE, ???? resolve CStyleCastExpr)
-	MmMarkHardwareMemoryWriteThrough(HlpAcpiRsdp, 1)
-	if Status != (???? resolve CStyleCastExpr) or HlpAcpiRsdp.Signature != 2329016660419433298 {
-		return (???? resolve CStyleCastExpr)
+	acpiResource = resourceHeader as! PSYSTEM_RESOURCE_ACPI
+	RsdpAddress.QuadPart = acpiResource.Header.PhysicalAddress as! LONGLONG
+	status = mmMapHardwareMemory(rsdpAddress, 1, tRUE, hlpAcpiRsdp as! PVOID *)
+	mmMarkHardwareMemoryWriteThrough(hlpAcpiRsdp, 1)
+	if status != (0 as! XTSTATUS) or hlpAcpiRsdp.Signature != 2329016660419433298 {
+		return (3221225485 as! XTSTATUS)
 
 	}
 
-	if HlpAcpiRsdp.Revision >= 2 {
-		RsdtAddress.QuadPart = ???? resolve CStyleCastExpr
+	if hlpAcpiRsdp.Revision >= 2 {
+		RsdtAddress.QuadPart = hlpAcpiRsdp.XsdtAddress as! LONGLONG
 
 	} else {
-		RsdtAddress.QuadPart = ???? resolve CStyleCastExpr
+		RsdtAddress.QuadPart = hlpAcpiRsdp.RsdtAddress as! LONGLONG
 
 	}
 
-	Status = MmMapHardwareMemory(RsdtAddress, 2, TRUE, ???? resolve CStyleCastExpr)
-	MmMarkHardwareMemoryWriteThrough(Rsdt, 2)
-	if (Status != (???? resolve CStyleCastExpr)) or (Rsdt.Header.Signature != 1413763922 and Rsdt.Header.Signature != 1413763928) {
-		return (???? resolve CStyleCastExpr)
+	status = mmMapHardwareMemory(rsdtAddress, 2, tRUE, rsdt as! PVOID *)
+	mmMarkHardwareMemoryWriteThrough(rsdt, 2)
+	if (status != (0 as! XTSTATUS)) or (rsdt.Header.Signature != 1413763922 and rsdt.Header.Signature != 1413763928) {
+		return (3221225485 as! XTSTATUS)
 
 	}
 
-	RsdtPages = ((RsdtAddress..LowPart & (4096 - 1)) + Rsdt.Header.Length + (4096 - 1)) >> 12
-	if RsdtPages != 2 {
-		MmUnmapHardwareMemory(Rsdt, 2, TRUE)
-		Status = MmMapHardwareMemory(RsdtAddress, RsdtPages, TRUE, ???? resolve CStyleCastExpr)
-		MmMarkHardwareMemoryWriteThrough(Rsdt, RsdtPages)
-		if Status != (???? resolve CStyleCastExpr) {
-			return (???? resolve CStyleCastExpr)
+	rsdtPages = ((RsdtAddress..LowPart & (4096 - 1)) + rsdt.Header.Length + (4096 - 1)) >> 12
+	if rsdtPages != 2 {
+		mmUnmapHardwareMemory(rsdt, 2, tRUE)
+		status = mmMapHardwareMemory(rsdtAddress, rsdtPages, tRUE, rsdt as! PVOID *)
+		mmMarkHardwareMemoryWriteThrough(rsdt, rsdtPages)
+		if status != (0 as! XTSTATUS) {
+			return (3221225626 as! XTSTATUS)
 
 		}
 
 
 	}
 
-	???? resolve UnaryOperator = ???? resolve UnaryOperator
-	return (???? resolve CStyleCastExpr)
+	*acpiTable = rsdt.Header
+	return (0 as! XTSTATUS)
 }
 
+/// Initializes System Information structure based on the ACPI provided data.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlpInitializeAcpiSystemInformation() {
 	var madtTable PUCHAR
 	let madt = new ByValue<PACPI_MADT>()
 
 	var status XTSTATUS
 	var cpuCount ULONG
-	if KeDbgPrint {
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 
 	}
 
 	??? CompoundStmt NullStmt
-	RtlZeroMemory(???? resolve UnaryOperator, ???? resolve UnaryExprOrTypeTraitExpr)
-	if KeDbgPrint {
+	rtlZeroMemory(hlpAcpiSystemInfo, ???? resolve UnaryExprOrTypeTraitExpr)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 
 	}
 
 	??? CompoundStmt NullStmt
-	Status = HlGetAcpiTable(1128878145, ???? resolve CStyleCastExpr)
-	if KeDbgPrint {
+	status = hlGetAcpiTable(1128878145, madt as! PACPI_DESCRIPTION_HEADER *)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 
 	}
 
 	??? CompoundStmt NullStmt
-	if Status != (???? resolve CStyleCastExpr) {
-		return (???? resolve CStyleCastExpr)
+	if status != (0 as! XTSTATUS) {
+		return (3221226021 as! XTSTATUS)
 
 	}
 
-	MadtTable = ???? resolve CStyleCastExpr
-	CpuCount = 0
-	if KeDbgPrint {
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-		??? CompoundStmt ImplicitCastExpr
-
-	}
-
-	??? CompoundStmt NullStmt
-	??? CompoundStmt WhileStmt
-	if KeDbgPrint {
+	madtTable = madt.ApicTables as! PUCHAR
+	cpuCount = 0
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -166,21 +207,59 @@ fun hlpInitializeAcpiSystemInformation() {
 	}
 
 	??? CompoundStmt NullStmt
-	return (???? resolve CStyleCastExpr)
+	while madtTable <= (madt as! PUCHAR + madt.Header.Length) {
+		if keDbgPrint {
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+
+		}
+
+		??? CompoundStmt NullStmt
+		if ((madtTable as! PACPI_MADT_LOCAL_APIC).Header.Type == 0) and ((madtTable as! PACPI_MADT_LOCAL_APIC).Header.Length == ???? resolve UnaryExprOrTypeTraitExpr) {
+			if (madtTable as! PACPI_MADT_LOCAL_APIC).LapicFlags & 1 {
+				??? CompoundStmt UnaryOperator
+
+			}
+
+			??? CompoundStmt CompoundAssignOperator
+
+		} else {
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+
+	}
+
+	if keDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	return (0 as! XTSTATUS)
 }
 
+/// Initializes the ACPI Timer.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlpInitializeAcpiTimer() {
 	let fadt = new ByValue<PACPI_FADT>()
 
 	var status XTSTATUS
-	Status = HlGetAcpiTable(1346584902, ???? resolve CStyleCastExpr)
-	if Status != (???? resolve CStyleCastExpr) or ???? resolve UnaryOperator {
-		return (???? resolve CStyleCastExpr)
+	status = hlGetAcpiTable(1346584902, fadt as! PACPI_DESCRIPTION_HEADER *)
+	if status != (0 as! XTSTATUS) or !fadt {
+		return (3221226021 as! XTSTATUS)
 
 	}
 
-	HlpAcpiTimerInfo.TimerPort = Fadt.PmTmrBlkIoPort
-	if Fadt.Flags & (1 << 8) {
+	HlpAcpiTimerInfo.TimerPort = fadt.PmTmrBlkIoPort
+	if fadt.Flags & (1 << 8) {
 		HlpAcpiTimerInfo.MsbMask = 2147483648
 
 	} else {
@@ -188,24 +267,57 @@ fun hlpInitializeAcpiTimer() {
 
 	}
 
-	return (???? resolve CStyleCastExpr)
+	return (0 as! XTSTATUS)
 }
 
+/// Queries kernel local ACPI cache in attempt to find a requested ACPI table.
+/// 
+/// @param Signature
+///        Supplies the signature of the desired ACPI table.
+/// 
+/// @param AcpiTable
+///        Supplies a pointer to memory area where ACPI table virtual address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlpQueryAcpiCache(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 	let acpiCache = new ByValue<PACPI_CACHE_LIST>()
 
 	let listEntry = new ByValue<PLIST_ENTRY>()
 
-	ListEntry = HlpAcpiCacheList.Flink
-	??? CompoundStmt WhileStmt
-	if ???? resolve UnaryOperator == (???? resolve CStyleCastExpr) {
-		return (???? resolve CStyleCastExpr)
+	listEntry = HlpAcpiCacheList.Flink
+	while listEntry != hlpAcpiCacheList {
+		acpiCache = (((listEntry) as! Char * - ???? resolve OffsetOfExpr) as! ACPI_CACHE_LIST *)
+		if acpiCache.Header.Signature == signature {
+			*acpiTable = acpiCache.Header
+			??? CompoundStmt BreakStmt
+
+		}
+
+		listEntry = listEntry.Flink
 
 	}
 
-	return (???? resolve CStyleCastExpr)
+	if *acpiTable == (0 as! PVOID) {
+		return (3221226021 as! XTSTATUS)
+
+	}
+
+	return (0 as! XTSTATUS)
 }
 
+/// Queries XSDT/RSDT in order to find a requested ACPI table. Once the desired ACPI table is found, it is being mapped and cached.
+/// 
+/// @param Signature
+///        Supplies the signature of the desired ACPI table.
+/// 
+/// @param AcpiTable
+///        Supplies a pointer to memory area where ACPI table virtual address will be stored.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 	var tableCount ULONG
 	var tableIndex ULONG
@@ -220,51 +332,51 @@ fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 	let xsdt = new ByValue<PACPI_XSDT>()
 
 	var status XTSTATUS
-	if Signature == 1413763922 or Signature == 1413763928 {
-		return (???? resolve CStyleCastExpr)
+	if signature == 1413763922 or signature == 1413763928 {
+		return (3221225485 as! XTSTATUS)
 
 	}
 
-	if Signature == 1413763908 or Signature == 1396916550 {
-		Status = HlGetAcpiTable(1346584902, ???? resolve CStyleCastExpr)
-		if Status != (???? resolve CStyleCastExpr) {
-			return Status
+	if signature == 1413763908 or signature == 1396916550 {
+		status = hlGetAcpiTable(1346584902, fadt as! PACPI_DESCRIPTION_HEADER *)
+		if status != (0 as! XTSTATUS) {
+			return status
 
 		}
 
-		if Signature == 1413763908 {
-			TableAddress..LowPart = Fadt.Dsdt
+		if signature == 1413763908 {
+			TableAddress..LowPart = fadt.Dsdt
 
 		} else {
-			TableAddress..LowPart = Fadt.FirmwareCtrl
+			TableAddress..LowPart = fadt.FirmwareCtrl
 
 		}
 
 		TableAddress..HighPart = 0
-		Status = MmMapHardwareMemory(TableAddress, 2, TRUE, ???? resolve CStyleCastExpr)
-		if Status != (???? resolve CStyleCastExpr) {
-			return Status
+		status = mmMapHardwareMemory(tableAddress, 2, tRUE, tableHeader as! PVOID *)
+		if status != (0 as! XTSTATUS) {
+			return status
 
 		}
 
 
 	} else {
-		Status = HlpQueryAcpiCache(1413763928, ???? resolve CStyleCastExpr)
-		if Status != (???? resolve CStyleCastExpr) {
-			Status = HlpQueryAcpiCache(1413763922, ???? resolve CStyleCastExpr)
+		status = hlpQueryAcpiCache(1413763928, xsdt as! PACPI_DESCRIPTION_HEADER *)
+		if status != (0 as! XTSTATUS) {
+			status = hlpQueryAcpiCache(1413763922, rsdt as! PACPI_DESCRIPTION_HEADER *)
 
 		}
 
-		if Status != (???? resolve CStyleCastExpr) {
-			return Status
+		if status != (0 as! XTSTATUS) {
+			return status
 
 		}
 
-		if Xsdt != (???? resolve CStyleCastExpr) {
-			TableCount = (Xsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 8
+		if xsdt != (0 as! PVOID) {
+			tableCount = (xsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 8
 
 		} else {
-			TableCount = (Rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 4
+			tableCount = (rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 4
 
 		}
 
@@ -272,48 +384,48 @@ fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 
 	}
 
-	if KeDbgPrint {
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 
 	}
 
 	??? CompoundStmt NullStmt
-	if TableHeader.Signature != Signature {
-		if TableHeader != (???? resolve CStyleCastExpr) {
-			MmUnmapHardwareMemory(TableHeader, 2, TRUE)
+	if tableHeader.Signature != signature {
+		if tableHeader != (0 as! PVOID) {
+			mmUnmapHardwareMemory(tableHeader, 2, tRUE)
 
 		}
 
-		return (???? resolve CStyleCastExpr)
+		return (3221226021 as! XTSTATUS)
 
 	}
 
-	if TableHeader.Signature != 1346584902 or TableHeader.Revision > 2 {
-		if ???? resolve UnaryOperator {
-			MmUnmapHardwareMemory(TableHeader, 2, TRUE)
-			return (???? resolve CStyleCastExpr)
-
-		}
-
-
-	}
-
-	TablePages = ((???? resolve CStyleCastExpr & (4096 - 1)) + TableHeader.Length + (4096 - 1)) >> 12
-	if TablePages != 2 {
-		MmUnmapHardwareMemory(TableHeader, 2, FALSE)
-		Status = MmMapHardwareMemory(TableAddress, TablePages, TRUE, ???? resolve CStyleCastExpr)
-		if Status != (???? resolve CStyleCastExpr) {
-			return (???? resolve CStyleCastExpr)
+	if tableHeader.Signature != 1346584902 or tableHeader.Revision > 2 {
+		if !hlpValidateAcpiTable(tableHeader, tableHeader.Length) {
+			mmUnmapHardwareMemory(tableHeader, 2, tRUE)
+			return (3221225535 as! XTSTATUS)
 
 		}
 
 
 	}
 
-	MmMarkHardwareMemoryWriteThrough(TableHeader, TablePages)
-	HlpCacheAcpiTable(TableHeader)
-	if KeDbgPrint {
+	tablePages = ((tableHeader as! ULONG_PTR & (4096 - 1)) + tableHeader.Length + (4096 - 1)) >> 12
+	if tablePages != 2 {
+		mmUnmapHardwareMemory(tableHeader, 2, fALSE)
+		status = mmMapHardwareMemory(tableAddress, tablePages, tRUE, tableHeader as! PVOID *)
+		if status != (0 as! XTSTATUS) {
+			return (3221225626 as! XTSTATUS)
+
+		}
+
+
+	}
+
+	mmMarkHardwareMemoryWriteThrough(tableHeader, tablePages)
+	hlpCacheAcpiTable(tableHeader)
+	if keDbgPrint {
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
 		??? CompoundStmt ImplicitCastExpr
@@ -321,15 +433,32 @@ fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 	}
 
 	??? CompoundStmt NullStmt
-	???? resolve UnaryOperator = TableHeader
-	return (???? resolve CStyleCastExpr)
+	*acpiTable = tableHeader
+	return (0 as! XTSTATUS)
 }
 
+/// Validates given ACPI table by calculating its checksum.
+/// 
+/// @param Buffer
+///        Supplies a pointer to the table to checksum.
+/// 
+/// @param Size
+///        Supplies the size of the table, in bytes.
+/// 
+/// @return This routine returns TRUE if the table is valid, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun hlpValidateAcpiTable(buffer PVOID, size UINT_PTR) {
 	var pointer PUCHAR
 	var sum UCHAR
-	Sum = 0
-	Pointer = Buffer
-	??? CompoundStmt WhileStmt
+	sum = 0
+	pointer = buffer
+	while size != 0 {
+		sum = (sum + *pointer) as! UCHAR
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
+
+	}
+
 	return ???? resolve ConditionalOperator
 }

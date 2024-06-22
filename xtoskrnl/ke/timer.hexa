@@ -1,59 +1,127 @@
 // Hexa 2024 from clang 15.0.3
+/// Cancels the timer.
+/// 
+/// @param Timer
+///        Supplies a pointer to a timer object.
+/// 
+/// @return This routine returns TRUE if the cancelled timer was set, or FALSE otherwise.
+/// 
+/// @since NT 3.5
 fun keCancelTimer(timer PKTIMER) {
 	var result BOOLEAN
 	var runLevel KRUNLEVEL
-	Result = FALSE
-	RunLevel = KeRaiseRunLevel(12)
-	KeAcquireQueuedSpinLock(DispatcherLock)
-	if Timer.Header.Inserted {
-		KepRemoveTimer(Timer)
-		Result = TRUE
+	result = fALSE
+	runLevel = keRaiseRunLevel(12)
+	keAcquireQueuedSpinLock(dispatcherLock)
+	if timer.Header.Inserted {
+		kepRemoveTimer(timer)
+		result = tRUE
 
 	}
 
-	KeReleaseQueuedSpinLock(DispatcherLock)
-	KepExitDispatcher(RunLevel)
-	return Result
+	keReleaseQueuedSpinLock(dispatcherLock)
+	kepExitDispatcher(runLevel)
+	return result
 }
 
+/// Clears the signal state of the timer.
+/// 
+/// @param Timer
+///        Supplies a pointer to a timer object.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 4.0
 fun keClearTimer(timer PKTIMER) {
-	Timer.Header.SignalState = 0
+	timer.Header.SignalState = 0
 }
 
+/// Reads the current signal state of the given timer.
+/// 
+/// @param Timer
+///        Supplies a pointer to a timer object.
+/// 
+/// @return This routine returns TRUE if the timer is set, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun keGetTimerState(timer PKTIMER) {
-	return ???? resolve CStyleCastExpr
+	return timer.Header.SignalState as! BOOLEAN
 }
 
+/// Initializes an extended kernel timer.
+/// 
+/// @param Timer
+///        Supplies a pointer to a timer object.
+/// 
+/// @param Type
+///        Supplies the type of the timer.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keInitializeTimer(timer PKTIMER, type KTIMER_TYPE) {
-	Timer.Header.Type = TimerNotificationObject + Type
-	Timer.Header.Inserted = 0
-	Timer.Header.SignalState = 0
-	Timer.DueTime.QuadPart = 0
-	Timer.Period = 0
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
+	timer.Header.Type = timerNotificationObject + type
+	timer.Header.Inserted = 0
+	timer.Header.SignalState = 0
+	timer.DueTime.QuadPart = 0
+	timer.Period = 0
+	rtlInitializeListHead(timer.Header.WaitListHead)
+	rtlInitializeListHead(timer.TimerListEntry)
 }
 
+/// Queries the timer's interrupt due time.
+/// 
+/// @param Timer
+///        Supplies a pointer to a timer object.
+/// 
+/// @return This routine returns the time remaining on the timer, or 0 if the timer is not set.
+/// 
+/// @since XT 1.0
 fun keQueryTimer(timer PKTIMER) {
 	var runLevel KRUNLEVEL
 	var dueTime ULONGLONG
-	DueTime = 0
-	RunLevel = KeRaiseRunLevel(12)
-	KeAcquireQueuedSpinLock(DispatcherLock)
-	if Timer.Header.Inserted {
-		DueTime = Timer.DueTime.QuadPart
+	dueTime = 0
+	runLevel = keRaiseRunLevel(12)
+	keAcquireQueuedSpinLock(dispatcherLock)
+	if timer.Header.Inserted {
+		dueTime = timer.DueTime.QuadPart
 
 	}
 
-	KeReleaseQueuedSpinLock(DispatcherLock)
-	KepExitDispatcher(RunLevel)
-	return DueTime
+	keReleaseQueuedSpinLock(dispatcherLock)
+	kepExitDispatcher(runLevel)
+	return dueTime
 }
 
+/// Sets the supplied timer to expire at the specified time.
+/// 
+/// @param Timer
+///        Supplies a pointer to a timer object.
+/// 
+/// @param DueTime
+///        Supplies the time at which the timer should expire (both absolute and relative times are supported).
+/// 
+/// @param Period
+///        Supplies the timer period.
+/// 
+/// @param Dpc
+///        Supplies a pointer to a Deferred Procedure Call (DPC) object.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun keSetTimer(timer PKTIMER, dueTime LARGE_INTEGER, period LONG, dpc PKDPC) {
 }
 
+/// Removes a specified timer from the timer list.
+/// 
+/// @param Timer
+///        Supplies a pointer to a timer object.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun kepRemoveTimer(timer PKTIMER) {
-	Timer.Header.Inserted = FALSE
-	RtlRemoveEntryList(???? resolve UnaryOperator)
+	timer.Header.Inserted = fALSE
+	rtlRemoveEntryList(timer.TimerListEntry)
 }

@@ -1,17 +1,37 @@
 // Hexa 2024 from clang 15.0.3
+/// Initializes the process.
+/// 
+/// @param Process
+///        Supplies a pointer to process that will be initialized.
+/// 
+/// @param Priority
+///        Specifies the process priority.
+/// 
+/// @param Affinity
+///        Specifies a process affinity designating processors on which process can run.
+/// 
+/// @param DirectoryTable
+///        Supplies a pointer to the directory table.
+/// 
+/// @param Alignment
+///        Specifies the exceptions alignment of the process.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since NT 3.5
 fun keInitializeProcess(process PKPROCESS, priority KPRIORITY, affinity KAFFINITY, directoryTable PULONG_PTR, alignment BOOLEAN) {
-	Process.Header.Type = ProcessObject
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	RtlInitializeListHead(???? resolve UnaryOperator)
-	Process.BasePriority = Priority
-	Process.Affinity = Affinity
-	Process...AutoAlignment = Alignment
+	process.Header.Type = processObject
+	rtlInitializeListHead(process.Header.WaitListHead)
+	rtlInitializeListHead(process.ProfileListHead)
+	rtlInitializeListHead(process.ReadyListHead)
+	rtlInitializeListHead(process.ThreadListHead)
+	process.BasePriority = priority
+	process.Affinity = affinity
+	process...AutoAlignment = alignment
 	???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr
 	???? resolve ArraySubscriptExpr = ???? resolve ArraySubscriptExpr
-	Process.StackCount = 32767
-	Process.Quantum = 6
-	Process.IopmOffset = ???? resolve UnaryExprOrTypeTraitExpr
-	Process.State = ProcessInMemory
+	process.StackCount = 32767
+	process.Quantum = 6
+	process.IopmOffset = ???? resolve UnaryExprOrTypeTraitExpr
+	process.State = processInMemory
 }

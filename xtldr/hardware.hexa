@@ -1,4 +1,9 @@
 // Hexa 2024 from clang 15.0.3
+/// Enables I/O space access to all serial controllers found on the PCI(E) root bridge.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun blpActivateSerialIOController() {
 	let pciGuid = new ByValue<EFI_GUID>()
 
@@ -10,33 +15,33 @@ fun blpActivateSerialIOController() {
 	var command USHORT
 	var index UINT_PTR
 	var pciHandleSize UINT_PTR
-	var pciHandle PEFI_HANDLE = (???? resolve CStyleCastExpr)
+	var pciHandle PEFI_HANDLE = (0 as! PVOID)
 	let pciHeader = new ByValue<PCI_COMMON_HEADER>()
 
 	var status EFI_STATUS
 	var address ULONGLONG
-	PciHandleSize = ???? resolve UnaryExprOrTypeTraitExpr
-	Status = BlAllocateMemoryPool(PciHandleSize, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	pciHandleSize = ???? resolve UnaryExprOrTypeTraitExpr
+	status = blAllocateMemoryPool(pciHandleSize, pciHandle as! PVOID *)
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 
-	Status = EfiSystemTable.BootServices.LocateHandle(ByProtocol, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, PciHandle)
-	if Status == (9223372036854775808 | 5) {
-		BlFreeMemoryPool(PciHandle)
-		Status = BlAllocateMemoryPool(PciHandleSize, ???? resolve CStyleCastExpr)
-		if Status != (9223372036854775808 & 0) {
-			return Status
+	status = efiSystemTable.BootServices.LocateHandle(byProtocol, pciGuid, (0 as! PVOID), pciHandleSize, pciHandle)
+	if status == (9223372036854775808 | 5) {
+		blFreeMemoryPool(pciHandle)
+		status = blAllocateMemoryPool(pciHandleSize, pciHandle as! PVOID *)
+		if status != (9223372036854775808 & 0) {
+			return status
 
 		}
 
-		Status = EfiSystemTable.BootServices.LocateHandle(ByProtocol, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr), ???? resolve UnaryOperator, PciHandle)
+		status = efiSystemTable.BootServices.LocateHandle(byProtocol, pciGuid, (0 as! PVOID), pciHandleSize, pciHandle)
 
 	}
 
-	if Status != (9223372036854775808 & 0) {
-		return Status
+	if status != (9223372036854775808 & 0) {
+		return status
 
 	}
 

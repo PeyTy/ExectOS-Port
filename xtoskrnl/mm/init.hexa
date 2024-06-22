@@ -1,38 +1,100 @@
 // Hexa 2024 from clang 15.0.3
+/// Performs an early initialization of the XTOS Memory Manager.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun mmInitializeMemoryManager() {
-	MmpScanMemoryDescriptors()
-	if MmNumberOfPhysicalPages < 2048 {
-		if KeDbgPrint {
+	mmpScanMemoryDescriptors()
+	if mmNumberOfPhysicalPages < 2048 {
+		if keDbgPrint {
 			??? CompoundStmt ImplicitCastExpr
 			??? CompoundStmt ImplicitCastExpr
 
 		}
 
 		??? CompoundStmt NullStmt
-		KePanic(0)
+		kePanic(0)
 
 	}
 
-	MmPageMapLevel = KeInitializationBlock.LoaderInformation.PageMapLevel
-	MmpInitializeArchitecture()
+	mmPageMapLevel = keInitializationBlock.LoaderInformation.PageMapLevel
+	mmpInitializeArchitecture()
 }
 
+/// Scans memory descriptors provided by the boot loader.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun mmpScanMemoryDescriptors() {
 	let memoryDescriptor = new ByValue<PLOADER_MEMORY_DESCRIPTOR>()
 
 	let memoryMappings = new ByValue<PLIST_ENTRY>()
 
 	var freePages PFN_NUMBER
-	FreePages = 0
-	MemoryMappings = KeInitializationBlock.MemoryDescriptorListHead.Flink
-	??? CompoundStmt WhileStmt
-	RtlCopyMemory(???? resolve UnaryOperator, MmFreeDescriptor, ???? resolve UnaryExprOrTypeTraitExpr)
+	freePages = 0
+	memoryMappings = keInitializationBlock.MemoryDescriptorListHead.Flink
+	while memoryMappings != keInitializationBlock.MemoryDescriptorListHead {
+		memoryDescriptor = (((memoryMappings) as! Char * - ???? resolve OffsetOfExpr) as! LOADER_MEMORY_DESCRIPTOR *)
+		if mmpVerifyMemoryTypeInvisible(memoryDescriptor.MemoryType) or (memoryDescriptor.MemoryType == loaderHardwareCachedMemory) {
+			memoryMappings = memoryMappings.Flink
+			??? CompoundStmt ContinueStmt
+
+		}
+
+		if memoryDescriptor.MemoryType != loaderBad {
+			??? CompoundStmt CompoundAssignOperator
+
+		}
+
+		if memoryDescriptor.BasePage < mmLowestPhysicalPage {
+			mmLowestPhysicalPage = memoryDescriptor.BasePage
+
+		}
+
+		if memoryDescriptor.BasePage + memoryDescriptor.PageCount > mmHighestPhysicalPage {
+			mmHighestPhysicalPage = (memoryDescriptor.BasePage + memoryDescriptor.PageCount) - 1
+
+		}
+
+		if mmpVerifyMemoryTypeFree(memoryDescriptor.MemoryType) {
+			if memoryDescriptor.PageCount >= freePages {
+				freePages = memoryDescriptor.PageCount
+				mmFreeDescriptor = memoryDescriptor
+
+			}
+
+
+		}
+
+		memoryMappings = memoryMappings.Flink
+
+	}
+
+	rtlCopyMemory(mmOldFreeDescriptor, mmFreeDescriptor, ???? resolve UnaryExprOrTypeTraitExpr)
 }
 
+/// Checks whether the specified memory type should be considered as free.
+/// 
+/// @param MemoryType
+///        Specifies the memory type to verify.
+/// 
+/// @return This routine returns TRUE if the specified memory type should be considered as free, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun mmpVerifyMemoryTypeFree(memoryType LOADER_MEMORY_TYPE) {
-	return (MemoryType == LoaderFree) or (MemoryType == LoaderFirmwareTemporary) or (MemoryType == LoaderLoadedProgram) or (MemoryType == LoaderOsloaderStack)
+	return (memoryType == loaderFree) or (memoryType == loaderFirmwareTemporary) or (memoryType == loaderLoadedProgram) or (memoryType == loaderOsloaderStack)
 }
 
+/// Checks whether the specified memory type should be considered as invisible for the memory manager.
+/// 
+/// @param MemoryType
+///        Specifies the memory type to verify.
+/// 
+/// @return This routine returns TRUE if the specified memory type should be considered as invisible, or FALSE otherwise.
+/// 
+/// @since XT 1.0
 fun mmpVerifyMemoryTypeInvisible(memoryType LOADER_MEMORY_TYPE) {
-	return (MemoryType == LoaderFirmwarePermanent) or (MemoryType == LoaderSpecialMemory) or (MemoryType == LoaderBBTMemory)
+	return (memoryType == loaderFirmwarePermanent) or (memoryType == loaderSpecialMemory) or (memoryType == loaderBBTMemory)
 }

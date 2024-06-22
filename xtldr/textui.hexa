@@ -1,4 +1,9 @@
 // Hexa 2024 from clang 15.0.3
+/// Displays a simple TUI-based boot menu.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blDisplayBootMenu() {
 	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
 
@@ -15,23 +20,175 @@ fun blDisplayBootMenu() {
 	var status EFI_STATUS
 	var timeOut LONG
 	var timeOutString PWCHAR
-	Status = BlInitializeBootMenuList(???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
+	status = blInitializeBootMenuList(menuEntries, numberOfEntries, highligtedEntryId)
+	if status != (9223372036854775808 & 0) {
 		return ??
 
 	}
 
-	TimeOutString = BlGetConfigValue(???? resolve StringLiteral)
-	TimeOut = ???? resolve UnaryOperator
-	if TimeOutString != (???? resolve CStyleCastExpr) {
-		TimeOut = 0
-		??? CompoundStmt WhileStmt
+	timeOutString = blGetConfigValue("TIMEOUT")
+	timeOut = -1
+	if timeOutString != (0 as! PVOID) {
+		timeOut = 0
+		while *timeOutString >= ???? resolve CharacterLiteral and *timeOutString <= ???? resolve CharacterLiteral {
+			??? CompoundStmt CompoundAssignOperator
+			??? CompoundStmt CompoundAssignOperator
+			??? CompoundStmt UnaryOperator
+
+		}
+
 
 	}
 
-	??? CompoundStmt WhileStmt
+	while tRUE {
+		blpDrawBootMenu(handle)
+		if numberOfEntries > 0 {
+			if numberOfEntries > Handle.Height - 2 {
+				numberOfEntries = Handle.Height - 2
+
+			}
+
+			??? CompoundStmt ForStmt
+
+		} else {
+			blDisplayErrorDialog("XTLDR", "No boot menu entries found in the configuration. Falling back to shell.")
+			return ??
+
+		}
+
+		status = efiSystemTable.BootServices.CreateEvent(2147483648, 8, (0 as! PVOID), (0 as! PVOID), timerEvent)
+		if status == (9223372036854775808 & 0) {
+			status = efiSystemTable.BootServices.SetTimer(timerEvent, timerPeriodic, 10000000)
+
+		}
+
+		if status != (9223372036854775808 & 0) {
+			timeOut = -1
+
+		}
+
+		???? resolve ArraySubscriptExpr = efiSystemTable.ConIn.WaitForKey
+		???? resolve ArraySubscriptExpr = timerEvent
+		efiSystemTable.ConIn.Reset(efiSystemTable.ConIn, fALSE)
+		while tRUE {
+			blWaitForEfiEvent(2, events, eventIndex)
+			if eventIndex == 0 {
+				if timeOut != -1 {
+					timeOut = -1
+					efiSystemTable.BootServices.SetTimer(timerEvent, timerCancel, 0)
+					blClearConsoleLine(Handle.PosY + Handle.Height + 4)
+
+				}
+
+				blReadKeyStroke(key)
+				if Key.ScanCode == 3 or Key.UnicodeChar == 13 {
+					blSetConsoleAttributes(Handle.DialogColor | Handle.TextColor)
+					blClearConsoleLine(Handle.PosY + Handle.Height + 4)
+					blSetCursorPosition(4, Handle.PosY + Handle.Height + 4)
+					blConsolePrint("Booting '%S' now...\n", ???? resolve ArraySubscriptExpr.EntryName)
+					status = blInvokeBootProtocol(???? resolve ArraySubscriptExpr.ShortName, ???? resolve ArraySubscriptExpr.Options)
+					if status != (0 as! XTSTATUS) {
+						blDebugPrint("ERROR: Failed to boot '%S' (Status Code: 0x%zX)\n", ???? resolve ArraySubscriptExpr.EntryName, status)
+						blDisplayErrorDialog("XTLDR", "Failed to startup the selected Operating System.")
+
+					}
+
+					??? CompoundStmt BreakStmt
+
+				} else {
+					??? CompoundStmt CompoundStmt
+					if Key.ScanCode == 2 {
+						if highligtedEntryId < numberOfEntries - 1 {
+							??? CompoundStmt UnaryOperator
+							blpDrawBootMenuEntry(handle, ???? resolve ArraySubscriptExpr.EntryName, highligtedEntryId - 1, fALSE)
+							blpDrawBootMenuEntry(handle, ???? resolve ArraySubscriptExpr.EntryName, highligtedEntryId, tRUE)
+
+						}
+
+
+					} else {
+						??? CompoundStmt CompoundStmt
+						if Key.ScanCode == 10 {
+							if highligtedEntryId != numberOfEntries - 1 {
+								blpDrawBootMenuEntry(handle, ???? resolve ArraySubscriptExpr.EntryName, highligtedEntryId, fALSE)
+								blpDrawBootMenuEntry(handle, ???? resolve ArraySubscriptExpr.EntryName, numberOfEntries - 1, tRUE)
+								highligtedEntryId = numberOfEntries - 1
+
+							}
+
+
+						} else {
+							??? CompoundStmt CompoundStmt
+							if Key.ScanCode == 20 {
+								blEnterFirmwareSetup()
+								blDisplayErrorDialog("XTLDR", "Reboot into firmware setup interface not supported!")
+								??? CompoundStmt BreakStmt
+
+							} else {
+								??? CompoundStmt CompoundStmt
+								if Key.ScanCode == 22 {
+									blShutdownSystem()
+									blDisplayErrorDialog("XTLDR", "Failed to shutdown the machine!")
+									??? CompoundStmt BreakStmt
+
+								} else {
+									??? CompoundStmt CompoundStmt
+									if Key.UnicodeChar == 115 {
+										return ??
+
+									}
+
+
+								}
+
+
+							}
+
+
+						}
+
+
+					}
+
+
+				}
+
+
+			} else {
+				if timeOut > 0 {
+					blSetConsoleAttributes(Handle.DialogColor | Handle.TextColor)
+					blClearConsoleLine(Handle.PosY + Handle.Height + 4)
+					blSetCursorPosition(4, Handle.PosY + Handle.Height + 4)
+					blConsolePrint("The highlighted position will be booted automatically in %ld seconds.", timeOut)
+					??? CompoundStmt UnaryOperator
+
+				} else {
+					??? CompoundStmt CompoundStmt
+
+				}
+
+
+			}
+
+
+		}
+
+
+	}
+
 }
 
+/// Displays a red error dialog box with the specified caption and message.
+/// 
+/// @param Caption
+///        Supplies a caption string put on the dialog box.
+/// 
+/// @param Message
+///        Supplies a message string put on the dialog box.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blDisplayErrorDialog(caption PWCHAR, message PWCHAR) {
 	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
 
@@ -39,17 +196,34 @@ fun blDisplayErrorDialog(caption PWCHAR, message PWCHAR) {
 
 	var index UINT_PTR
 	Handle.Attributes = 2 | 4
-	BlpDetermineDialogBoxSize(???? resolve UnaryOperator, Message)
-	BlDisableConsoleCursor()
-	BlpDrawDialogBox(???? resolve UnaryOperator, Caption, Message)
-	BlpDrawDialogButton(???? resolve UnaryOperator)
+	blpDetermineDialogBoxSize(handle, message)
+	blDisableConsoleCursor()
+	blpDrawDialogBox(handle, caption, message)
+	blpDrawDialogButton(handle)
 	Key.ScanCode = 0
 	Key.UnicodeChar = 0
-	??? CompoundStmt WhileStmt
-	BlSetConsoleAttributes(0 | 7)
-	BlClearConsoleScreen()
+	while Key.ScanCode != 23 and Key.UnicodeChar != 13 {
+		blWaitForEfiEvent(1, efiSystemTable.ConIn.WaitForKey, index)
+		blReadKeyStroke(key)
+		blResetConsoleInputBuffer()
+
+	}
+
+	blSetConsoleAttributes(0 | 7)
+	blClearConsoleScreen()
 }
 
+/// Displays a blue informational dialog box with the specified caption and message.
+/// 
+/// @param Caption
+///        Supplies a caption string put on the dialog box.
+/// 
+/// @param Message
+///        Supplies a message string put on the dialog box.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blDisplayInfoDialog(caption PWCHAR, message PWCHAR) {
 	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
 
@@ -57,17 +231,37 @@ fun blDisplayInfoDialog(caption PWCHAR, message PWCHAR) {
 
 	var index UINT_PTR
 	Handle.Attributes = 1 | 4
-	BlpDetermineDialogBoxSize(???? resolve UnaryOperator, Message)
-	BlDisableConsoleCursor()
-	BlpDrawDialogBox(???? resolve UnaryOperator, Caption, Message)
-	BlpDrawDialogButton(???? resolve UnaryOperator)
+	blpDetermineDialogBoxSize(handle, message)
+	blDisableConsoleCursor()
+	blpDrawDialogBox(handle, caption, message)
+	blpDrawDialogButton(handle)
 	Key.ScanCode = 0
 	Key.UnicodeChar = 0
-	??? CompoundStmt WhileStmt
-	BlSetConsoleAttributes(0 | 7)
-	BlClearConsoleScreen()
+	while Key.ScanCode != 23 and Key.UnicodeChar != 13 {
+		blWaitForEfiEvent(1, efiSystemTable.ConIn.WaitForKey, index)
+		blReadKeyStroke(key)
+		blResetConsoleInputBuffer()
+
+	}
+
+	blSetConsoleAttributes(0 | 7)
+	blClearConsoleScreen()
 }
 
+/// Displays a blue informational dialog box with the specified caption and message and an input field.
+/// 
+/// @param Caption
+///        Specifies a caption string put on the dialog box.
+/// 
+/// @param Message
+///        Specifies a message string put on the dialog box.
+/// 
+/// @param InputFieldText
+///        Specifies a pointer to the input field text that will be edited.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *) {
 	var inputFieldLength SIZE_T
 	var textCursorPosition SIZE_T
@@ -82,57 +276,186 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 	var status EFI_STATUS
 	var index UINT_PTR
 	Handle.Attributes = 1 | 16 | 8
-	BlpDetermineDialogBoxSize(???? resolve UnaryOperator, Message)
-	BlDisableConsoleCursor()
-	BlpDrawDialogBox(???? resolve UnaryOperator, Caption, Message)
-	BlpDrawDialogButton(???? resolve UnaryOperator)
-	BlpDrawDialogInputField(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	blpDetermineDialogBoxSize(handle, message)
+	blDisableConsoleCursor()
+	blpDrawDialogBox(handle, caption, message)
+	blpDrawDialogButton(handle)
+	blpDrawDialogInputField(handle, *inputFieldText)
 	Key.ScanCode = 0
 	Key.UnicodeChar = 0
-	BufferLength = RtlWideStringLength(???? resolve UnaryOperator, 0)
-	Status = BlAllocateMemoryPool(BufferLength * ???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
-		BlDisplayErrorDialog(???? resolve StringLiteral, ???? resolve StringLiteral)
+	bufferLength = rtlWideStringLength(*inputFieldText, 0)
+	status = blAllocateMemoryPool(bufferLength * ???? resolve UnaryExprOrTypeTraitExpr, inputFieldBuffer as! PVOID *)
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
+		blDisplayErrorDialog("XTLDR", "Failed to allocate memory for input field buffer.")
 		return ??
 
 	}
 
-	RtlCopyMemory(InputFieldBuffer, ???? resolve UnaryOperator, BufferLength * ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlCopyMemory(inputFieldBuffer, *inputFieldText, bufferLength * ???? resolve UnaryExprOrTypeTraitExpr)
 	???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
-	InputFieldLength = BufferLength
-	if InputFieldLength > Handle.Width - 8 {
-		InputFieldLength = Handle.Width - 8
+	inputFieldLength = bufferLength
+	if inputFieldLength > Handle.Width - 8 {
+		inputFieldLength = Handle.Width - 8
 
 	}
 
-	TextPosition = 0
-	BlSetCursorPosition(Handle.PosX + 4 + TextPosition, Handle.PosY + Handle.Height - 4)
-	??? CompoundStmt WhileStmt
-	BlSetConsoleAttributes(0 | 7)
-	BlClearConsoleScreen()
+	textPosition = 0
+	blSetCursorPosition(Handle.PosX + 4 + textPosition, Handle.PosY + Handle.Height - 4)
+	while tRUE {
+		blWaitForEfiEvent(1, efiSystemTable.ConIn.WaitForKey, index)
+		blReadKeyStroke(key)
+		blResetConsoleInputBuffer()
+		if Key.ScanCode == 23 {
+			??? CompoundStmt BreakStmt
+
+		} else {
+			??? CompoundStmt CompoundStmt
+			if Key.ScanCode == 3 {
+				if Handle.Attributes & 16 and textPosition < inputFieldLength {
+					??? CompoundStmt UnaryOperator
+
+				}
+
+
+			} else {
+				??? CompoundStmt CompoundStmt
+				if Key.ScanCode == 5 {
+					if Handle.Attributes & 16 {
+						textPosition = 0
+
+					}
+
+
+				} else {
+					??? CompoundStmt CompoundStmt
+					if Key.ScanCode == 8 {
+						if Handle.Attributes & 16 {
+							if inputFieldLength > 0 and textPosition < inputFieldLength {
+								rtlMoveMemory(inputFieldBuffer + textPosition, inputFieldBuffer + textPosition + 1, (inputFieldLength - textPosition) * ???? resolve UnaryExprOrTypeTraitExpr)
+								??? CompoundStmt UnaryOperator
+								???? resolve ArraySubscriptExpr = 0
+
+							}
+
+
+						}
+
+
+					} else {
+						??? CompoundStmt CompoundStmt
+						if Key.UnicodeChar == 13 {
+							*inputFieldText = inputFieldBuffer
+							??? CompoundStmt BreakStmt
+
+						} else {
+							if Handle.Attributes & 16 and Key.UnicodeChar != 0 {
+								rtlMoveMemory(inputFieldBuffer + textPosition + 1, inputFieldBuffer + textPosition, (inputFieldLength - textPosition) * ???? resolve UnaryExprOrTypeTraitExpr)
+								???? resolve ArraySubscriptExpr = Key.UnicodeChar
+								??? CompoundStmt UnaryOperator
+								??? CompoundStmt UnaryOperator
+								???? resolve ArraySubscriptExpr = 0
+
+							}
+
+
+						}
+
+
+					}
+
+
+				}
+
+
+			}
+
+
+		}
+
+		if textPosition > (Handle.Width - 9) {
+			textIndex = textPosition - (Handle.Width - 9)
+			textCursorPosition = Handle.Width - 9
+
+		} else {
+			textIndex = 0
+			textCursorPosition = textPosition
+
+		}
+
+		blpDrawDialogButton(handle)
+		blpDrawDialogInputField(handle, ???? resolve ArraySubscriptExpr)
+		if Handle.Attributes & 16 {
+			blSetCursorPosition(Handle.PosX + 4 + textCursorPosition, Handle.PosY + Handle.Height - 4)
+
+		}
+
+
+	}
+
+	blSetConsoleAttributes(0 | 7)
+	blClearConsoleScreen()
 }
 
+/// Displays a blue informational dialog box with the specified caption and message and a progress bar.
+/// 
+/// @param Caption
+///        Supplies a caption string put on the dialog box.
+/// 
+/// @param Message
+///        Supplies a message string put on the dialog box.
+/// 
+/// @param Percentage
+///        Specifies the percentage progress of the progress bar.
+/// 
+/// @return This routine returns a dialog box handle needed to update the progress bar.
+/// 
+/// @since XT 1.0
 fun blDisplayProgressDialog(caption PWCHAR, message PWCHAR, percentage UCHAR) {
 	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
 
 	Handle.Attributes = 1 | 64
-	BlpDetermineDialogBoxSize(???? resolve UnaryOperator, Message)
-	BlDisableConsoleCursor()
-	BlpDrawDialogBox(???? resolve UnaryOperator, Caption, Message)
-	BlpDrawDialogProgressBar(???? resolve UnaryOperator, Percentage)
-	return Handle
+	blpDetermineDialogBoxSize(handle, message)
+	blDisableConsoleCursor()
+	blpDrawDialogBox(handle, caption, message)
+	blpDrawDialogProgressBar(handle, percentage)
+	return handle
 }
 
+/// Updates the progress bar on the dialog box.
+/// 
+/// @param Handle
+///        Supplies a pointer to the dialog box handle.
+/// 
+/// @param Message
+///        Supplies a new message that will be put on the dialog box, while updating the progress bar.
+/// 
+/// @param Percentage
+///        Specifies the new percentage progress of the progress bar.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blUpdateProgressBar(handle PXTBL_DIALOG_HANDLE, message PWCHAR, percentage UCHAR) {
-	if Message != (???? resolve CStyleCastExpr) {
-		BlpDrawDialogMessage(Handle, Message)
+	if message != (0 as! PVOID) {
+		blpDrawDialogMessage(handle, message)
 
 	}
 
-	BlpDrawDialogProgressBar(Handle, Percentage)
+	blpDrawDialogProgressBar(handle, percentage)
 }
 
+/// Determines dialog box size based on enabled components and message length.
+/// 
+/// @param Handle
+///        Supplies a pointer to the dialog box handle.
+/// 
+/// @param Message
+///        Supplies a pointer to the message string put on the dialog box.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpDetermineDialogBoxSize(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 	var width UINT_PTR
 	var height UINT_PTR
@@ -141,142 +464,206 @@ fun blpDetermineDialogBoxSize(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 	var messageLength SIZE_T
 	var attributes UCHAR
 	var mask ULONG
-	Height = 4
-	Width = 36
-	LineLength = 0
-	Mask = 1
-	Attributes = Handle.Attributes
-	??? CompoundStmt WhileStmt
-	if Handle.Attributes & (16 | 32) {
-		Width = 100
+	height = 4
+	width = 36
+	lineLength = 0
+	mask = 1
+	attributes = handle.Attributes
+	while mask {
+		??? CompoundStmt SwitchStmt
+		??? CompoundStmt CompoundAssignOperator
+		??? CompoundStmt CompoundAssignOperator
 
 	}
 
-	MessageLength = RtlWideStringLength(Message, 0)
+	if handle.Attributes & (16 | 32) {
+		width = 100
+
+	}
+
+	messageLength = rtlWideStringLength(message, 0)
 	??? CompoundStmt ForStmt
 	??? CompoundStmt CompoundAssignOperator
-	BlQueryConsoleMode(???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	if Width > 100 {
-		Width = 100
+	blQueryConsoleMode(handle.ResX, handle.ResY)
+	if width > 100 {
+		width = 100
 
 	}
 
-	if Width > (Handle.ResX - 2) {
-		Width = Handle.ResX - 2
+	if width > (handle.ResX - 2) {
+		width = handle.ResX - 2
 
 	}
 
-	if Height > (Handle.ResY - 2) {
-		Height = Handle.ResY - 2
+	if height > (handle.ResY - 2) {
+		height = handle.ResY - 2
 
 	}
 
-	Handle.PosX = (Handle.ResX - Width) / 2
-	Handle.PosY = (Handle.ResY - Height) / 2
-	Handle.Width = Width
-	Handle.Height = Height
+	handle.PosX = (handle.ResX - width) / 2
+	handle.PosY = (handle.ResY - height) / 2
+	handle.Width = width
+	handle.Height = height
 }
 
+/// Draws a text UI-based boot menu.
+/// 
+/// @param Handle
+///        Supplies a pointer to the boot menu handle.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpDrawBootMenu(handle PXTBL_DIALOG_HANDLE) {
-	BlQueryConsoleMode(???? resolve UnaryOperator, ???? resolve UnaryOperator)
-	Handle.Attributes = 0
-	Handle.DialogColor = 0
-	Handle.TextColor = 7
-	Handle.PosX = 3
-	Handle.PosY = 3
-	Handle.Width = Handle.ResX - 6
-	Handle.Height = Handle.ResY - 10
-	BlSetConsoleAttributes(Handle.DialogColor | Handle.TextColor)
-	BlClearConsoleScreen()
-	BlDisableConsoleCursor()
+	blQueryConsoleMode(handle.ResX, handle.ResY)
+	handle.Attributes = 0
+	handle.DialogColor = 0
+	handle.TextColor = 7
+	handle.PosX = 3
+	handle.PosY = 3
+	handle.Width = handle.ResX - 6
+	handle.Height = handle.ResY - 10
+	blSetConsoleAttributes(handle.DialogColor | handle.TextColor)
+	blClearConsoleScreen()
+	blDisableConsoleCursor()
 	if 1 {
-		BlSetCursorPosition((Handle.ResX - 44) / 2, 1)
-		BlConsolePrint(???? resolve StringLiteral, 0, 1, ???? resolve StringLiteral, ???? resolve StringLiteral)
+		blSetCursorPosition((handle.ResX - 44) / 2, 1)
+		blConsolePrint("XTLDR Boot Loader v%d.%d (%s-%s)\n", 0, 1, ???? resolve StringLiteral, ???? resolve StringLiteral)
 
 	} else {
-		BlSetCursorPosition((Handle.ResX - 22) / 2, 1)
-		BlConsolePrint(???? resolve StringLiteral, 0, 1)
+		blSetCursorPosition((handle.ResX - 22) / 2, 1)
+		blConsolePrint("XTLDR Boot Loader v%d.%d\n", 0, 1)
 
 	}
 
-	BlpDrawDialogBox(Handle, (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr))
-	BlSetCursorPosition(0, Handle.PosY + Handle.Height)
-	BlSetConsoleAttributes(0 | 7)
-	BlConsolePrint(???? resolve StringLiteral)
+	blpDrawDialogBox(handle, (0 as! PVOID), (0 as! PVOID))
+	blSetCursorPosition(0, handle.PosY + handle.Height)
+	blSetConsoleAttributes(0 | 7)
+	blConsolePrint("    Use cursors to change the selection. Press ENTER key to boot the chosen\n    Operating System, 'e' to edit it before booting or 's' for XTLDR shell.\n    Additional help available after pressing F1 key.")
 }
 
+/// Draws boot menu entry at the specified position.
+/// 
+/// @param Handle
+///        Supplies a pointer to the boot menu handle.
+/// 
+/// @param MenuEntry
+///        Supplies a pointer to the buffer containing a menu entry name.
+/// 
+/// @param Position
+///        Specifies entry position on the list in the boot menu.
+/// 
+/// @param Highlighted
+///        Specifies whether this entry should be highlighted or not.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpDrawBootMenuEntry(handle PXTBL_DIALOG_HANDLE, menuEntry PWCHAR, position UINT, highlighted BOOLEAN) {
 	var index UINT
-	BlSetCursorPosition(5, 4 + Position)
-	if Highlighted {
-		BlSetConsoleAttributes(112 | 0)
+	blSetCursorPosition(5, 4 + position)
+	if highlighted {
+		blSetConsoleAttributes(112 | 0)
 
 	} else {
-		BlSetConsoleAttributes(0 | 7)
+		blSetConsoleAttributes(0 | 7)
 
 	}
 
 	??? CompoundStmt ForStmt
-	BlSetCursorPosition(5, 4 + Position)
-	BlConsolePrint(???? resolve StringLiteral, MenuEntry)
+	blSetCursorPosition(5, 4 + position)
+	blConsolePrint("%S\n", menuEntry)
 }
 
+/// Draws dialog box with caption and message.
+/// 
+/// @param Handle
+///        Supplies a pointer to the dialog box handle.
+/// 
+/// @param Caption
+///        Specifies a caption string put on the dialog box.
+/// 
+/// @param Message
+///        Specifies a message string put on the dialog box.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpDrawDialogBox(handle PXTBL_DIALOG_HANDLE, caption PWCHAR, message PWCHAR) {
 	var boxLine WCHAR[100]
 	var captionLength SIZE_T
 	var posX UINT_PTR
 	var posY UINT_PTR
-	if Handle.Attributes & 2 {
-		Handle.DialogColor = 64
-		Handle.TextColor = 15
+	if handle.Attributes & 2 {
+		handle.DialogColor = 64
+		handle.TextColor = 15
 
 	} else {
 		??? CompoundStmt CompoundStmt
 
 	}
 
-	BlSetConsoleAttributes(Handle.DialogColor | 15)
+	blSetConsoleAttributes(handle.DialogColor | 15)
 	??? CompoundStmt ForStmt
-	if Caption != (???? resolve CStyleCastExpr) {
-		BlSetCursorPosition(Handle.PosX + 3, Handle.PosY)
-		BlConsolePrint(???? resolve StringLiteral, Caption)
+	if caption != (0 as! PVOID) {
+		blSetCursorPosition(handle.PosX + 3, handle.PosY)
+		blConsolePrint("%S", caption)
 
 	}
 
-	if Message != (???? resolve CStyleCastExpr) {
-		BlpDrawDialogMessage(Handle, Message)
+	if message != (0 as! PVOID) {
+		blpDrawDialogMessage(handle, message)
 
 	}
 
 }
 
+/// Draws an active or inactive button in the dialog box, depending on the attributes.
+/// 
+/// @param Handle
+///        Supplies a pointer to the dialog box handle.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpDrawDialogButton(handle PXTBL_DIALOG_HANDLE) {
 	var buttonColor ULONG
 	var textColor ULONG
-	if Handle.Attributes & 4 {
-		if Handle.Attributes & 2 {
-			ButtonColor = 96
-			TextColor = 15
+	if handle.Attributes & 4 {
+		if handle.Attributes & 2 {
+			buttonColor = 96
+			textColor = 15
 
 		} else {
-			ButtonColor = 48
-			TextColor = 15
+			buttonColor = 48
+			textColor = 15
 
 		}
 
 
 	} else {
-		ButtonColor = 112
-		TextColor = 0
+		buttonColor = 112
+		textColor = 0
 
 	}
 
-	BlDisableConsoleCursor()
-	BlSetConsoleAttributes(ButtonColor | TextColor)
-	BlSetCursorPosition(Handle.ResX / 2 - 4, Handle.PosY + Handle.Height - 2)
-	BlConsolePrint(???? resolve StringLiteral)
+	blDisableConsoleCursor()
+	blSetConsoleAttributes(buttonColor | textColor)
+	blSetCursorPosition(handle.ResX / 2 - 4, handle.PosY + handle.Height - 2)
+	blConsolePrint("[  OK  ]")
 }
 
+/// Draws an active or inactive input field in the dialog box, depending on the attributes.
+/// 
+/// @param Handle
+///        Supplies a pointer to the dialog box handle.
+/// 
+/// @param InputFieldText
+///        Supplies a pointer to the wide char string that will be displayed in the input field.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpDrawDialogInputField(handle PXTBL_DIALOG_HANDLE, inputFieldText PWCHAR) {
 	var inputField WCHAR[100]
 	var inputColor ULONG
@@ -284,47 +671,58 @@ fun blpDrawDialogInputField(handle PXTBL_DIALOG_HANDLE, inputFieldText PWCHAR) {
 	var index UINT_PTR
 	var position UINT_PTR
 	var length SIZE_T
-	if Handle.Attributes & 16 {
-		if Handle.Attributes & 2 {
-			InputColor = 96
-			TextColor = 15
+	if handle.Attributes & 16 {
+		if handle.Attributes & 2 {
+			inputColor = 96
+			textColor = 15
 
 		} else {
-			InputColor = 48
-			TextColor = 15
+			inputColor = 48
+			textColor = 15
 
 		}
 
 
 	} else {
-		InputColor = 112
-		TextColor = 0
+		inputColor = 112
+		textColor = 0
 
 	}
 
-	BlSetConsoleAttributes(InputColor | TextColor)
-	Position = ???? resolve ConditionalOperator
-	BlSetCursorPosition(Handle.PosX + 4, Handle.PosY + Handle.Height - Position)
+	blSetConsoleAttributes(inputColor | textColor)
+	position = ???? resolve ConditionalOperator
+	blSetCursorPosition(handle.PosX + 4, handle.PosY + handle.Height - position)
 	??? CompoundStmt ForStmt
-	BlDisableConsoleCursor()
-	BlConsoleWrite(InputField)
-	Length = RtlWideStringLength(InputFieldText, 0)
-	if Length > (Handle.Width - 9) {
-		Length = Handle.Width - 9
+	blDisableConsoleCursor()
+	blConsoleWrite(inputField)
+	length = rtlWideStringLength(inputFieldText, 0)
+	if length > (handle.Width - 9) {
+		length = handle.Width - 9
 
 	}
 
 	??? CompoundStmt ForStmt
 	???? resolve ArraySubscriptExpr = 0
-	BlSetCursorPosition(Handle.PosX + 4, Handle.PosY + Handle.Height - Position)
-	BlConsoleWrite(InputField)
-	if Handle.Attributes & 16 {
-		BlEnableConsoleCursor()
+	blSetCursorPosition(handle.PosX + 4, handle.PosY + handle.Height - position)
+	blConsoleWrite(inputField)
+	if handle.Attributes & 16 {
+		blEnableConsoleCursor()
 
 	}
 
 }
 
+/// Draws a message on the dialog box specified by the handle.
+/// 
+/// @param Handle
+///        Supplies a pointer to the dialog box handle.
+/// 
+/// @param Message
+///        Supplies a message that will be displayed on the dialog box.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpDrawDialogMessage(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 	var msg PWCHAR
 	var msgLine PWCHAR
@@ -334,34 +732,59 @@ fun blpDrawDialogMessage(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 	var lineLength SIZE_T
 	var status EFI_STATUS
 	var line ULONG
-	Length = RtlWideStringLength(Message, 0)
-	Status = BlAllocateMemoryPool(Length * ???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
-	if Status != (9223372036854775808 & 0) {
-		BlDebugPrint(???? resolve StringLiteral, Status)
+	length = rtlWideStringLength(message, 0)
+	status = blAllocateMemoryPool(length * ???? resolve UnaryExprOrTypeTraitExpr, msg as! PVOID *)
+	if status != (9223372036854775808 & 0) {
+		blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
 		return ??
 
 	}
 
-	RtlCopyMemory(Msg, Message, Length * ???? resolve UnaryExprOrTypeTraitExpr)
+	rtlCopyMemory(msg, message, length * ???? resolve UnaryExprOrTypeTraitExpr)
 	???? resolve ArraySubscriptExpr = 0
-	MsgLine = RtlTokenizeWideString(Msg, ???? resolve StringLiteral, ???? resolve UnaryOperator)
-	Line = 0
-	??? CompoundStmt WhileStmt
+	msgLine = rtlTokenizeWideString(msg, "\n", lastMsgLine)
+	line = 0
+	while msgLine {
+		lineLength = rtlWideStringLength(msgLine, 0)
+		blSetCursorPosition(handle.PosX + 2, handle.PosY + 2 + line)
+		blSetConsoleAttributes(handle.DialogColor | handle.TextColor)
+		blConsolePrint("%S", msgLine)
+		if lineLength < handle.Width - 4 {
+			??? CompoundStmt ForStmt
+
+		}
+
+		msgLine = rtlTokenizeWideString((0 as! PVOID), "\n", lastMsgLine)
+		??? CompoundStmt UnaryOperator
+
+	}
+
 }
 
+/// Draws a progress bar component in the dialog box.
+/// 
+/// @param Handle
+///        Supplies a pointer to the dialog box handle.
+/// 
+/// @param Percentage
+///        Specifies the percentage progress of the progress bar.
+/// 
+/// @return This routine does not return any value.
+/// 
+/// @since XT 1.0
 fun blpDrawDialogProgressBar(handle PXTBL_DIALOG_HANDLE, percentage UCHAR) {
 	var index UINT_PTR
 	var progressLength UINT_PTR
 	var progressBarLength UINT_PTR
 	var progressBar WCHAR[100]
 	var position UINT_PTR
-	ProgressBarLength = Handle.Width - 8
-	ProgressLength = (ProgressBarLength * Percentage) / 100
-	BlSetConsoleAttributes(14)
-	Position = ???? resolve ConditionalOperator
-	BlSetCursorPosition(Handle.PosX + 4, Handle.PosY + Handle.Height - Position)
+	progressBarLength = handle.Width - 8
+	progressLength = (progressBarLength * percentage) / 100
+	blSetConsoleAttributes(14)
+	position = ???? resolve ConditionalOperator
+	blSetCursorPosition(handle.PosX + 4, handle.PosY + handle.Height - position)
 	??? CompoundStmt ForStmt
 	???? resolve ArraySubscriptExpr = 0
-	BlDisableConsoleCursor()
-	BlConsoleWrite(ProgressBar)
+	blDisableConsoleCursor()
+	blConsoleWrite(progressBar)
 }

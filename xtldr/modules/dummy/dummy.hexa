@@ -7,21 +7,40 @@ var __UNIQUE_ID_license2
 var __UNIQUE_ID_version3
 
 
+/// Stub boot routine.
+/// 
+/// @param Parameters
+///        Supplies all parameters associated with the chosen boot menu entry.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun dmBootSystem(parameters PXTBL_BOOT_PARAMETERS) {
 	return (9223372036854775808 & 0)
 }
 
+/// This routine is the entry point of the XT EFI boot loader module.
+/// 
+/// @param ImageHandle
+///        Firmware-allocated handle that identifies the image.
+/// 
+/// @param SystemTable
+///        Provides the EFI system table.
+/// 
+/// @return This routine returns a status code.
+/// 
+/// @since XT 1.0
 fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	let dummyGuid = new ByValue<EFI_GUID>()
 
 	var status EFI_STATUS
-	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
-	if Status != (9223372036854775808 & 0) {
+	status = blGetXtLdrProtocol(systemTable, imageHandle, xtLdrProtocol)
+	if status != (9223372036854775808 & 0) {
 		return (9223372036854775808 | 24)
 
 	}
 
-	BlpDummyProtocol.BootSystem = DmBootSystem
-	XtLdrProtocol.Boot.RegisterProtocol(???? resolve StringLiteral, ???? resolve UnaryOperator)
-	return XtLdrProtocol.Protocol.Install(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	BlpDummyProtocol.BootSystem = dmBootSystem
+	xtLdrProtocol.Boot.RegisterProtocol("DUMMYOS", dummyGuid)
+	return xtLdrProtocol.Protocol.Install(blpDummyProtocol, dummyGuid)
 }
