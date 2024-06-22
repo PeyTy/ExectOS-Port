@@ -12,7 +12,6 @@ fun mmInitializeMemoryManager() {
 
 		}
 
-		[unknown clang ast] CompoundStmt NullStmt
 		kePanic(0)
 
 	}

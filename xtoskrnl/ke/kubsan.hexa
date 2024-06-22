@@ -33,7 +33,6 @@ fun kepEnterUbsanFrame(location PKUBSAN_SOURCE_LOCATION, reason PCCHAR) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 }
 
 /// Gets signed value from UBSAN.
@@ -116,7 +115,7 @@ fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PV
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Division-Overflow")
 	if (data.type.typeInfo & 1) and (kepGetSignedUbsanValue(data.type, rhs) == -1) {
 		if keDbgPrint {
 			[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -125,7 +124,6 @@ fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PV
 
 		}
 
-		[unknown clang ast] CompoundStmt NullStmt
 
 	} else {
 		if keDbgPrint {
@@ -134,7 +132,6 @@ fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PV
 
 		}
 
-		[unknown clang ast] CompoundStmt NullStmt
 
 	}
 
@@ -161,7 +158,7 @@ fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs U
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Float-Cast-Overflow")
 	if keDbgPrint {
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -170,7 +167,6 @@ fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs U
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -191,7 +187,7 @@ fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA,
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Float-Cast-Overflow")
 	if keDbgPrint {
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -200,7 +196,6 @@ fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA,
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -224,7 +219,7 @@ fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Integer-Overflow")
 	if keDbgPrint {
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -232,7 +227,6 @@ fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -250,7 +244,7 @@ fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Invalid-Builtin")
 	if data.kind == 0 or data.kind == 1 {
 		if keDbgPrint {
 			[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -258,7 +252,6 @@ fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
 
 		}
 
-		[unknown clang ast] CompoundStmt NullStmt
 
 	} else {
 		if keDbgPrint {
@@ -268,7 +261,6 @@ fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
 
 		}
 
-		[unknown clang ast] CompoundStmt NullStmt
 
 	}
 
@@ -292,7 +284,7 @@ fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULON
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Misaligned-Access")
 	if keDbgPrint {
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -303,7 +295,6 @@ fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULON
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -324,7 +315,7 @@ fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR)
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Negate-Overflow")
 	if keDbgPrint {
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -333,7 +324,6 @@ fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR)
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -354,7 +344,7 @@ fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "NULL-Pointer-Dereference")
 	if keDbgPrint {
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -363,7 +353,6 @@ fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -384,7 +373,7 @@ fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer UL
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Object-Size-Mismatch")
 	if keDbgPrint {
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -394,7 +383,6 @@ fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer UL
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -415,7 +403,7 @@ fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) 
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Array-Index-Out-Of-Bounds")
 	if keDbgPrint {
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -423,7 +411,6 @@ fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) 
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -447,7 +434,7 @@ fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Pointer-Overflow")
 	if keDbgPrint {
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
 		[unknown clang ast] CompoundStmt ImplicitCastExpr
@@ -457,7 +444,6 @@ fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	kepLeaveUbsanFrame()
 }
 
@@ -482,7 +468,7 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 
 	}
 
-	kepEnterUbsanFrame(data.location, [unknown clang ast] resolve StringLiteral)
+	kepEnterUbsanFrame(data.location, "Shift-Out-Of-Bounds")
 	lhsBitWidth = 1 << (data.lhsType.typeInfo >> 1)
 	if (data.rhsType.typeInfo & 1) and (kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID) < 0) {
 		if keDbgPrint {
@@ -492,7 +478,6 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 
 		}
 
-		[unknown clang ast] CompoundStmt NullStmt
 
 	} else {
 		[unknown clang ast] CompoundStmt CompoundStmt
@@ -506,7 +491,6 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 
 			}
 
-			[unknown clang ast] CompoundStmt NullStmt
 
 		} else {
 			if keDbgPrint {
@@ -518,7 +502,6 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 
 			}
 
-			[unknown clang ast] CompoundStmt NullStmt
 
 		}
 

@@ -124,7 +124,6 @@ fun rtlDumpBitMap(bitMap PRTL_BITMAP) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -308,7 +307,7 @@ fun rtlTestBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
 
 	}
 
-	return [unknown clang ast] resolve ConditionalOperator
+	return (((bitMap.buffer[bit / 64] >> (bit & (64 - 1))) & 1)) ? tRUE : fALSE
 }
 
 /// Counts the number of either set or clear bits in the contiguous region of the bit map.
@@ -337,9 +336,9 @@ fun rtlpCountBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR,
 	buffer = bitMap.buffer[startingIndex / 64]
 	bufferEnd = buffer + ((length + 64 - 1) / 64)
 	bitOffset = startingIndex & (64 - 1)
-	value = ([unknown clang ast] resolve ConditionalOperator) >> bitOffset << bitOffset
+	value = ((setBits) ? ~buffer[0] : buffer[0]) >> bitOffset << bitOffset
 	while !value and buffer + 1 < bufferEnd {
-		value = [unknown clang ast] resolve ConditionalOperator
+		value = (setBits) ? ~(++buffer)[0] : (++buffer)[0]
 
 	}
 
@@ -349,7 +348,7 @@ fun rtlpCountBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR,
 	}
 
 	size = ((buffer - bitMap.buffer) * 64) - startingIndex + rtlCountTrailingZeroes64(value) as! ULONG_PTR
-	return [unknown clang ast] resolve ConditionalOperator
+	return (size > length) ? length : size
 }
 
 /// Searches the bit map for a contiguous region of either set or clear bits.

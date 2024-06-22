@@ -73,7 +73,7 @@ fun arHalt() {
 fun arInterruptsEnabled() {
 	var flags ULONG_PTR
 	flags = arGetCpuFlags()
-	return [unknown clang ast] resolve ConditionalOperator
+	return ((flags & 512)) ? tRUE : fALSE
 }
 
 /// Invalidates the TLB (Translation Lookaside Buffer) for specified virtual address.

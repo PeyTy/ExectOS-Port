@@ -54,7 +54,7 @@ fun rtlCompareWideStringInsensitive(string1 Const PWCHAR, string2 Const PWCHAR, 
 		}
 
 		if character1 != character2 {
-			return [unknown clang ast] resolve ConditionalOperator
+			return (character1 > character2) ? 1 : -1
 
 		}
 
@@ -390,7 +390,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 	}
 
 	if formatIndex[0] == 42/* "*" */ {
-		formatIndex++		FormatProperties.FieldWidth = ([unknown clang ast] resolve ConditionalOperator)
+		formatIndex++		FormatProperties.FieldWidth = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
 
 	} else {
 		[unknown clang ast] CompoundStmt CompoundStmt
@@ -405,7 +405,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 	if formatIndex[0] == 46/* "." */ {
 		formatIndex++		if formatIndex[0] == 42/* "*" */ {
-			formatIndex++			FormatProperties.Precision = ([unknown clang ast] resolve ConditionalOperator)
+			formatIndex++			FormatProperties.Precision = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
 
 		} else {
 			[unknown clang ast] CompoundStmt CompoundStmt
@@ -448,15 +448,15 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, FormatProperties.IntegerSize)
 
 		} else {
-			intArg = ([unknown clang ast] resolve ConditionalOperator)
+			intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG : ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG)
 
 		}
 
 		if FormatProperties.Flags & 512 {
-			wideStrArg = [unknown clang ast] resolve ConditionalOperator
+			wideStrArg = (intArg) ? "TRUE" : "FALSE"
 
 		} else {
-			wideStrArg = [unknown clang ast] resolve ConditionalOperator
+			wideStrArg = (intArg) ? "true" : "false"
 
 		}
 
@@ -469,7 +469,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 				charArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>()) as! UCHAR
 
 			} else {
-				charArg = ([unknown clang ast] resolve ConditionalOperator)
+				charArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
 
 			}
 
@@ -483,10 +483,10 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 				} else {
 					if FormatProperties.Flags & 32 {
-						FloatArg.DoublePart = ([unknown clang ast] resolve ConditionalOperator)
+						FloatArg.DoublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LDOUBLE : ([unknown clang ast] resolve VAArgExpr) as! LDOUBLE)
 
 					} else {
-						FloatArg.DoublePart = ([unknown clang ast] resolve ConditionalOperator)
+						FloatArg.DoublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! DOUBLE : ([unknown clang ast] resolve VAArgExpr) as! DOUBLE)
 
 					}
 
@@ -503,7 +503,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 						strArg = intArg as! UINT_PTR as! PCHAR
 
 					} else {
-						strArg = ([unknown clang ast] resolve ConditionalOperator)
+						strArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PCHAR : ([unknown clang ast] resolve VAArgExpr) as! PCHAR)
 
 					}
 
@@ -517,7 +517,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 							ansiStrArg = intArg as! UINT_PTR as! PANSI_STRING
 
 						} else {
-							ansiStrArg = ([unknown clang ast] resolve ConditionalOperator)
+							ansiStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PANSI_STRING : ([unknown clang ast] resolve VAArgExpr) as! PANSI_STRING)
 
 						}
 
@@ -725,7 +725,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	}
 
 	exponent = rtlGetBaseExponent(value, tenPower)
-	roundingAmount = [unknown clang ast] resolve FloatingLiteral
+	roundingAmount = 0.5
 	writeExponent = (formatProperties.flags & 4096)
 	if (writeExponent == fALSE) and !(formatProperties.flags & 2048) {
 		if (exponent < -4) or (exponent >= precision) {
@@ -737,11 +737,11 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	}
 
 	digitCount = 0
-	if value != [unknown clang ast] resolve FloatingLiteral {
+	if value != 0 {
 		if (writeExponent != fALSE) or (formatProperties.flags & 8192) {
 			roundingAmount /= tenPower
 			if formatProperties.flags & 8192 {
-				roundingAmount *= [unknown clang ast] resolve FloatingLiteral
+				roundingAmount *= 10
 
 			}
 
@@ -752,15 +752,15 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 		value += roundingAmount
 		value *= tenPower
 		if value as! LONG > 9 {
-			value *= [unknown clang ast] resolve FloatingLiteral
+			value *= 0.10000000000000001
 			exponent += 1
 
 		}
 
-		while (value != [unknown clang ast] resolve FloatingLiteral) and (digitCount < 15) {
+		while (value != 0) and (digitCount < 15) {
 			buffer[digitCount] = value as! LONG + 48/* "0" */
 			digitCount += 1
-			value = (value - value as! LONG as! Double) * [unknown clang ast] resolve FloatingLiteral
+			value = (value - value as! LONG as! Double) * 10
 
 		}
 
@@ -1071,7 +1071,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 	negativeValue = fALSE
 	Parts.DoublePart = double
 	precision = formatProperties.precision
-	if double == [unknown clang ast] resolve FloatingLiteral {
+	if double == 0 {
 		absoluteExponent = 0
 		exponent = 0
 		integerValue = 48/* "0" */
@@ -1425,7 +1425,7 @@ fun rtlpWriteWideStringStringValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	var paddingLength ULONG
 	var status XTSTATUS
 	if string == (0 as! PVOID) {
-		string = [unknown clang ast] resolve StringLiteral
+		string = "(null)"
 		stringLength = 6
 
 	}

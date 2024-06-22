@@ -32,7 +32,6 @@ fun kepInitializeKernel() {
 
 		}
 
-		[unknown clang ast] CompoundStmt NullStmt
 		kePanic(0)
 
 	}
@@ -55,7 +54,6 @@ fun kepInitializeMachine() {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	hlInitializeProcessor()
 }
 
@@ -97,7 +95,6 @@ fun kepStartKernel() {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 

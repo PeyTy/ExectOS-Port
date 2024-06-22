@@ -68,5 +68,5 @@ fun mmpInitializeArchitecture() {
 /// 
 /// @since XT 1.0
 fun mmpMemoryExtensionEnabled() {
-	return [unknown clang ast] resolve ConditionalOperator
+	return (((arReadControlRegister(4) & 4096) != 0)) ? tRUE : fALSE
 }

@@ -408,7 +408,7 @@ fun blReadFile(dirHandle PEFI_FILE_HANDLE, fileName Const PWCHAR, fileData PVOID
 	}
 
 	fileSize[0] = fileInfo.fileSize
-	pages = (((fileInfo.fileSize) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
+	pages = (((fileInfo.fileSize) >> 12) + ((((fileInfo.fileSize) & 4095)) ? 1 : 0))
 	status = blAllocateMemoryPages(pages, address)
 	if status != (9223372036854775808 & 0) {
 		fileHandle.close(fileHandle)

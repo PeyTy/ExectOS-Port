@@ -104,7 +104,7 @@ fun rtlMoveMemory(destination PVOID, source PCVOID, length SIZE_T) {
 /// 
 /// @since XT 1.0
 fun rtlSameMemory(leftBuffer PCVOID, rightBuffer PCVOID, length SIZE_T) {
-	return [unknown clang ast] resolve ConditionalOperator
+	return ((rtlCompareMemory(leftBuffer, rightBuffer, length) == length)) ? tRUE : fALSE
 }
 
 /// This routine fills a section of memory with a specified byte.

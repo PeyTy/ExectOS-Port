@@ -244,7 +244,7 @@ fun acpValidateAcpiTable(buffer PVOID, size UINT_PTR) {
 
 	}
 
-	return [unknown clang ast] resolve ConditionalOperator
+	return ((sum == 0)) ? tRUE : fALSE
 }
 
 /// This routine is the entry point of the XT EFI boot loader module.

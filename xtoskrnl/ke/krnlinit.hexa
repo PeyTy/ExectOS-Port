@@ -33,7 +33,6 @@ fun keStartXtSystem(parameters PKERNEL_INITIALIZATION_BLOCK) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	arInitializeProcessor((0 as! PVOID))
 	kepInitializeSystemResources()
 	kepInitializeMachine()

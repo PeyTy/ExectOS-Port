@@ -124,7 +124,7 @@ fun fbInitializeDisplay() {
 
 			}
 
-			queryMode = [unknown clang ast] resolve ConditionalOperator
+			queryMode = (FbpDisplayInfo.Driver.gop.mode == (0 as! PVOID)) ? 0 : FbpDisplayInfo.Driver.gop.mode.mode
 			status = FbpDisplayInfo.Driver.gop.queryMode(FbpDisplayInfo.Driver.gop, queryMode, infoSize, gopModeInfo)
 			if status == (9223372036854775808 | 19) {
 				status = FbpDisplayInfo.Driver.gop.setMode(FbpDisplayInfo.Driver.gop, 0)

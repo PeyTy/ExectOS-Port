@@ -353,26 +353,26 @@ fun rtlGetBaseExponent(value DOUBLE, powerOfTen PDOUBLE) {
 	var power DOUBLE
 	exponentMask = 9218868437227405312 >> (sizeOf<Unsigned long long>() * 8)
 	exponentShift = 52 - (sizeOf<Unsigned long long>() * 8)
-	if value == [unknown clang ast] resolve FloatingLiteral {
-		powerOfTen[0] = [unknown clang ast] resolve FloatingLiteral
+	if value == 0 {
+		powerOfTen[0] = 1
 		return 0
 
 	}
 
 	Parts.DoublePart = value
 	baseExponent = ((Parts.u.highPart & exponentMask) >> exponentShift) - 1023
-	exponent = (baseExponent as! DOUBLE * [unknown clang ast] resolve FloatingLiteral) as! LONG + 1
+	exponent = (baseExponent as! DOUBLE * 0.30102999565999999) as! LONG + 1
 	currentExponent = 0
-	power = [unknown clang ast] resolve FloatingLiteral
+	power = 1
 	if exponent > 0 {
 		while currentExponent + 10 <= exponent {
-			power *= [unknown clang ast] resolve FloatingLiteral
+			power *= 1.0E-10
 			currentExponent += 10
 
 		}
 
 		while currentExponent + 1 <= exponent {
-			power *= [unknown clang ast] resolve FloatingLiteral
+			power *= 0.10000000000000001
 			currentExponent += 1
 
 		}
@@ -386,7 +386,7 @@ fun rtlGetBaseExponent(value DOUBLE, powerOfTen PDOUBLE) {
 		}
 
 		while currentExponent - 1 >= exponent {
-			power *= [unknown clang ast] resolve FloatingLiteral
+			power *= 10
 			currentExponent -= 1
 
 		}
@@ -395,10 +395,10 @@ fun rtlGetBaseExponent(value DOUBLE, powerOfTen PDOUBLE) {
 	}
 
 	value *= power
-	while (value != [unknown clang ast] resolve FloatingLiteral) and (value as! LONG == 0) {
-		value *= [unknown clang ast] resolve FloatingLiteral
+	while (value != 0) and (value as! LONG == 0) {
+		value *= 10
 		exponent -= 1
-		power *= [unknown clang ast] resolve FloatingLiteral
+		power *= 10
 
 	}
 

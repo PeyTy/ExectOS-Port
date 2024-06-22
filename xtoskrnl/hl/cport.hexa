@@ -23,7 +23,7 @@ fun hlComPortGetByte(port PCPPORT, byte PUCHAR, wait BOOLEAN, poll BOOLEAN) {
 
 	}
 
-	retry = [unknown clang ast] resolve ConditionalOperator
+	retry = (wait) ? 204800 : 1
 	while --retry {
 		lsr = hlComPortReadLsr(port, 1)
 		if (lsr & 1) == 1 {
@@ -120,7 +120,7 @@ fun hlComPortReadLsr(port PCPPORT, byte UCHAR) {
 	lsr = hlIoPortInByte((port.address as! ULONG_PTR as! USHORT + 5 as! ULONG))
 	if (lsr & byte) == 0 {
 		msr = hlIoPortInByte((port.address as! ULONG_PTR as! USHORT + 6 as! ULONG))
-		ringFlag |= [unknown clang ast] resolve ConditionalOperator
+		ringFlag |= ((msr & 64)) ? 1 : 2
 		if ringFlag == 3 {
 			port.flags |= 4
 

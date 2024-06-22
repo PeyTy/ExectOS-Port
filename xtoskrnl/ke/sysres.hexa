@@ -11,7 +11,7 @@
 /// @since XT 1.0
 fun keAcquireSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
 	kepGetSystemResource(resourceType, tRUE, resourceHeader)
-	return [unknown clang ast] resolve ConditionalOperator
+	return ((resourceHeader[0] == (0 as! PVOID))) ? (3221226021 as! XTSTATUS) : (0 as! XTSTATUS)
 }
 
 /// Looks for an unacquired system resource of the specified type and returns it without acquiring an ownership.
@@ -27,7 +27,7 @@ fun keAcquireSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PS
 /// @since XT 1.0
 fun keGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, resourceHeader PSYSTEM_RESOURCE_HEADER *) {
 	kepGetSystemResource(resourceType, fALSE, resourceHeader)
-	return [unknown clang ast] resolve ConditionalOperator
+	return ((resourceHeader[0] == (0 as! PVOID))) ? (3221226021 as! XTSTATUS) : (0 as! XTSTATUS)
 }
 
 /// Releases system resource.

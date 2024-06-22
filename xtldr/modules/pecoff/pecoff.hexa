@@ -280,7 +280,7 @@ fun peLoadImage(fileHandle PEFI_FILE_HANDLE, memoryType LOADER_MEMORY_TYPE, virt
 	imageData.fileSize = fileInfo.fileSize
 	imageData.memoryType = memoryType
 	xtLdrProtocol.memory.freePool(fileInfo)
-	pages = (((imageData.fileSize) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
+	pages = (((imageData.fileSize) >> 12) + ((((imageData.fileSize) & 4095)) ? 1 : 0))
 	status = xtLdrProtocol.memory.allocatePages(pages, address)
 	if status != (9223372036854775808 & 0) {
 		xtLdrProtocol.debug.print("ERROR: Pages allocation failure (Status Code: 0x%zX)\n", status)
@@ -327,7 +327,7 @@ fun peLoadImage(fileHandle PEFI_FILE_HANDLE, memoryType LOADER_MEMORY_TYPE, virt
 
 	}
 
-	imageData.imagePages = (((imageData.imageSize) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
+	imageData.imagePages = (((imageData.imageSize) >> 12) + ((((imageData.imageSize) & 4095)) ? 1 : 0))
 	status = xtLdrProtocol.memory.allocatePages(imageData.imagePages, address)
 	if status != (9223372036854775808 & 0) {
 		xtLdrProtocol.debug.print("ERROR: Pages reallocation failure (Status Code: 0x%zX)\n", status)

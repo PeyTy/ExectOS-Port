@@ -191,7 +191,7 @@ fun blInitializeEntropy(rNGBuffer PULONGLONG) {
 
 	}
 
-	rNGBuffer[0] = [unknown clang ast] resolve ConditionalOperator
+	rNGBuffer[0] = (seed) ? seed : 1
 	return (9223372036854775808 & 0)
 }
 

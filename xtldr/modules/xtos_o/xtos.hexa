@@ -48,7 +48,7 @@ fun xtGetMemoryDescriptorList(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *
 	var address EFI_PHYSICAL_ADDRESS
 	var status EFI_STATUS
 	var pages ULONGLONG
-	pages = ((((pageMap.mapSize + 1) * sizeOf<Unsigned long long>()) >> 12) + ([unknown clang ast] resolve ConditionalOperator)) as! ULONGLONG
+	pages = ((((pageMap.mapSize + 1) * sizeOf<Unsigned long long>()) >> 12) + (((((pageMap.mapSize + 1) * sizeOf<Unsigned long long>()) & 4095)) ? 1 : 0)) as! ULONGLONG
 	status = xtLdrProtocol.memory.allocatePages(pages, address)
 	if status != (9223372036854775808 & 0) {
 		return status
@@ -108,7 +108,7 @@ fun xtGetSystemResourcesList(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *,
 	var address EFI_PHYSICAL_ADDRESS
 	var physicalBase PVOID
 	var virtualBase PVOID
-	pages = (((sizeOf<Unsigned long long>() + sizeOf<Unsigned long long>()) >> 12) + ([unknown clang ast] resolve ConditionalOperator)) as! ULONGLONG
+	pages = (((sizeOf<Unsigned long long>() + sizeOf<Unsigned long long>()) >> 12) + ((((sizeOf<Unsigned long long>() + sizeOf<Unsigned long long>()) & 4095)) ? 1 : 0)) as! ULONGLONG
 	status = xtLdrProtocol.memory.allocatePages(pages, address)
 	if status != (9223372036854775808 & 0) {
 		return status
@@ -159,7 +159,7 @@ fun xtGetSystemResourcesList(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *,
 
 	}
 
-	frameBufferPages = (((fbSize) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
+	frameBufferPages = (((fbSize) >> 12) + ((((fbSize) & 4095)) ? 1 : 0))
 	frameBufferResource.header.virtualAddress = virtualAddress[0]
 	xtLdrProtocol.memory.mapVirtualMemory(pageMap, frameBufferResource.header.virtualAddress, frameBufferResource.header.physicalAddress, frameBufferPages, loaderFirmwarePermanent)
 	xtLdrProtocol.protocol.close(protocolHandle, frameBufGuid)
@@ -402,7 +402,7 @@ fun xtpInitializeLoaderBlock(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *,
 	var address EFI_PHYSICAL_ADDRESS
 	var status EFI_STATUS
 	var blockPages UINT
-	blockPages = (((sizeOf<Unsigned long long>()) >> 12) + ([unknown clang ast] resolve ConditionalOperator))
+	blockPages = (((sizeOf<Unsigned long long>()) >> 12) + ((((sizeOf<Unsigned long long>()) & 4095)) ? 1 : 0))
 	status = xtLdrProtocol.memory.allocatePages(blockPages, address)
 	if status != (9223372036854775808 & 0) {
 		return status

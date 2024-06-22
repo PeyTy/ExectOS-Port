@@ -54,7 +54,7 @@ fun rtlCompareStringInsensitive(string1 Const PCHAR, string2 Const PCHAR, length
 		}
 
 		if character1 != character2 {
-			return [unknown clang ast] resolve ConditionalOperator
+			return (character1 > character2) ? 1 : -1
 
 		}
 

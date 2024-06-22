@@ -34,7 +34,7 @@ fun mmAllocateHardwareMemory(pageCount PFN_NUMBER, aligned BOOLEAN, buffer PULON
 	listEntry = keInitializationBlock.memoryDescriptorListHead.flink
 	while listEntry != keInitializationBlock.memoryDescriptorListHead {
 		descriptor = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! LOADER_MEMORY_DESCRIPTOR *)
-		alignment = [unknown clang ast] resolve ConditionalOperator
+		alignment = (aligned) ? (((descriptor.basePage + 15) & ~15) - descriptor.basePage) : 0
 		if descriptor.memoryType == loaderFree {
 			if descriptor.basePage and ((descriptor.basePage + pageCount + alignment) < maxPage) and (descriptor.pageCount >= (pageCount + alignment)) {
 				physicalAddress = (descriptor.basePage + alignment) << 12
@@ -158,7 +158,6 @@ fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, 
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	virtualAddress[0] = returnAddress
 	return (0 as! XTSTATUS)
 }

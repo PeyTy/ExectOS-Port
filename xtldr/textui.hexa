@@ -515,7 +515,7 @@ fun blpDrawBootMenu(handle PXTBL_DIALOG_HANDLE) {
 	blDisableConsoleCursor()
 	if 1 {
 		blSetCursorPosition((handle.resX - 44) / 2, 1)
-		blConsolePrint("XTLDR Boot Loader v%d.%d (%s-%s)\n", 0, 1, [unknown clang ast] resolve StringLiteral, [unknown clang ast] resolve StringLiteral)
+		blConsolePrint("XTLDR Boot Loader v%d.%d (%s-%s)\n", 0, 1, "20240622", "c2db94125d")
 
 	} else {
 		blSetCursorPosition((handle.resX - 22) / 2, 1)
@@ -677,7 +677,7 @@ fun blpDrawDialogInputField(handle PXTBL_DIALOG_HANDLE, inputFieldText PWCHAR) {
 	}
 
 	blSetConsoleAttributes(inputColor | textColor)
-	position = [unknown clang ast] resolve ConditionalOperator
+	position = ((handle.attributes & (4 | 8))) ? 4 : 3
 	blSetCursorPosition(handle.posX + 4, handle.posY + handle.height - position)
 	[unknown clang ast] CompoundStmt ForStmt
 	blDisableConsoleCursor()
@@ -767,7 +767,7 @@ fun blpDrawDialogProgressBar(handle PXTBL_DIALOG_HANDLE, percentage UCHAR) {
 	progressBarLength = handle.width - 8
 	progressLength = (progressBarLength * percentage) / 100
 	blSetConsoleAttributes(14)
-	position = [unknown clang ast] resolve ConditionalOperator
+	position = ((handle.attributes & (4 | 8))) ? 4 : 3
 	blSetCursorPosition(handle.posX + 4, handle.posY + handle.height - position)
 	[unknown clang ast] CompoundStmt ForStmt
 	progressBar[index] = 0

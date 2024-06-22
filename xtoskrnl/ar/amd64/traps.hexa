@@ -17,7 +17,6 @@ fun arpHandleSystemCall32() {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 }
 
 fun arpHandleSystemCall64() {
@@ -27,7 +26,6 @@ fun arpHandleSystemCall64() {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 }
 
 /// Handles the trap 0x00 when a Divide By Zero exception occurs.
@@ -45,7 +43,6 @@ fun arpHandleTrap00(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -64,7 +61,6 @@ fun arpHandleTrap01(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -83,7 +79,6 @@ fun arpHandleTrap02(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -102,7 +97,6 @@ fun arpHandleTrap03(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -121,7 +115,6 @@ fun arpHandleTrap04(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -140,7 +133,6 @@ fun arpHandleTrap05(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -159,7 +151,6 @@ fun arpHandleTrap06(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -178,7 +169,6 @@ fun arpHandleTrap07(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -197,7 +187,6 @@ fun arpHandleTrap08(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -216,7 +205,6 @@ fun arpHandleTrap09(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -235,7 +223,6 @@ fun arpHandleTrap0A(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -254,7 +241,6 @@ fun arpHandleTrap0B(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -273,7 +259,6 @@ fun arpHandleTrap0C(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -292,7 +277,6 @@ fun arpHandleTrap0D(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -311,7 +295,6 @@ fun arpHandleTrap0E(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -330,7 +313,6 @@ fun arpHandleTrap10(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -349,7 +331,6 @@ fun arpHandleTrap11(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -368,7 +349,6 @@ fun arpHandleTrap12(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -387,7 +367,6 @@ fun arpHandleTrap13(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -406,7 +385,6 @@ fun arpHandleTrap1F(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 }
 
 /// Handles the trap 0x2C when an assertion is raised.
@@ -424,7 +402,6 @@ fun arpHandleTrap2C(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -443,7 +420,6 @@ fun arpHandleTrap2D(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
 
@@ -462,7 +438,6 @@ fun arpHandleTrap2F(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 }
 
 /// Handles the trap 0xE1 when InterProcessor Interrupt (IPI) occurs.
@@ -480,7 +455,6 @@ fun arpHandleTrapE1(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 }
 
 /// Handles the trap 0xFF when Unexpected Interrupt occurs.
@@ -498,6 +472,5 @@ fun arpHandleTrapFF(trapFrame PKTRAP_FRAME) {
 
 	}
 
-	[unknown clang ast] CompoundStmt NullStmt
 	[unknown clang ast] CompoundStmt ForStmt
 }
