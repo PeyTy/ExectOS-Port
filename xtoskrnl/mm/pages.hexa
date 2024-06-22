@@ -1,0 +1,27 @@
+// Hexa 2024 from clang 15.0.3
+fun mmFlushTlb() {
+	let cpuRegisters = new ByValue<CPUID_REGISTERS>()
+
+	var interrupts BOOLEAN
+	var cr4 ULONG_PTR
+	Interrupts = ArInterruptsEnabled()
+	ArClearInterruptFlag()
+	CpuRegisters.Leaf = CPUID_GET_CPU_FEATURES
+	ArCpuId(???? resolve UnaryOperator)
+	if CpuRegisters.Edx & CPUID_FEATURES_EDX_PGE {
+		Cr4 = ArReadControlRegister(4)
+		ArWriteControlRegister(4, Cr4 & ???? resolve UnaryOperator)
+		ArFlushTlb()
+		ArWriteControlRegister(4, Cr4)
+
+	} else {
+		ArFlushTlb()
+
+	}
+
+	if Interrupts {
+		ArSetInterruptFlag()
+
+	}
+
+}

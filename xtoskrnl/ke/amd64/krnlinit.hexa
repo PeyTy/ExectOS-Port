@@ -1,0 +1,92 @@
+// Hexa 2024 from clang 15.0.3
+type RTL_IMAGE_TYPE
+
+type PRTL_IMAGE_TYPE
+
+// TODO: RecordDecl:_RTL_IMAGE_FORMAT_BMP_RTL_IMAGE_FORMAT_BMP
+
+type RTL_IMAGE_FORMAT_BMP
+
+type PRTL_IMAGE_FORMAT_BMP
+
+// TODO: RecordDecl:_RTL_IMAGE_CONTEXT_RTL_IMAGE_CONTEXT
+
+type RTL_IMAGE_CONTEXT
+
+type PRTL_IMAGE_CONTEXT
+
+fun rtlInitializeImageContext(buffer PUCHAR, imageContext PRTL_IMAGE_CONTEXT) {
+}
+
+fun kepInitializeKernel() {
+	var status XTSTATUS
+	Status = HlInitializeSystem()
+	if Status != (???? resolve CStyleCastExpr) {
+		if KeDbgPrint {
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+
+		}
+
+		??? CompoundStmt NullStmt
+		KePanic(0)
+
+	}
+
+	ArSetInterruptFlag()
+}
+
+fun kepInitializeMachine() {
+	HlIoPortOutByte(886, 0)
+	HlIoPortOutByte(1014, 0)
+	HlInitializeFrameBuffer()
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	HlInitializeProcessor()
+}
+
+fun kepStartKernel() {
+	let prcb = new ByValue<PKPROCESSOR_CONTROL_BLOCK>()
+
+	var pageDirectory ULONG_PTR[2]
+	let currentProcess = new ByValue<PKPROCESS>()
+
+	let currentThread = new ByValue<PKTHREAD>()
+
+	Prcb = KeGetCurrentProcessorControlBlock()
+	CurrentThread = KeGetCurrentThread()
+	CurrentProcess = CurrentThread..ApcState.Process
+	PoInitializeProcessorControlBlock(Prcb)
+	KepSaveProcessorState(???? resolve UnaryOperator)
+	KeLowerRunLevel(1)
+	KepInitializeKernel()
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	???? resolve ArraySubscriptExpr = 0
+	???? resolve ArraySubscriptExpr = 0
+	KeInitializeProcess(CurrentProcess, 0, 4294967295, PageDirectory, FALSE)
+	CurrentProcess.Quantum = 127
+	KeInitializeThread(CurrentProcess, CurrentThread, (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr), (???? resolve CStyleCastExpr), ArKernelBootStack, TRUE)
+	CurrentThread...NextProcessor = Prcb.CpuNumber
+	CurrentThread.Priority = 31
+	CurrentThread.State = Running
+	CurrentThread.Affinity = ???? resolve CStyleCastExpr << Prcb.CpuNumber
+	CurrentThread.WaitRunLevel = 2
+	??? CompoundStmt CompoundAssignOperator
+	if KeDbgPrint {
+		??? CompoundStmt ImplicitCastExpr
+		??? CompoundStmt ImplicitCastExpr
+
+	}
+
+	??? CompoundStmt NullStmt
+	??? CompoundStmt ForStmt
+}
+
+fun kepSwitchBootStack(stack ULONG_PTR) {
+	??? CompoundStmt GCCAsmStmt
+}

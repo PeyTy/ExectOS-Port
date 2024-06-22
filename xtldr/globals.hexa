@@ -1,0 +1,22 @@
+// Hexa 2024 from clang 15.0.3var blpBootProtocols
+
+var blComPortList
+
+var blpConfig
+
+var blpConfigSections
+
+var blpLdrProtocol
+
+var blpLoadedModules
+
+var blpMenuList
+
+var blpStatus
+
+var efiBlockDevices
+
+var efiImageHandle
+
+var efiSystemTable
+

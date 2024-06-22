@@ -1,0 +1,38 @@
+// Hexa 2024 from clang 15.0.3
+fun mmInitializeMemoryManager() {
+	MmpScanMemoryDescriptors()
+	if MmNumberOfPhysicalPages < 2048 {
+		if KeDbgPrint {
+			??? CompoundStmt ImplicitCastExpr
+			??? CompoundStmt ImplicitCastExpr
+
+		}
+
+		??? CompoundStmt NullStmt
+		KePanic(0)
+
+	}
+
+	MmPageMapLevel = KeInitializationBlock.LoaderInformation.PageMapLevel
+	MmpInitializeArchitecture()
+}
+
+fun mmpScanMemoryDescriptors() {
+	let memoryDescriptor = new ByValue<PLOADER_MEMORY_DESCRIPTOR>()
+
+	let memoryMappings = new ByValue<PLIST_ENTRY>()
+
+	var freePages PFN_NUMBER
+	FreePages = 0
+	MemoryMappings = KeInitializationBlock.MemoryDescriptorListHead.Flink
+	??? CompoundStmt WhileStmt
+	RtlCopyMemory(???? resolve UnaryOperator, MmFreeDescriptor, ???? resolve UnaryExprOrTypeTraitExpr)
+}
+
+fun mmpVerifyMemoryTypeFree(memoryType LOADER_MEMORY_TYPE) {
+	return (MemoryType == LoaderFree) or (MemoryType == LoaderFirmwareTemporary) or (MemoryType == LoaderLoadedProgram) or (MemoryType == LoaderOsloaderStack)
+}
+
+fun mmpVerifyMemoryTypeInvisible(memoryType LOADER_MEMORY_TYPE) {
+	return (MemoryType == LoaderFirmwarePermanent) or (MemoryType == LoaderSpecialMemory) or (MemoryType == LoaderBBTMemory)
+}

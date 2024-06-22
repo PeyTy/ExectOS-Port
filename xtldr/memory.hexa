@@ -1,0 +1,191 @@
+// Hexa 2024 from clang 15.0.3
+fun blAllocateMemoryPages(pages ULONGLONG, memory PEFI_PHYSICAL_ADDRESS) {
+	return EfiSystemTable.BootServices.AllocatePages(AllocateAnyPages, EfiLoaderData, Pages, Memory)
+}
+
+fun blAllocateMemoryPool(size UINT_PTR, memory PVOID *) {
+	return EfiSystemTable.BootServices.AllocatePool(EfiLoaderData, Size, Memory)
+}
+
+fun blFreeMemoryPages(pages ULONGLONG, memory EFI_PHYSICAL_ADDRESS) {
+	return EfiSystemTable.BootServices.FreePages(Memory, Pages)
+}
+
+fun blFreeMemoryPool(memory PVOID) {
+	return EfiSystemTable.BootServices.FreePool(Memory)
+}
+
+fun blGetMappingsCount(pageMap PXTBL_PAGE_MAPPING, numberOfMappings PULONG) {
+	???? resolve UnaryOperator = PageMap.MapSize
+}
+
+fun blGetMemoryMap(memoryMap PEFI_MEMORY_MAP) {
+	var status EFI_STATUS
+	if MemoryMap == (???? resolve CStyleCastExpr) {
+		return (9223372036854775808 | 2)
+
+	}
+
+	MemoryMap.Map = (???? resolve CStyleCastExpr)
+	MemoryMap.MapSize = 0
+	??? CompoundStmt DoStmt
+	if MemoryMap.Map == (???? resolve CStyleCastExpr) {
+		return (9223372036854775808 | 17)
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun blGetVirtualAddress(pageMap PXTBL_PAGE_MAPPING, physicalAddress PVOID) {
+	let mapping = new ByValue<PXTBL_MEMORY_MAPPING>()
+
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	ListEntry = PageMap.MemoryMap.Flink
+	??? CompoundStmt WhileStmt
+	return 0
+}
+
+fun blInitializePageMap(pageMap PXTBL_PAGE_MAPPING, pageMapLevel SHORT, pageSize PAGE_SIZE) {
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	PageMap.MapSize = 0
+	PageMap.PageMapLevel = PageMapLevel
+	PageMap.PageSize = PageSize
+}
+
+fun blMapEfiMemory(pageMap PXTBL_PAGE_MAPPING, memoryMapAddress PVOID *, getMemoryTypeRoutine PBL_GET_MEMTYPE_ROUTINE) {
+	let descriptor = new ByValue<PEFI_MEMORY_DESCRIPTOR>()
+
+	var memoryType LOADER_MEMORY_TYPE
+	let memoryMap = new ByValue<PEFI_MEMORY_MAP>()
+
+	var descriptorCount SIZE_T
+	var virtualAddress PUCHAR
+	var status EFI_STATUS
+	var index SIZE_T
+	VirtualAddress = ???? resolve UnaryOperator
+	if GetMemoryTypeRoutine == (???? resolve CStyleCastExpr) {
+		GetMemoryTypeRoutine = BlpGetLoaderMemoryType
+
+	}
+
+	BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	RtlZeroMemory(MemoryMap, ???? resolve UnaryExprOrTypeTraitExpr)
+	Status = BlGetMemoryMap(MemoryMap)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Descriptor = MemoryMap.Map
+	DescriptorCount = MemoryMap.MapSize / MemoryMap.DescriptorSize
+	??? CompoundStmt ForStmt
+	Status = BlMapVirtualMemory(PageMap, (???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr, 1, LoaderFirmwarePermanent)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = BlMapVirtualMemory(PageMap, (???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr, 96, LoaderFirmwarePermanent)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	???? resolve UnaryOperator = VirtualAddress
+	return (9223372036854775808 & 0)
+}
+
+fun blMapVirtualMemory(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID, physicalAddress PVOID, numberOfPages ULONGLONG, memoryType LOADER_MEMORY_TYPE) {
+	let mapping1 = new ByValue<PXTBL_MEMORY_MAPPING>()
+
+	let mapping2 = new ByValue<PXTBL_MEMORY_MAPPING>()
+
+	let mapping3 = new ByValue<PXTBL_MEMORY_MAPPING>()
+
+	var physicalAddressEnd PVOID
+	var physicalAddress2End PVOID
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	let mappingListEntry = new ByValue<PLIST_ENTRY>()
+
+	var numberOfMappedPages SIZE_T
+	var status EFI_STATUS
+	Status = BlAllocateMemoryPool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Mapping1.PhysicalAddress = PhysicalAddress
+	Mapping1.VirtualAddress = VirtualAddress
+	Mapping1.NumberOfPages = NumberOfPages
+	Mapping1.MemoryType = MemoryType
+	PhysicalAddressEnd = ???? resolve CStyleCastExpr
+	ListEntry = PageMap.MemoryMap.Flink
+	??? CompoundStmt WhileStmt
+	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	??? CompoundStmt UnaryOperator
+	return (9223372036854775808 & 0)
+}
+
+fun blPhysicalAddressToVirtual(physicalAddress PVOID, physicalBase PVOID, virtualBase PVOID) {
+	return ???? resolve CStyleCastExpr + (???? resolve CStyleCastExpr - ???? resolve CStyleCastExpr)
+}
+
+fun blPhysicalListToVirtual(pageMap PXTBL_PAGE_MAPPING, listHead PLIST_ENTRY, physicalBase PVOID, virtualBase PVOID) {
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	let nextEntry = new ByValue<PLIST_ENTRY>()
+
+	if ListHead.Flink == 0 or ListHead.Blink == 0 {
+		return (9223372036854775808 | 2)
+
+	}
+
+	ListEntry = ListHead.Flink
+	??? CompoundStmt WhileStmt
+	ListHead.Blink = BlPhysicalAddressToVirtual(ListHead.Blink, ???? resolve CStyleCastExpr, VirtualBase)
+	ListHead.Flink = BlPhysicalAddressToVirtual(ListHead.Flink, ???? resolve CStyleCastExpr, VirtualBase)
+	return (9223372036854775808 & 0)
+}
+
+fun blpGetLoaderMemoryType(efiMemoryType EFI_MEMORY_TYPE) {
+	var memoryType LOADER_MEMORY_TYPE
+	??? CompoundStmt SwitchStmt
+	return MemoryType
+}
+
+fun blpGetNextPageTable(pageMap PXTBL_PAGE_MAPPING, pageTable PHARDWARE_PTE, entry SIZE_T, nextPageTable PHARDWARE_PTE *) {
+	var address EFI_PHYSICAL_ADDRESS
+	var pmlPointer ULONGLONG
+	var status EFI_STATUS
+	if ???? resolve ArraySubscriptExpr.Valid {
+		PmlPointer = ???? resolve ArraySubscriptExpr.PageFrameNumber
+		??? CompoundStmt CompoundAssignOperator
+
+	} else {
+		Status = BlAllocateMemoryPages(1, ???? resolve UnaryOperator)
+		if Status != (9223372036854775808 & 0) {
+			return Status
+
+		}
+
+		Status = BlMapVirtualMemory(PageMap, (???? resolve CStyleCastExpr), ???? resolve CStyleCastExpr, 1, LoaderMemoryData)
+		if Status != (9223372036854775808 & 0) {
+			return Status
+
+		}
+
+		RtlZeroMemory(???? resolve CStyleCastExpr, 4096)
+		???? resolve ArraySubscriptExpr.PageFrameNumber = Address / 4096
+		???? resolve ArraySubscriptExpr.Valid = 1
+		???? resolve ArraySubscriptExpr.Writable = 1
+		PmlPointer = ???? resolve CStyleCastExpr
+
+	}
+
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	return (9223372036854775808 & 0)
+}

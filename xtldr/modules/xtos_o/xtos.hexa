@@ -1,0 +1,416 @@
+// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+
+var __UNIQUE_ID_description1
+
+var __UNIQUE_ID_softdeps2
+
+var __UNIQUE_ID_license3
+
+var __UNIQUE_ID_version4
+
+var xtLdrProtocol
+
+var xtPeCoffProtocol
+
+var xtBootProtocol
+
+
+fun xtGetDisplayInformation(frameBufferResource PSYSTEM_RESOURCE_FRAMEBUFFER, frameBufferBase PEFI_PHYSICAL_ADDRESS, frameBufferSize PULONG_PTR, frameBufferModeInfo PXTBL_FRAMEBUFFER_MODE_INFORMATION) {
+	FrameBufferResource.Header.PhysicalAddress = ???? resolve CStyleCastExpr
+	FrameBufferResource.Header.ResourceType = SystemResourceFrameBuffer
+	FrameBufferResource.Header.ResourceSize = ???? resolve UnaryExprOrTypeTraitExpr
+	FrameBufferResource.BufferSize = ???? resolve UnaryOperator
+	FrameBufferResource.Width = FrameBufferModeInfo.Width
+	FrameBufferResource.Height = FrameBufferModeInfo.Height
+	FrameBufferResource.Depth = FrameBufferModeInfo.Depth
+	FrameBufferResource.BitsPerPixel = FrameBufferModeInfo.BitsPerPixel
+	FrameBufferResource.PixelsPerScanLine = FrameBufferModeInfo.PixelsPerScanLine
+	FrameBufferResource.Pitch = FrameBufferModeInfo.Pitch
+	FrameBufferResource.Pixels.BlueShift = FrameBufferModeInfo.PixelInformation.BlueShift
+	FrameBufferResource.Pixels.BlueSize = FrameBufferModeInfo.PixelInformation.BlueSize
+	FrameBufferResource.Pixels.GreenShift = FrameBufferModeInfo.PixelInformation.GreenShift
+	FrameBufferResource.Pixels.GreenSize = FrameBufferModeInfo.PixelInformation.GreenSize
+	FrameBufferResource.Pixels.RedShift = FrameBufferModeInfo.PixelInformation.RedShift
+	FrameBufferResource.Pixels.RedSize = FrameBufferModeInfo.PixelInformation.RedSize
+	FrameBufferResource.Pixels.ReservedShift = FrameBufferModeInfo.PixelInformation.ReservedShift
+	FrameBufferResource.Pixels.ReservedSize = FrameBufferModeInfo.PixelInformation.ReservedSize
+}
+
+fun xtGetMemoryDescriptorList(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *, memoryDescriptorList PLIST_ENTRY) {
+	var address EFI_PHYSICAL_ADDRESS
+	var status EFI_STATUS
+	var pages ULONGLONG
+	Pages = ???? resolve CStyleCastExpr
+	Status = XtLdrProtocol.Memory.AllocatePages(Pages, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = XtLdrProtocol.Memory.MapVirtualMemory(PageMap, ???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Pages, LoaderMemoryData)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Memory.FreePages(Address, Pages)
+		return Status
+
+	}
+
+	var physicalBase PVOID = ???? resolve CStyleCastExpr
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	ListEntry = PageMap.MemoryMap.Flink
+	??? CompoundStmt WhileStmt
+	XtLdrProtocol.Memory.PhysicalListToVirtual(PageMap, MemoryDescriptorList, PhysicalBase, ???? resolve UnaryOperator)
+	return (9223372036854775808 & 0)
+}
+
+fun xtGetSystemResourcesList(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *, systemResourcesList PLIST_ENTRY) {
+	var status XTSTATUS
+	var protocolHandle EFI_HANDLE
+	let acpiGuid = new ByValue<EFI_GUID>()
+
+	let frameBufGuid = new ByValue<EFI_GUID>()
+
+	let acpiProtocol = new ByValue<PXTBL_ACPI_PROTOCOL>()
+
+	let frameBufProtocol = new ByValue<PXTBL_FRAMEBUFFER_PROTOCOL>()
+
+	let fbModeInfo = new ByValue<XTBL_FRAMEBUFFER_MODE_INFORMATION>()
+
+	var fbAddress EFI_PHYSICAL_ADDRESS
+	var fbSize ULONG_PTR
+	var frameBufferPages UINT
+	let frameBufferResource = new ByValue<PSYSTEM_RESOURCE_FRAMEBUFFER>()
+
+	let acpiResource = new ByValue<PSYSTEM_RESOURCE_ACPI>()
+
+	var pages ULONGLONG
+	var address EFI_PHYSICAL_ADDRESS
+	var physicalBase PVOID
+	var virtualBase PVOID
+	Pages = ???? resolve CStyleCastExpr
+	Status = XtLdrProtocol.Memory.AllocatePages(Pages, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = XtLdrProtocol.Memory.MapVirtualMemory(PageMap, ???? resolve UnaryOperator, ???? resolve CStyleCastExpr, Pages, LoaderFirmwarePermanent)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Memory.FreePages(Address, Pages)
+		return Status
+
+	}
+
+	PhysicalBase = ???? resolve CStyleCastExpr
+	VirtualBase = ???? resolve UnaryOperator
+	??? CompoundStmt CompoundAssignOperator
+	AcpiResource = ???? resolve CStyleCastExpr
+	RtlZeroMemory(AcpiResource, ???? resolve UnaryExprOrTypeTraitExpr)
+	Status = XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	AcpiResource.Header.ResourceType = SystemResourceAcpi
+	AcpiResource.Header.ResourceSize = ???? resolve UnaryExprOrTypeTraitExpr
+	AcpiProtocol.GetApicBase(???? resolve UnaryOperator)
+	AcpiProtocol.GetAcpiDescriptionPointer(???? resolve UnaryOperator)
+	AcpiResource.Header.VirtualAddress = 0
+	RtlInsertTailList(SystemResourcesList, ???? resolve UnaryOperator)
+	XtLdrProtocol.Protocol.Close(ProtocolHandle, ???? resolve UnaryOperator)
+	Address = Address + ???? resolve UnaryExprOrTypeTraitExpr
+	FrameBufferResource = ???? resolve CStyleCastExpr
+	RtlZeroMemory(FrameBufferResource, ???? resolve UnaryExprOrTypeTraitExpr)
+	Status = XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	if Status == (9223372036854775808 & 0) {
+		Status = FrameBufProtocol.GetDisplayInformation(???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+		if Status == (9223372036854775808 & 0) {
+			XtGetDisplayInformation(FrameBufferResource, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+
+		}
+
+
+	}
+
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	FrameBufferPages = (((FbSize) >> 12) + (???? resolve ConditionalOperator))
+	FrameBufferResource.Header.VirtualAddress = ???? resolve UnaryOperator
+	XtLdrProtocol.Memory.MapVirtualMemory(PageMap, FrameBufferResource.Header.VirtualAddress, FrameBufferResource.Header.PhysicalAddress, FrameBufferPages, LoaderFirmwarePermanent)
+	XtLdrProtocol.Protocol.Close(ProtocolHandle, ???? resolve UnaryOperator)
+	??? CompoundStmt CompoundAssignOperator
+	RtlInsertTailList(SystemResourcesList, ???? resolve UnaryOperator)
+	XtLdrProtocol.Memory.PhysicalListToVirtual(PageMap, SystemResourcesList, PhysicalBase, VirtualBase)
+	return (9223372036854775808 & 0)
+}
+
+fun xtBootSystem(parameters PXTBL_BOOT_PARAMETERS) {
+	let peCoffProtocolGuid = new ByValue<EFI_GUID>()
+
+	var diskHandle EFI_HANDLE
+	var protocolHandle EFI_HANDLE
+	let fsHandle = new ByValue<PEFI_FILE_HANDLE>()
+
+	let bootDir = new ByValue<PEFI_FILE_HANDLE>()
+
+	var systemPath PWCHAR
+	var status EFI_STATUS
+	XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+	Status = XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		return (9223372036854775808 | 24)
+
+	}
+
+	if Parameters.DevicePath == (???? resolve CStyleCastExpr) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		return (9223372036854775808 | 2)
+
+	}
+
+	if Parameters.SystemPath != (???? resolve CStyleCastExpr) {
+		if ???? resolve ArraySubscriptExpr == ???? resolve CharacterLiteral {
+			???? resolve ArraySubscriptExpr = ???? resolve CharacterLiteral
+
+		}
+
+		SystemPath = ???? resolve UnaryOperator
+		??? CompoundStmt WhileStmt
+
+	} else {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		Parameters.SystemPath = ???? resolve StringLiteral
+
+	}
+
+	if Parameters.KernelFile == (???? resolve CStyleCastExpr) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		Parameters.KernelFile = ???? resolve StringLiteral
+
+	}
+
+	if Parameters.Parameters == (???? resolve CStyleCastExpr) {
+		Parameters.Parameters = ???? resolve StringLiteral
+
+	}
+
+	XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Parameters.ArcName, Parameters.SystemPath, Parameters.KernelFile, Parameters.Parameters)
+	Status = XtLdrProtocol.Disk.OpenVolume((???? resolve CStyleCastExpr), ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		return Status
+
+	}
+
+	RtlConcatenateWideString(Parameters.SystemPath, ???? resolve StringLiteral, 0)
+	Status = FsHandle.Open(FsHandle, ???? resolve UnaryOperator, Parameters.SystemPath, 1, 0)
+	FsHandle.Close(FsHandle)
+	if Status == (9223372036854775808 | 14) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		XtLdrProtocol.Disk.CloseVolume(DiskHandle)
+		return Status
+
+	} else {
+		??? CompoundStmt CompoundStmt
+
+	}
+
+	return XtpBootSequence(BootDir, Parameters)
+}
+
+fun xtpBootSequence(bootDir PEFI_FILE_HANDLE, parameters PXTBL_BOOT_PARAMETERS) {
+	let loadedImageGuid = new ByValue<EFI_GUID>()
+
+	let frameBufGuid = new ByValue<EFI_GUID>()
+
+	let kernelParameters = new ByValue<PKERNEL_INITIALIZATION_BLOCK>()
+
+	let frameBufProtocol = new ByValue<PXTBL_FRAMEBUFFER_PROTOCOL>()
+
+	let imageContext = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	let imageProtocol = new ByValue<PEFI_LOADED_IMAGE_PROTOCOL>()
+
+	var virtualAddress PVOID
+	var virtualMemoryArea PVOID
+	var kernelEntryPoint PXT_ENTRY_POINT
+	var protocolHandle EFI_HANDLE
+	var status EFI_STATUS
+	let pageMap = new ByValue<XTBL_PAGE_MAPPING>()
+
+	XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+	Status = XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	if Status == (9223372036854775808 & 0) {
+		FrameBufProtocol.Initialize()
+		FrameBufProtocol.SetScreenResolution(0, 0)
+
+	}
+
+	XtLdrProtocol.Protocol.Close(ProtocolHandle, ???? resolve UnaryOperator)
+	VirtualMemoryArea = ???? resolve CStyleCastExpr
+	VirtualAddress = ???? resolve CStyleCastExpr
+	XtLdrProtocol.Memory.InitializePageMap(???? resolve UnaryOperator, 3, Size4K)
+	Status = XtLdrProtocol.Memory.MapEfiMemory(???? resolve UnaryOperator, ???? resolve UnaryOperator, (???? resolve CStyleCastExpr))
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = XtpLoadModule(BootDir, Parameters.KernelFile, VirtualAddress, LoaderSystemCode, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = XtLdrProtocol.Memory.MapVirtualMemory(???? resolve UnaryOperator, ImageContext.VirtualAddress, ImageContext.PhysicalAddress, ImageContext.ImagePages, 0)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	??? CompoundStmt CompoundAssignOperator
+	Status = XtpInitializeApicBase(???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	KernelParameters = ???? resolve CStyleCastExpr
+	Status = XtpInitializeLoaderBlock(???? resolve UnaryOperator, ???? resolve UnaryOperator, Parameters)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	XtPeCoffProtocol.GetEntryPoint(ImageContext, ???? resolve CStyleCastExpr)
+	BootDir.Close(BootDir)
+	XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	Status = XtEnablePaging(???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+	KernelEntryPoint(KernelParameters)
+	return (9223372036854775808 & 0)
+}
+
+fun xtpInitializeApicBase(pageMap PXTBL_PAGE_MAPPING) {
+	let acpiGuid = new ByValue<EFI_GUID>()
+
+	let acpiProtocol = new ByValue<PXTBL_ACPI_PROTOCOL>()
+
+	var protocolHandle EFI_HANDLE
+	var apicBaseAddress PVOID
+	var status EFI_STATUS
+	Status = XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Status = AcpiProtocol.GetApicBase(???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	XtLdrProtocol.Memory.MapVirtualMemory(PageMap, ???? resolve CStyleCastExpr, ApicBaseAddress, 1, LoaderFirmwarePermanent)
+	return (9223372036854775808 & 0)
+}
+
+fun xtpInitializeLoaderBlock(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID *, parameters PXTBL_BOOT_PARAMETERS) {
+	let loaderBlock = new ByValue<PKERNEL_INITIALIZATION_BLOCK>()
+
+	var address EFI_PHYSICAL_ADDRESS
+	var status EFI_STATUS
+	var blockPages UINT
+	BlockPages = (((???? resolve UnaryExprOrTypeTraitExpr) >> 12) + (???? resolve ConditionalOperator))
+	Status = XtLdrProtocol.Memory.AllocatePages(BlockPages, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	LoaderBlock = ???? resolve CStyleCastExpr
+	RtlZeroMemory(LoaderBlock, ???? resolve UnaryExprOrTypeTraitExpr)
+	LoaderBlock.BlockSize = ???? resolve UnaryExprOrTypeTraitExpr
+	LoaderBlock.BlockVersion = 1
+	LoaderBlock.ProtocolVersion = 1
+	LoaderBlock.LoaderInformation.DbgPrint = XtLdrProtocol.Debug.Print
+	LoaderBlock.LoaderInformation.PageMapLevel = 3
+	LoaderBlock.FirmwareInformation.FirmwareType = SystemFirmwareEfi
+	LoaderBlock.FirmwareInformation..EfiFirmware.EfiVersion = 0
+	LoaderBlock.FirmwareInformation..EfiFirmware.EfiRuntimeServices = (???? resolve CStyleCastExpr)
+	RtlCopyMemory(LoaderBlock.KernelParameters, Parameters.Parameters, (RtlWideStringLength(Parameters.Parameters, 0) + 1) * ???? resolve UnaryExprOrTypeTraitExpr)
+	XtLdrProtocol.Memory.MapVirtualMemory(PageMap, ???? resolve UnaryOperator, ???? resolve CStyleCastExpr, BlockPages, LoaderSystemBlock)
+	??? CompoundStmt CompoundAssignOperator
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	XtGetSystemResourcesList(PageMap, VirtualAddress, ???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	XtGetMemoryDescriptorList(PageMap, VirtualAddress, ???? resolve UnaryOperator)
+	return (9223372036854775808 & 0)
+}
+
+fun xtpLoadModule(systemDir PEFI_FILE_HANDLE, fileName PWCHAR, virtualAddress PVOID, memoryType LOADER_MEMORY_TYPE, imageContext PPECOFF_IMAGE_CONTEXT *) {
+	let moduleHandle = new ByValue<PEFI_FILE_HANDLE>()
+
+	var machineType USHORT
+	var subSystem USHORT
+	var status EFI_STATUS
+	XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FileName)
+	Status = SystemDir.Open(SystemDir, ???? resolve UnaryOperator, FileName, 1, 0)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FileName)
+		return Status
+
+	}
+
+	Status = XtPeCoffProtocol.LoadImage(ModuleHandle, MemoryType, VirtualAddress, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FileName)
+		return Status
+
+	}
+
+	ModuleHandle.Close(ModuleHandle)
+	XtPeCoffProtocol.GetMachineType(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if MachineType != 34404 {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		return (9223372036854775808 | 25)
+
+	}
+
+	XtPeCoffProtocol.GetSubSystem(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if SubSystem != 20 and SubSystem != 21 and SubSystem != 22 {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+
+	}
+
+	XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FileName, (???? resolve UnaryOperator).PhysicalAddress, (???? resolve UnaryOperator).VirtualAddress)
+	return (9223372036854775808 & 0)
+}
+
+fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
+	let guid = new ByValue<EFI_GUID>()
+
+	var status EFI_STATUS
+	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return (9223372036854775808 | 24)
+
+	}
+
+	XtBootProtocol.BootSystem = XtBootSystem
+	XtLdrProtocol.Boot.RegisterProtocol(???? resolve StringLiteral, ???? resolve UnaryOperator)
+	return XtLdrProtocol.Protocol.Install(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+}

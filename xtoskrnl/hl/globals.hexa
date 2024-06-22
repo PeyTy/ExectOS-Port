@@ -1,0 +1,14 @@
+// Hexa 2024 from clang 15.0.3var hlpAcpiCacheList
+
+var hlpAcpiRsdp
+
+var hlpAcpiSystemInfo
+
+var hlpAcpiTimerInfo
+
+var hlpActiveProcessors
+
+var hlpApicMode
+
+var hlpFrameBufferData
+

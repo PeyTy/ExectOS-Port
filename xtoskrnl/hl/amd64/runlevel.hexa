@@ -1,0 +1,16 @@
+// Hexa 2024 from clang 15.0.3
+fun hlGetRunLevel() {
+	return ???? resolve CStyleCastExpr
+}
+
+fun hlSetRunLevel(runLevel KRUNLEVEL) {
+	ArWriteControlRegister(8, RunLevel)
+}
+
+fun hlpTransformApicTprToRunLevel(tpr UCHAR) {
+	return ???? resolve CStyleCastExpr
+}
+
+fun hlpTransformRunLevelToApicTpr(runLevel KRUNLEVEL) {
+	return (RunLevel << 4)
+}

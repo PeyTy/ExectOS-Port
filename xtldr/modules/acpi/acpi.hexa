@@ -1,0 +1,189 @@
+// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+
+var __UNIQUE_ID_description1
+
+var __UNIQUE_ID_license2
+
+var __UNIQUE_ID_version3
+
+
+fun acGetAcpiDescriptionPointer(acpiTable PVOID *) {
+	var rsdp PVOID
+	if AcGetXsdpTable(???? resolve UnaryOperator) == (9223372036854775808 & 0) {
+		???? resolve UnaryOperator = Rsdp
+		return (9223372036854775808 & 0)
+
+	}
+
+	if AcGetRsdpTable(???? resolve UnaryOperator) == (9223372036854775808 & 0) {
+		???? resolve UnaryOperator = Rsdp
+		return (9223372036854775808 & 0)
+
+	}
+
+	return (9223372036854775808 | 14)
+}
+
+fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *) {
+	let tableHeader = new ByValue<PACPI_DESCRIPTION_HEADER>()
+
+	var rsdtIndex SIZE_T
+	var tableIndex SIZE_T
+	var status EFI_STATUS
+	var tableCount SIZE_T
+	let rsdp = new ByValue<PACPI_RSDP>()
+
+	let rsdt = new ByValue<PACPI_RSDT>()
+
+	var xsdp BOOLEAN
+	???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+	Status = AcGetAcpiDescriptionPointer(???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	if Rsdp.Revision >= 2 and Rsdp.XsdtAddress {
+		Xsdp = TRUE
+		Rsdt = ???? resolve CStyleCastExpr
+		TableCount = (Rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 8
+
+	} else {
+		Xsdp = FALSE
+		Rsdt = ???? resolve CStyleCastExpr
+		TableCount = (Rsdt.Header.Length - ???? resolve UnaryExprOrTypeTraitExpr) / 4
+
+	}
+
+	??? CompoundStmt ForStmt
+	if TableHeader.Signature != Signature {
+		return (9223372036854775808 | 14)
+
+	}
+
+	if TableHeader.Signature != 1346584902 or TableHeader.Revision > 2 {
+		if ???? resolve UnaryOperator {
+			return (9223372036854775808 | 27)
+
+		}
+
+
+	}
+
+	???? resolve UnaryOperator = TableHeader
+	return (9223372036854775808 & 0)
+}
+
+fun acGetApicBase(apicBase PVOID *) {
+	let cpuRegisters = new ByValue<PCPUID_REGISTERS>()
+
+	CpuRegisters.Leaf = CPUID_GET_CPU_FEATURES
+	CpuRegisters.SubLeaf = 0
+	CpuRegisters.Eax = 0
+	CpuRegisters.Ebx = 0
+	CpuRegisters.Ecx = 0
+	CpuRegisters.Edx = 0
+	ArCpuId(CpuRegisters)
+	if (CpuRegisters.Edx & CPUID_FEATURES_EDX_APIC) == 0 {
+		return (9223372036854775808 | 3)
+
+	}
+
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	return (9223372036854775808 & 0)
+}
+
+fun acGetRsdpTable(acpiTable PVOID *) {
+	let acpiGuid = new ByValue<EFI_GUID>()
+
+	var status EFI_STATUS
+	var rsdpTable PVOID
+	Status = XtLdrProtocol.Util.GetConfigurationTable(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
+		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+		return (9223372036854775808 | 14)
+
+	}
+
+	???? resolve UnaryOperator = RsdpTable
+	return (9223372036854775808 & 0)
+}
+
+fun acGetSMBiosTable(smBiosTable PVOID *) {
+	let smBiosGuid = new ByValue<EFI_GUID>()
+
+	let smBios = new ByValue<PSMBIOS_TABLE_HEADER>()
+
+	var status EFI_STATUS
+	Status = XtLdrProtocol.Util.GetConfigurationTable(???? resolve UnaryOperator, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
+		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+		return (9223372036854775808 | 14)
+
+	}
+
+	???? resolve UnaryOperator = SmBios
+	return (9223372036854775808 & 0)
+}
+
+fun acGetSMBios3Table(smBiosTable PVOID *) {
+	let smBios3Guid = new ByValue<EFI_GUID>()
+
+	let smBios = new ByValue<PSMBIOS3_TABLE_HEADER>()
+
+	var status EFI_STATUS
+	Status = XtLdrProtocol.Util.GetConfigurationTable(???? resolve UnaryOperator, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
+		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+		return (9223372036854775808 | 14)
+
+	}
+
+	???? resolve UnaryOperator = SmBios
+	return (9223372036854775808 & 0)
+}
+
+fun acGetXsdpTable(acpiTable PVOID *) {
+	let acpiGuid = new ByValue<EFI_GUID>()
+
+	var status EFI_STATUS
+	var xsdpTable PVOID
+	Status = XtLdrProtocol.Util.GetConfigurationTable(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) or ???? resolve UnaryOperator {
+		???? resolve UnaryOperator = (???? resolve CStyleCastExpr)
+		return (9223372036854775808 | 14)
+
+	}
+
+	???? resolve UnaryOperator = XsdpTable
+	return (9223372036854775808 & 0)
+}
+
+fun acpValidateAcpiTable(buffer PVOID, size UINT_PTR) {
+	var pointer PUCHAR
+	var sum UCHAR
+	Sum = 0
+	Pointer = Buffer
+	??? CompoundStmt WhileStmt
+	return ???? resolve ConditionalOperator
+}
+
+fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
+	let guid = new ByValue<EFI_GUID>()
+
+	var status EFI_STATUS
+	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return (9223372036854775808 | 24)
+
+	}
+
+	AcpAcpiProtocol.GetAcpiDescriptionPointer = AcGetAcpiDescriptionPointer
+	AcpAcpiProtocol.GetAcpiTable = AcGetAcpiTable
+	AcpAcpiProtocol.GetApicBase = AcGetApicBase
+	AcpAcpiProtocol.GetRsdpTable = AcGetRsdpTable
+	AcpAcpiProtocol.GetSMBiosTable = AcGetSMBiosTable
+	AcpAcpiProtocol.GetSMBios3Table = AcGetSMBios3Table
+	AcpAcpiProtocol.GetXsdpTable = AcGetXsdpTable
+	return XtLdrProtocol.Protocol.Install(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+}

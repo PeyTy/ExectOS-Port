@@ -1,0 +1,47 @@
+// Hexa 2024 from clang 15.0.3
+fun rtlCompareMemory(leftBuffer PCVOID, rightBuffer PCVOID, length SIZE_T) {
+	var bytes SIZE_T = 0
+	if Length {
+		??? CompoundStmt WhileStmt
+
+	}
+
+	return Bytes
+}
+
+fun rtlCopyMemory(destination PVOID, source PCVOID, length SIZE_T) {
+	var destinationBytes PCHAR = ???? resolve CStyleCastExpr
+	var sourceBytes PCCHAR = ???? resolve CStyleCastExpr
+	??? CompoundStmt WhileStmt
+}
+
+fun rtlMoveMemory(destination PVOID, source PCVOID, length SIZE_T) {
+	var destinationBytes PCHAR = ???? resolve CStyleCastExpr
+	var sourceBytes PCHAR = ???? resolve CStyleCastExpr
+	if (???? resolve UnaryOperator) and (???? resolve UnaryOperator) {
+		return ??
+
+	}
+
+	if (DestinationBytes > SourceBytes) and (SourceBytes + Length > DestinationBytes) {
+		??? CompoundStmt WhileStmt
+
+	} else {
+		RtlCopyMemory(Destination, Source, Length)
+
+	}
+
+}
+
+fun rtlSameMemory(leftBuffer PCVOID, rightBuffer PCVOID, length SIZE_T) {
+	return ???? resolve ConditionalOperator
+}
+
+fun rtlSetMemory(destination PVOID, byte UCHAR, length SIZE_T) {
+	var destinationBytes PCHAR = ???? resolve CStyleCastExpr
+	??? CompoundStmt WhileStmt
+}
+
+fun rtlZeroMemory(destination PVOID, length SIZE_T) {
+	RtlSetMemory(Destination, 0, Length)
+}

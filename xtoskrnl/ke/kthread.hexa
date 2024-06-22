@@ -1,0 +1,106 @@
+// Hexa 2024 from clang 15.0.3
+fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTEM_ROUTINE, startRoutine PKSTART_ROUTINE, startContext PVOID, context PCONTEXT, environmentBlock PVOID, stack PVOID, startThread BOOLEAN) {
+	let timerWaitBlock = new ByValue<PKWAIT_BLOCK>()
+
+	var allocation BOOLEAN
+	var status XTSTATUS
+	var index ULONG
+	Allocation = FALSE
+	Thread.Header.Type = ThreadObject
+	Thread.Header.SignalState = 0
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	??? CompoundStmt ForStmt
+	Thread.AutoAlignment = Process...AutoAlignment
+	Thread.StackResident = TRUE
+	Thread.StackSwap = TRUE
+	Thread.SwapBusy = FALSE
+	Thread...AdjustReason = AdjustNone
+	KeInitializeSpinLock(???? resolve UnaryOperator)
+	Thread.ServiceTable = KeServiceDescriptorTable
+	???? resolve ArraySubscriptExpr = ???? resolve UnaryOperator
+	???? resolve ArraySubscriptExpr = ???? resolve UnaryOperator
+	Thread...ApcQueueable = TRUE
+	Thread..ApcState.Process = Process
+	Thread.Process = Process
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	RtlInitializeListHead(???? resolve UnaryOperator)
+	KeInitializeSpinLock(???? resolve UnaryOperator)
+	KeInitializeApc(???? resolve UnaryOperator, Thread, OriginalApcEnvironment, KepSuspendNop, KepSuspendRundown, KepSuspendThread, KernelMode, (???? resolve CStyleCastExpr))
+	KeInitializeSemaphore(???? resolve UnaryOperator, 0, 2)
+	KeInitializeTimer(???? resolve UnaryOperator, NotificationTimer)
+	TimerWaitBlock = ???? resolve UnaryOperator
+	TimerWaitBlock.Object = ???? resolve UnaryOperator
+	TimerWaitBlock.WaitKey = (???? resolve CStyleCastExpr)
+	TimerWaitBlock.WaitType = WaitAny
+	TimerWaitBlock.WaitListEntry.Flink = ???? resolve UnaryOperator
+	TimerWaitBlock.WaitListEntry.Blink = ???? resolve UnaryOperator
+	Thread.EnvironmentBlock = EnvironmentBlock
+	if ???? resolve UnaryOperator {
+		Status = MmAllocateKernelStack(???? resolve UnaryOperator, FALSE, 0)
+		if Status != (???? resolve CStyleCastExpr) or ???? resolve UnaryOperator {
+			return (???? resolve CStyleCastExpr)
+
+		}
+
+		Allocation = TRUE
+
+	}
+
+	Thread.InitialStack = Stack
+	Thread.StackBase = Stack
+	Thread.StackLimit = Stack - 32768
+	??? CompoundStmt SEHTryStmt
+	Thread.State = Initialized
+	if StartThread {
+		KeStartThread(Thread)
+
+	}
+
+	return (???? resolve CStyleCastExpr)
+}
+
+fun keStartThread(thread PKTHREAD) {
+	let process = new ByValue<PKPROCESS>()
+
+	var runLevel KRUNLEVEL
+	let lock = new ByValue<KLOCK_QUEUE_HANDLE>()
+
+	var processorAffinity KAFFINITY
+	var testAffinity KAFFINITY
+	Process = Thread..ApcState.Process
+	Thread.DisableBoost = Process...DisableBoost
+	Thread.Iopl = Thread..ApcState.Process.Iopl
+	Thread.Quantum = Process.Quantum
+	Thread.SystemAffinityActive = FALSE
+	KeAcquireSpinLock(???? resolve UnaryOperator)
+	RunLevel = KeRaiseRunLevel(12)
+	Thread.Affinity = Process.Affinity
+	Thread.UserAffinity = Process.Affinity
+	Thread.Priority = Process.BasePriority
+	Thread.BasePriority = Process.BasePriority
+	Process.ThreadSeed = 0
+	Thread.IdealProcessor = Process.ThreadSeed
+	Thread.UserIdealProcessor = Process.ThreadSeed
+	RtlInsertTailList(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Process.StackCount != 2147483647 {
+		??? CompoundStmt UnaryOperator
+
+	}
+
+	KeReleaseSpinLock(???? resolve UnaryOperator)
+	KeLowerRunLevel(RunLevel)
+}
+
+fun kepExitDispatcher(oldRunLevel KRUNLEVEL) {
+	KeLowerRunLevel(OldRunLevel)
+}
+
+fun kepSuspendNop(apc PKAPC, normalRoutine PKNORMAL_ROUTINE *, normalContext PVOID *, systemArgument1 PVOID *, systemArgument2 PVOID *) {
+}
+
+fun kepSuspendRundown(apc PKAPC) {
+}
+
+fun kepSuspendThread(normalContext PVOID, systemArgument1 PVOID, systemArgument2 PVOID) {
+}

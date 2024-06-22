@@ -1,0 +1,89 @@
+// Hexa 2024 from clang 15.0.3
+fun blBuildPageMap(pageMap PXTBL_PAGE_MAPPING, selfMapAddress ULONG_PTR) {
+	let listEntry = new ByValue<PLIST_ENTRY>()
+
+	let modulesList = new ByValue<PLIST_ENTRY>()
+
+	let modulesListEntry = new ByValue<PLIST_ENTRY>()
+
+	let mapping = new ByValue<PXTBL_MEMORY_MAPPING>()
+
+	let moduleInfo = new ByValue<PXTBL_MODULE_INFO>()
+
+	var address EFI_PHYSICAL_ADDRESS
+	var status EFI_STATUS
+	Status = BlAllocateMemoryPages(1, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	PageMap.PtePointer = ???? resolve CStyleCastExpr
+	RtlZeroMemory(PageMap.PtePointer, 4096)
+	Status = BlpSelfMapPml(PageMap, SelfMapAddress)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	ModulesList = BlGetModulesList()
+	ModulesListEntry = ModulesList.Flink
+	??? CompoundStmt WhileStmt
+	if BlpStatus.LoaderBase and BlpStatus.LoaderSize {
+		Status = BlMapVirtualMemory(PageMap, BlpStatus.LoaderBase, BlpStatus.LoaderBase, (((BlpStatus.LoaderSize) >> 12) + (???? resolve ConditionalOperator)), LoaderFirmwareTemporary)
+		if Status != (9223372036854775808 & 0) {
+			return Status
+
+		}
+
+
+	} else {
+		return (9223372036854775808 | 24)
+
+	}
+
+	BlDebugPrint(???? resolve StringLiteral)
+	ListEntry = PageMap.MemoryMap.Flink
+	??? CompoundStmt WhileStmt
+	return (9223372036854775808 & 0)
+}
+
+fun blMapPage(pageMap PXTBL_PAGE_MAPPING, virtualAddress UINT_PTR, physicalAddress UINT_PTR, numberOfPages UINT) {
+	var pml1Entry SIZE_T
+	var pml2Entry SIZE_T
+	var pml3Entry SIZE_T
+	var pml4Entry SIZE_T
+	var pml5Entry SIZE_T
+	let pml1 = new ByValue<PHARDWARE_PTE>()
+
+	let pml2 = new ByValue<PHARDWARE_PTE>()
+
+	let pml3 = new ByValue<PHARDWARE_PTE>()
+
+	let pml4 = new ByValue<PHARDWARE_PTE>()
+
+	let pml5 = new ByValue<PHARDWARE_PTE>()
+
+	var pageFrameNumber SIZE_T
+	var status EFI_STATUS
+	PageFrameNumber = PhysicalAddress >> 12
+	??? CompoundStmt WhileStmt
+	return (9223372036854775808 & 0)
+}
+
+fun blpSelfMapPml(pageMap PXTBL_PAGE_MAPPING, selfMapAddress ULONG_PTR) {
+	var pmlIndex ULONGLONG
+	if PageMap.PageMapLevel == 5 {
+		BlDebugPrint(???? resolve StringLiteral)
+		return (9223372036854775808 | 3)
+
+	} else {
+		PmlIndex = (SelfMapAddress >> 39) & 511
+		???? resolve ArraySubscriptExpr.PageFrameNumber = ???? resolve CStyleCastExpr / 4096
+		???? resolve ArraySubscriptExpr.Valid = 1
+		???? resolve ArraySubscriptExpr.Writable = 1
+
+	}
+
+	return (9223372036854775808 & 0)
+}

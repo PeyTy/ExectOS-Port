@@ -1,0 +1,18 @@
+// Hexa 2024 from clang 15.0.3var keDbgPrint
+
+var keInitializationBlock
+
+var keInitialProcess
+
+var keInitialThread
+
+var keServiceDescriptorTable
+
+var kepProcessListHead
+
+var kepSystemResourcesListHead
+
+var kepSystemResourcesLock
+
+var kepUbsanActiveFrame
+

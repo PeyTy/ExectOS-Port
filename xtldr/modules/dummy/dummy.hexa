@@ -1,0 +1,27 @@
+// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+
+var __UNIQUE_ID_description1
+
+var __UNIQUE_ID_license2
+
+var __UNIQUE_ID_version3
+
+
+fun dmBootSystem(parameters PXTBL_BOOT_PARAMETERS) {
+	return (9223372036854775808 & 0)
+}
+
+fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
+	let dummyGuid = new ByValue<EFI_GUID>()
+
+	var status EFI_STATUS
+	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return (9223372036854775808 | 24)
+
+	}
+
+	BlpDummyProtocol.BootSystem = DmBootSystem
+	XtLdrProtocol.Boot.RegisterProtocol(???? resolve StringLiteral, ???? resolve UnaryOperator)
+	return XtLdrProtocol.Protocol.Install(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+}

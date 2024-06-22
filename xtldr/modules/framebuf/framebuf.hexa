@@ -1,0 +1,281 @@
+// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+
+var __UNIQUE_ID_description1
+
+var __UNIQUE_ID_license2
+
+var __UNIQUE_ID_version3
+
+
+fun fbGetDisplayDriver(protocol PEFI_GRAPHICS_PROTOCOL) {
+	if ???? resolve UnaryOperator {
+		return (9223372036854775808 | 6)
+
+	}
+
+	???? resolve UnaryOperator = FbpDisplayInfo.Protocol
+	return (9223372036854775808 & 0)
+}
+
+fun fbGetDisplayInformation(frameBufferBase PEFI_PHYSICAL_ADDRESS, frameBufferSize PULONG_PTR, modeInfo PXTBL_FRAMEBUFFER_MODE_INFORMATION) {
+	if ???? resolve UnaryOperator {
+		return (9223372036854775808 | 6)
+
+	}
+
+	???? resolve UnaryOperator = FbpDisplayInfo.FrameBufferBase
+	???? resolve UnaryOperator = FbpDisplayInfo.FrameBufferSize
+	ModeInfo.Width = FbpDisplayInfo.ModeInfo.Width
+	ModeInfo.Height = FbpDisplayInfo.ModeInfo.Height
+	ModeInfo.Depth = FbpDisplayInfo.ModeInfo.Depth
+	ModeInfo.RefreshRate = FbpDisplayInfo.ModeInfo.RefreshRate
+	ModeInfo.BitsPerPixel = FbpDisplayInfo.ModeInfo.BitsPerPixel
+	ModeInfo.BytesPerPixel = FbpDisplayInfo.ModeInfo.BytesPerPixel
+	ModeInfo.PixelsPerScanLine = FbpDisplayInfo.ModeInfo.PixelsPerScanLine
+	ModeInfo.Pitch = FbpDisplayInfo.ModeInfo.Pitch
+	ModeInfo.PixelFormat = FbpDisplayInfo.ModeInfo.PixelFormat
+	ModeInfo.PixelInformation = FbpDisplayInfo.ModeInfo.PixelInformation
+	return (9223372036854775808 & 0)
+}
+
+fun fbGetPreferredScreenResolution(preferredWidth PUINT, preferredHeight PUINT) {
+	let gopGuid = new ByValue<EFI_GUID>()
+
+	let edidGuid = new ByValue<EFI_GUID>()
+
+	let activeEdid = new ByValue<PEFI_EDID_ACTIVE_PROTOCOL>()
+
+	var status EFI_STATUS
+	if ???? resolve UnaryOperator {
+		return (9223372036854775808 | 6)
+
+	}
+
+	if FbpDisplayInfo.Protocol != GOP {
+		return (9223372036854775808 | 3)
+
+	}
+
+	Status = XtLdrProtocol.Protocol.OpenHandle(FbpDisplayInfo.Handle, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+		return Status
+
+	}
+
+	???? resolve UnaryOperator = ???? resolve ArraySubscriptExpr | ((???? resolve ArraySubscriptExpr & 240) << 4)
+	???? resolve UnaryOperator = ???? resolve ArraySubscriptExpr | ((???? resolve ArraySubscriptExpr & 240) << 4)
+	XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+	return (9223372036854775808 & 0)
+}
+
+fun fbInitializeDisplay() {
+	let gopGuid = new ByValue<EFI_GUID>()
+
+	let ugaGuid = new ByValue<EFI_GUID>()
+
+	let gopModeInfo = new ByValue<PEFI_GRAPHICS_OUTPUT_MODE_INFORMATION>()
+
+	var depth UINT
+	var queryMode UINT
+	var refresh UINT
+	var infoSize UINT_PTR
+	var status EFI_STATUS
+	if ???? resolve UnaryOperator {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		Status = XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+		if Status == (9223372036854775808 & 0) {
+			if FbpDisplayInfo.Driver.Gop.Mode.MaxMode == 0 {
+				XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+				XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+				return (9223372036854775808 | 3)
+
+			}
+
+			QueryMode = ???? resolve ConditionalOperator
+			Status = FbpDisplayInfo.Driver.Gop.QueryMode(FbpDisplayInfo.Driver.Gop, QueryMode, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+			if Status == (9223372036854775808 | 19) {
+				Status = FbpDisplayInfo.Driver.Gop.SetMode(FbpDisplayInfo.Driver.Gop, 0)
+
+			}
+
+			if Status != (9223372036854775808 & 0) {
+				XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+				XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+				return (9223372036854775808 | 3)
+
+			}
+
+			FbpDisplayInfo.FrameBufferBase = FbpDisplayInfo.Driver.Gop.Mode.FrameBufferBase
+			FbpDisplayInfo.DefaultMode = FbpDisplayInfo.Driver.Gop.Mode.Mode
+			FbpDisplayInfo.Protocol = GOP
+			Status = FbpGetModeInfo()
+			if Status != (9223372036854775808 & 0) {
+				XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+				XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+				return (9223372036854775808 | 3)
+
+			}
+
+			XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
+			Status = XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+
+		} else {
+			Status = XtLdrProtocol.Protocol.Open(???? resolve UnaryOperator, ???? resolve CStyleCastExpr, ???? resolve UnaryOperator)
+			if Status == (9223372036854775808 & 0) {
+				Status = FbpDisplayInfo.Driver.Uga.GetMode(FbpDisplayInfo.Driver.Uga, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+				if Status != (9223372036854775808 & 0) {
+					XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+					XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+					return (9223372036854775808 | 7)
+
+				}
+
+				Status = FbpFindFramebufferAddress(???? resolve UnaryOperator)
+				if Status != (9223372036854775808 & 0) {
+					XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+					XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+					return (9223372036854775808 | 7)
+
+				}
+
+				FbpDisplayInfo.DefaultMode = 0
+				FbpDisplayInfo.Protocol = UGA
+				Status = FbpGetModeInfo()
+				if Status != (9223372036854775808 & 0) {
+					XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+					return (9223372036854775808 | 3)
+
+				}
+
+				XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FbpDisplayInfo.FrameBufferBase, FbpDisplayInfo.FrameBufferSize)
+				XtLdrProtocol.Protocol.Close(FbpDisplayInfo.Handle, ???? resolve UnaryOperator)
+
+			}
+
+
+		}
+
+		if FbpDisplayInfo.Protocol == NONE {
+			XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+			return (9223372036854775808 | 14)
+
+		}
+
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, FbpDisplayInfo.ModeInfo.BitsPerPixel)
+		FbpDisplayInfo.Initialized = TRUE
+
+	}
+
+	return (???? resolve CStyleCastExpr)
+}
+
+fun fbSetScreenResolution(width UINT, height UINT) {
+	let modeInfo = new ByValue<PEFI_GRAPHICS_OUTPUT_MODE_INFORMATION>()
+
+	var modeChanged BOOLEAN
+	var status EFI_STATUS
+	var size UINT_PTR
+	var mode UINT
+	if ???? resolve UnaryOperator {
+		return (9223372036854775808 | 6)
+
+	}
+
+	ModeChanged = FALSE
+	??? CompoundStmt SwitchStmt
+	if ???? resolve UnaryOperator {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Width, Height, Status)
+		return (9223372036854775808 | 3)
+
+	}
+
+	Status = FbpGetModeInfo()
+	if Status == (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, FbpDisplayInfo.ModeInfo.Width, FbpDisplayInfo.ModeInfo.Height, FbpDisplayInfo.ModeInfo.BitsPerPixel)
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun fbpFindFramebufferAddress(address PEFI_PHYSICAL_ADDRESS) {
+	let pciIoGuid = new ByValue<EFI_GUID>()
+
+	let barInfo = new ByValue<PEFI_ACPI_ADDRESS_SPACE_DESCRIPTOR>()
+
+	let ioProtocol = new ByValue<PEFI_PCI_IO_PROTOCOL>()
+
+	var framebufAddressLength ULONGLONG
+	let pciDevice = new ByValue<PCI_TYPE0_DEVICE>()
+
+	var framebufAddress PVOID
+	var handlesCount UINT_PTR
+	var handles EFI_HANDLE *
+	var status EFI_STATUS
+	var index UINT
+	FramebufAddressLength = 0
+	Handles = (???? resolve CStyleCastExpr)
+	Status = XtLdrProtocol.Protocol.LocateHandles(???? resolve UnaryOperator, ???? resolve UnaryOperator, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	??? CompoundStmt ForStmt
+	???? resolve UnaryOperator = ???? resolve CStyleCastExpr
+	return (9223372036854775808 & 0)
+}
+
+fun fbpGetColorMask(pixelBitMask UINT, colorSize PUSHORT, colorShift PUSHORT) {
+	var shift UINT
+	var size UINT
+	Shift = 0
+	Size = 0
+	if PixelBitMask {
+		??? CompoundStmt WhileStmt
+		??? CompoundStmt WhileStmt
+
+	}
+
+	???? resolve UnaryOperator = Shift
+	???? resolve UnaryOperator = Size
+}
+
+fun fbpGetModeInfo() {
+	let modeInfo = new ByValue<PEFI_GRAPHICS_OUTPUT_MODE_INFORMATION>()
+
+	let pixelBitMask = new ByValue<EFI_PIXEL_BITMASK>()
+
+	var status XTSTATUS
+	var size UINT_PTR
+	??? CompoundStmt SwitchStmt
+	return (9223372036854775808 & 0)
+}
+
+fun fbpGetPixelInformation(pixelsBitMask PEFI_PIXEL_BITMASK) {
+	var compoundMask UINT
+	??? CompoundStmt SwitchStmt
+	FbpDisplayInfo.ModeInfo.BytesPerPixel = FbpDisplayInfo.ModeInfo.BitsPerPixel >> 3
+}
+
+fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
+	let guid = new ByValue<EFI_GUID>()
+
+	var status EFI_STATUS
+	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return (9223372036854775808 | 24)
+
+	}
+
+	FbpDisplayInfo.Protocol = NONE
+	FbpDisplayInfo.Initialized = FALSE
+	FbpFrameBufferProtocol.GetDisplayDriver = FbGetDisplayDriver
+	FbpFrameBufferProtocol.GetDisplayInformation = FbGetDisplayInformation
+	FbpFrameBufferProtocol.GetPreferredScreenResolution = FbGetPreferredScreenResolution
+	FbpFrameBufferProtocol.Initialize = FbInitializeDisplay
+	FbpFrameBufferProtocol.SetScreenResolution = FbSetScreenResolution
+	return XtLdrProtocol.Protocol.Install(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+}

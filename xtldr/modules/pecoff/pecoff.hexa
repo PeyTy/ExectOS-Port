@@ -1,0 +1,416 @@
+// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+
+var __UNIQUE_ID_description1
+
+var __UNIQUE_ID_license2
+
+var __UNIQUE_ID_version3
+
+
+fun peGetEntryPoint(imagePointer PVOID, entryPoint PVOID *) {
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	if Image.PeHeader..OptionalHeader32.Magic == 523 {
+		???? resolve UnaryOperator = ???? resolve CStyleCastExpr + Image.PeHeader..OptionalHeader64.AddressOfEntryPoint
+
+	} else {
+		???? resolve UnaryOperator = ???? resolve CStyleCastExpr + Image.PeHeader..OptionalHeader32.AddressOfEntryPoint
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun peGetFileSize(imagePointer PVOID, fileSize PULONGLONG) {
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	Image = ImagePointer
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	???? resolve UnaryOperator = Image.FileSize
+	return (9223372036854775808 | 14)
+}
+
+fun peGetImageSize(imagePointer PVOID, imageSize PUINT) {
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	Image = ImagePointer
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	???? resolve UnaryOperator = Image.ImageSize
+	return (9223372036854775808 | 14)
+}
+
+fun peGetMachineType(imagePointer PVOID, machineType PUSHORT) {
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	???? resolve UnaryOperator = Image.PeHeader.FileHeader.Machine
+	return (9223372036854775808 & 0)
+}
+
+fun peGetSection(imagePointer PVOID, sectionName PCHAR, rawData PULONG *) {
+	let sectionHeader = new ByValue<PPECOFF_IMAGE_SECTION_HEADER>()
+
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	var sectionNameLength SIZE_T
+	var sectionIndex USHORT
+	Image = ImagePointer
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	if Image.PeHeader..OptionalHeader32.Magic == 523 {
+		SectionHeader = ???? resolve CStyleCastExpr
+
+	} else {
+		SectionHeader = ???? resolve CStyleCastExpr
+
+	}
+
+	SectionNameLength = RtlStringLength(SectionName, 0)
+	??? CompoundStmt ForStmt
+	return (9223372036854775808 | 14)
+}
+
+fun peGetSubSystem(imagePointer PVOID, subSystem PUSHORT) {
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	if Image.PeHeader..OptionalHeader32.Magic == 523 {
+		???? resolve UnaryOperator = Image.PeHeader..OptionalHeader64.Subsystem
+
+	} else {
+		???? resolve UnaryOperator = Image.PeHeader..OptionalHeader32.Subsystem
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun peGetVersion(imagePointer PVOID, version PUSHORT) {
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	if Image.PeHeader..OptionalHeader32.Magic == 523 {
+		???? resolve UnaryOperator = Image.PeHeader..OptionalHeader64.MajorImageVersion
+
+	} else {
+		???? resolve UnaryOperator = Image.PeHeader..OptionalHeader32.MajorImageVersion
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun peLoadImage(fileHandle PEFI_FILE_HANDLE, memoryType LOADER_MEMORY_TYPE, virtualAddress PVOID, imagePointer PVOID *) {
+	let fileInfoGuid = new ByValue<EFI_GUID>()
+
+	let sectionHeader = new ByValue<PPECOFF_IMAGE_SECTION_HEADER>()
+
+	let imageData = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	var address EFI_PHYSICAL_ADDRESS
+	let fileInfo = new ByValue<PEFI_FILE_INFO>()
+
+	var readSize UINT_PTR
+	var status EFI_STATUS
+	var sectionSize UINT
+	var pages SIZE_T
+	var data PUCHAR
+	var index UINT
+	ReadSize = ???? resolve UnaryExprOrTypeTraitExpr + 32
+	Status = XtLdrProtocol.Memory.AllocatePool(ReadSize, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	Status = FileHandle.GetInfo(FileHandle, ???? resolve UnaryOperator, ???? resolve UnaryOperator, FileInfo)
+	if Status == (9223372036854775808 | 5) {
+		XtLdrProtocol.Memory.FreePool(???? resolve UnaryOperator)
+		Status = XtLdrProtocol.Memory.AllocatePool(ReadSize, ???? resolve CStyleCastExpr)
+		if Status != (9223372036854775808 & 0) {
+			XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+			return Status
+
+		}
+
+		Status = FileHandle.GetInfo(FileHandle, ???? resolve UnaryOperator, ???? resolve UnaryOperator, FileInfo)
+
+	}
+
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	Status = XtLdrProtocol.Memory.AllocatePool(???? resolve UnaryExprOrTypeTraitExpr, ???? resolve CStyleCastExpr)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	ImageData.Data = (???? resolve CStyleCastExpr)
+	ImageData.FileSize = FileInfo.FileSize
+	ImageData.MemoryType = MemoryType
+	XtLdrProtocol.Memory.FreePool(FileInfo)
+	Pages = (((ImageData.FileSize) >> 12) + (???? resolve ConditionalOperator))
+	Status = XtLdrProtocol.Memory.AllocatePages(Pages, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		XtLdrProtocol.Memory.FreePool(ImageData)
+		return Status
+
+	}
+
+	ReadSize = Pages * 4096
+	Data = ???? resolve CStyleCastExpr
+	Status = FileHandle.Read(FileHandle, ???? resolve UnaryOperator, Data)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		XtLdrProtocol.Memory.FreePages(Pages, ???? resolve CStyleCastExpr)
+		XtLdrProtocol.Memory.FreePool(ImageData)
+		return Status
+
+	}
+
+	ImageData.DosHeader = ???? resolve CStyleCastExpr
+	ImageData.PeHeader = ???? resolve CStyleCastExpr
+	Status = PeVerifyImage(ImageData)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		XtLdrProtocol.Memory.FreePages(Pages, ???? resolve CStyleCastExpr)
+		XtLdrProtocol.Memory.FreePool(ImageData)
+		return Status
+
+	}
+
+	if ???? resolve UnaryOperator {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		XtLdrProtocol.Memory.FreePages(Pages, ???? resolve CStyleCastExpr)
+		XtLdrProtocol.Memory.FreePool(ImageData)
+		return (9223372036854775808 | 1)
+
+	}
+
+	if ImageData.PeHeader..OptionalHeader32.Magic == 523 {
+		ImageData.ImageSize = ImageData.PeHeader..OptionalHeader64.SizeOfImage
+
+	} else {
+		ImageData.ImageSize = ImageData.PeHeader..OptionalHeader32.SizeOfImage
+
+	}
+
+	ImageData.ImagePages = (((ImageData.ImageSize) >> 12) + (???? resolve ConditionalOperator))
+	Status = XtLdrProtocol.Memory.AllocatePages(ImageData.ImagePages, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		XtLdrProtocol.Memory.FreePool(ImageData)
+		return Status
+
+	}
+
+	ImageData.Data = ???? resolve CStyleCastExpr
+	ImageData.PhysicalAddress = ???? resolve CStyleCastExpr
+	if VirtualAddress {
+		ImageData.VirtualAddress = VirtualAddress
+
+	} else {
+		ImageData.VirtualAddress = ???? resolve CStyleCastExpr
+
+	}
+
+	if ImageData.PeHeader..OptionalHeader32.Magic == 523 {
+		XtLdrProtocol.Memory.CopyMemory(ImageData.Data, Data, ImageData.PeHeader..OptionalHeader64.SizeOfHeaders)
+		SectionHeader = ???? resolve CStyleCastExpr
+
+	} else {
+		XtLdrProtocol.Memory.CopyMemory(ImageData.Data, Data, ImageData.PeHeader..OptionalHeader64.SizeOfHeaders)
+		SectionHeader = ???? resolve CStyleCastExpr
+
+	}
+
+	??? CompoundStmt ForStmt
+	XtLdrProtocol.Memory.FreePages(???? resolve CStyleCastExpr, Pages)
+	Status = PepRelocateLoadedImage(ImageData)
+	if Status != (9223372036854775808 & 0) {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral, Status)
+		return Status
+
+	}
+
+	???? resolve UnaryOperator = ImageData
+	return (9223372036854775808 & 0)
+}
+
+fun peRelocateImage(imagePointer PVOID, address EFI_VIRTUAL_ADDRESS) {
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	var imageBase UINT64
+	var oldVirtualAddress UINT64
+	var status EFI_STATUS
+	OldVirtualAddress = ???? resolve CStyleCastExpr
+	if Image.PeHeader..OptionalHeader32.Magic == 523 {
+		ImageBase = Image.PeHeader..OptionalHeader64.ImageBase
+
+	} else {
+		ImageBase = Image.PeHeader..OptionalHeader32.ImageBase
+
+	}
+
+	Image.VirtualAddress = ???? resolve CStyleCastExpr
+	Status = PepRelocateLoadedImage(Image)
+	if Status != (9223372036854775808 & 0) {
+		return Status
+
+	}
+
+	Image.VirtualAddress = ???? resolve CStyleCastExpr
+	return (9223372036854775808 & 0)
+}
+
+fun peUnloadImage(imagePointer PVOID) {
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	var status EFI_STATUS
+	Image = ImagePointer
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	Status = XtLdrProtocol.Memory.FreePages(Image.ImagePages, ???? resolve CStyleCastExpr)
+	??? CompoundStmt CompoundAssignOperator
+	return Status
+}
+
+fun peVerifyImage(imagePointer PVOID) {
+	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
+
+	if ???? resolve UnaryOperator or ???? resolve UnaryOperator {
+		return (9223372036854775808 | 2)
+
+	}
+
+	if Image.FileSize < ???? resolve UnaryExprOrTypeTraitExpr {
+		return (9223372036854775808 | 31)
+
+	}
+
+	if Image.DosHeader.Magic != 23117 {
+		return (9223372036854775808 | 25)
+
+	}
+
+	if Image.PeHeader.Signature != 17744 and Image.PeHeader.Signature != 1415071056 {
+		return (9223372036854775808 | 25)
+
+	}
+
+	if Image.PeHeader..OptionalHeader32.Magic != 267 and Image.PeHeader..OptionalHeader64.Magic != 523 {
+		return (9223372036854775808 | 25)
+
+	}
+
+	return (9223372036854775808 & 0)
+}
+
+fun pepRelocateLoadedImage(image PPECOFF_IMAGE_CONTEXT) {
+	let relocationDir = new ByValue<PPECOFF_IMAGE_BASE_RELOCATION>()
+
+	let relocationEnd = new ByValue<PPECOFF_IMAGE_BASE_RELOCATION>()
+
+	let dataDirectory = new ByValue<PPECOFF_IMAGE_DATA_DIRECTORY>()
+
+	var offset USHORT
+	var type USHORT
+	var count USHORT
+	var typeOffset PUSHORT
+	var imageBase UINT64
+	var address PUINT32
+	var longPtr PUINT64
+	var shortPtr PUINT
+	if Image.PeHeader.FileHeader.Characteristics & 1 {
+		XtLdrProtocol.Debug.Print(???? resolve StringLiteral)
+		return (9223372036854775808 & 0)
+
+	}
+
+	if Image.PeHeader..OptionalHeader32.Magic == 523 {
+		DataDirectory = ???? resolve UnaryOperator
+		ImageBase = Image.PeHeader..OptionalHeader64.ImageBase
+		if Image.PeHeader..OptionalHeader64.NumberOfRvaAndSizes <= 5 or DataDirectory.VirtualAddress == 0 or DataDirectory.Size < ???? resolve UnaryExprOrTypeTraitExpr {
+			return (9223372036854775808 & 0)
+
+		}
+
+
+	} else {
+		DataDirectory = ???? resolve UnaryOperator
+		ImageBase = Image.PeHeader..OptionalHeader32.ImageBase
+		if Image.PeHeader..OptionalHeader32.NumberOfRvaAndSizes <= 5 or DataDirectory.VirtualAddress == 0 or DataDirectory.Size < ???? resolve UnaryExprOrTypeTraitExpr {
+			return (9223372036854775808 & 0)
+
+		}
+
+
+	}
+
+	RelocationDir = ???? resolve CStyleCastExpr
+	RelocationEnd = ???? resolve CStyleCastExpr
+	??? CompoundStmt WhileStmt
+	return (9223372036854775808 & 0)
+}
+
+fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
+	let guid = new ByValue<EFI_GUID>()
+
+	var status EFI_STATUS
+	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return (9223372036854775808 | 24)
+
+	}
+
+	PeCoffProtocol.GetEntryPoint = PeGetEntryPoint
+	PeCoffProtocol.GetFileSize = PeGetFileSize
+	PeCoffProtocol.GetImageSize = PeGetImageSize
+	PeCoffProtocol.GetMachineType = PeGetMachineType
+	PeCoffProtocol.GetSection = PeGetSection
+	PeCoffProtocol.GetSubSystem = PeGetSubSystem
+	PeCoffProtocol.GetVersion = PeGetVersion
+	PeCoffProtocol.LoadImage = PeLoadImage
+	PeCoffProtocol.RelocateImage = PeRelocateImage
+	PeCoffProtocol.UnloadImage = PeUnloadImage
+	PeCoffProtocol.VerifyImage = PeVerifyImage
+	return XtLdrProtocol.Protocol.Install(???? resolve UnaryOperator, ???? resolve UnaryOperator)
+}

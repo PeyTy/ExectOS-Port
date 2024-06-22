@@ -1,0 +1,22 @@
+// Hexa 2024 from clang 15.0.3var mmFreeDescriptor
+
+var mmHighestPhysicalPage
+
+var mmLowestPhysicalPage
+
+var mmNumberOfPhysicalPages
+
+var mmOldFreeDescriptor
+
+var mmPageMapLevel
+
+var mmProcessorStructuresData
+
+var mmpHardwareAllocationDescriptors
+
+var mmpHardwareHeapStart
+
+var mmpMemoryExtension
+
+var mmpUsedHardwareAllocationDescriptors
+

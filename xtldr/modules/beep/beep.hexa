@@ -1,0 +1,66 @@
+// Hexa 2024 from clang 15.0.3var __UNIQUE_ID_author0
+
+var __UNIQUE_ID_description1
+
+var __UNIQUE_ID_license2
+
+var __UNIQUE_ID_version3
+
+
+fun bpDisableToneBeep() {
+	var status UCHAR
+	Status = HlIoPortInByte(97)
+	HlIoPortOutByte(97, Status & 252)
+}
+
+fun bpEnableToneBeep(pitch UINT) {
+	var counter UINT
+	var status UCHAR
+	if Pitch < 20 {
+		Pitch = 20
+
+	} else {
+		??? CompoundStmt CompoundStmt
+
+	}
+
+	Counter = 1193181 / Pitch
+	HlIoPortOutByte(67, 182)
+	HlIoPortOutByte(67, 182)
+	HlIoPortOutByte(66, ???? resolve CStyleCastExpr & 255)
+	HlIoPortOutByte(66, ???? resolve CStyleCastExpr & 255)
+	Status = HlIoPortInByte(97)
+	HlIoPortOutByte(97, Status | 3)
+}
+
+fun bpPlayTune(arguments PWCHAR) {
+	var pitch LONG
+	var duration LONG
+	var tempo LONG
+	var argument PWCHAR
+	var lastArgument PWCHAR
+	Duration = ???? resolve UnaryOperator
+	Pitch = ???? resolve UnaryOperator
+	Tempo = ???? resolve UnaryOperator
+	Argument = RtlTokenizeWideString(Arguments, ???? resolve StringLiteral, ???? resolve UnaryOperator)
+	??? CompoundStmt WhileStmt
+	BpDisableToneBeep()
+}
+
+fun bpWideStringToNumber(string PWCHAR) {
+	var number ULONG = 0
+	??? CompoundStmt DoStmt
+	return Number
+}
+
+fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
+	var status EFI_STATUS
+	Status = BlGetXtLdrProtocol(SystemTable, ImageHandle, ???? resolve UnaryOperator)
+	if Status != (9223372036854775808 & 0) {
+		return (9223372036854775808 | 24)
+
+	}
+
+	BpPlayTune(XtLdrProtocol.Config.GetValue(???? resolve StringLiteral))
+	return (9223372036854775808 & 0)
+}
