@@ -10,17 +10,17 @@ fun blInitializeBootLoader() {
 
 	var handle EFI_HANDLE
 	var status EFI_STATUS
-	BlpStatus.BootServices = tRUE
+	BlpStatus.bootServices = tRUE
 	blInitializeConsole()
 	blConsolePrint("XTLDR boot loader v%s\n", "0.1-devel")
 	rtlInitializeListHead(blpBootProtocols)
 	rtlInitializeListHead(blpConfig)
 	rtlInitializeListHead(blpLoadedModules)
-	BlpStatus.SecureBoot = blGetSecureBootStatus()
+	BlpStatus.secureBoot = blGetSecureBootStatus()
 	status = blOpenProtocol(handle, loadedImage as! PVOID *, lipGuid)
 	if status == (9223372036854775808 & 0) {
-		BlpStatus.LoaderBase = loadedImage.imageBase
-		BlpStatus.LoaderSize = loadedImage.imageSize
+		BlpStatus.loaderBase = loadedImage.imageBase
+		BlpStatus.loaderSize = loadedImage.imageSize
 		if 1 {
 			blConsolePrint("\n---------- BOOTLOADER DEBUG ----------\nPointer Size      : %d\nImage Base Address: %P\nImage Base Size   : 0x%lX\nImage Revision    : 0x%lX\n--------------------------------------\n", sizeOf<Unsigned long long>(), loadedImage.imageBase, loadedImage.imageSize, loadedImage.revision)
 			blSleepExecution(3000)
@@ -171,16 +171,21 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 			rtlCopyMemory(modulesList, option.value, sizeOf<Unsigned long long>() * (moduleListLength + 1))
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
+			rtlCompareWideStringInsensitive(option.name, "SYSTEMTYPE", 0) == 0
+
+			{
+
+			}
+
 			if rtlCompareWideStringInsensitive(option.name, "SYSTEMPATH", 0) == 0 {
-				status = blGetVolumeDevicePath(option.value, BootParameters.DevicePath, BootParameters.ArcName, BootParameters.SystemPath)
+				status = blGetVolumeDevicePath(option.value, BootParameters.devicePath, BootParameters.arcName, BootParameters.systemPath)
 				if status != (9223372036854775808 & 0) {
 					blDebugPrint("ERROR: Failed to find volume device path (Status Code: 0x%zX)\n", status)
 					return status
 
 				}
 
-				status = blGetEfiPath(BootParameters.SystemPath, BootParameters.EfiPath)
+				status = blGetEfiPath(BootParameters.systemPath, BootParameters.efiPath)
 				if status != (9223372036854775808 & 0) {
 					blDebugPrint("ERROR: Failed to get EFI path (Status Code: 0x%zX)\n", status)
 					return status
@@ -189,14 +194,24 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 
 
 			} else {
-				[unknown clang ast] CompoundStmt CompoundStmt
+				rtlCompareWideStringInsensitive(option.name, "KERNELFILE", 0) == 0
+
+				{
+
+				}
+
 				if rtlCompareWideStringInsensitive(option.name, "INITRDFILE", 0) == 0 {
-					BootParameters.InitrdFile = option.value
+					BootParameters.initrdFile = option.value
 
 				} else {
-					[unknown clang ast] CompoundStmt CompoundStmt
+					rtlCompareWideStringInsensitive(option.name, "HALFILE", 0) == 0
+
+					{
+
+					}
+
 					if rtlCompareWideStringInsensitive(option.name, "PARAMETERS", 0) == 0 {
-						BootParameters.Parameters = option.value
+						BootParameters.parameters = option.value
 
 					}
 
@@ -220,7 +235,7 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 
 	}
 
-	status = blFindBootProtocol(BootParameters.SystemType, bootProtocolGuid)
+	status = blFindBootProtocol(BootParameters.systemType, bootProtocolGuid)
 	if status != (9223372036854775808 & 0) {
 		blDebugPrint("ERROR: Unable to find appropriate boot protocol (Status Code: 0x%zX)\n", status)
 		return (9223372036854775808 | 3)
@@ -323,8 +338,8 @@ fun blStartXtLoader(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 	}
 
 	while tRUE {
-		if BlpStatus.BootMenu != (0 as! PVOID) {
-			BlpStatus.BootMenu()
+		if BlpStatus.bootMenu != (0 as! PVOID) {
+			BlpStatus.bootMenu()
 
 		} else {
 			blDisplayBootMenu()

@@ -374,7 +374,11 @@ fun rtlpFindBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, 
 		return -1 as! ULONG_PTR
 
 	} else {
-		length!		[unknown clang ast] CompoundStmt CompoundStmt
+		length!
+		{
+
+		}
+
 
 	}
 

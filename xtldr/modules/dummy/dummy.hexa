@@ -40,7 +40,7 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 
 	}
 
-	BlpDummyProtocol.BootSystem = dmBootSystem
+	BlpDummyProtocol.bootSystem = dmBootSystem
 	xtLdrProtocol.boot.registerProtocol("DUMMYOS", dummyGuid)
 	return xtLdrProtocol.protocol.install(blpDummyProtocol, dummyGuid)
 }

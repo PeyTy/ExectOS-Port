@@ -111,7 +111,7 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 
 	}
 
-	ChpBootProtocol.BootSystem = chBootSystem
+	ChpBootProtocol.bootSystem = chBootSystem
 	xtLdrProtocol.boot.registerProtocol("CHAINLOADER", guid)
 	return xtLdrProtocol.protocol.install(chpBootProtocol, guid)
 }

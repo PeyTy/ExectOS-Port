@@ -60,7 +60,7 @@ fun blEnumerateBlockDevices() {
 
 	}
 
-	listEntry = BlockDevices.Flink
+	listEntry = BlockDevices.flink
 	while listEntry != blockDevices {
 		blockDeviceData = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE_DATA *)
 		status = blpFindLastBlockDeviceNode(blockDeviceData.devicePath, lastNode)
@@ -84,7 +84,12 @@ fun blEnumerateBlockDevices() {
 
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
+			lastNode.type == 4
+
+			{
+
+			}
+
 
 		}
 
@@ -246,8 +251,17 @@ fun blGetVolumeDevicePath(systemPath PWCHAR, devicePath PEFI_DEVICE_PATH_PROTOCO
 			return (9223372036854775808 | 3)
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
-			[unknown clang ast] CompoundStmt CompoundStmt
+			pathLength == 13
+
+			{
+
+			}
+
+
+			{
+
+			}
+
 
 		}
 
@@ -263,7 +277,7 @@ fun blGetVolumeDevicePath(systemPath PWCHAR, devicePath PEFI_DEVICE_PATH_PROTOCO
 
 	}
 
-	listEntry = EfiBlockDevices.Flink
+	listEntry = EfiBlockDevices.flink
 	while listEntry != efiBlockDevices {
 		device = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE *)
 		if (device.driveType == driveType and device.driveNumber == driveNumber and device.partitionNumber == partNumber) {
@@ -501,8 +515,17 @@ fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, 
 		driveType[0] = 4
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
-		[unknown clang ast] CompoundStmt CompoundStmt
+		rtlCompareWideStringInsensitive(systemPath, "multi(0)disk(0)", 0) == 0
+
+		{
+
+		}
+
+
+		{
+
+		}
+
 
 	}
 

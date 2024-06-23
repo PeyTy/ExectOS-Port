@@ -69,7 +69,7 @@ fun kepGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, acquire BOOLEAN, res
 	interrupts = arInterruptsEnabled()
 	arClearInterruptFlag()
 	keAcquireSpinLock(kepSystemResourcesLock)
-	listEntry = KepSystemResourcesListHead.Flink
+	listEntry = KepSystemResourcesListHead.flink
 	while listEntry != kepSystemResourcesListHead {
 		resource = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
 		if resource.resourceType == resourceType and resource.acquired == fALSE {

@@ -10,9 +10,9 @@ fun mmFlushTlb() {
 	var cr4 ULONG_PTR
 	interrupts = arInterruptsEnabled()
 	arClearInterruptFlag()
-	CpuRegisters.Leaf = cPUID_GET_CPU_FEATURES
+	CpuRegisters.leaf = cPUID_GET_CPU_FEATURES
 	arCpuId(cpuRegisters)
-	if CpuRegisters.Edx & cPUID_FEATURES_EDX_PGE {
+	if CpuRegisters.edx & cPUID_FEATURES_EDX_PGE {
 		cr4 = arReadControlRegister(4)
 		arWriteControlRegister(4, cr4 & ~128)
 		arFlushTlb()

@@ -16,15 +16,15 @@ fun blDebugPrint(format PUSHORT) {
 
 	var arguments VA_LIST
 	if 1 {
-		ConsolePrintContext.WriteWideCharacter = blpConsolePutChar
-		SerialPrintContext.WriteWideCharacter = blpDebugPutChar
+		ConsolePrintContext.writeWideCharacter = blpConsolePutChar
+		SerialPrintContext.writeWideCharacter = blpDebugPutChar
 		__builtin_va_start(arguments, format)
-		if (BlpStatus.DebugPort & 2) and (BlpStatus.SerialPort.flags & 1) {
+		if (BlpStatus.debugPort & 2) and (BlpStatus.serialPort.flags & 1) {
 			rtlFormatWideString(serialPrintContext, format as! PWCHAR, arguments)
 
 		}
 
-		if (BlpStatus.DebugPort & 1) and (BlpStatus.BootServices == tRUE) {
+		if (BlpStatus.debugPort & 1) and (BlpStatus.bootServices == tRUE) {
 			rtlFormatWideString(consolePrintContext, format as! PWCHAR, arguments)
 
 		}
@@ -47,7 +47,7 @@ fun blpDebugPutChar(character USHORT) {
 	var buffer USHORT[2]
 	buffer[0] = character
 	buffer[1] = 0
-	hlComPortPutByte(BlpStatus.SerialPort, buffer[0])
+	hlComPortPutByte(BlpStatus.serialPort, buffer[0])
 	return (9223372036854775808 & 0)
 }
 
@@ -68,7 +68,7 @@ fun blpInitializeDebugConsole() {
 	portNumber = 0
 	baudRate = 0
 	debugConfiguration = blGetConfigValue("DEBUG")
-	if debugConfiguration and BlpStatus.DebugPort == 0 {
+	if debugConfiguration and BlpStatus.debugPort == 0 {
 		debugPort = rtlTokenizeWideString(debugConfiguration, ";", lastPort)
 		while debugPort != (0 as! PVOID) {
 			if rtlCompareWideStringInsensitive(debugPort, "COM", 3) == 0 {
@@ -87,7 +87,12 @@ fun blpInitializeDebugConsole() {
 							portAddress += debugPort[0] - 48/* "0" */
 
 						} else {
-							[unknown clang ast] CompoundStmt CompoundStmt
+							debugPort[0] >= 65/* "A" */ && debugPort[0] <= 70/* "F" */
+
+							{
+
+							}
+
 							if debugPort[0] >= 97/* "a" */ and debugPort[0] <= 102/* "f" */ {
 								portAddress += debugPort[0] - 97/* "a" */ + 10
 
@@ -112,11 +117,20 @@ fun blpInitializeDebugConsole() {
 
 				}
 
-				BlpStatus.DebugPort |= 2
+				BlpStatus.debugPort |= 2
 
 			} else {
-				[unknown clang ast] CompoundStmt CompoundStmt
-				[unknown clang ast] CompoundStmt CompoundStmt
+				rtlCompareWideStringInsensitive(debugPort, "SCREEN", 5) == 0
+
+				{
+
+				}
+
+
+				{
+
+				}
+
 
 			}
 
@@ -124,10 +138,10 @@ fun blpInitializeDebugConsole() {
 
 		}
 
-		if BlpStatus.DebugPort & 2 {
+		if BlpStatus.debugPort & 2 {
 			status = blpInitializeSerialPort(portNumber, portAddress, baudRate)
 			if status != (9223372036854775808 & 0) {
-				BlpStatus.DebugPort &= ~2
+				BlpStatus.debugPort &= ~2
 				return status
 
 			}
@@ -177,12 +191,12 @@ fun blpInitializeSerialPort(portNumber ULONG, portAddress ULONG, baudRate ULONG)
 
 	}
 
-	status = hlInitializeComPort(BlpStatus.SerialPort, (portAddress as! ULONG_PTR as! PVOID), baudRate)
+	status = hlInitializeComPort(BlpStatus.serialPort, (portAddress as! ULONG_PTR as! PVOID), baudRate)
 	if status == (3221226021 as! XTSTATUS) and portAddress {
 		efiStatus = blpActivateSerialIOController()
 		if efiStatus == (9223372036854775808 & 0) {
 			blConsolePrint("Enabled I/O space access for all PCI(E) serial controllers found\n")
-			status = hlInitializeComPort(BlpStatus.SerialPort, (portAddress as! ULONG_PTR as! PVOID), baudRate)
+			status = hlInitializeComPort(BlpStatus.serialPort, (portAddress as! ULONG_PTR as! PVOID), baudRate)
 
 		}
 

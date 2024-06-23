@@ -41,8 +41,8 @@ fun blDisplayBootMenu() {
 	while tRUE {
 		blpDrawBootMenu(handle)
 		if numberOfEntries > 0 {
-			if numberOfEntries > Handle.Height - 2 {
-				numberOfEntries = Handle.Height - 2
+			if numberOfEntries > Handle.height - 2 {
+				numberOfEntries = Handle.height - 2
 
 			}
 
@@ -74,15 +74,15 @@ fun blDisplayBootMenu() {
 				if timeOut != -1 {
 					timeOut = -1
 					efiSystemTable.bootServices.setTimer(timerEvent, timerCancel, 0)
-					blClearConsoleLine(Handle.PosY + Handle.Height + 4)
+					blClearConsoleLine(Handle.posY + Handle.height + 4)
 
 				}
 
 				blReadKeyStroke(key)
-				if Key.ScanCode == 3 or Key.UnicodeChar == 13 {
-					blSetConsoleAttributes(Handle.DialogColor | Handle.TextColor)
-					blClearConsoleLine(Handle.PosY + Handle.Height + 4)
-					blSetCursorPosition(4, Handle.PosY + Handle.Height + 4)
+				if Key.scanCode == 3 or Key.unicodeChar == 13 {
+					blSetConsoleAttributes(Handle.dialogColor | Handle.textColor)
+					blClearConsoleLine(Handle.posY + Handle.height + 4)
+					blSetCursorPosition(4, Handle.posY + Handle.height + 4)
 					blConsolePrint("Booting '%S' now...\n", menuEntries[highligtedEntryId].entryName)
 					status = blInvokeBootProtocol(menuEntries[highligtedEntryId].shortName, menuEntries[highligtedEntryId].options)
 					if status != (0 as! XTSTATUS) {
@@ -93,8 +93,13 @@ fun blDisplayBootMenu() {
 
 					break
 				} else {
-					[unknown clang ast] CompoundStmt CompoundStmt
-					if Key.ScanCode == 2 {
+					Key.scanCode == 1
+
+					{
+
+					}
+
+					if Key.scanCode == 2 {
 						if highligtedEntryId < numberOfEntries - 1 {
 							highligtedEntryId++							blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId - 1].entryName, highligtedEntryId - 1, fALSE)
 							blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, tRUE)
@@ -103,8 +108,13 @@ fun blDisplayBootMenu() {
 
 
 					} else {
-						[unknown clang ast] CompoundStmt CompoundStmt
-						if Key.ScanCode == 10 {
+						Key.scanCode == 9
+
+						{
+
+						}
+
+						if Key.scanCode == 10 {
 							if highligtedEntryId != numberOfEntries - 1 {
 								blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, fALSE)
 								blpDrawBootMenuEntry(handle, menuEntries[numberOfEntries - 1].entryName, numberOfEntries - 1, tRUE)
@@ -114,20 +124,35 @@ fun blDisplayBootMenu() {
 
 
 						} else {
-							[unknown clang ast] CompoundStmt CompoundStmt
-							if Key.ScanCode == 20 {
+							Key.scanCode == 11
+
+							{
+
+							}
+
+							if Key.scanCode == 20 {
 								blEnterFirmwareSetup()
 								blDisplayErrorDialog("XTLDR", "Reboot into firmware setup interface not supported!")
 								break
 							} else {
-								[unknown clang ast] CompoundStmt CompoundStmt
-								if Key.ScanCode == 22 {
+								Key.scanCode == 21
+
+								{
+
+								}
+
+								if Key.scanCode == 22 {
 									blShutdownSystem()
 									blDisplayErrorDialog("XTLDR", "Failed to shutdown the machine!")
 									break
 								} else {
-									[unknown clang ast] CompoundStmt CompoundStmt
-									if Key.UnicodeChar == 115 {
+									Key.unicodeChar == 101
+
+									{
+
+									}
+
+									if Key.unicodeChar == 115 {
 										return
 
 									}
@@ -150,13 +175,18 @@ fun blDisplayBootMenu() {
 
 			} else {
 				if timeOut > 0 {
-					blSetConsoleAttributes(Handle.DialogColor | Handle.TextColor)
-					blClearConsoleLine(Handle.PosY + Handle.Height + 4)
-					blSetCursorPosition(4, Handle.PosY + Handle.Height + 4)
+					blSetConsoleAttributes(Handle.dialogColor | Handle.textColor)
+					blClearConsoleLine(Handle.posY + Handle.height + 4)
+					blSetCursorPosition(4, Handle.posY + Handle.height + 4)
 					blConsolePrint("The highlighted position will be booted automatically in %ld seconds.", timeOut)
 					timeOut--
 				} else {
-					[unknown clang ast] CompoundStmt CompoundStmt
+					timeOut == 0
+
+					{
+
+					}
+
 
 				}
 
@@ -188,14 +218,14 @@ fun blDisplayErrorDialog(caption PWCHAR, message PWCHAR) {
 	let key = new ByValue<EFI_INPUT_KEY>()
 
 	var index UINT_PTR
-	Handle.Attributes = 2 | 4
+	Handle.attributes = 2 | 4
 	blpDetermineDialogBoxSize(handle, message)
 	blDisableConsoleCursor()
 	blpDrawDialogBox(handle, caption, message)
 	blpDrawDialogButton(handle)
-	Key.ScanCode = 0
-	Key.UnicodeChar = 0
-	while Key.ScanCode != 23 and Key.UnicodeChar != 13 {
+	Key.scanCode = 0
+	Key.unicodeChar = 0
+	while Key.scanCode != 23 and Key.unicodeChar != 13 {
 		blWaitForEfiEvent(1, efiSystemTable.conIn.waitForKey, index)
 		blReadKeyStroke(key)
 		blResetConsoleInputBuffer()
@@ -223,14 +253,14 @@ fun blDisplayInfoDialog(caption PWCHAR, message PWCHAR) {
 	let key = new ByValue<EFI_INPUT_KEY>()
 
 	var index UINT_PTR
-	Handle.Attributes = 1 | 4
+	Handle.attributes = 1 | 4
 	blpDetermineDialogBoxSize(handle, message)
 	blDisableConsoleCursor()
 	blpDrawDialogBox(handle, caption, message)
 	blpDrawDialogButton(handle)
-	Key.ScanCode = 0
-	Key.UnicodeChar = 0
-	while Key.ScanCode != 23 and Key.UnicodeChar != 13 {
+	Key.scanCode = 0
+	Key.unicodeChar = 0
+	while Key.scanCode != 23 and Key.unicodeChar != 13 {
 		blWaitForEfiEvent(1, efiSystemTable.conIn.waitForKey, index)
 		blReadKeyStroke(key)
 		blResetConsoleInputBuffer()
@@ -268,14 +298,14 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 
 	var status EFI_STATUS
 	var index UINT_PTR
-	Handle.Attributes = 1 | 16 | 8
+	Handle.attributes = 1 | 16 | 8
 	blpDetermineDialogBoxSize(handle, message)
 	blDisableConsoleCursor()
 	blpDrawDialogBox(handle, caption, message)
 	blpDrawDialogButton(handle)
 	blpDrawDialogInputField(handle, inputFieldText[0])
-	Key.ScanCode = 0
-	Key.UnicodeChar = 0
+	Key.scanCode = 0
+	Key.unicodeChar = 0
 	bufferLength = rtlWideStringLength(inputFieldText[0], 0)
 	status = blAllocateMemoryPool(bufferLength * sizeOf<Unsigned long long>(), inputFieldBuffer as! PVOID *)
 	if status != (9223372036854775808 & 0) {
@@ -288,40 +318,55 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 	rtlCopyMemory(inputFieldBuffer, inputFieldText[0], bufferLength * sizeOf<Unsigned long long>())
 	inputFieldBuffer[bufferLength] = 0/* "\u0000" */
 	inputFieldLength = bufferLength
-	if inputFieldLength > Handle.Width - 8 {
-		inputFieldLength = Handle.Width - 8
+	if inputFieldLength > Handle.width - 8 {
+		inputFieldLength = Handle.width - 8
 
 	}
 
 	textPosition = 0
-	blSetCursorPosition(Handle.PosX + 4 + textPosition, Handle.PosY + Handle.Height - 4)
+	blSetCursorPosition(Handle.posX + 4 + textPosition, Handle.posY + Handle.height - 4)
 	while tRUE {
 		blWaitForEfiEvent(1, efiSystemTable.conIn.waitForKey, index)
 		blReadKeyStroke(key)
 		blResetConsoleInputBuffer()
-		if Key.ScanCode == 23 {
+		if Key.scanCode == 23 {
 			break
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
-			if Key.ScanCode == 3 {
-				if Handle.Attributes & 16 and textPosition < inputFieldLength {
+			Key.unicodeChar == 9
+
+			{
+
+			}
+
+			if Key.scanCode == 3 {
+				if Handle.attributes & 16 and textPosition < inputFieldLength {
 					textPosition++
 				}
 
 
 			} else {
-				[unknown clang ast] CompoundStmt CompoundStmt
-				if Key.ScanCode == 5 {
-					if Handle.Attributes & 16 {
+				Key.scanCode == 4
+
+				{
+
+				}
+
+				if Key.scanCode == 5 {
+					if Handle.attributes & 16 {
 						textPosition = 0
 
 					}
 
 
 				} else {
-					[unknown clang ast] CompoundStmt CompoundStmt
-					if Key.ScanCode == 8 {
-						if Handle.Attributes & 16 {
+					Key.scanCode == 6
+
+					{
+
+					}
+
+					if Key.scanCode == 8 {
+						if Handle.attributes & 16 {
 							if inputFieldLength > 0 and textPosition < inputFieldLength {
 								rtlMoveMemory(inputFieldBuffer + textPosition, inputFieldBuffer + textPosition + 1, (inputFieldLength - textPosition) * sizeOf<Unsigned long long>())
 								inputFieldLength--								inputFieldBuffer[inputFieldLength] = 0
@@ -333,14 +378,19 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 
 
 					} else {
-						[unknown clang ast] CompoundStmt CompoundStmt
-						if Key.UnicodeChar == 13 {
+						Key.unicodeChar == 8
+
+						{
+
+						}
+
+						if Key.unicodeChar == 13 {
 							inputFieldText[0] = inputFieldBuffer
 							break
 						} else {
-							if Handle.Attributes & 16 and Key.UnicodeChar != 0 {
+							if Handle.attributes & 16 and Key.unicodeChar != 0 {
 								rtlMoveMemory(inputFieldBuffer + textPosition + 1, inputFieldBuffer + textPosition, (inputFieldLength - textPosition) * sizeOf<Unsigned long long>())
-								inputFieldBuffer[textPosition] = Key.UnicodeChar
+								inputFieldBuffer[textPosition] = Key.unicodeChar
 								textPosition++								inputFieldLength++								inputFieldBuffer[inputFieldLength] = 0
 
 							}
@@ -360,9 +410,9 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 
 		}
 
-		if textPosition > (Handle.Width - 9) {
-			textIndex = textPosition - (Handle.Width - 9)
-			textCursorPosition = Handle.Width - 9
+		if textPosition > (Handle.width - 9) {
+			textIndex = textPosition - (Handle.width - 9)
+			textCursorPosition = Handle.width - 9
 
 		} else {
 			textIndex = 0
@@ -372,8 +422,8 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 
 		blpDrawDialogButton(handle)
 		blpDrawDialogInputField(handle, inputFieldBuffer[textIndex])
-		if Handle.Attributes & 16 {
-			blSetCursorPosition(Handle.PosX + 4 + textCursorPosition, Handle.PosY + Handle.Height - 4)
+		if Handle.attributes & 16 {
+			blSetCursorPosition(Handle.posX + 4 + textCursorPosition, Handle.posY + Handle.height - 4)
 
 		}
 
@@ -401,7 +451,7 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 fun blDisplayProgressDialog(caption PWCHAR, message PWCHAR, percentage UCHAR) {
 	let handle = new ByValue<XTBL_DIALOG_HANDLE>()
 
-	Handle.Attributes = 1 | 64
+	Handle.attributes = 1 | 64
 	blpDetermineDialogBoxSize(handle, message)
 	blDisableConsoleCursor()
 	blpDrawDialogBox(handle, caption, message)
@@ -586,7 +636,12 @@ fun blpDrawDialogBox(handle PXTBL_DIALOG_HANDLE, caption PWCHAR, message PWCHAR)
 		handle.textColor = 15
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
+		handle.attributes & 1
+
+		{
+
+		}
+
 
 	}
 

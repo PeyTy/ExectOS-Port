@@ -438,7 +438,12 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
+		(data.lhsType.typeInfo & 1) && (kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID) < 0)
+
+		{
+
+		}
+
 		if kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID) >= lhsBitWidth {
 			if keDbgPrint {
 
@@ -477,8 +482,17 @@ fun kepHandleUbsanTypeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PT
 		kepHandleUbsanNullPointerDereference(data)
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
-		[unknown clang ast] CompoundStmt CompoundStmt
+		data.alignment && (((pointer) & ((data.alignment) as! Typeof (Pointer) - 1)) != 0)
+
+		{
+
+		}
+
+
+		{
+
+		}
+
 
 	}
 

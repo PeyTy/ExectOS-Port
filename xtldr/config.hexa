@@ -35,7 +35,7 @@ fun blGetConfigValue(configName Const PWCHAR) {
 	var status EFI_STATUS
 	var value PWCHAR
 	keyLength = rtlWideStringLength(configName, 0)
-	configListEntry = BlpConfig.Flink
+	configListEntry = BlpConfig.flink
 	while configListEntry != blpConfig {
 		configEntry = (((configListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
 		if rtlCompareWideStringInsensitive(configEntry.name, configName, keyLength) == 0 {
@@ -79,7 +79,7 @@ fun blSetConfigValue(configName Const PWCHAR, configValue Const PWCHAR) {
 	var status EFI_STATUS
 	var length SIZE_T
 	length = rtlWideStringLength(configName, 0)
-	configListEntry = BlpConfig.Flink
+	configListEntry = BlpConfig.flink
 	while configListEntry != blpConfig {
 		configEntry = (((configListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
 		if rtlCompareWideStringInsensitive(configEntry.name, configName, length) == 0 {
@@ -138,7 +138,7 @@ fun blpLoadConfiguration() {
 
 	}
 
-	sectionListEntry = BlpConfigSections.Flink
+	sectionListEntry = BlpConfigSections.flink
 	while sectionListEntry != blpConfigSections {
 		let section = new ByValue<PXTBL_CONFIG_SECTION>()
 
@@ -274,7 +274,12 @@ fun blpParseConfigFile(rawConfig Const PCHAR, configuration PLIST_ENTRY) {
 
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
+			inputData[0] == 32/* " " */ or inputData[0] == 9/* "\t" */ or inputData[0] == 13/* "\r" */ || inputData[0] == 10/* "\n" */
+
+			{
+
+			}
+
 			if inputData[0] == 91/* "[" */ {
 				inputData++				sectionName = inputData
 				while inputData[0] != 93/* "]" */ and inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {

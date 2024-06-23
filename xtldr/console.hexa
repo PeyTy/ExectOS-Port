@@ -59,12 +59,12 @@ fun blConsolePrint(format PUSHORT) {
 	let serialPrintContext = new ByValue<RTL_PRINT_CONTEXT>()
 
 	var arguments VA_LIST
-	ConsolePrintContext.WriteWideCharacter = blpConsolePutChar
-	SerialPrintContext.WriteWideCharacter = blpDebugPutChar
+	ConsolePrintContext.writeWideCharacter = blpConsolePutChar
+	SerialPrintContext.writeWideCharacter = blpDebugPutChar
 	__builtin_va_start(arguments, format)
 	rtlFormatWideString(consolePrintContext, format as! PWCHAR, arguments)
 	if rtlCompareWideString(efiSystemTable.firmwareVendor, "EDK II", 6) != 0 {
-		if 1 and (BlpStatus.SerialPort.flags & 1) {
+		if 1 and (BlpStatus.serialPort.flags & 1) {
 			rtlFormatWideString(serialPrintContext, format as! PWCHAR, arguments)
 
 		}

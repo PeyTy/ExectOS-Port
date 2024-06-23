@@ -254,7 +254,12 @@ fun xtBootSystem(parameters PXTBL_BOOT_PARAMETERS) {
 		return status
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
+		status != (9223372036854775808 & 0)
+
+		{
+
+		}
+
 
 	}
 
@@ -509,7 +514,7 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 
 	}
 
-	XtBootProtocol.BootSystem = xtBootSystem
+	XtBootProtocol.bootSystem = xtBootSystem
 	xtLdrProtocol.boot.registerProtocol("XTOS", guid)
 	return xtLdrProtocol.protocol.install(xtBootProtocol, guid)
 }

@@ -50,8 +50,8 @@ fun blBuildPageMap(pageMap PXTBL_PAGE_MAPPING, selfMapAddress ULONG_PTR) {
 
 	}
 
-	if BlpStatus.LoaderBase and BlpStatus.LoaderSize {
-		status = blMapVirtualMemory(pageMap, BlpStatus.LoaderBase, BlpStatus.LoaderBase, (((BlpStatus.LoaderSize) >> 12) + ((((BlpStatus.LoaderSize) & 4095)) ? 1 : 0)), loaderFirmwareTemporary)
+	if BlpStatus.loaderBase and BlpStatus.loaderSize {
+		status = blMapVirtualMemory(pageMap, BlpStatus.loaderBase, BlpStatus.loaderBase, (((BlpStatus.loaderSize) >> 12) + ((((BlpStatus.loaderSize) & 4095)) ? 1 : 0)), loaderFirmwareTemporary)
 		if status != (9223372036854775808 & 0) {
 			return status
 

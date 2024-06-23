@@ -268,12 +268,12 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 
 	}
 
-	AcpAcpiProtocol.GetAcpiDescriptionPointer = acGetAcpiDescriptionPointer
-	AcpAcpiProtocol.GetAcpiTable = acGetAcpiTable
-	AcpAcpiProtocol.GetApicBase = acGetApicBase
-	AcpAcpiProtocol.GetRsdpTable = acGetRsdpTable
-	AcpAcpiProtocol.GetSMBiosTable = acGetSMBiosTable
-	AcpAcpiProtocol.GetSMBios3Table = acGetSMBios3Table
-	AcpAcpiProtocol.GetXsdpTable = acGetXsdpTable
+	AcpAcpiProtocol.getAcpiDescriptionPointer = acGetAcpiDescriptionPointer
+	AcpAcpiProtocol.getAcpiTable = acGetAcpiTable
+	AcpAcpiProtocol.getApicBase = acGetApicBase
+	AcpAcpiProtocol.getRsdpTable = acGetRsdpTable
+	AcpAcpiProtocol.getSMBiosTable = acGetSMBiosTable
+	AcpAcpiProtocol.getSMBios3Table = acGetSMBios3Table
+	AcpAcpiProtocol.getXsdpTable = acGetXsdpTable
 	return xtLdrProtocol.protocol.install(acpAcpiProtocol, guid)
 }

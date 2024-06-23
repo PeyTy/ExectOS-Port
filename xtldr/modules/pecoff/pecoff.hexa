@@ -566,16 +566,16 @@ fun xtLdrModuleMain(imageHandle EFI_HANDLE, systemTable PEFI_SYSTEM_TABLE) {
 
 	}
 
-	PeCoffProtocol.GetEntryPoint = peGetEntryPoint
-	PeCoffProtocol.GetFileSize = peGetFileSize
-	PeCoffProtocol.GetImageSize = peGetImageSize
-	PeCoffProtocol.GetMachineType = peGetMachineType
-	PeCoffProtocol.GetSection = peGetSection
-	PeCoffProtocol.GetSubSystem = peGetSubSystem
-	PeCoffProtocol.GetVersion = peGetVersion
-	PeCoffProtocol.LoadImage = peLoadImage
-	PeCoffProtocol.RelocateImage = peRelocateImage
-	PeCoffProtocol.UnloadImage = peUnloadImage
-	PeCoffProtocol.VerifyImage = peVerifyImage
+	PeCoffProtocol.getEntryPoint = peGetEntryPoint
+	PeCoffProtocol.getFileSize = peGetFileSize
+	PeCoffProtocol.getImageSize = peGetImageSize
+	PeCoffProtocol.getMachineType = peGetMachineType
+	PeCoffProtocol.getSection = peGetSection
+	PeCoffProtocol.getSubSystem = peGetSubSystem
+	PeCoffProtocol.getVersion = peGetVersion
+	PeCoffProtocol.loadImage = peLoadImage
+	PeCoffProtocol.relocateImage = peRelocateImage
+	PeCoffProtocol.unloadImage = peUnloadImage
+	PeCoffProtocol.verifyImage = peVerifyImage
 	return xtLdrProtocol.protocol.install(peCoffProtocol, guid)
 }

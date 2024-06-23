@@ -138,10 +138,10 @@ fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, 
 
 	while --mappedPages {
 		ptePointer = mmpGetPteAddress(baseAddress) as! PHARDWARE_PTE
-		ptePointer.pageFrameNumber = (PhysicalAddress.QuadPart >> 12) as! PFN_NUMBER
+		ptePointer.pageFrameNumber = (PhysicalAddress.quadPart >> 12) as! PFN_NUMBER
 		ptePointer.valid = 1
 		ptePointer.writable = 1
-		PhysicalAddress.QuadPart += 4096
+		PhysicalAddress.quadPart += 4096
 		baseAddress = (baseAddress as! ULONG_PTR + 4096) as! PVOID
 
 	}
@@ -197,7 +197,7 @@ fun mmRemapHardwareMemory(virtualAddress PVOID, physicalAddress PHYSICAL_ADDRESS
 	let ptePointer = new ByValue<PHARDWARE_PTE>()
 
 	ptePointer = mmpGetPteAddress(virtualAddress) as! PHARDWARE_PTE
-	ptePointer.pageFrameNumber = (PhysicalAddress.QuadPart >> 12) as! PFN_NUMBER
+	ptePointer.pageFrameNumber = (PhysicalAddress.quadPart >> 12) as! PFN_NUMBER
 	ptePointer.valid = 1
 	ptePointer.writable = 1
 	if flushTlb {

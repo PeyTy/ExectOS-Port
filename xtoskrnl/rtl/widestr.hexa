@@ -334,8 +334,8 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 	formatIndex = format + index[0] + 1
 	argPosition = 0
 	rtlZeroMemory(formatProperties, sizeOf<Unsigned long long>())
-	FormatProperties.IntegerSize = sizeOf<Unsigned long long>()
-	FormatProperties.Precision = -1
+	FormatProperties.integerSize = sizeOf<Unsigned long long>()
+	FormatProperties.precision = -1
 	__builtin_va_copy(argumentsCopy, argumentList[0])
 	if (formatIndex[0] >= 49/* "1" */) and (formatIndex[0] <= 57/* "9" */) {
 		specifierValue = rtlpGetWideStringSpecifierValue(formatIndex as! PWSTR *)
@@ -343,7 +343,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			argPosition = specifierValue as! ULONG
 			formatIndex++
 		} else {
-			FormatProperties.FieldWidth = specifierValue as! ULONG
+			FormatProperties.fieldWidth = specifierValue as! ULONG
 
 		}
 
@@ -352,21 +352,40 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 	while tRUE {
 		if formatIndex[0] == 39/* "'" */ {
-			FormatProperties.Flags |= 16384
+			FormatProperties.flags |= 16384
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
+			formatIndex[0] == 45/* "-" */
+
+			{
+
+			}
+
 			if formatIndex[0] == 32/* " " */ {
-				FormatProperties.Flags |= 2
+				FormatProperties.flags |= 2
 
 			} else {
-				[unknown clang ast] CompoundStmt CompoundStmt
+				formatIndex[0] == 43/* "+" */
+
+				{
+
+				}
+
 				if formatIndex[0] == 35/* "#" */ {
-					FormatProperties.Flags |= 1024
+					FormatProperties.flags |= 1024
 
 				} else {
-					[unknown clang ast] CompoundStmt CompoundStmt
-					[unknown clang ast] CompoundStmt CompoundStmt
+					formatIndex[0] == 48/* "0" */
+
+					{
+
+					}
+
+
+					{
+
+					}
+
 
 				}
 
@@ -379,80 +398,99 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 		formatIndex++
 	}
 
-	if FormatProperties.Flags & 4 {
-		FormatProperties.Flags &= ~8
+	if FormatProperties.flags & 4 {
+		FormatProperties.flags &= ~8
 
 	}
 
-	if FormatProperties.Flags & 1 {
-		FormatProperties.Flags &= ~2
+	if FormatProperties.flags & 1 {
+		FormatProperties.flags &= ~2
 
 	}
 
 	if formatIndex[0] == 42/* "*" */ {
-		formatIndex++		FormatProperties.FieldWidth = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
+		formatIndex++		FormatProperties.fieldWidth = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
+		(formatIndex[0] >= 49/* "1" */) && (formatIndex[0] <= 57/* "9" */)
 
-	}
-
-	if FormatProperties.FieldWidth < 0 {
-		FormatProperties.Flags |= 4
-		FormatProperties.FieldWidth *= -1
-
-	}
-
-	if formatIndex[0] == 46/* "." */ {
-		formatIndex++		if formatIndex[0] == 42/* "*" */ {
-			formatIndex++			FormatProperties.Precision = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
-
-		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
-			[unknown clang ast] CompoundStmt CompoundStmt
+		{
 
 		}
 
 
 	}
 
-	if FormatProperties.Precision < 0 {
-		FormatProperties.Precision = -1
+	if FormatProperties.fieldWidth < 0 {
+		FormatProperties.flags |= 4
+		FormatProperties.fieldWidth *= -1
+
+	}
+
+	if formatIndex[0] == 46/* "." */ {
+		formatIndex++		if formatIndex[0] == 42/* "*" */ {
+			formatIndex++			FormatProperties.precision = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
+
+		} else {
+			(formatIndex[0] >= 48/* "0" */) && (formatIndex[0] <= 57/* "9" */)
+
+			{
+
+			}
+
+
+			{
+
+			}
+
+
+		}
+
+
+	}
+
+	if FormatProperties.precision < 0 {
+		FormatProperties.precision = -1
 
 	}
 
 	specifier = formatIndex[0]
 	[unknown clang ast] CompoundStmt SwitchStmt
 	specifier = ++formatIndex[0]
-	if FormatProperties.Flags & 64 {
+	if FormatProperties.flags & 64 {
 		if specifier == 99/* "c" */ {
 			specifier = 67/* "C" */
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
+			specifier == 115/* "s" */
+
+			{
+
+			}
+
 
 		}
 
 
 	}
 
-	FormatProperties.Flags |= 256
+	FormatProperties.flags |= 256
 	[unknown clang ast] CompoundStmt SwitchStmt
-	if FormatProperties.VariableType == unknown {
+	if FormatProperties.variableType == unknown {
 		status = rtlpWriteWideStringValue(context, formatProperties, wideCharArg, 1)
 
 	}
 
-	if FormatProperties.VariableType == boolean {
+	if FormatProperties.variableType == boolean {
 		if argPosition != 0 {
-			intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, FormatProperties.IntegerSize)
+			intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, FormatProperties.integerSize)
 
 		} else {
 			intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG : ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG)
 
 		}
 
-		if FormatProperties.Flags & 512 {
+		if FormatProperties.flags & 512 {
 			wideStrArg = (intArg) ? "TRUE" : "FALSE"
 
 		} else {
@@ -463,8 +501,13 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 		status = rtlpWriteWideStringValue(context, formatProperties, wideStrArg, rtlWideStringLength(wideStrArg, 0))
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
-		if FormatProperties.VariableType == char {
+		FormatProperties.variableType == guid
+
+		{
+
+		}
+
+		if FormatProperties.variableType == char {
 			if argPosition != 0 {
 				charArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>()) as! UCHAR
 
@@ -476,28 +519,38 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			status = rtlpWriteWideStringStringValue(context, formatProperties, charArg, 1)
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
-			if FormatProperties.VariableType == float {
+			FormatProperties.variableType == wideChar
+
+			{
+
+			}
+
+			if FormatProperties.variableType == float {
 				if argPosition != 0 {
-					FloatArg.QuadPart = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
+					FloatArg.quadPart = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
 
 				} else {
-					if FormatProperties.Flags & 32 {
-						FloatArg.DoublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LDOUBLE : ([unknown clang ast] resolve VAArgExpr) as! LDOUBLE)
+					if FormatProperties.flags & 32 {
+						FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LDOUBLE : ([unknown clang ast] resolve VAArgExpr) as! LDOUBLE)
 
 					} else {
-						FloatArg.DoublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! DOUBLE : ([unknown clang ast] resolve VAArgExpr) as! DOUBLE)
+						FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! DOUBLE : ([unknown clang ast] resolve VAArgExpr) as! DOUBLE)
 
 					}
 
 
 				}
 
-				status = rtlpWriteWideStringDoubleValue(context, formatProperties, FloatArg.DoublePart)
+				status = rtlpWriteWideStringDoubleValue(context, formatProperties, FloatArg.doublePart)
 
 			} else {
-				[unknown clang ast] CompoundStmt CompoundStmt
-				if FormatProperties.VariableType == string {
+				FormatProperties.variableType == integer
+
+				{
+
+				}
+
+				if FormatProperties.variableType == string {
 					if argPosition != 0 {
 						intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
 						strArg = intArg as! UINT_PTR as! PCHAR
@@ -510,8 +563,13 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 					status = rtlpWriteWideStringStringValue(context, formatProperties, strArg, rtlStringLength(strArg, 0))
 
 				} else {
-					[unknown clang ast] CompoundStmt CompoundStmt
-					if FormatProperties.VariableType == ansiString {
+					FormatProperties.variableType == wideString
+
+					{
+
+					}
+
+					if FormatProperties.variableType == ansiString {
 						if argPosition != 0 {
 							intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
 							ansiStrArg = intArg as! UINT_PTR as! PANSI_STRING
@@ -528,7 +586,12 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 
 					} else {
-						[unknown clang ast] CompoundStmt CompoundStmt
+						FormatProperties.variableType == unicodeString
+
+						{
+
+						}
+
 
 					}
 
@@ -653,7 +716,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	var status XTSTATUS
 	negativeValue = fALSE
 	numberLength = 0
-	Parts.DoublePart = value
+	Parts.doublePart = value
 	precision = formatProperties.precision
 	signCharacter = 0
 	if precision == -1 {
@@ -699,7 +762,12 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 			buffer[index] = 45/* "-" */
 			index++
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
+			formatProperties.flags & 1
+
+			{
+
+			}
+
 			if formatProperties.flags & 2 {
 				buffer[index] = 32/* " " */
 				index++
@@ -789,7 +857,12 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 		signCharacter = 45/* "-" */
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
+		formatProperties.flags & 1
+
+		{
+
+		}
+
 		if formatProperties.flags & 2 {
 			signCharacter = 32/* " " */
 
@@ -804,7 +877,12 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 			significantDigits = precision
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
+			precision > significantDigits
+
+			{
+
+			}
+
 
 		}
 
@@ -816,7 +894,12 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 		numberLength += 1
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
+		formatProperties.flags & 8192
+
+		{
+
+		}
+
 		if precision != 0 {
 			numberLength += 1
 
@@ -1069,7 +1152,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 	var prefix WCHAR[4]
 	var status XTSTATUS
 	negativeValue = fALSE
-	Parts.DoublePart = double
+	Parts.doublePart = double
 	precision = formatProperties.precision
 	if double == 0 {
 		absoluteExponent = 0
@@ -1086,7 +1169,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 	} else {
 		if (Parts.u.highPart & (9223372036854775808 >> 32)) != 0 {
 			negativeValue = tRUE
-			Parts.DoublePart *= -1
+			Parts.doublePart *= -1
 
 		}
 
@@ -1139,7 +1222,12 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 		prefixSize += 1
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
+		formatProperties.flags & 1
+
+		{
+
+		}
+
 		if formatProperties.flags & 2 {
 			prefix[prefixSize] = 32/* " " */
 			prefixSize += 1
@@ -1317,7 +1405,12 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 		prefixLength += 1
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
+		formatProperties.flags & 1
+
+		{
+
+		}
+
 		if formatProperties.flags & 2 {
 			prefix[prefixLength] = 32/* " " */
 			prefixLength += 1
@@ -1337,7 +1430,12 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
+			formatProperties.radix == 16
+
+			{
+
+			}
+
 
 		}
 

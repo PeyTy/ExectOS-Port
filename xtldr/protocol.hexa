@@ -29,7 +29,7 @@ fun blFindBootProtocol(systemType PWCHAR, bootProtocolGuid PEFI_GUID) {
 
 	let protocolListEntry = new ByValue<PLIST_ENTRY>()
 
-	protocolListEntry = BlpBootProtocols.Flink
+	protocolListEntry = BlpBootProtocols.flink
 	while protocolListEntry != blpBootProtocols {
 		protocolEntry = (((protocolListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_KNOWN_BOOT_PROTOCOL *)
 		if rtlCompareWideStringInsensitive(protocolEntry.systemType, systemType, 0) == 0 {
@@ -112,7 +112,7 @@ fun blLoadModule(moduleName PWCHAR) {
 	var moduleSize SIZE_T
 	var status EFI_STATUS
 	var moduleData PVOID
-	moduleListEntry = BlpLoadedModules.Flink
+	moduleListEntry = BlpLoadedModules.flink
 	while moduleListEntry != blpLoadedModules {
 		moduleInfo = (((moduleListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_MODULE_INFO *)
 		if rtlCompareWideStringInsensitive(moduleInfo.moduleName, moduleName, 0) == 0 {
@@ -206,7 +206,7 @@ fun blLoadModule(moduleName PWCHAR) {
 	blDebugPrint("Starting module '%S' ...\n", moduleName)
 	status = blLoadEfiImage(moduleDevicePath as! PEFI_DEVICE_PATH_PROTOCOL, moduleData, moduleSize, moduleHandle)
 	if status != (9223372036854775808 & 0) {
-		if status == (9223372036854775808 | 15) and BlpStatus.SecureBoot >= 1 {
+		if status == (9223372036854775808 | 15) and BlpStatus.secureBoot >= 1 {
 			blDebugPrint("ERROR: SecureBoot signature validation failed, module '%S' will not be loaded\n", moduleName)
 
 		} else {
@@ -366,7 +366,7 @@ fun blOpenProtocolHandle(handle EFI_HANDLE, protocolHandler PVOID *, protocolGui
 /// 
 /// @since XT 1.0
 fun blRegisterBootMenu(bootMenuRoutine PVOID) {
-	BlpStatus.BootMenu = bootMenuRoutine
+	BlpStatus.bootMenu = bootMenuRoutine
 }
 
 /// Registers a known boot protocol for a specified OS.
@@ -386,7 +386,7 @@ fun blRegisterBootProtocol(systemType PWCHAR, bootProtocolGuid PEFI_GUID) {
 	let protocolListEntry = new ByValue<PLIST_ENTRY>()
 
 	var status EFI_STATUS
-	protocolListEntry = BlpBootProtocols.Flink
+	protocolListEntry = BlpBootProtocols.flink
 	while protocolListEntry != blpBootProtocols {
 		protocolEntry = (((protocolListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_KNOWN_BOOT_PROTOCOL *)
 		if rtlCompareWideStringInsensitive(protocolEntry.systemType, systemType, 0) == 0 {
@@ -544,70 +544,70 @@ fun blpGetModuleInfoStrings(sectionData PWCHAR, sectionSize ULONG, modInfo PWCHA
 fun blpInstallXtLoaderProtocol() {
 	let guid = new ByValue<EFI_GUID>()
 
-	BlpLdrProtocol.Boot.findProtocol = blFindBootProtocol
-	BlpLdrProtocol.Boot.initializeMenuList = blInitializeBootMenuList
-	BlpLdrProtocol.Boot.invokeProtocol = blInvokeBootProtocol
-	BlpLdrProtocol.Boot.registerMenu = blRegisterBootMenu
-	BlpLdrProtocol.Boot.registerProtocol = blRegisterBootProtocol
-	BlpLdrProtocol.Config.getBooleanValue = blGetConfigBooleanValue
-	BlpLdrProtocol.Config.getValue = blGetConfigValue
-	BlpLdrProtocol.Console.clearLine = blClearConsoleLine
-	BlpLdrProtocol.Console.clearScreen = blClearConsoleScreen
-	BlpLdrProtocol.Console.disableCursor = blDisableConsoleCursor
-	BlpLdrProtocol.Console.enableCursor = blEnableConsoleCursor
-	BlpLdrProtocol.Console.print = blConsolePrint
-	BlpLdrProtocol.Console.queryMode = blQueryConsoleMode
-	BlpLdrProtocol.Console.readKeyStroke = blReadKeyStroke
-	BlpLdrProtocol.Console.resetInputBuffer = blResetConsoleInputBuffer
-	BlpLdrProtocol.Console.setAttributes = blSetConsoleAttributes
-	BlpLdrProtocol.Console.setCursorPosition = blSetCursorPosition
-	BlpLdrProtocol.Console.write = blConsoleWrite
-	BlpLdrProtocol.Debug.print = blDebugPrint
-	BlpLdrProtocol.Disk.closeVolume = blCloseVolume
-	BlpLdrProtocol.Disk.openVolume = blOpenVolume
-	BlpLdrProtocol.Disk.readFile = blReadFile
-	BlpLdrProtocol.Memory.allocatePages = blAllocateMemoryPages
-	BlpLdrProtocol.Memory.allocatePool = blAllocateMemoryPool
-	BlpLdrProtocol.Memory.buildPageMap = blBuildPageMap
-	BlpLdrProtocol.Memory.copyMemory = rtlCopyMemory
-	BlpLdrProtocol.Memory.freePages = blFreeMemoryPages
-	BlpLdrProtocol.Memory.freePool = blFreeMemoryPool
-	BlpLdrProtocol.Memory.getMappingsCount = blGetMappingsCount
-	BlpLdrProtocol.Memory.getMemoryMap = blGetMemoryMap
-	BlpLdrProtocol.Memory.getVirtualAddress = blGetVirtualAddress
-	BlpLdrProtocol.Memory.initializePageMap = blInitializePageMap
-	BlpLdrProtocol.Memory.mapEfiMemory = blMapEfiMemory
-	BlpLdrProtocol.Memory.mapPage = blMapPage
-	BlpLdrProtocol.Memory.mapVirtualMemory = blMapVirtualMemory
-	BlpLdrProtocol.Memory.physicalAddressToVirtual = blPhysicalAddressToVirtual
-	BlpLdrProtocol.Memory.physicalListToVirtual = blPhysicalListToVirtual
-	BlpLdrProtocol.Memory.setMemory = rtlSetMemory
-	BlpLdrProtocol.Memory.zeroMemory = rtlZeroMemory
-	BlpLdrProtocol.Protocol.close = blCloseProtocol
-	BlpLdrProtocol.Protocol.getModulesList = blGetModulesList
-	BlpLdrProtocol.Protocol.install = blInstallProtocol
-	BlpLdrProtocol.Protocol.locateHandles = blLocateProtocolHandles
-	BlpLdrProtocol.Protocol.open = blOpenProtocol
-	BlpLdrProtocol.Protocol.openHandle = blOpenProtocolHandle
-	BlpLdrProtocol.Tui.displayErrorDialog = blDisplayErrorDialog
-	BlpLdrProtocol.Tui.displayInfoDialog = blDisplayInfoDialog
-	BlpLdrProtocol.Tui.displayInputDialog = blDisplayInputDialog
-	BlpLdrProtocol.Tui.displayProgressDialog = blDisplayProgressDialog
-	BlpLdrProtocol.Tui.updateProgressBar = blUpdateProgressBar
-	BlpLdrProtocol.Util.enterFirmwareSetup = blEnterFirmwareSetup
-	BlpLdrProtocol.Util.exitBootServices = blExitBootServices
-	BlpLdrProtocol.Util.getConfigurationTable = blGetConfigurationTable
-	BlpLdrProtocol.Util.getEfiVariable = blGetEfiVariable
-	BlpLdrProtocol.Util.getRandomValue = blGetRandomValue
-	BlpLdrProtocol.Util.getSecureBootStatus = blGetSecureBootStatus
-	BlpLdrProtocol.Util.initializeEntropy = blInitializeEntropy
-	BlpLdrProtocol.Util.loadEfiImage = blLoadEfiImage
-	BlpLdrProtocol.Util.rebootSystem = blRebootSystem
-	BlpLdrProtocol.Util.setEfiVariable = blSetEfiVariable
-	BlpLdrProtocol.Util.shutdownSystem = blShutdownSystem
-	BlpLdrProtocol.Util.sleepExecution = blSleepExecution
-	BlpLdrProtocol.Util.startEfiImage = blStartEfiImage
-	BlpLdrProtocol.Util.waitForEfiEvent = blWaitForEfiEvent
+	BlpLdrProtocol.boot.findProtocol = blFindBootProtocol
+	BlpLdrProtocol.boot.initializeMenuList = blInitializeBootMenuList
+	BlpLdrProtocol.boot.invokeProtocol = blInvokeBootProtocol
+	BlpLdrProtocol.boot.registerMenu = blRegisterBootMenu
+	BlpLdrProtocol.boot.registerProtocol = blRegisterBootProtocol
+	BlpLdrProtocol.config.getBooleanValue = blGetConfigBooleanValue
+	BlpLdrProtocol.config.getValue = blGetConfigValue
+	BlpLdrProtocol.console.clearLine = blClearConsoleLine
+	BlpLdrProtocol.console.clearScreen = blClearConsoleScreen
+	BlpLdrProtocol.console.disableCursor = blDisableConsoleCursor
+	BlpLdrProtocol.console.enableCursor = blEnableConsoleCursor
+	BlpLdrProtocol.console.print = blConsolePrint
+	BlpLdrProtocol.console.queryMode = blQueryConsoleMode
+	BlpLdrProtocol.console.readKeyStroke = blReadKeyStroke
+	BlpLdrProtocol.console.resetInputBuffer = blResetConsoleInputBuffer
+	BlpLdrProtocol.console.setAttributes = blSetConsoleAttributes
+	BlpLdrProtocol.console.setCursorPosition = blSetCursorPosition
+	BlpLdrProtocol.console.write = blConsoleWrite
+	BlpLdrProtocol.debug.print = blDebugPrint
+	BlpLdrProtocol.disk.closeVolume = blCloseVolume
+	BlpLdrProtocol.disk.openVolume = blOpenVolume
+	BlpLdrProtocol.disk.readFile = blReadFile
+	BlpLdrProtocol.memory.allocatePages = blAllocateMemoryPages
+	BlpLdrProtocol.memory.allocatePool = blAllocateMemoryPool
+	BlpLdrProtocol.memory.buildPageMap = blBuildPageMap
+	BlpLdrProtocol.memory.copyMemory = rtlCopyMemory
+	BlpLdrProtocol.memory.freePages = blFreeMemoryPages
+	BlpLdrProtocol.memory.freePool = blFreeMemoryPool
+	BlpLdrProtocol.memory.getMappingsCount = blGetMappingsCount
+	BlpLdrProtocol.memory.getMemoryMap = blGetMemoryMap
+	BlpLdrProtocol.memory.getVirtualAddress = blGetVirtualAddress
+	BlpLdrProtocol.memory.initializePageMap = blInitializePageMap
+	BlpLdrProtocol.memory.mapEfiMemory = blMapEfiMemory
+	BlpLdrProtocol.memory.mapPage = blMapPage
+	BlpLdrProtocol.memory.mapVirtualMemory = blMapVirtualMemory
+	BlpLdrProtocol.memory.physicalAddressToVirtual = blPhysicalAddressToVirtual
+	BlpLdrProtocol.memory.physicalListToVirtual = blPhysicalListToVirtual
+	BlpLdrProtocol.memory.setMemory = rtlSetMemory
+	BlpLdrProtocol.memory.zeroMemory = rtlZeroMemory
+	BlpLdrProtocol.protocol.close = blCloseProtocol
+	BlpLdrProtocol.protocol.getModulesList = blGetModulesList
+	BlpLdrProtocol.protocol.install = blInstallProtocol
+	BlpLdrProtocol.protocol.locateHandles = blLocateProtocolHandles
+	BlpLdrProtocol.protocol.open = blOpenProtocol
+	BlpLdrProtocol.protocol.openHandle = blOpenProtocolHandle
+	BlpLdrProtocol.tui.displayErrorDialog = blDisplayErrorDialog
+	BlpLdrProtocol.tui.displayInfoDialog = blDisplayInfoDialog
+	BlpLdrProtocol.tui.displayInputDialog = blDisplayInputDialog
+	BlpLdrProtocol.tui.displayProgressDialog = blDisplayProgressDialog
+	BlpLdrProtocol.tui.updateProgressBar = blUpdateProgressBar
+	BlpLdrProtocol.util.enterFirmwareSetup = blEnterFirmwareSetup
+	BlpLdrProtocol.util.exitBootServices = blExitBootServices
+	BlpLdrProtocol.util.getConfigurationTable = blGetConfigurationTable
+	BlpLdrProtocol.util.getEfiVariable = blGetEfiVariable
+	BlpLdrProtocol.util.getRandomValue = blGetRandomValue
+	BlpLdrProtocol.util.getSecureBootStatus = blGetSecureBootStatus
+	BlpLdrProtocol.util.initializeEntropy = blInitializeEntropy
+	BlpLdrProtocol.util.loadEfiImage = blLoadEfiImage
+	BlpLdrProtocol.util.rebootSystem = blRebootSystem
+	BlpLdrProtocol.util.setEfiVariable = blSetEfiVariable
+	BlpLdrProtocol.util.shutdownSystem = blShutdownSystem
+	BlpLdrProtocol.util.sleepExecution = blSleepExecution
+	BlpLdrProtocol.util.startEfiImage = blStartEfiImage
+	BlpLdrProtocol.util.waitForEfiEvent = blWaitForEfiEvent
 	blDebugPrint("Registering XT loader protocol\n")
 	return blInstallProtocol(blpLdrProtocol, guid)
 }

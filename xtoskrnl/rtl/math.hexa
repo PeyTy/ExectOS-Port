@@ -8,7 +8,7 @@
 /// @since XT 1.0
 fun rtlConvertToLargeInteger32(value LONG) {
 	var largeInt LARGE_INTEGER
-	LargeInt.QuadPart = value
+	LargeInt.quadPart = value
 	return largeInt
 }
 
@@ -22,7 +22,7 @@ fun rtlConvertToLargeInteger32(value LONG) {
 /// @since XT 1.0
 fun rtlConvertToLargeIntegerUnsigned32(value ULONG) {
 	var largeInt LARGE_INTEGER
-	LargeInt.QuadPart = value
+	LargeInt.quadPart = value
 	return largeInt
 }
 
@@ -183,8 +183,8 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 
 	}
 
-	DividendParts.QuadPart = dividend
-	DivisorParts.QuadPart = divisor
+	DividendParts.quadPart = dividend
+	DivisorParts.quadPart = divisor
 	if DividendParts.u.highPart == 0 {
 		if DivisorParts.u.highPart == 0 {
 			if remainder != (0 as! PVOID) {
@@ -210,7 +210,7 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 			shift = rtlCountLeadingZeroes32(DivisorParts.u.highPart) - rtlCountLeadingZeroes32(DividendParts.u.highPart)
 			if shift > ((sizeOf<Unsigned long long>() * 8) - 1) {
 				if remainder != (0 as! PVOID) {
-					remainder[0] = DividendParts.QuadPart
+					remainder[0] = DividendParts.quadPart
 
 				}
 
@@ -241,8 +241,17 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 				RemainderParts.u.highPart = 0
 
 			} else {
-				[unknown clang ast] CompoundStmt CompoundStmt
-				[unknown clang ast] CompoundStmt CompoundStmt
+				shift < (sizeOf<Unsigned long long>() * 8)
+
+				{
+
+				}
+
+
+				{
+
+				}
+
 
 			}
 
@@ -255,7 +264,7 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 			if remainder != (0 as! PVOID) {
 				RemainderParts.u.highPart = DividendParts.u.highPart % DivisorParts.u.highPart
 				RemainderParts.u.lowPart = 0
-				remainder[0] = RemainderParts.QuadPart
+				remainder[0] = RemainderParts.quadPart
 
 			}
 
@@ -266,7 +275,7 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 		shift = rtlCountLeadingZeroes32(DivisorParts.u.highPart) - rtlCountLeadingZeroes32(DividendParts.u.highPart)
 		if shift > ((sizeOf<Unsigned long long>() * 8) - 2) {
 			if remainder != (0 as! PVOID) {
-				remainder[0] = DividendParts.QuadPart
+				remainder[0] = DividendParts.quadPart
 
 			}
 
@@ -287,20 +296,20 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 		RemainderParts.u.lowPart = (RemainderParts.u.lowPart << 1) | (QuotientParts.u.highPart >> ((sizeOf<Unsigned long long>() * 8) - 1))
 		QuotientParts.u.highPart = (QuotientParts.u.highPart << 1) | (QuotientParts.u.lowPart >> ((sizeOf<Unsigned long long>() * 8) - 1))
 		QuotientParts.u.lowPart = (QuotientParts.u.lowPart << 1) | carry
-		difference = (DivisorParts.QuadPart - RemainderParts.QuadPart - 1) as! LONGLONG >> ((sizeOf<Unsigned long long>() * 8) - 1)
+		difference = (DivisorParts.quadPart - RemainderParts.quadPart - 1) as! LONGLONG >> ((sizeOf<Unsigned long long>() * 8) - 1)
 		carry = difference & 1
-		RemainderParts.QuadPart -= DivisorParts.QuadPart & difference
+		RemainderParts.quadPart -= DivisorParts.quadPart & difference
 		shift -= 1
 
 	}
 
-	QuotientParts.QuadPart = (QuotientParts.QuadPart << 1) | carry
+	QuotientParts.quadPart = (QuotientParts.quadPart << 1) | carry
 	if remainder != (0 as! PVOID) {
-		remainder[0] = RemainderParts.QuadPart
+		remainder[0] = RemainderParts.quadPart
 
 	}
 
-	return QuotientParts.QuadPart
+	return QuotientParts.quadPart
 }
 
 /// Divides a signed large integer by a 32-bit divisor.
@@ -321,11 +330,11 @@ fun rtlDivideLargeInteger(dividend LARGE_INTEGER, divisor ULONG, remainder PULON
 	var dividendSign LONGLONG
 	var uDividend LONGLONG
 	var largeInt LARGE_INTEGER
-	dividendSign = Dividend.QuadPart >> ((sizeOf<Unsigned long long>() * 8) - 1)
-	uDividend = (Dividend.QuadPart ^ dividendSign) - dividendSign
-	LargeInt.QuadPart = (rtlDivideUnsigned64(uDividend, divisor, (0 as! PVOID)) ^ dividendSign) - dividendSign
+	dividendSign = Dividend.quadPart >> ((sizeOf<Unsigned long long>() * 8) - 1)
+	uDividend = (Dividend.quadPart ^ dividendSign) - dividendSign
+	LargeInt.quadPart = (rtlDivideUnsigned64(uDividend, divisor, (0 as! PVOID)) ^ dividendSign) - dividendSign
 	if remainder {
-		remainder[0] = Dividend.QuadPart - (LargeInt.QuadPart * divisor)
+		remainder[0] = Dividend.quadPart - (LargeInt.quadPart * divisor)
 
 	}
 
@@ -359,7 +368,7 @@ fun rtlGetBaseExponent(value DOUBLE, powerOfTen PDOUBLE) {
 
 	}
 
-	Parts.DoublePart = value
+	Parts.doublePart = value
 	baseExponent = ((Parts.u.highPart & exponentMask) >> exponentShift) - 1023
 	exponent = (baseExponent as! DOUBLE * 0.30102999565999999) as! LONG + 1
 	currentExponent = 0
@@ -416,8 +425,8 @@ fun rtlGetBaseExponent(value DOUBLE, powerOfTen PDOUBLE) {
 /// @since XT 1.0
 fun rtlInfiniteDouble(value DOUBLE) {
 	var var Union (unnamed union at /home/Belliash/ExectOS/xtoskrnl/rtl/math.c:618:5)
-	Var.Double = value
-	return ((Var.DoubleS.exponent & 2047) == 2047)
+	Var.double = value
+	return ((Var.doubleS.exponent & 2047) == 2047)
 }
 
 /// Multiplies a signed large integer by a signed integer.
@@ -433,7 +442,7 @@ fun rtlInfiniteDouble(value DOUBLE) {
 /// @since XT 1.0
 fun rtlMultiplyLargeInteger(multiplicand LARGE_INTEGER, multiplier LONG) {
 	var largeInt LARGE_INTEGER
-	LargeInt.QuadPart = Multiplicand.QuadPart as! LONGLONG * multiplier
+	LargeInt.quadPart = Multiplicand.quadPart as! LONGLONG * multiplier
 	return largeInt
 }
 
@@ -447,6 +456,6 @@ fun rtlMultiplyLargeInteger(multiplicand LARGE_INTEGER, multiplier LONG) {
 /// @since XT 1.0
 fun rtlNanDouble(value DOUBLE) {
 	var var Union (unnamed union at /home/Belliash/ExectOS/xtoskrnl/rtl/math.c:677:5)
-	Var.Double = value
-	return (Var.DoubleS.exponent == 2047 and (Var.DoubleS.mantissaHigh != 0 or Var.DoubleS.mantissaLow != 0))
+	Var.double = value
+	return (Var.doubleS.exponent == 2047 and (Var.doubleS.mantissaHigh != 0 or Var.doubleS.mantissaLow != 0))
 }

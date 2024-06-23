@@ -36,12 +36,12 @@ fun arInitializeProcessor(processorStructures PVOID) {
 	arpInitializeGdt(processorBlock)
 	arpInitializeIdt(processorBlock)
 	arpInitializeTss(processorBlock, kernelBootStack, kernelFaultStack)
-	GdtDescriptor.Base = gdt
-	GdtDescriptor.Limit = (128 * sizeOf<Unsigned long long>()) - 1
-	IdtDescriptor.Base = idt
-	IdtDescriptor.Limit = (256 * sizeOf<Unsigned long long>()) - 1
-	arLoadGlobalDescriptorTable(GdtDescriptor.Limit)
-	arLoadInterruptDescriptorTable(IdtDescriptor.Limit)
+	GdtDescriptor.base = gdt
+	GdtDescriptor.limit = (128 * sizeOf<Unsigned long long>()) - 1
+	IdtDescriptor.base = idt
+	IdtDescriptor.limit = (256 * sizeOf<Unsigned long long>()) - 1
+	arLoadGlobalDescriptorTable(GdtDescriptor.limit)
+	arLoadInterruptDescriptorTable(IdtDescriptor.limit)
 	arLoadTaskRegister(64 as! UINT)
 	hlSetRunLevel(0)
 	arpInitializeSegments()
@@ -89,31 +89,40 @@ fun arpIdentifyProcessor() {
 
 	prcb = keGetCurrentProcessorControlBlock()
 	rtlZeroMemory(cpuRegisters, sizeOf<Unsigned long long>())
-	CpuRegisters.Leaf = cPUID_GET_VENDOR_STRING
+	CpuRegisters.leaf = cPUID_GET_VENDOR_STRING
 	arCpuId(cpuRegisters)
-	prcb.cpuId.vendor = CpuRegisters.Ebx
-	prcb.cpuId.vendorName[0] as! PULONG[0] = CpuRegisters.Ebx
-	prcb.cpuId.vendorName[4] as! PULONG[0] = CpuRegisters.Edx
-	prcb.cpuId.vendorName[8] as! PULONG[0] = CpuRegisters.Ecx
+	prcb.cpuId.vendor = CpuRegisters.ebx
+	prcb.cpuId.vendorName[0] as! PULONG[0] = CpuRegisters.ebx
+	prcb.cpuId.vendorName[4] as! PULONG[0] = CpuRegisters.edx
+	prcb.cpuId.vendorName[8] as! PULONG[0] = CpuRegisters.ecx
 	prcb.cpuId.vendorName[12] = 0/* "\u0000" */
 	rtlZeroMemory(cpuRegisters, sizeOf<Unsigned long long>())
-	CpuRegisters.Leaf = cPUID_GET_CPU_FEATURES
+	CpuRegisters.leaf = cPUID_GET_CPU_FEATURES
 	arCpuId(cpuRegisters)
-	cpuSignature = CpuRegisters.Eax as! PCPUID_SIGNATURE[0]
-	prcb.cpuId.family = CpuSignature.Family
-	prcb.cpuId.model = CpuSignature.Model
-	prcb.cpuId.stepping = CpuSignature.Stepping
+	cpuSignature = CpuRegisters.eax as! PCPUID_SIGNATURE[0]
+	prcb.cpuId.family = CpuSignature.family
+	prcb.cpuId.model = CpuSignature.model
+	prcb.cpuId.stepping = CpuSignature.stepping
 	if prcb.cpuId.vendor == cPU_VENDOR_AMD {
 		if prcb.cpuId.family >= 15 {
-			prcb.cpuId.family = prcb.cpuId.family + CpuSignature.ExtendedFamily
-			prcb.cpuId.model = prcb.cpuId.model + (CpuSignature.ExtendedModel << 4)
+			prcb.cpuId.family = prcb.cpuId.family + CpuSignature.extendedFamily
+			prcb.cpuId.model = prcb.cpuId.model + (CpuSignature.extendedModel << 4)
 
 		}
 
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
-		[unknown clang ast] CompoundStmt CompoundStmt
+		prcb.cpuId.vendor == cPU_VENDOR_INTEL
+
+		{
+
+		}
+
+
+		{
+
+		}
+
 
 	}
 
@@ -207,9 +216,9 @@ fun arpInitializeProcessorBlock(processorBlock PKPROCESSOR_BLOCK, gdt PKGDTENTRY
 	processorBlock.prcb.multiThreadProcessorSet = 1 << processorBlock.cpuNumber
 	processorBlock.prcb.processorState.specialRegisters.kernelDr6 = 0
 	processorBlock.prcb.processorState.specialRegisters.kernelDr7 = 0
-	processorBlock.prcb.currentThread = KeInitialThread.ThreadControlBlock
-	processorBlock.prcb.currentThread.apcState.process = KeInitialProcess.ProcessControlBlock
-	processorBlock.prcb.idleThread = KeInitialThread.ThreadControlBlock
+	processorBlock.prcb.currentThread = KeInitialThread.threadControlBlock
+	processorBlock.prcb.currentThread.apcState.process = KeInitialProcess.processControlBlock
+	processorBlock.prcb.idleThread = KeInitialThread.threadControlBlock
 	processorBlock.prcb.nextThread = (0 as! PVOID)
 	processorBlock.prcb.mxCsr = 8064
 	processorBlock.runLevel = 0

@@ -39,7 +39,7 @@ fun blExitBootServices() {
 
 	var status EFI_STATUS
 	var counter ULONG
-	BlpStatus.BootServices = fALSE
+	BlpStatus.bootServices = fALSE
 	status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), memoryMap as! PVOID *)
 	if status != (9223372036854775808 & 0) {
 		blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)

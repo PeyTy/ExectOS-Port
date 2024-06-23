@@ -33,7 +33,12 @@ fun bpEnableToneBeep(pitch UINT) {
 		pitch = 20
 
 	} else {
-		[unknown clang ast] CompoundStmt CompoundStmt
+		pitch > 20000
+
+		{
+
+		}
+
 
 	}
 
@@ -69,8 +74,17 @@ fun bpPlayTune(arguments PWCHAR) {
 			tempo = bpWideStringToNumber(argument)
 
 		} else {
-			[unknown clang ast] CompoundStmt CompoundStmt
-			[unknown clang ast] CompoundStmt CompoundStmt
+			pitch < 0
+
+			{
+
+			}
+
+
+			{
+
+			}
+
 
 		}
 
