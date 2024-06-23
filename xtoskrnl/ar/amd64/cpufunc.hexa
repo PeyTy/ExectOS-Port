@@ -148,7 +148,27 @@ fun arLoadMxcsrRegister(source ULONG) {
 /// 
 /// @since XT 1.0
 fun arLoadSegment(segment USHORT, source ULONG) {
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch segment {
+		case 46:
+			source as! ULONGLONG
+		break
+		case 62:
+			source
+		break
+		case 38:
+			source
+		break
+		case 100:
+			source
+		break
+		case 101:
+			source
+		break
+		case 54:
+			source
+		break
+	}
+
 }
 
 /// Loads Task Register (TR) with a segment selector that points to TSS.
@@ -183,7 +203,27 @@ fun arMemoryBarrier() {
 /// @since XT 1.0
 fun arReadControlRegister(controlRegister USHORT) {
 	var value ULONG_PTR
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch controlRegister {
+		case 0:
+			value
+		break
+		case 2:
+			value
+		break
+		case 3:
+			value
+		break
+		case 4:
+			value
+		break
+		case 8:
+			value
+		break
+		case _:
+			value = 0
+		break
+	}
+
 	return value
 }
 
@@ -197,7 +237,36 @@ fun arReadControlRegister(controlRegister USHORT) {
 /// @since XT 1.0
 fun arReadDebugRegister(debugRegister USHORT) {
 	var value ULONG_PTR
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch debugRegister {
+		case 0:
+			value
+		break
+		case 1:
+			value
+		break
+		case 2:
+			value
+		break
+		case 3:
+			value
+		break
+		case 4:
+			value
+		break
+		case 5:
+			value
+		break
+		case 6:
+			value
+		break
+		case 7:
+			value
+		break
+		case _:
+			value = 0
+		break
+	}
+
 	return value
 }
 
@@ -317,7 +386,24 @@ fun arStoreLocalDescriptorTable(destination PVOID) {
 /// 
 /// @since XT 1.0
 fun arStoreSegment(segment USHORT, destination PVOID) {
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch segment {
+		case 46:
+			destination as! PUINT*		break
+		case 62:
+			destination as! PUINT*		break
+		case 38:
+			destination as! PUINT*		break
+		case 100:
+			destination as! PUINT*		break
+		case 101:
+			destination as! PUINT*		break
+		case 54:
+			destination as! PUINT*		break
+		case _:
+			destination = (0 as! PVOID)
+		break
+	}
+
 }
 
 /// Stores TR into the given memory area.
@@ -344,7 +430,24 @@ fun arStoreTaskRegister(destination PVOID) {
 /// 
 /// @since XT 1.0
 fun arWriteControlRegister(controlRegister USHORT, value UINT_PTR) {
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch controlRegister {
+		case 0:
+			value
+		break
+		case 2:
+			value
+		break
+		case 3:
+			value
+		break
+		case 4:
+			value
+		break
+		case 8:
+			value
+		break
+	}
+
 }
 
 /// Writes a value to the specified CPU debug register.
@@ -359,7 +462,33 @@ fun arWriteControlRegister(controlRegister USHORT, value UINT_PTR) {
 /// 
 /// @since XT 1.0
 fun arWriteDebugRegister(debugRegister USHORT, value UINT_PTR) {
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch debugRegister {
+		case 0:
+			value
+
+		case 1:
+			value
+
+		case 2:
+			value
+
+		case 3:
+			value
+
+		case 4:
+			value
+
+		case 5:
+			value
+
+		case 6:
+			value
+
+		case 7:
+			value
+
+	}
+
 }
 
 /// Writes the specified value to the program status and control (EFLAGS) register.

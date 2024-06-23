@@ -65,7 +65,42 @@ fun kepGetSignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 /// 
 /// @since XT 1.0
 fun kepGetUbsanTypeKind(typeCheckKind UCHAR) {
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch typeCheckKind {
+		case 0:
+			"Load of"
+
+		case 1:
+			"Store to"
+
+		case 2:
+			"Reference binding to"
+
+		case 3:
+			"Member access within"
+
+		case 4:
+			"Member call on"
+
+		case 5:
+			"Constructor call on"
+
+		case 6:
+			"Downcast of"
+
+		case 7:
+			"Downcast of"
+
+		case 8:
+			"Upcast of"
+
+		case 9:
+			"Cast to virtual base of"
+
+		case _:
+			"Unrecognized failure code"
+
+	}
+
 }
 
 /// Gets unsigned value from UBSAN.

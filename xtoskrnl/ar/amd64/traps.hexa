@@ -7,7 +7,84 @@
 /// 
 /// @since XT 1.0
 fun arpDispatchTrap(trapFrame PKTRAP_FRAME) {
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch trapFrame.vector {
+		case 0:
+			arpHandleTrap00(trapFrame)
+		break
+		case 1:
+			arpHandleTrap01(trapFrame)
+		break
+		case 2:
+			arpHandleTrap02(trapFrame)
+		break
+		case 3:
+			arpHandleTrap03(trapFrame)
+		break
+		case 4:
+			arpHandleTrap04(trapFrame)
+		break
+		case 5:
+			arpHandleTrap05(trapFrame)
+		break
+		case 6:
+			arpHandleTrap06(trapFrame)
+		break
+		case 7:
+			arpHandleTrap07(trapFrame)
+		break
+		case 8:
+			arpHandleTrap08(trapFrame)
+		break
+		case 9:
+			arpHandleTrap09(trapFrame)
+		break
+		case 10:
+			arpHandleTrap0A(trapFrame)
+		break
+		case 11:
+			arpHandleTrap0B(trapFrame)
+		break
+		case 12:
+			arpHandleTrap0C(trapFrame)
+		break
+		case 13:
+			arpHandleTrap0D(trapFrame)
+		break
+		case 14:
+			arpHandleTrap0E(trapFrame)
+		break
+		case 16:
+			arpHandleTrap10(trapFrame)
+		break
+		case 17:
+			arpHandleTrap11(trapFrame)
+		break
+		case 18:
+			arpHandleTrap12(trapFrame)
+		break
+		case 19:
+			arpHandleTrap13(trapFrame)
+		break
+		case 31:
+			arpHandleTrap1F(trapFrame)
+		break
+		case 44:
+			arpHandleTrap2C(trapFrame)
+		break
+		case 45:
+			arpHandleTrap2D(trapFrame)
+		break
+		case 47:
+			arpHandleTrap2F(trapFrame)
+		break
+		case 225:
+			arpHandleTrapE1(trapFrame)
+		break
+		case _:
+			arpHandleTrapFF(trapFrame)
+		break
+	}
+
 }
 
 fun arpHandleSystemCall32() {

@@ -226,7 +226,70 @@ fun fbSetScreenResolution(width UINT, height UINT) {
 	}
 
 	modeChanged = fALSE
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch FbpDisplayInfo.protocol {
+		case gOP:
+			width == 0 || height == 0
+
+			{
+				status = FbpDisplayInfo.driver.gop.setMode(FbpDisplayInfo.driver.gop, 1)
+				status == (9223372036854775808 & 0)
+
+				{
+					status = FbpDisplayInfo.driver.gop.setMode(FbpDisplayInfo.driver.gop, FbpDisplayInfo.defaultMode)
+					modeChanged = (status == (9223372036854775808 & 0))
+
+				}
+
+
+			}
+
+
+			{
+				mode = 1
+				mode <= FbpDisplayInfo.driver.gop.mode.maxMode
+
+				{
+					status = FbpDisplayInfo.driver.gop.queryMode(FbpDisplayInfo.driver.gop, mode, size, modeInfo)
+					status == (9223372036854775808 & 0) and size >= sizeOf<Unsigned long long>() && modeInfo != (0 as! PVOID)
+
+					{
+						modeInfo.horizontalResolution == width && modeInfo.verticalResolution == height
+
+						{
+							status = FbpDisplayInfo.driver.gop.setMode(FbpDisplayInfo.driver.gop, mode)
+							status == (9223372036854775808 & 0)
+
+							{
+								modeChanged = tRUE
+
+							}
+
+
+						}
+
+
+					}
+
+					++mode
+
+				}
+
+
+			}
+
+		break
+		case uGA:
+			status = FbpDisplayInfo.driver.uga.setMode(FbpDisplayInfo.driver.uga, width, height, FbpDisplayInfo.modeInfo.depth, FbpDisplayInfo.modeInfo.refreshRate)
+		if status == (9223372036854775808 & 0) {
+			modeChanged = tRUE
+
+		}
+
+		break
+		case _:
+
+	}
+
 	if !modeChanged {
 		xtLdrProtocol.debug.print("ERROR: Failed to change screen mode to %ux%u (Status Code: 0x%zX)\n", width, height, status)
 		return (9223372036854775808 | 3)
@@ -373,7 +436,42 @@ fun fbpGetModeInfo() {
 
 	var status XTSTATUS
 	var size UINT_PTR
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch FbpDisplayInfo.protocol {
+		case gOP:
+			status = FbpDisplayInfo.driver.gop.queryMode(FbpDisplayInfo.driver.gop, FbpDisplayInfo.driver.gop.mode.mode, size, modeInfo)
+		if status != (9223372036854775808 & 0) {
+			return status
+
+		}
+
+		fbpGetPixelInformation(FbpDisplayInfo.driver.gop.mode.info.pixelInformation)
+		FbpDisplayInfo.modeInfo.width = FbpDisplayInfo.driver.gop.mode.info.horizontalResolution
+		FbpDisplayInfo.modeInfo.height = FbpDisplayInfo.driver.gop.mode.info.verticalResolution
+		FbpDisplayInfo.modeInfo.depth = FbpDisplayInfo.modeInfo.bitsPerPixel
+		FbpDisplayInfo.modeInfo.pixelsPerScanLine = FbpDisplayInfo.driver.gop.mode.info.pixelsPerScanLine
+		FbpDisplayInfo.modeInfo.pitch = FbpDisplayInfo.modeInfo.pixelsPerScanLine * (FbpDisplayInfo.modeInfo.bitsPerPixel / 8)
+		FbpDisplayInfo.modeInfo.refreshRate = 0
+		FbpDisplayInfo.modeInfo.pixelFormat = FbpDisplayInfo.driver.gop.mode.info.pixelFormat
+		FbpDisplayInfo.frameBufferSize = FbpDisplayInfo.driver.gop.mode.frameBufferSize
+		break
+		case uGA:
+			status = FbpDisplayInfo.driver.uga.getMode(FbpDisplayInfo.driver.uga, FbpDisplayInfo.modeInfo.width, FbpDisplayInfo.modeInfo.height, FbpDisplayInfo.modeInfo.depth, FbpDisplayInfo.modeInfo.refreshRate)
+		if status != (9223372036854775808 & 0) {
+			return status
+
+		}
+
+		pixelBitMask = [unknown clang ast] resolve CompoundLiteralExpr
+		fbpGetPixelInformation(pixelBitMask)
+		FbpDisplayInfo.modeInfo.pixelsPerScanLine = FbpDisplayInfo.modeInfo.width
+		FbpDisplayInfo.modeInfo.pitch = FbpDisplayInfo.modeInfo.pixelsPerScanLine * (FbpDisplayInfo.modeInfo.bitsPerPixel / 8)
+		FbpDisplayInfo.modeInfo.pixelFormat = pixelBlueGreenRedReserved8BitPerColor
+		FbpDisplayInfo.frameBufferSize = FbpDisplayInfo.modeInfo.width * FbpDisplayInfo.modeInfo.height * FbpDisplayInfo.modeInfo.bytesPerPixel + 1024
+		break
+		case _:
+
+	}
+
 	return (9223372036854775808 & 0)
 }
 
@@ -390,7 +488,55 @@ fun fbpGetModeInfo() {
 /// @since XT 1.0
 fun fbpGetPixelInformation(pixelsBitMask PEFI_PIXEL_BITMASK) {
 	var compoundMask UINT
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch FbpDisplayInfo.modeInfo.pixelFormat {
+		case pixelBlueGreenRedReserved8BitPerColor:
+			FbpDisplayInfo.modeInfo.bitsPerPixel = 32
+		FbpDisplayInfo.modeInfo.pixelInformation.blueShift = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.blueSize = 8
+		FbpDisplayInfo.modeInfo.pixelInformation.greenShift = 8
+		FbpDisplayInfo.modeInfo.pixelInformation.greenSize = 8
+		FbpDisplayInfo.modeInfo.pixelInformation.redShift = 16
+		FbpDisplayInfo.modeInfo.pixelInformation.redSize = 8
+		FbpDisplayInfo.modeInfo.pixelInformation.reservedShift = 24
+		FbpDisplayInfo.modeInfo.pixelInformation.reservedSize = 8
+		break
+		case pixelRedGreenBlueReserved8BitPerColor:
+			FbpDisplayInfo.modeInfo.bitsPerPixel = 32
+		FbpDisplayInfo.modeInfo.pixelInformation.blueShift = 16
+		FbpDisplayInfo.modeInfo.pixelInformation.blueSize = 8
+		FbpDisplayInfo.modeInfo.pixelInformation.greenShift = 8
+		FbpDisplayInfo.modeInfo.pixelInformation.greenSize = 8
+		FbpDisplayInfo.modeInfo.pixelInformation.redShift = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.redSize = 8
+		FbpDisplayInfo.modeInfo.pixelInformation.reservedShift = 24
+		FbpDisplayInfo.modeInfo.pixelInformation.reservedSize = 8
+		break
+		case pixelBitMask:
+			FbpDisplayInfo.modeInfo.bitsPerPixel = 32
+		compoundMask = pixelsBitMask.redMask | pixelsBitMask.greenMask | pixelsBitMask.blueMask | pixelsBitMask.reservedMask
+		while (compoundMask & (1 << 31)) == 0 {
+			FbpDisplayInfo.modeInfo.bitsPerPixel--			compoundMask <<= 1
+
+		}
+
+		fbpGetColorMask(pixelsBitMask.redMask, FbpDisplayInfo.modeInfo.pixelInformation.redSize, FbpDisplayInfo.modeInfo.pixelInformation.redShift)
+		fbpGetColorMask(pixelsBitMask.greenMask, FbpDisplayInfo.modeInfo.pixelInformation.greenSize, FbpDisplayInfo.modeInfo.pixelInformation.greenShift)
+		fbpGetColorMask(pixelsBitMask.blueMask, FbpDisplayInfo.modeInfo.pixelInformation.blueSize, FbpDisplayInfo.modeInfo.pixelInformation.blueShift)
+		fbpGetColorMask(pixelsBitMask.reservedMask, FbpDisplayInfo.modeInfo.pixelInformation.reservedSize, FbpDisplayInfo.modeInfo.pixelInformation.reservedShift)
+		break
+		case _:
+			FbpDisplayInfo.modeInfo.bitsPerPixel = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.blueShift = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.blueSize = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.greenShift = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.greenSize = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.redShift = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.redSize = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.reservedShift = 0
+		FbpDisplayInfo.modeInfo.pixelInformation.reservedSize = 0
+		break
+	}
+
 	FbpDisplayInfo.modeInfo.bytesPerPixel = FbpDisplayInfo.modeInfo.bitsPerPixel >> 3
 }
 

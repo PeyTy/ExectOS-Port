@@ -514,7 +514,35 @@ fun blPhysicalListToVirtual(pageMap PXTBL_PAGE_MAPPING, listHead PLIST_ENTRY, ph
 /// @since XT 1.0
 fun blpGetLoaderMemoryType(efiMemoryType EFI_MEMORY_TYPE) {
 	var memoryType LOADER_MEMORY_TYPE
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch efiMemoryType {
+		case efiACPIMemoryNVS:
+			efiACPIReclaimMemory
+
+			case efiPalCode:
+				efiReservedMemoryType
+				memoryType = loaderSpecialMemory
+		break
+		case efiRuntimeServicesCode:
+			efiRuntimeServicesData
+
+			case efiMemoryMappedIO:
+				efiMemoryMappedIOPortSpace
+				memoryType = loaderFirmwarePermanent
+		break
+		case efiBootServicesData:
+			efiLoaderCode
+
+			case efiLoaderData:
+				memoryType = loaderFirmwareTemporary
+		break
+		case efiUnusableMemory:
+			memoryType = loaderBad
+		break
+		case _:
+			memoryType = loaderFree
+		break
+	}
+
 	return memoryType
 }
 

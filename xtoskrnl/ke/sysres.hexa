@@ -119,7 +119,18 @@ fun kepInitializeSystemResources() {
 		while listEntry != keInitializationBlock.systemResourcesListHead {
 			resourceHeader = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
 			nextListEntry = listEntry.flink
-			[unknown clang ast] CompoundStmt SwitchStmt
+			switch resourceHeader.resourceType {
+				case systemResourceAcpi:
+					resourceSize = sizeOf<Unsigned long long>()
+				break
+				case systemResourceFrameBuffer:
+					resourceSize = sizeOf<Unsigned long long>()
+				break
+				case _:
+					resourceSize = 0
+				break
+			}
+
 			if resourceSize != 0 and resourceSize == resourceHeader.resourceSize {
 				rtlRemoveEntryList(resourceHeader.listEntry)
 				rtlInsertTailList(kepSystemResourcesListHead, resourceHeader.listEntry)

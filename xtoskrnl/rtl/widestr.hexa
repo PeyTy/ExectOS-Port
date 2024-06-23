@@ -483,7 +483,77 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 	}
 
 	specifier = formatIndex[0]
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch specifier {
+		case 104/* "h" */:
+			++formatIndex
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		FormatProperties.flags |= 128
+		if formatIndex[0] == 104/* "h" */ {
+			formatIndex++			FormatProperties.integerSize = sizeOf<Unsigned long long>()
+			FormatProperties.flags &= ~128
+
+		}
+
+		break
+		case 106/* "j" */:
+			++formatIndex
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		break
+		case 108/* "l" */:
+			++formatIndex
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		FormatProperties.flags |= 32 | 16 | 64
+		if formatIndex[0] == 108/* "l" */ {
+			formatIndex++			FormatProperties.integerSize = sizeOf<Unsigned long long>()
+			FormatProperties.flags &= ~(32 | 16 | 64)
+
+		}
+
+		break
+		case 113/* "q" */:
+			++formatIndex
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		break
+		case 116/* "t" */:
+			++formatIndex
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		break
+		case 119/* "w" */:
+			++formatIndex
+		FormatProperties.flags |= 64
+		break
+		case 122/* "z" */:
+			++formatIndex
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		break
+		case 73/* "I" */:
+			++formatIndex
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		if (formatIndex[0] == 51/* "3" */) and ((formatIndex + 1)[0] == 50/* "2" */) {
+			formatIndex += 2
+			FormatProperties.integerSize = sizeOf<Unsigned long long>()
+			FormatProperties.flags |= 16
+
+		} else {
+			(formatIndex[0] == 54/* "6" */) && ((formatIndex + 1)[0] == 52/* "4" */)
+
+			{
+				[unknown clang ast] resolve CompoundAssignOperator
+				FormatProperties.integerSize = sizeOf<Unsigned long long>()
+
+			}
+
+
+		}
+
+		break
+		case 76/* "L" */:
+			++formatIndex
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		FormatProperties.flags |= 32
+		break
+	}
+
 	specifier = ++formatIndex[0]
 	if FormatProperties.flags & 64 {
 		if specifier == 99/* "c" */ {
@@ -504,7 +574,119 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 	}
 
 	FormatProperties.flags |= 256
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch specifier {
+		case 97/* "a" */:
+			FormatProperties.variableType = float
+		FormatProperties.flags |= 4096
+		FormatProperties.radix = 16
+		break
+		case 65/* "A" */:
+			FormatProperties.variableType = float
+		FormatProperties.flags |= 4096 | 512
+		FormatProperties.radix = 16
+		break
+		case 98/* "b" */:
+			FormatProperties.variableType = boolean
+		break
+		case 66/* "B" */:
+			FormatProperties.variableType = boolean
+		FormatProperties.flags |= 512
+		break
+		case 99/* "c" */:
+			FormatProperties.variableType = char
+		break
+		case 67/* "C" */:
+			FormatProperties.variableType = wideChar
+		break
+		case 100/* "d" */:
+			105/* "i" */
+			FormatProperties.variableType = integer
+		FormatProperties.flags &= ~256
+		FormatProperties.radix = 10
+		break
+		case 101/* "e" */:
+			FormatProperties.variableType = float
+		FormatProperties.flags |= 4096
+		break
+		case 69/* "E" */:
+			FormatProperties.variableType = float
+		FormatProperties.flags |= 4096 | 512
+		break
+		case 102/* "f" */:
+			FormatProperties.variableType = float
+		FormatProperties.flags |= 2048
+		break
+		case 70/* "F" */:
+			FormatProperties.variableType = float
+		FormatProperties.flags |= 2048 | 512
+		break
+		case 103/* "g" */:
+			FormatProperties.variableType = float
+		FormatProperties.flags |= 8192
+		break
+		case 71/* "G" */:
+			FormatProperties.variableType = float
+		FormatProperties.flags |= 8192 | 512
+		break
+		case 110/* "n" */:
+			FormatProperties.variableType = integer
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		break
+		case 111/* "o" */:
+			FormatProperties.variableType = integer
+		FormatProperties.radix = 8
+		break
+		case 112/* "p" */:
+			FormatProperties.variableType = integer
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		FormatProperties.flags |= 1024
+		FormatProperties.radix = 16
+		break
+		case 80/* "P" */:
+			FormatProperties.variableType = integer
+		FormatProperties.integerSize = sizeOf<Unsigned long long>()
+		FormatProperties.flags |= 1024 | 512
+		FormatProperties.radix = 16
+		break
+		case 115/* "s" */:
+			FormatProperties.variableType = string
+		break
+		case 83/* "S" */:
+			FormatProperties.variableType = wideString
+		break
+		case 117/* "u" */:
+			FormatProperties.variableType = integer
+		FormatProperties.radix = 10
+		break
+		case 118/* "v" */:
+			FormatProperties.variableType = guid
+		break
+		case 86/* "V" */:
+			FormatProperties.variableType = guid
+		FormatProperties.flags |= 512
+		break
+		case 120/* "x" */:
+			FormatProperties.variableType = integer
+		FormatProperties.radix = 16
+		break
+		case 88/* "X" */:
+			FormatProperties.variableType = integer
+		FormatProperties.flags |= 512
+		FormatProperties.radix = 16
+		break
+		case 90/* "Z" */:
+			FormatProperties.variableType = ((FormatProperties.flags & 64)) ? unicodeString : ansiString
+		break
+		case 37/* "%" */:
+			FormatProperties.variableType = unknown
+		wideCharArg = 37/* "%" */
+		break
+		case _:
+			FormatProperties.variableType = unknown
+		wideCharArg = 63/* "?" */
+		break
+	}
+
 	if FormatProperties.variableType == unknown {
 		status = rtlpWriteWideStringValue(context, formatProperties, wideCharArg, 1)
 
@@ -631,13 +813,13 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 						FormatProperties.integerSize
 
 						{
-							[unknown clang ast] resolve ConstantExpr
+							sizeOf<Unsigned long long>()
 							intArg = intArg as! UCHAR
-							[unknown clang ast] resolve ConstantExpr
+							sizeOf<Unsigned long long>()
 							intArg = intArg as! USHORT
-							[unknown clang ast] resolve ConstantExpr
+							sizeOf<Unsigned long long>()
 							intArg = intArg as! ULONG
-							[unknown clang ast] resolve ConstantExpr
+							sizeOf<Unsigned long long>()
 							intArg = intArg as! ULONGLONG
 							return (3221225485 as! XTSTATUS)
 
@@ -651,13 +833,13 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 						FormatProperties.integerSize
 
 						{
-							[unknown clang ast] resolve ConstantExpr
+							sizeOf<Unsigned long long>()
 							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! UINT : ([unknown clang ast] resolve VAArgExpr) as! UINT) as! CHAR
-							[unknown clang ast] resolve ConstantExpr
+							sizeOf<Unsigned long long>()
 							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! UINT : ([unknown clang ast] resolve VAArgExpr) as! UINT) as! SHORT
-							[unknown clang ast] resolve ConstantExpr
+							sizeOf<Unsigned long long>()
 							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! ULONG : ([unknown clang ast] resolve VAArgExpr) as! ULONG)
-							[unknown clang ast] resolve ConstantExpr
+							sizeOf<Unsigned long long>()
 							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG : ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG)
 							return (3221225485 as! XTSTATUS)
 
@@ -810,7 +992,24 @@ fun rtlpGetWideStringArgument(argumentList PVA_LIST, argumentNumber ULONG, argum
 	}
 
 	value = 0
-	[unknown clang ast] CompoundStmt SwitchStmt
+	switch argumentSize {
+		case sizeOf<Unsigned long long>():
+			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT) as! UCHAR
+		break
+		case sizeOf<Unsigned long long>():
+			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT) as! USHORT
+		break
+		case sizeOf<Unsigned long long>():
+			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LONG : ([unknown clang ast] resolve VAArgExpr) as! LONG)
+		break
+		case sizeOf<Unsigned long long>():
+			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LONGLONG : ([unknown clang ast] resolve VAArgExpr) as! LONGLONG)
+		break
+		case _:
+			value = 0
+		break
+	}
+
 	__builtin_va_end(argumentsCopy)
 	return value
 }
@@ -1744,7 +1943,18 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 	integerLength = 0
 	negative = fALSE
 	if !(formatProperties.flags & 256) {
-		[unknown clang ast] CompoundStmt SwitchStmt
+		switch formatProperties.integerSize {
+			case sizeOf<Unsigned long long>():
+				integer = integer as! CHAR
+			break
+			case sizeOf<Unsigned long long>():
+				integer = integer as! SHORT
+			break
+			case sizeOf<Unsigned long long>():
+				integer = integer as! LONG
+			break
+		}
+
 
 	}
 

@@ -565,7 +565,22 @@ fun pepRelocateLoadedImage(image PPECOFF_IMAGE_CONTEXT) {
 			}
 
 			if (address + offset) as! ULONG_PTR < relocationDir as! ULONG_PTR or (address + offset) as! ULONG_PTR >= relocationEnd as! ULONG_PTR {
-				[unknown clang ast] CompoundStmt SwitchStmt
+				switch type {
+					case 0:
+
+					case 10:
+						longPtr = (address as! PUCHAR + offset) as! PULONGLONG
+					longPtr[0] = longPtr[0] - imageBase + image.virtualAddress as! UINT_PTR
+					break
+					case 3:
+						shortPtr = (address as! PUCHAR + offset) as! PUINT32
+					shortPtr[0] = shortPtr[0] - imageBase + image.virtualAddress as! UINT_PTR
+					break
+					case _:
+						(9223372036854775808 | 3)
+
+				}
+
 
 			}
 

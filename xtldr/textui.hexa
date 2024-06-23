@@ -46,7 +46,13 @@ fun blDisplayBootMenu() {
 
 			}
 
-			[unknown clang ast] CompoundStmt ForStmt
+			index = 0
+			while index < numberOfEntries {
+				blpDrawBootMenuEntry(handle, menuEntries[index].entryName, index, index == highligtedEntryId)
+				index
+
+			}
+
 
 		} else {
 			blDisplayErrorDialog("XTLDR", "No boot menu entries found in the configuration. Falling back to shell.")
@@ -575,7 +581,19 @@ fun blpDetermineDialogBoxSize(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 	mask = 1
 	attributes = handle.attributes
 	while mask {
-		[unknown clang ast] CompoundStmt SwitchStmt
+		switch attributes & mask {
+			case 4:
+				8
+				height += 1
+			break
+			case 16:
+				32
+
+				case 64:
+					[unknown clang ast] resolve CompoundAssignOperator
+			break
+		}
+
 		attributes &= ~mask
 		mask <<= 1
 
@@ -587,7 +605,24 @@ fun blpDetermineDialogBoxSize(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 	}
 
 	messageLength = rtlWideStringLength(message, 0)
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < messageLength {
+		if message[index] == 10/* "\n" */ or index == messageLength - 1 {
+			if lineLength > width {
+				width = lineLength
+
+			}
+
+			height++			lineLength = 0
+
+		} else {
+			lineLength++
+		}
+
+		index
+
+	}
+
 	width += 4
 	blQueryConsoleMode(handle.resX, handle.resY)
 	if width > 100 {
@@ -675,7 +710,13 @@ fun blpDrawBootMenuEntry(handle PXTBL_DIALOG_HANDLE, menuEntry PWCHAR, position 
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < handle.width - 4 {
+		blConsolePrint(" ")
+		index
+
+	}
+
 	blSetCursorPosition(5, 4 + position)
 	blConsolePrint("%S\n", menuEntry)
 }
@@ -716,7 +757,80 @@ fun blpDrawDialogBox(handle PXTBL_DIALOG_HANDLE, caption PWCHAR, message PWCHAR)
 	}
 
 	blSetConsoleAttributes(handle.dialogColor | 15)
-	[unknown clang ast] CompoundStmt ForStmt
+	posY = handle.posY
+	while posY < handle.posY + handle.height {
+		blSetCursorPosition(handle.posX, posY)
+		if posY == handle.posY {
+			boxLine[0] = 9484
+			if caption != (0 as! PVOID) {
+				captionLength = rtlWideStringLength(caption, 0)
+				boxLine[1] = 9508
+				posX = 2
+				while posX < captionLength + 4 {
+					boxLine[posX] = 32/* " " */
+					posX
+
+				}
+
+				boxLine[captionLength + 4] = 9500
+
+			} else {
+				captionLength = -4
+
+			}
+
+			posX = captionLength + 5
+			while posX < handle.width - 1 {
+				boxLine[posX] = 9472
+				posX
+
+			}
+
+			boxLine[handle.width - 1] = 9488
+
+		} else {
+			posY == handle.posY + handle.height - 1
+
+			{
+				boxLine[0] = 9492
+				posX = 1
+				[unknown clang ast] CompoundStmt 
+				posX < handle.width - 1
+				posX++
+				{
+					boxLine[posX] = 9472
+
+				}
+
+				boxLine[handle.width - 1] = 9496
+
+			}
+
+
+			{
+				boxLine[0] = 9474
+				posX = 1
+				[unknown clang ast] CompoundStmt 
+				posX < handle.width - 1
+				posX++
+				{
+					boxLine[posX] = 32/* " " */
+
+				}
+
+				boxLine[handle.width - 1] = 9474
+
+			}
+
+
+		}
+
+		boxLine[handle.width] = 0
+		blConsoleWrite(boxLine)
+		posY
+
+	}
+
 	if caption != (0 as! PVOID) {
 		blSetCursorPosition(handle.posX + 3, handle.posY)
 		blConsolePrint("%S", caption)
@@ -804,7 +918,13 @@ fun blpDrawDialogInputField(handle PXTBL_DIALOG_HANDLE, inputFieldText PWCHAR) {
 	blSetConsoleAttributes(inputColor | textColor)
 	position = ((handle.attributes & (4 | 8))) ? 4 : 3
 	blSetCursorPosition(handle.posX + 4, handle.posY + handle.height - position)
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < handle.width - 8 {
+		inputField[index] = 32/* " " */
+		index
+
+	}
+
 	blDisableConsoleCursor()
 	blConsoleWrite(inputField)
 	length = rtlWideStringLength(inputFieldText, 0)
@@ -813,7 +933,13 @@ fun blpDrawDialogInputField(handle PXTBL_DIALOG_HANDLE, inputFieldText PWCHAR) {
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < length {
+		inputField[index] = inputFieldText[index]
+		index
+
+	}
+
 	inputField[handle.width] = 0
 	blSetCursorPosition(handle.posX + 4, handle.posY + handle.height - position)
 	blConsoleWrite(inputField)
@@ -862,7 +988,13 @@ fun blpDrawDialogMessage(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 		blSetConsoleAttributes(handle.dialogColor | handle.textColor)
 		blConsolePrint("%S", msgLine)
 		if lineLength < handle.width - 4 {
-			[unknown clang ast] CompoundStmt ForStmt
+			index = lineLength
+			while index < handle.width - 4 {
+				blConsolePrint(" ")
+				index
+
+			}
+
 
 		}
 
@@ -894,7 +1026,20 @@ fun blpDrawDialogProgressBar(handle PXTBL_DIALOG_HANDLE, percentage UCHAR) {
 	blSetConsoleAttributes(14)
 	position = ((handle.attributes & (4 | 8))) ? 4 : 3
 	blSetCursorPosition(handle.posX + 4, handle.posY + handle.height - position)
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < progressBarLength {
+		if index < progressLength {
+			progressBar[index] = 9608
+
+		} else {
+			progressBar[index] = 9617
+
+		}
+
+		index
+
+	}
+
 	progressBar[index] = 0
 	blDisableConsoleCursor()
 	blConsoleWrite(progressBar)
