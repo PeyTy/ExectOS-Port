@@ -24,13 +24,8 @@ fun kepCheckUbsanReport(location PKUBSAN_SOURCE_LOCATION) {
 fun kepEnterUbsanFrame(location PKUBSAN_SOURCE_LOCATION, reason PCCHAR) {
 	kepUbsanActiveFrame = tRUE
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("UBSAN: Undefined behavior (%s) in %s:%d:%d\n", reason, location.fileName, location.line, location.column)
 	}
 
 }
@@ -111,25 +106,22 @@ fun kepGetUnsignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 /// @since XT 1.0
 fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PVOID) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Division-Overflow")
 	if (data.type.typeInfo & 1) and (kepGetSignedUbsanValue(data.type, rhs) == -1) {
 		if keDbgPrint {
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+			keDbgPrint("UBSAN: Division by -1 cannot be represented in type %s\n", data.type.typeName)
 		}
 
 
 	} else {
 		if keDbgPrint {
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+			keDbgPrint("UBSAN: Division by zero\n")
 		}
 
 
@@ -154,17 +146,14 @@ fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PV
 /// @since XT 1.0
 fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Float-Cast-Overflow")
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Value of type %s is outside the range of type %s\n", data.lhsType.typeName, data.rhsType.typeName)
 	}
 
 	kepLeaveUbsanFrame()
@@ -183,17 +172,14 @@ fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs U
 /// @since XT 1.0
 fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Float-Cast-Overflow")
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt CStyleCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("UBSAN: Indirect function call through %P address of a wrong type %s\n", pointer as! PVOID, data.type.typeName)
 	}
 
 	kepLeaveUbsanFrame()
@@ -215,16 +201,14 @@ fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA,
 /// @since XT 1.0
 fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Integer-Overflow")
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("UBSAN: The result of an arithmetic operation cannot be represented in type %s\n", data.type.typeName)
 	}
 
 	kepLeaveUbsanFrame()
@@ -240,25 +224,22 @@ fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 /// @since XT 1.0
 fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Invalid-Builtin")
 	if data.kind == 0 or data.kind == 1 {
 		if keDbgPrint {
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+			keDbgPrint("UBSAN: Passing zero to ctz() or clz() which is not a valid argument\n")
 		}
 
 
 	} else {
 		if keDbgPrint {
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+			keDbgPrint("UBSAN: Unknown kind %u\n", data.kind)
 		}
 
 
@@ -280,19 +261,14 @@ fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
 /// @since XT 1.0
 fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Misaligned-Access")
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		kepGetUbsanTypeKind(data.typeCheckKind)
-		[unknown clang ast] CompoundStmt CStyleCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("UBSAN: %s misaligned address %p for type %s which requires %ld byte alignment\n", kepGetUbsanTypeKind(data.typeCheckKind), pointer as! PVOID, data.type.typeName, data.alignment)
 	}
 
 	kepLeaveUbsanFrame()
@@ -311,17 +287,14 @@ fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULON
 /// @since XT 1.0
 fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Negate-Overflow")
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("UBSAN: Negation of %lu cannot be represented in type %s\n", oldValue, data.type.typeName)
 	}
 
 	kepLeaveUbsanFrame()
@@ -340,17 +313,14 @@ fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR)
 /// @since XT 1.0
 fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "NULL-Pointer-Dereference")
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		kepGetUbsanTypeKind(data.typeCheckKind)
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("UBSAN: %s NULL pointer of type %s\n", kepGetUbsanTypeKind(data.typeCheckKind), data.type.typeName)
 	}
 
 	kepLeaveUbsanFrame()
@@ -369,18 +339,14 @@ fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
 /// @since XT 1.0
 fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Object-Size-Mismatch")
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		kepGetUbsanTypeKind(data.typeCheckKind)
-		[unknown clang ast] CompoundStmt CStyleCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("UBSAN: %s address %p with insufficient space for an object of type %s\n", kepGetUbsanTypeKind(data.typeCheckKind), pointer as! PVOID, data.type.typeName)
 	}
 
 	kepLeaveUbsanFrame()
@@ -399,16 +365,14 @@ fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer UL
 /// @since XT 1.0
 fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Array-Index-Out-Of-Bounds")
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("UBSAN: index is out of range for type %s", data.arrayType.typeName)
 	}
 
 	kepLeaveUbsanFrame()
@@ -430,18 +394,14 @@ fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) 
 /// @since XT 1.0
 fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
 	kepEnterUbsanFrame(data.location, "Pointer-Overflow")
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ConditionalOperator
-		[unknown clang ast] CompoundStmt CStyleCastExpr
-		[unknown clang ast] CompoundStmt CStyleCastExpr
 
+		keDbgPrint("UBSAN: Pointer operation %s %p to %p\n", (lhs > rhs) ? "overflowed" : "underflowed", lhs as! PVOID, rhs as! PVOID)
 	}
 
 	kepLeaveUbsanFrame()
@@ -464,7 +424,7 @@ fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
 	var lhsBitWidth ULONG
 	if !kepCheckUbsanReport(data.location) {
-		return ??
+		return
 
 	}
 
@@ -472,10 +432,8 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 	lhsBitWidth = 1 << (data.lhsType.typeInfo >> 1)
 	if (data.rhsType.typeInfo & 1) and (kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID) < 0) {
 		if keDbgPrint {
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID)
 
+			keDbgPrint("UBSAN: Shift exponent %lld is negative\n", kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID))
 		}
 
 
@@ -483,23 +441,15 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 		[unknown clang ast] CompoundStmt CompoundStmt
 		if kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID) >= lhsBitWidth {
 			if keDbgPrint {
-				[unknown clang ast] CompoundStmt ImplicitCastExpr
-				[unknown clang ast] CompoundStmt ImplicitCastExpr
-				kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID)
-				[unknown clang ast] CompoundStmt ImplicitCastExpr
-				[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+				keDbgPrint("UBSAN: Shift exponent %lld is too large for %u-bit type %s\n", kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID), lhsBitWidth, data.lhsType.typeName)
 			}
 
 
 		} else {
 			if keDbgPrint {
-				[unknown clang ast] CompoundStmt ImplicitCastExpr
-				[unknown clang ast] CompoundStmt ImplicitCastExpr
-				kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID)
-				kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID)
-				[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+				keDbgPrint("UBSAN: Left shift of %lld by %lld places cannot be represented in type %s\n", kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID), kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID), data.lhsType.typeName)
 			}
 
 

@@ -22,7 +22,7 @@ fun hlClearScreen(color ULONG) {
 	var backgroundColor ULONG
 	var frameBuf PULONG
 	if HlpFrameBufferData.Initialized == fALSE {
-		return ??
+		return
 
 	}
 
@@ -48,12 +48,12 @@ fun hlClearScreen(color ULONG) {
 fun hlDrawPixel(positionX ULONG, positionY ULONG, color ULONG) {
 	var frameBufferIndex SIZE_T
 	if HlpFrameBufferData.Initialized == fALSE {
-		return ??
+		return
 
 	}
 
 	if positionX >= HlpFrameBufferData.Width or positionY >= HlpFrameBufferData.Height or color > 4294967295 {
-		return ??
+		return
 
 	}
 
@@ -149,7 +149,7 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 
 	var fontColor ULONG
 	if HlpFrameBufferData.Initialized == fALSE {
-		return ??
+		return
 
 	}
 
@@ -158,7 +158,7 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 	character = 0
 	[unknown clang ast] CompoundStmt ForStmt
 	if !character {
-		return ??
+		return
 
 	}
 

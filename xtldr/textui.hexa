@@ -21,7 +21,7 @@ fun blDisplayBootMenu() {
 	var timeOutString PWCHAR
 	status = blInitializeBootMenuList(menuEntries, numberOfEntries, highligtedEntryId)
 	if status != (9223372036854775808 & 0) {
-		return ??
+		return
 
 	}
 
@@ -50,7 +50,7 @@ fun blDisplayBootMenu() {
 
 		} else {
 			blDisplayErrorDialog("XTLDR", "No boot menu entries found in the configuration. Falling back to shell.")
-			return ??
+			return
 
 		}
 
@@ -128,7 +128,7 @@ fun blDisplayBootMenu() {
 								} else {
 									[unknown clang ast] CompoundStmt CompoundStmt
 									if Key.UnicodeChar == 115 {
-										return ??
+										return
 
 									}
 
@@ -281,7 +281,7 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 	if status != (9223372036854775808 & 0) {
 		blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
 		blDisplayErrorDialog("XTLDR", "Failed to allocate memory for input field buffer.")
-		return ??
+		return
 
 	}
 
@@ -723,7 +723,7 @@ fun blpDrawDialogMessage(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 	status = blAllocateMemoryPool(length * sizeOf<Unsigned long long>(), msg as! PVOID *)
 	if status != (9223372036854775808 & 0) {
 		blDebugPrint("ERROR: Memory allocation failure (Status Code: 0x%zX)\n", status)
-		return ??
+		return
 
 	}
 

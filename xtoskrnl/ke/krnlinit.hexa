@@ -19,18 +19,8 @@ fun keStartXtSystem(parameters PKERNEL_INITIALIZATION_BLOCK) {
 	}
 
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt IntegerLiteral
-		[unknown clang ast] CompoundStmt IntegerLiteral
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Starting ExectOS v%d.%d for %s (%s-%s-%s-%s / %s %s)\n", 0, 1, "64-bit x86", "20240622", "devel", "amd64", "c2db94125d", "Clang", "18.1.5")
 	}
 
 	arInitializeProcessor((0 as! PVOID))

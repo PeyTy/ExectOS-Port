@@ -27,9 +27,8 @@ fun kepInitializeKernel() {
 	status = hlInitializeSystem()
 	if status != (0 as! XTSTATUS) {
 		if keDbgPrint {
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+			keDbgPrint("Failed to initialize hardware layer subsystem!\n")
 		}
 
 		kePanic(0)
@@ -49,9 +48,8 @@ fun kepInitializeMachine() {
 	hlIoPortOutByte(1014, 0)
 	hlInitializeFrameBuffer()
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Starting...\n")
 	}
 
 	hlInitializeProcessor()
@@ -90,9 +88,8 @@ fun kepStartKernel() {
 	currentThread.waitRunLevel = 2
 	currentProcess.activeProcessors |= 1 as! ULONG_PTR << prcb.cpuNumber
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("KepStartKernel() finished. Entering infinite loop.\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt

@@ -12,18 +12,16 @@ fun arpDispatchTrap(trapFrame PKTRAP_FRAME) {
 
 fun arpHandleSystemCall32() {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled 32-bit system call!\n")
 	}
 
 }
 
 fun arpHandleSystemCall64() {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled 64-bit system call!\n")
 	}
 
 }
@@ -38,9 +36,8 @@ fun arpHandleSystemCall64() {
 /// @since XT 1.0
 fun arpHandleTrap00(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Division-By-Zero Error (0x00)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -56,9 +53,8 @@ fun arpHandleTrap00(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap01(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Debug exception (0x01)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -74,9 +70,8 @@ fun arpHandleTrap01(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap02(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Non-Maskable-Interrupt (0x02)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -92,9 +87,8 @@ fun arpHandleTrap02(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap03(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled INT3 (0x03)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -110,9 +104,8 @@ fun arpHandleTrap03(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap04(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Overflow exception (0x04)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -128,9 +121,8 @@ fun arpHandleTrap04(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap05(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Bound-Range-Exceeded exception (0x05)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -146,9 +138,8 @@ fun arpHandleTrap05(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap06(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Invalid Opcode exception (0x06)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -164,9 +155,8 @@ fun arpHandleTrap06(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap07(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Device Not Available exception (0x07)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -182,9 +172,8 @@ fun arpHandleTrap07(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap08(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Double-Fault exception (0x08)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -200,9 +189,8 @@ fun arpHandleTrap08(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap09(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Segment-Overrun exception (0x09)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -218,9 +206,8 @@ fun arpHandleTrap09(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap0A(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Invalid-TSS exception (0x0A)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -236,9 +223,8 @@ fun arpHandleTrap0A(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap0B(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Segment-Not-Present exception (0x0B)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -254,9 +240,8 @@ fun arpHandleTrap0B(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap0C(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Stack-Segment-Fault exception (0x0C)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -272,9 +257,8 @@ fun arpHandleTrap0C(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap0D(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled General-Protection-Fault (0x0D)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -290,9 +274,8 @@ fun arpHandleTrap0D(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap0E(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Page-Fault exception (0x0E)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -308,9 +291,8 @@ fun arpHandleTrap0E(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap10(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled x87 Floating-Point exception (0x10)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -326,9 +308,8 @@ fun arpHandleTrap10(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap11(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Alignment-Check exception (0x11)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -344,9 +325,8 @@ fun arpHandleTrap11(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap12(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Machine-Check exception (0x12)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -362,9 +342,8 @@ fun arpHandleTrap12(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap13(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled SIMD Floating-Point exception (0x13)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -380,9 +359,8 @@ fun arpHandleTrap13(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap1F(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Unhandled software interrupt at APC level (0x1F)!\n")
 	}
 
 }
@@ -397,9 +375,8 @@ fun arpHandleTrap1F(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap2C(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Assertion (0x2C)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -415,9 +392,8 @@ fun arpHandleTrap2C(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap2D(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Debug-Service-Request (0x2D)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -433,9 +409,8 @@ fun arpHandleTrap2D(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrap2F(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Unhandled software interrupt at DISPATCH level (0x2F)!\n")
 	}
 
 }
@@ -450,9 +425,8 @@ fun arpHandleTrap2F(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrapE1(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Unhandled IPI interrupt (0xE1)!\n")
 	}
 
 }
@@ -467,9 +441,8 @@ fun arpHandleTrapE1(trapFrame PKTRAP_FRAME) {
 /// @since XT 1.0
 fun arpHandleTrapFF(trapFrame PKTRAP_FRAME) {
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Handled Unexpected-Interrupt (0xFF)!\n")
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt

@@ -7,9 +7,8 @@ fun mmInitializeMemoryManager() {
 	mmpScanMemoryDescriptors()
 	if mmNumberOfPhysicalPages < 2048 {
 		if keDbgPrint {
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+			keDbgPrint("Insufficient physical pages! Install additional memory\n")
 		}
 
 		kePanic(0)

@@ -169,23 +169,20 @@ fun hlpInitializeAcpiSystemInformation() {
 	var status XTSTATUS
 	var cpuCount ULONG
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("HlpInitializeAcpiSystemInformation()\n")
 	}
 
 	rtlZeroMemory(hlpAcpiSystemInfo, sizeOf<Unsigned long long>())
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("DUPA1\n")
 	}
 
 	status = hlGetAcpiTable(1128878145, madt as! PACPI_DESCRIPTION_HEADER *)
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("DUPA2\n")
 	}
 
 	if status != (0 as! XTSTATUS) {
@@ -196,18 +193,14 @@ fun hlpInitializeAcpiSystemInformation() {
 	madtTable = madt.apicTables as! PUCHAR
 	cpuCount = 0
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Madt: %zX\n", madt)
 	}
 
 	while madtTable <= (madt as! PUCHAR + madt.header.length) {
 		if keDbgPrint {
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
-			[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+			keDbgPrint("MadtTable: %P\n", madtTable)
 		}
 
 		if ((madtTable as! PACPI_MADT_LOCAL_APIC).header.type == 0) and ((madtTable as! PACPI_MADT_LOCAL_APIC).header.length == sizeOf<Unsigned long long>()) {
@@ -226,10 +219,8 @@ fun hlpInitializeAcpiSystemInformation() {
 	}
 
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Number of CPUs: %u\n", cpuCount)
 	}
 
 	return (0 as! XTSTATUS)
@@ -376,9 +367,8 @@ fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 	}
 
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("KUPA2\n")
 	}
 
 	if tableHeader.signature != signature {
@@ -416,10 +406,8 @@ fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 	mmMarkHardwareMemoryWriteThrough(tableHeader, tablePages)
 	hlpCacheAcpiTable(tableHeader)
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Table Address: %P\n", tableHeader)
 	}
 
 	acpiTable[0] = tableHeader

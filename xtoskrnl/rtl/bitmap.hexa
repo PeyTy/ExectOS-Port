@@ -23,7 +23,7 @@ fun rtlClearAllBits(bitMap PRTL_BITMAP) {
 /// @since NT 5.1
 fun rtlClearBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
 	if bit >= bitMap.size {
-		return ??
+		return
 
 	}
 
@@ -49,7 +49,7 @@ fun rtlClearBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) 
 	var mask ULONG_PTR
 	var buffer PULONG_PTR
 	if !length {
-		return ??
+		return
 
 	}
 
@@ -62,7 +62,7 @@ fun rtlClearBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) 
 			bitOffset -= length
 			mask = mask << bitOffset >> bitOffset
 			buffer[0] &= ~mask
-			return ??
+			return
 
 		}
 
@@ -117,11 +117,8 @@ fun rtlClearSetBits(bitMap PRTL_BITMAP, length ULONG_PTR, index ULONG_PTR) {
 fun rtlDumpBitMap(bitMap PRTL_BITMAP) {
 	var index ULONG_PTR
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("BitMap Buffer: 0x%zX (%lu bytes)\n", bitMap.buffer, bitMap.size)
 	}
 
 	[unknown clang ast] CompoundStmt ForStmt
@@ -207,7 +204,7 @@ fun rtlSetAllBits(bitMap PRTL_BITMAP) {
 /// @since NT 5.1
 fun rtlSetBit(bitMap PRTL_BITMAP, bit ULONG_PTR) {
 	if bit >= bitMap.size {
-		return ??
+		return
 
 	}
 
@@ -233,7 +230,7 @@ fun rtlSetBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) {
 	var mask ULONG_PTR
 	var buffer PULONG_PTR
 	if !length {
-		return ??
+		return
 
 	}
 
@@ -246,7 +243,7 @@ fun rtlSetBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) {
 			bitOffset -= length
 			mask = mask << bitOffset >> bitOffset
 			buffer[0] |= mask
-			return ??
+			return
 
 		}
 

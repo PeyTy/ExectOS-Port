@@ -152,10 +152,8 @@ fun mmMapHardwareMemory(physicalAddress PHYSICAL_ADDRESS, pageCount PFN_NUMBER, 
 	}
 
 	if keDbgPrint {
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
-		[unknown clang ast] CompoundStmt ImplicitCastExpr
 
+		keDbgPrint("Virtual address: %P\n", returnAddress)
 	}
 
 	virtualAddress[0] = returnAddress
