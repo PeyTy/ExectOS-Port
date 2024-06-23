@@ -4,7 +4,7 @@
 /// 
 /// @since XT 1.0
 fun arClearInterruptFlag() {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(/*empty*/)
 }
 
 /// Retrieves a various amount of information about the CPU.
@@ -17,13 +17,13 @@ fun arClearInterruptFlag() {
 /// @since XT 1.0
 fun arCpuId(registers PCPUID_REGISTERS) {
 	var maxLeaf UINT32
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(maxLeaf, registers.leaf & 2147483648)
 	if registers.leaf > maxLeaf {
 		return fALSE
 
 	}
 
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(registers.eax, registers.ebx, registers.ecx, registers.edx, registers.leaf, registers.subLeaf)
 	return tRUE
 }
 
@@ -43,7 +43,7 @@ fun arFlushTlb() {
 /// @since XT 1.0
 fun arGetCpuFlags() {
 	var flags ULONG_PTR
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(flags)
 	return flags
 }
 
@@ -53,7 +53,7 @@ fun arGetCpuFlags() {
 /// 
 /// @since XT 1.0
 fun arGetStackPointer() {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(/*empty*/)
 }
 
 /// Halts the central processing unit (CPU).
@@ -62,7 +62,7 @@ fun arGetStackPointer() {
 /// 
 /// @since XT 1.0
 fun arHalt() {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(/*empty*/)
 }
 
 /// Checks whether interrupts are enabled or not.
@@ -85,7 +85,7 @@ fun arInterruptsEnabled() {
 /// 
 /// @since XT 1.0
 fun arInvalidateTlbEntry(address PVOID) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(address)
 }
 
 /// Loads the value in the source operand into the global descriptor table register (GDTR).
@@ -97,7 +97,7 @@ fun arInvalidateTlbEntry(address PVOID) {
 /// 
 /// @since XT 1.0
 fun arLoadGlobalDescriptorTable(source PVOID) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(source as! PSHORT[0])
 }
 
 /// Loads the value in the source operand into the interrupt descriptor table register (IDTR).
@@ -109,7 +109,7 @@ fun arLoadGlobalDescriptorTable(source PVOID) {
 /// 
 /// @since XT 1.0
 fun arLoadInterruptDescriptorTable(source PVOID) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(source as! PSHORT[0])
 }
 
 /// Loads the value in the source operand into the local descriptor table register (LDTR).
@@ -121,7 +121,7 @@ fun arLoadInterruptDescriptorTable(source PVOID) {
 /// 
 /// @since XT 1.0
 fun arLoadLocalDescriptorTable(source USHORT) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(source)
 }
 
 /// Loads the value in the source operand into the MXCSR register
@@ -133,7 +133,7 @@ fun arLoadLocalDescriptorTable(source USHORT) {
 /// 
 /// @since XT 1.0
 fun arLoadMxcsrRegister(source ULONG) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(source)
 }
 
 /// Loads source data into specified segment.
@@ -180,7 +180,7 @@ fun arLoadSegment(segment USHORT, source ULONG) {
 /// 
 /// @since XT 1.0
 fun arLoadTaskRegister(source USHORT) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(source)
 }
 
 /// Orders memory accesses as seen by other processors.
@@ -190,7 +190,7 @@ fun arLoadTaskRegister(source USHORT) {
 /// @since XT 1.0
 fun arMemoryBarrier() {
 	var barrier LONG
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(barrier)
 }
 
 /// Reads the specified CPU control register and returns its value.
@@ -280,7 +280,7 @@ fun arReadDebugRegister(debugRegister USHORT) {
 /// @since XT 1.0
 fun arReadGSQuadWord(offset ULONG) {
 	var value ULONGLONG
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(value, offset)
 	return value
 }
 
@@ -295,7 +295,7 @@ fun arReadGSQuadWord(offset ULONG) {
 fun arReadModelSpecificRegister(register ULONG) {
 	var low ULONG
 	var high ULONG
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(low, high, register)
 	return (high as! ULONGLONG << 32) | low
 }
 
@@ -316,7 +316,7 @@ fun arReadMxCsrRegister() {
 fun arReadTimeStampCounter() {
 	var low ULONGLONG
 	var high ULONGLONG
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(low, high)
 	return (high as! ULONGLONG << 32) | low
 }
 
@@ -326,7 +326,7 @@ fun arReadTimeStampCounter() {
 /// 
 /// @since XT 1.0
 fun arReadWriteBarrier() {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(/*empty*/)
 }
 
 /// Instructs the processor to set the interrupt flag.
@@ -335,7 +335,7 @@ fun arReadWriteBarrier() {
 /// 
 /// @since XT 1.0
 fun arSetInterruptFlag() {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(/*empty*/)
 }
 
 /// Stores GDT register into the given memory area.
@@ -347,7 +347,7 @@ fun arSetInterruptFlag() {
 /// 
 /// @since XT 1.0
 fun arStoreGlobalDescriptorTable(destination PVOID) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(destination as! PSHORT[0])
 }
 
 /// Stores IDT register into the given memory area.
@@ -359,7 +359,7 @@ fun arStoreGlobalDescriptorTable(destination PVOID) {
 /// 
 /// @since XT 1.0
 fun arStoreInterruptDescriptorTable(destination PVOID) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(destination as! PSHORT[0])
 }
 
 /// Stores LDT register into the given memory area.
@@ -371,7 +371,7 @@ fun arStoreInterruptDescriptorTable(destination PVOID) {
 /// 
 /// @since XT 1.0
 fun arStoreLocalDescriptorTable(destination PVOID) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(destination as! PSHORT[0])
 }
 
 /// Stores specified segment into the given memory area.
@@ -415,7 +415,7 @@ fun arStoreSegment(segment USHORT, destination PVOID) {
 /// 
 /// @since XT 1.0
 fun arStoreTaskRegister(destination PVOID) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(destination as! PULONG[0])
 }
 
 /// Writes a value to the specified CPU control register.
@@ -500,7 +500,7 @@ fun arWriteDebugRegister(debugRegister USHORT, value UINT_PTR) {
 /// 
 /// @since XT 1.0
 fun arWriteEflagsRegister(value UINT_PTR) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(value)
 }
 
 /// Writes a 64-bit value to the requested Model Specific Register (MSR).
@@ -517,7 +517,7 @@ fun arWriteEflagsRegister(value UINT_PTR) {
 fun arWriteModelSpecificRegister(register ULONG, value ULONGLONG) {
 	var low ULONG = value & 4294967295
 	var high ULONG = value >> 32
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(register, low, high)
 }
 
 /// Yields a current thread running on the processor.
@@ -526,5 +526,5 @@ fun arWriteModelSpecificRegister(register ULONG, value ULONGLONG) {
 /// 
 /// @since XT 1.0
 fun arYieldProcessor() {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(/*empty*/)
 }

@@ -8,7 +8,7 @@
 /// @since XT 1.0
 fun hlIoPortInByte(port USHORT) {
 	var value UCHAR
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(value, port)
 	return value
 }
 
@@ -22,7 +22,7 @@ fun hlIoPortInByte(port USHORT) {
 /// @since XT 1.0
 fun hlIoPortInLong(port USHORT) {
 	var value ULONG
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(value, port)
 	return value
 }
 
@@ -36,7 +36,7 @@ fun hlIoPortInLong(port USHORT) {
 /// @since XT 1.0
 fun hlIoPortInShort(port USHORT) {
 	var value USHORT
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(value, port)
 	return value
 }
 
@@ -52,7 +52,7 @@ fun hlIoPortInShort(port USHORT) {
 /// 
 /// @since XT 1.0
 fun hlIoPortOutByte(port USHORT, value UCHAR) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(value, port)
 }
 
 /// Writes the 32-bit data to the specified I/O port.
@@ -67,7 +67,7 @@ fun hlIoPortOutByte(port USHORT, value UCHAR) {
 /// 
 /// @since XT 1.0
 fun hlIoPortOutLong(port USHORT, value ULONG) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(value, port)
 }
 
 /// Writes the 16-bit data to the specified I/O port.
@@ -82,5 +82,5 @@ fun hlIoPortOutLong(port USHORT, value ULONG) {
 /// 
 /// @since XT 1.0
 fun hlIoPortOutShort(port USHORT, value USHORT) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(value, port)
 }

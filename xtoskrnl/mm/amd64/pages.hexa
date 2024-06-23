@@ -10,5 +10,5 @@
 /// 
 /// @since XT 1.0
 fun mmZeroPages(address PVOID, size ULONG) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(address, size)
 }

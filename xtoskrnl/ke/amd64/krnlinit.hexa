@@ -100,5 +100,5 @@ fun kepStartKernel() {
 /// 
 /// @since XT 1.0
 fun kepSwitchBootStack(stack ULONG_PTR) {
-	[unknown clang ast] CompoundStmt GCCAsmStmt
+	asm(stack, ((sizeOf<Unsigned long long>() + 15) & ~15) | sizeOf<Unsigned long long>() | sizeOf<Unsigned long long>() | 8, kepStartKernel)
 }
