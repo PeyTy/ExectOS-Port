@@ -84,7 +84,29 @@ fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTE
 	thread.initialStack = stack
 	thread.stackBase = stack
 	thread.stackLimit = stack - 32768
-	[unknown clang ast] CompoundStmt SEHTryStmt
+	@seh try {
+		kepInitializeThreadContext(thread, systemRoutine, startRoutine, startContext, context)
+
+	} catch seh EXCEPTION_EXECUTE_HANDLER {
+		[unknown clang ast] CompoundStmt IntegerLiteral
+
+		{
+			allocation
+
+			{
+				mmFreeKernelStack(stack, fALSE)
+				thread.initialStack = (0 as! PVOID)
+				thread.stackBase = (0 as! PVOID)
+
+			}
+
+			(3221225473 as! XTSTATUS)
+
+		}
+
+
+	}
+
 	thread.state = initialized
 	if startThread {
 		keStartThread(thread)
