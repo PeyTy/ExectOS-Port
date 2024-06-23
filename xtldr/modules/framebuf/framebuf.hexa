@@ -461,7 +461,7 @@ fun fbpGetModeInfo() {
 
 		}
 
-		pixelBitMask = [unknown clang ast] resolve CompoundLiteralExpr
+		pixelBitMask = [0,0,0,0]
 		fbpGetPixelInformation(pixelBitMask)
 		FbpDisplayInfo.modeInfo.pixelsPerScanLine = FbpDisplayInfo.modeInfo.width
 		FbpDisplayInfo.modeInfo.pitch = FbpDisplayInfo.modeInfo.pixelsPerScanLine * (FbpDisplayInfo.modeInfo.bitsPerPixel / 8)

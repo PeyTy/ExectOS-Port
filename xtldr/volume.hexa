@@ -615,15 +615,15 @@ fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, 
 			rtlCompareWideStringInsensitive(arcPath, "cdrom(", 0) == 0
 
 			{
-				[unknown clang ast] resolve CompoundAssignOperator
+				arcLength += 6
 				systemPath[arcLength] != 41/* ")" */ && systemPath[arcLength] != 0/* "\u0000" */
 
 				{
 					systemPath[arcLength] >= 48/* "0" */ && systemPath[arcLength] <= 57/* "9" */
 
 					{
-						[unknown clang ast] resolve CompoundAssignOperator
-						[unknown clang ast] resolve CompoundAssignOperator
+						driveNumber[0] *= 10
+						driveNumber[0] += systemPath[arcLength] - 48/* "0" */
 
 					}
 
@@ -654,15 +654,15 @@ fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, 
 				rtlCompareWideStringInsensitive(arcPath, "rdisk(", 0) == 0
 
 				{
-					[unknown clang ast] resolve CompoundAssignOperator
+					arcLength += 6
 					systemPath[arcLength] != 41/* ")" */ && systemPath[arcLength] != 0/* "\u0000" */
 
 					{
 						systemPath[arcLength] >= 48/* "0" */ && systemPath[arcLength] <= 57/* "9" */
 
 						{
-							[unknown clang ast] resolve CompoundAssignOperator
-							[unknown clang ast] resolve CompoundAssignOperator
+							driveNumber[0] *= 10
+							driveNumber[0] += systemPath[arcLength] - 48/* "0" */
 
 						}
 
@@ -676,15 +676,15 @@ fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, 
 					rtlCompareWideStringInsensitive(arcPath, "partition(", 0) == 0
 
 					{
-						[unknown clang ast] resolve CompoundAssignOperator
+						arcLength += 10
 						systemPath[arcLength] != 41/* ")" */ && systemPath[arcLength] != 0/* "\u0000" */
 
 						{
 							systemPath[arcLength] >= 48/* "0" */ && systemPath[arcLength] <= 57/* "9" */
 
 							{
-								[unknown clang ast] resolve CompoundAssignOperator
-								[unknown clang ast] resolve CompoundAssignOperator
+								partNumber[0] *= 10
+								partNumber[0] += systemPath[arcLength] - 48/* "0" */
 
 							}
 

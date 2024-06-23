@@ -380,7 +380,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			formatIndex[0] == 45/* "-" */
 
 			{
-				[unknown clang ast] resolve CompoundAssignOperator
+				FormatProperties.flags |= 4
 
 			}
 
@@ -391,7 +391,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 				formatIndex[0] == 43/* "+" */
 
 				{
-					[unknown clang ast] resolve CompoundAssignOperator
+					FormatProperties.flags |= 1
 
 				}
 
@@ -402,7 +402,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 					formatIndex[0] == 48/* "0" */
 
 					{
-						[unknown clang ast] resolve CompoundAssignOperator
+						FormatProperties.flags |= 8
 
 					}
 
@@ -538,7 +538,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			(formatIndex[0] == 54/* "6" */) && ((formatIndex + 1)[0] == 52/* "4" */)
 
 			{
-				[unknown clang ast] resolve CompoundAssignOperator
+				formatIndex += 2
 				FormatProperties.integerSize = sizeOf<Unsigned long long>()
 
 			}
@@ -1306,7 +1306,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 				precision > 1
 
 				{
-					[unknown clang ast] resolve CompoundAssignOperator
+					numberLength += 1
 
 				}
 
@@ -1318,7 +1318,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 				(exponent < 0) || ((exponent + 1) - significantDigits < 0)
 
 				{
-					[unknown clang ast] resolve CompoundAssignOperator
+					numberLength += 1
 
 				}
 
@@ -1760,7 +1760,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 		{
 			prefix[prefixSize] = 43/* "+" */
-			[unknown clang ast] resolve CompoundAssignOperator
+			prefixSize += 1
 
 		}
 
@@ -2009,7 +2009,7 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 		{
 			prefix[prefixLength] = 43/* "+" */
-			[unknown clang ast] resolve CompoundAssignOperator
+			prefixLength += 1
 
 		}
 
@@ -2036,9 +2036,9 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 			{
 				prefix[prefixLength] = 48/* "0" */
-				[unknown clang ast] resolve CompoundAssignOperator
+				prefixLength += 1
 				prefix[prefixLength] = 120/* "x" */
-				[unknown clang ast] resolve CompoundAssignOperator
+				prefixLength += 1
 
 			}
 

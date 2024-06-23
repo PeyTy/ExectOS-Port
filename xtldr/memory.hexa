@@ -249,7 +249,7 @@ fun blMapEfiMemory(pageMap PXTBL_PAGE_MAPPING, memoryMapAddress PVOID *, getMemo
 
 				{
 					status = blMapVirtualMemory(pageMap, virtualAddress, descriptor.physicalStart as! PVOID, descriptor.numberOfPages, memoryType)
-					[unknown clang ast] resolve CompoundAssignOperator
+					virtualAddress += descriptor.numberOfPages * 4096
 
 				}
 

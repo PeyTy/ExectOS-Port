@@ -377,8 +377,8 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 			Key.unicodeChar == 9
 
 			{
-				[unknown clang ast] resolve CompoundAssignOperator
-				[unknown clang ast] resolve CompoundAssignOperator
+				Handle.attributes ^= (16 | 32)
+				Handle.attributes ^= (4 | 8)
 
 			}
 
@@ -590,7 +590,7 @@ fun blpDetermineDialogBoxSize(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 				32
 
 				case 64:
-					[unknown clang ast] resolve CompoundAssignOperator
+					height += 2
 			break
 		}
 

@@ -178,8 +178,8 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 			(characterMapping[0] & 192) == 192
 
 			{
-				[unknown clang ast] resolve CompoundAssignOperator
-				[unknown clang ast] resolve CompoundAssignOperator
+				index += (((characterMapping[0] & 63) << 8) | characterMapping[1])
+				characterMapping += 2
 
 			}
 
