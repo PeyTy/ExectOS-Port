@@ -70,7 +70,7 @@ fun rtlAtomicAnd64(address Volatile PLONG_PTR, mask LONG_PTR) {
 /// 
 /// @since XT 1.0
 fun rtlAtomicBitTestAndSet(base Volatile PLONG, offset LONG) {
-	return ([unknown clang ast] resolve AtomicExpr >> offset) & 1
+	return (__atomic_fetch_or(base, 5, 1 << offset) >> offset) & 1
 }
 
 /// Performs an atomic test of the specified bit of the specified 64-bit long value and sets it to 1.
@@ -85,7 +85,7 @@ fun rtlAtomicBitTestAndSet(base Volatile PLONG, offset LONG) {
 /// 
 /// @since XT 1.0
 fun rtlAtomicBitTestAndSet64(base Volatile PLONGLONG, offset LONGLONG) {
-	return ([unknown clang ast] resolve AtomicExpr >> offset) & 1
+	return (__atomic_fetch_or(base, 5, 1 << offset) >> offset) & 1
 }
 
 /// Performs atomically compare exchange operation on the 8-bit value.

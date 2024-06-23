@@ -434,7 +434,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 	}
 
 	if formatIndex[0] == 42/* "*" */ {
-		formatIndex++		FormatProperties.fieldWidth = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
+		formatIndex++		FormatProperties.fieldWidth = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
 
 	} else {
 		(formatIndex[0] >= 49/* "1" */) && (formatIndex[0] <= 57/* "9" */)
@@ -455,7 +455,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 	if formatIndex[0] == 46/* "." */ {
 		formatIndex++		if formatIndex[0] == 42/* "*" */ {
-			formatIndex++			FormatProperties.precision = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
+			formatIndex++			FormatProperties.precision = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
 
 		} else {
 			(formatIndex[0] >= 48/* "0" */) && (formatIndex[0] <= 57/* "9" */)
@@ -697,7 +697,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, FormatProperties.integerSize)
 
 		} else {
-			intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG : ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG)
+			intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! ULONGLONG : (va_arg(argumentList[0])) as! ULONGLONG)
 
 		}
 
@@ -725,7 +725,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 
 			{
-				guidArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PGUID : ([unknown clang ast] resolve VAArgExpr) as! PGUID)
+				guidArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PGUID : (va_arg(argumentList[0])) as! PGUID)
 
 			}
 
@@ -757,7 +757,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 				charArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>()) as! UCHAR
 
 			} else {
-				charArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
+				charArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
 
 			}
 
@@ -776,7 +776,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 
 				{
-					wideCharArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
+					wideCharArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
 
 				}
 
@@ -790,10 +790,10 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 				} else {
 					if FormatProperties.flags & 32 {
-						FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LDOUBLE : ([unknown clang ast] resolve VAArgExpr) as! LDOUBLE)
+						FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! LDOUBLE : (va_arg(argumentList[0])) as! LDOUBLE)
 
 					} else {
-						FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! DOUBLE : ([unknown clang ast] resolve VAArgExpr) as! DOUBLE)
+						FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! DOUBLE : (va_arg(argumentList[0])) as! DOUBLE)
 
 					}
 
@@ -834,13 +834,13 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 						{
 							sizeOf<Unsigned long long>()
-							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! UINT : ([unknown clang ast] resolve VAArgExpr) as! UINT) as! CHAR
+							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! UINT : (va_arg(argumentList[0])) as! UINT) as! CHAR
 							sizeOf<Unsigned long long>()
-							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! UINT : ([unknown clang ast] resolve VAArgExpr) as! UINT) as! SHORT
+							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! UINT : (va_arg(argumentList[0])) as! UINT) as! SHORT
 							sizeOf<Unsigned long long>()
-							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! ULONG : ([unknown clang ast] resolve VAArgExpr) as! ULONG)
+							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! ULONG : (va_arg(argumentList[0])) as! ULONG)
 							sizeOf<Unsigned long long>()
-							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG : ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG)
+							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! ULONGLONG : (va_arg(argumentList[0])) as! ULONGLONG)
 							return (3221225485 as! XTSTATUS)
 
 						}
@@ -876,7 +876,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 						strArg = intArg as! UINT_PTR as! PCHAR
 
 					} else {
-						strArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PCHAR : ([unknown clang ast] resolve VAArgExpr) as! PCHAR)
+						strArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PCHAR : (va_arg(argumentList[0])) as! PCHAR)
 
 					}
 
@@ -896,7 +896,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 
 						{
-							wideStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PWCHAR : ([unknown clang ast] resolve VAArgExpr) as! PWCHAR)
+							wideStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PWCHAR : (va_arg(argumentList[0])) as! PWCHAR)
 
 						}
 
@@ -910,7 +910,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 							ansiStrArg = intArg as! UINT_PTR as! PANSI_STRING
 
 						} else {
-							ansiStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PANSI_STRING : ([unknown clang ast] resolve VAArgExpr) as! PANSI_STRING)
+							ansiStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PANSI_STRING : (va_arg(argumentList[0])) as! PANSI_STRING)
 
 						}
 
@@ -934,7 +934,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 
 
 							{
-								unicodeStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PUNICODE_STRING : ([unknown clang ast] resolve VAArgExpr) as! PUNICODE_STRING)
+								unicodeStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PUNICODE_STRING : (va_arg(argumentList[0])) as! PUNICODE_STRING)
 
 							}
 
@@ -985,7 +985,7 @@ fun rtlpGetWideStringArgument(argumentList PVA_LIST, argumentNumber ULONG, argum
 	__builtin_va_copy(argumentsCopy, argumentList[0])
 	index = 1
 	while index < argumentNumber {
-		value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LONGLONG : ([unknown clang ast] resolve VAArgExpr) as! LONGLONG)
+		value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentsCopy)) as! LONGLONG : (va_arg(argumentsCopy)) as! LONGLONG)
 		index
 		1
 
@@ -994,16 +994,16 @@ fun rtlpGetWideStringArgument(argumentList PVA_LIST, argumentNumber ULONG, argum
 	value = 0
 	switch argumentSize {
 		case sizeOf<Unsigned long long>():
-			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT) as! UCHAR
+			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentsCopy)) as! INT : (va_arg(argumentsCopy)) as! INT) as! UCHAR
 		break
 		case sizeOf<Unsigned long long>():
-			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT) as! USHORT
+			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentsCopy)) as! INT : (va_arg(argumentsCopy)) as! INT) as! USHORT
 		break
 		case sizeOf<Unsigned long long>():
-			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LONG : ([unknown clang ast] resolve VAArgExpr) as! LONG)
+			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentsCopy)) as! LONG : (va_arg(argumentsCopy)) as! LONG)
 		break
 		case sizeOf<Unsigned long long>():
-			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LONGLONG : ([unknown clang ast] resolve VAArgExpr) as! LONGLONG)
+			value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentsCopy)) as! LONGLONG : (va_arg(argumentsCopy)) as! LONGLONG)
 		break
 		case _:
 			value = 0
