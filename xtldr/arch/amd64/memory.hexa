@@ -39,7 +39,7 @@ fun blBuildPageMap(pageMap PXTBL_PAGE_MAPPING, selfMapAddress ULONG_PTR) {
 	modulesList = blGetModulesList()
 	modulesListEntry = modulesList.flink
 	while modulesListEntry != modulesList {
-		moduleInfo = (((modulesListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_MODULE_INFO *)
+		moduleInfo = (((modulesListEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_MODULE_INFO *)
 		status = blMapVirtualMemory(pageMap, moduleInfo.moduleBase, moduleInfo.moduleBase, (((moduleInfo.moduleSize) >> 12) + ((((moduleInfo.moduleSize) & 4095)) ? 1 : 0)), loaderFirmwareTemporary)
 		if status != (9223372036854775808 & 0) {
 			return status
@@ -66,7 +66,7 @@ fun blBuildPageMap(pageMap PXTBL_PAGE_MAPPING, selfMapAddress ULONG_PTR) {
 	blDebugPrint("Mapping and dumping EFI memory:\n")
 	listEntry = pageMap.memoryMap.flink
 	while listEntry != pageMap.memoryMap {
-		mapping = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_MEMORY_MAPPING *)
+		mapping = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_MEMORY_MAPPING *)
 		if mapping.virtualAddress {
 			blDebugPrint("   Type=%02lu, PhysicalBase=%.16P, VirtualBase=%.16P, Pages=%llu\n", mapping.memoryType, mapping.physicalAddress, mapping.virtualAddress, mapping.numberOfPages)
 			status = blMapPage(pageMap, mapping.virtualAddress as! UINT_PTR, mapping.physicalAddress as! UINT_PTR, mapping.numberOfPages)

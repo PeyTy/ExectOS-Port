@@ -95,7 +95,7 @@ fun blInitializeBootMenuList(menuEntries PXTBL_BOOTMENU_ITEM *, entriesCount PUL
 	menuEntrySectionList = blpMenuList.flink
 	while menuEntrySectionList != blpMenuList {
 		menuEntryName = (0 as! PVOID)
-		menuEntrySection = (((menuEntrySectionList) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_SECTION *)
+		menuEntrySection = (((menuEntrySectionList) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_CONFIG_SECTION *)
 		if rtlCompareWideStringInsensitive(menuEntrySection.sectionName, defaultMenuEntry, 0) == 0 {
 			defaultOS = numberOfEntries
 
@@ -103,7 +103,7 @@ fun blInitializeBootMenuList(menuEntries PXTBL_BOOTMENU_ITEM *, entriesCount PUL
 
 		menuEntryList = menuEntrySection.options.flink
 		while menuEntryList != menuEntrySection.options {
-			menuEntryOption = (((menuEntryList) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+			menuEntryOption = (((menuEntryList) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_CONFIG_ENTRY *)
 			if rtlCompareWideStringInsensitive(menuEntryOption.name, "SYSTEMNAME", 0) == 0 {
 				menuEntryName = menuEntryOption.value
 
@@ -158,7 +158,7 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 	modulesList = (0 as! PVOID)
 	optionsListEntry = optionsList.flink
 	while optionsListEntry != optionsList {
-		option = (((optionsListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		option = (((optionsListEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_CONFIG_ENTRY *)
 		if rtlCompareWideStringInsensitive(option.name, "BOOTMODULES", 0) == 0 {
 			moduleListLength = rtlWideStringLength(option.value, 0)
 			status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (moduleListLength + 1), modulesList as! PVOID *)

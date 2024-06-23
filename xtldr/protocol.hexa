@@ -31,7 +31,7 @@ fun blFindBootProtocol(systemType PWCHAR, bootProtocolGuid PEFI_GUID) {
 
 	protocolListEntry = BlpBootProtocols.flink
 	while protocolListEntry != blpBootProtocols {
-		protocolEntry = (((protocolListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_KNOWN_BOOT_PROTOCOL *)
+		protocolEntry = (((protocolListEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_KNOWN_BOOT_PROTOCOL *)
 		if rtlCompareWideStringInsensitive(protocolEntry.systemType, systemType, 0) == 0 {
 			bootProtocolGuid[0] = protocolEntry.guid
 			return (9223372036854775808 & 0)
@@ -114,7 +114,7 @@ fun blLoadModule(moduleName PWCHAR) {
 	var moduleData PVOID
 	moduleListEntry = BlpLoadedModules.flink
 	while moduleListEntry != blpLoadedModules {
-		moduleInfo = (((moduleListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_MODULE_INFO *)
+		moduleInfo = (((moduleListEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_MODULE_INFO *)
 		if rtlCompareWideStringInsensitive(moduleInfo.moduleName, moduleName, 0) == 0 {
 			blDebugPrint("WARNING: Module '%S' already loaded!\n", moduleName)
 			return (9223372036854775808 & 0)
@@ -191,7 +191,7 @@ fun blLoadModule(moduleName PWCHAR) {
 
 	depsListEntry = moduleInfo.dependencies.flink
 	while depsListEntry != moduleInfo.dependencies {
-		moduleDependency = (((depsListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_MODULE_DEPS *)
+		moduleDependency = (((depsListEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_MODULE_DEPS *)
 		if moduleDependency.moduleName == (0 as! PVOID) or moduleDependency.moduleName[0] == 0/* "\u0000" */ {
 			break
 		}
@@ -415,7 +415,7 @@ fun blRegisterBootProtocol(systemType PWCHAR, bootProtocolGuid PEFI_GUID) {
 	var status EFI_STATUS
 	protocolListEntry = BlpBootProtocols.flink
 	while protocolListEntry != blpBootProtocols {
-		protocolEntry = (((protocolListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_KNOWN_BOOT_PROTOCOL *)
+		protocolEntry = (((protocolListEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_KNOWN_BOOT_PROTOCOL *)
 		if rtlCompareWideStringInsensitive(protocolEntry.systemType, systemType, 0) == 0 {
 			return (9223372036854775808 | 21)
 

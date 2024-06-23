@@ -71,7 +71,7 @@ fun kepGetSystemResource(resourceType SYSTEM_RESOURCE_TYPE, acquire BOOLEAN, res
 	keAcquireSpinLock(kepSystemResourcesLock)
 	listEntry = KepSystemResourcesListHead.flink
 	while listEntry != kepSystemResourcesListHead {
-		resource = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
+		resource = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! SYSTEM_RESOURCE_HEADER *)
 		if resource.resourceType == resourceType and resource.acquired == fALSE {
 			if acquire {
 				resource.acquired = tRUE
@@ -117,7 +117,7 @@ fun kepInitializeSystemResources() {
 	if !rtlListEmpty(keInitializationBlock.systemResourcesListHead) {
 		listEntry = keInitializationBlock.systemResourcesListHead.flink
 		while listEntry != keInitializationBlock.systemResourcesListHead {
-			resourceHeader = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! SYSTEM_RESOURCE_HEADER *)
+			resourceHeader = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! SYSTEM_RESOURCE_HEADER *)
 			nextListEntry = listEntry.flink
 			switch resourceHeader.resourceType {
 				case systemResourceAcpi:

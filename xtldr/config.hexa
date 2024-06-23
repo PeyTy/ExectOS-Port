@@ -37,7 +37,7 @@ fun blGetConfigValue(configName Const PWCHAR) {
 	keyLength = rtlWideStringLength(configName, 0)
 	configListEntry = BlpConfig.flink
 	while configListEntry != blpConfig {
-		configEntry = (((configListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		configEntry = (((configListEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_CONFIG_ENTRY *)
 		if rtlCompareWideStringInsensitive(configEntry.name, configName, keyLength) == 0 {
 			valueLength = rtlWideStringLength(configEntry.value, 0)
 			status = blAllocateMemoryPool((valueLength + 1) * sizeOf<Unsigned long long>(), value as! PVOID *)
@@ -81,7 +81,7 @@ fun blSetConfigValue(configName Const PWCHAR, configValue Const PWCHAR) {
 	length = rtlWideStringLength(configName, 0)
 	configListEntry = BlpConfig.flink
 	while configListEntry != blpConfig {
-		configEntry = (((configListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		configEntry = (((configListEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_CONFIG_ENTRY *)
 		if rtlCompareWideStringInsensitive(configEntry.name, configName, length) == 0 {
 			length = rtlWideStringLength(configValue, 0)
 			status = blFreeMemoryPool(configEntry.value)
@@ -438,7 +438,7 @@ fun blpUpdateConfiguration(newConfig PLIST_ENTRY) {
 
 	configListEntry = newConfig.flink
 	while configListEntry != newConfig {
-		configEntry = (((configListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_CONFIG_ENTRY *)
+		configEntry = (((configListEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_CONFIG_ENTRY *)
 		nextListEntry = configListEntry.flink
 		if blGetConfigValue(configEntry.name) == (0 as! PVOID) {
 			rtlRemoveEntryList(configEntry.flink)

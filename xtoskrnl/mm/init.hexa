@@ -33,7 +33,7 @@ fun mmpScanMemoryDescriptors() {
 	freePages = 0
 	memoryMappings = keInitializationBlock.memoryDescriptorListHead.flink
 	while memoryMappings != keInitializationBlock.memoryDescriptorListHead {
-		memoryDescriptor = (((memoryMappings) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! LOADER_MEMORY_DESCRIPTOR *)
+		memoryDescriptor = (((memoryMappings) as! Char * - __builtin_offsetof<Unsigned long long>()) as! LOADER_MEMORY_DESCRIPTOR *)
 		if mmpVerifyMemoryTypeInvisible(memoryDescriptor.memoryType) or (memoryDescriptor.memoryType == loaderHardwareCachedMemory) {
 			memoryMappings = memoryMappings.flink
 			continue

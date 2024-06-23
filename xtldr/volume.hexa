@@ -62,7 +62,7 @@ fun blEnumerateBlockDevices() {
 
 	listEntry = BlockDevices.flink
 	while listEntry != blockDevices {
-		blockDeviceData = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE_DATA *)
+		blockDeviceData = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! EFI_BLOCK_DEVICE_DATA *)
 		status = blpFindLastBlockDeviceNode(blockDeviceData.devicePath, lastNode)
 		if status != (9223372036854775808 & 0) {
 			blDebugPrint("WARNING: Block device last node not found\n")
@@ -209,7 +209,7 @@ fun blFindVolumeDevicePath(fsHandle PEFI_DEVICE_PATH_PROTOCOL, fileSystemPath Co
 	filePath = (devicePath[0] as! PUCHAR + devicePathLength) as! PEFI_FILEPATH_DEVICE_PATH
 	filePath.header.type = 4
 	filePath.header.subType = 4
-	filePath.header.length[0] = fsPathLength as! UCHAR + [unknown clang ast] resolve OffsetOfExpr + sizeOf<Unsigned long long>()
+	filePath.header.length[0] = fsPathLength as! UCHAR + __builtin_offsetof<Unsigned long long>() + sizeOf<Unsigned long long>()
 	filePath.header.length[1] = filePath.header.length[0] >> 8
 	rtlCopyMemory(filePath.pathName, fileSystemPath, fsPathLength + sizeOf<Unsigned long long>())
 	endDevicePath = filePath.pathName[(fsPathLength / sizeOf<Unsigned long long>()) + 1] as! PEFI_DEVICE_PATH_PROTOCOL
@@ -333,7 +333,7 @@ fun blGetVolumeDevicePath(systemPath PWCHAR, devicePath PEFI_DEVICE_PATH_PROTOCO
 
 	listEntry = EfiBlockDevices.flink
 	while listEntry != efiBlockDevices {
-		device = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE *)
+		device = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! EFI_BLOCK_DEVICE *)
 		if (device.driveType == driveType and device.driveNumber == driveNumber and device.partitionNumber == partNumber) {
 			devicePath[0] = device.devicePath
 			break
@@ -838,7 +838,7 @@ fun blpFindParentBlockDevice(blockDevices PLIST_ENTRY, childNode PEFI_BLOCK_DEVI
 
 	listEntry = blockDevices.flink
 	while listEntry != blockDevices {
-		blockDeviceData = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! EFI_BLOCK_DEVICE_DATA *)
+		blockDeviceData = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! EFI_BLOCK_DEVICE_DATA *)
 		childDevicePath = childNode.devicePath
 		parentDevicePath = blockDeviceData.devicePath
 		while tRUE {

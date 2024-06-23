@@ -54,7 +54,7 @@ fun hlGetAcpiTable(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 fun hlpCacheAcpiTable(acpiTable PACPI_DESCRIPTION_HEADER) {
 	let acpiCache = new ByValue<PACPI_CACHE_LIST>()
 
-	acpiCache = (((acpiTable) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! ACPI_CACHE_LIST *)
+	acpiCache = (((acpiTable) as! Char * - __builtin_offsetof<Unsigned long long>()) as! ACPI_CACHE_LIST *)
 	rtlInsertTailList(hlpAcpiCacheList, acpiCache.listEntry)
 }
 
@@ -283,7 +283,7 @@ fun hlpQueryAcpiCache(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 
 	listEntry = HlpAcpiCacheList.flink
 	while listEntry != hlpAcpiCacheList {
-		acpiCache = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! ACPI_CACHE_LIST *)
+		acpiCache = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! ACPI_CACHE_LIST *)
 		if acpiCache.header.signature == signature {
 			acpiTable[0] = acpiCache.header
 			break

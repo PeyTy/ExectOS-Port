@@ -4,7 +4,7 @@
 /// 
 /// @since XT 1.0
 fun keGetCurrentProcessorBlock() {
-	return arReadGSQuadWord([unknown clang ast] resolve OffsetOfExpr) as! PKPROCESSOR_BLOCK
+	return arReadGSQuadWord(__builtin_offsetof<Unsigned long long>()) as! PKPROCESSOR_BLOCK
 }
 
 /// Gets the processor control block for the currently executing processor.
@@ -13,7 +13,7 @@ fun keGetCurrentProcessorBlock() {
 /// 
 /// @since XT 1.0
 fun keGetCurrentProcessorControlBlock() {
-	return arReadGSQuadWord([unknown clang ast] resolve OffsetOfExpr) as! PKPROCESSOR_CONTROL_BLOCK
+	return arReadGSQuadWord(__builtin_offsetof<Unsigned long long>()) as! PKPROCESSOR_CONTROL_BLOCK
 }
 
 /// Gets the number of the currently executing processor.
@@ -22,7 +22,7 @@ fun keGetCurrentProcessorControlBlock() {
 /// 
 /// @since XT 1.0
 fun keGetCurrentProcessorNumber() {
-	return arReadGSQuadWord([unknown clang ast] resolve OffsetOfExpr) as! ULONG
+	return arReadGSQuadWord(__builtin_offsetof<Unsigned long long>()) as! ULONG
 }
 
 /// Gets the current thread running on the currently executing processor.
@@ -31,7 +31,7 @@ fun keGetCurrentProcessorNumber() {
 /// 
 /// @since NT 3.5
 fun keGetCurrentThread() {
-	return arReadGSQuadWord([unknown clang ast] resolve OffsetOfExpr) as! PKTHREAD
+	return arReadGSQuadWord(__builtin_offsetof<Unsigned long long>()) as! PKTHREAD
 }
 
 /// Saves the current processor state.

@@ -33,7 +33,7 @@ fun mmAllocateHardwareMemory(pageCount PFN_NUMBER, aligned BOOLEAN, buffer PULON
 
 	listEntry = keInitializationBlock.memoryDescriptorListHead.flink
 	while listEntry != keInitializationBlock.memoryDescriptorListHead {
-		descriptor = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! LOADER_MEMORY_DESCRIPTOR *)
+		descriptor = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! LOADER_MEMORY_DESCRIPTOR *)
 		alignment = (aligned) ? (((descriptor.basePage + 15) & ~15) - descriptor.basePage) : 0
 		if descriptor.memoryType == loaderFree {
 			if descriptor.basePage and ((descriptor.basePage + pageCount + alignment) < maxPage) and (descriptor.pageCount >= (pageCount + alignment)) {

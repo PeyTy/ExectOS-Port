@@ -140,7 +140,7 @@ fun blGetVirtualAddress(pageMap PXTBL_PAGE_MAPPING, physicalAddress PVOID) {
 
 	listEntry = pageMap.memoryMap.flink
 	while listEntry != pageMap.memoryMap {
-		mapping = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_MEMORY_MAPPING *)
+		mapping = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_MEMORY_MAPPING *)
 		if mapping.virtualAddress {
 			if (physicalAddress >= mapping.physicalAddress) and (physicalAddress < mapping.physicalAddress + (mapping.numberOfPages * 4096)) {
 				return physicalAddress - mapping.physicalAddress + mapping.virtualAddress
@@ -339,7 +339,7 @@ fun blMapVirtualMemory(pageMap PXTBL_PAGE_MAPPING, virtualAddress PVOID, physica
 	physicalAddressEnd = (physicalAddress as! ULONG_PTR + (numberOfPages * 4096) - 1) as! PVOID
 	listEntry = pageMap.memoryMap.flink
 	while listEntry != pageMap.memoryMap {
-		mapping2 = (((listEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_MEMORY_MAPPING *)
+		mapping2 = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! XTBL_MEMORY_MAPPING *)
 		physicalAddress2End = (mapping2.physicalAddress as! ULONG_PTR + (mapping2.numberOfPages * 4096) - 1) as! PVOID
 		if mapping1.physicalAddress >= mapping2.physicalAddress and physicalAddressEnd <= physicalAddress2End {
 			if mapping1.memoryType == mapping2.memoryType {
