@@ -88,7 +88,7 @@ fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTE
 		kepInitializeThreadContext(thread, systemRoutine, startRoutine, startContext, context)
 
 	} catch seh EXCEPTION_EXECUTE_HANDLER {
-		[unknown clang ast] CompoundStmt IntegerLiteral
+		1
 
 		{
 			allocation

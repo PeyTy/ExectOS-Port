@@ -357,7 +357,8 @@ fun fbpFindFramebufferAddress(address PEFI_PHYSICAL_ADDRESS) {
 			continue
 		}
 
-		[unknown clang ast] resolve DeclStmt
+		var bars UINT = 0
+		
 		while bars < 6 {
 			status = ioProtocol.getBarAttributes(ioProtocol, bars, (0 as! PVOID), barInfo as! VOID **)
 			if status != (9223372036854775808 & 0) {

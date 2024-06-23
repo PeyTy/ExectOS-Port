@@ -57,7 +57,8 @@ fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 
 	}
 
-	[unknown clang ast] resolve DeclStmt
+	var index UINT = 0
+	
 	while index < 2 {
 		if !pdeBase[((18446744073705357312 >> 21) & 511) + index].valid {
 			status = xtLdrProtocol.memory.allocatePages(1, address)
