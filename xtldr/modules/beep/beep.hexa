@@ -124,7 +124,16 @@ fun bpPlayTune(arguments PWCHAR) {
 /// @since XT 1.0
 fun bpWideStringToNumber(string PWCHAR) {
 	var number ULONG = 0
-	[unknown clang ast] CompoundStmt DoStmt
+	do {
+		if string[0] - 48/* "0" */ < 10 {
+			number *= 10
+			number += string[0] - 48/* "0" */
+
+		}
+
+
+	} while ++string[0] != 0/* "\u0000" */
+
 	return number
 }
 

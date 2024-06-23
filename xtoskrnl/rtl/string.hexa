@@ -84,7 +84,14 @@ fun rtlConcatenateString(destination PCHAR, source PCHAR, count SIZE_T) {
 	}
 
 	if count > 0 {
-		[unknown clang ast] CompoundStmt DoStmt
+		do {
+			if (destination[0] = ++source[0]) == 0/* "\u0000" */ {
+				break
+			}
+
+			destination++
+		} while --count != 0
+
 		destination[0] = 0/* "\u0000" */
 
 	} else {

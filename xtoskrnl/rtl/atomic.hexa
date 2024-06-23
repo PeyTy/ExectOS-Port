@@ -499,7 +499,17 @@ fun rtlAtomicPopEntrySingleList(header PSINGLE_LIST_HEADER) {
 
 	listHead = header as! PVOID
 	firstEntry = listHead.next
-	[unknown clang ast] CompoundStmt DoStmt
+	do {
+		if !firstEntry {
+			return (0 as! PVOID)
+
+		}
+
+		nextEntry = firstEntry
+		firstEntry = rtlAtomicCompareExchange64(listHead as! PLONG_PTR, firstEntry.next as! LONG_PTR, firstEntry as! LONG_PTR) as! PVOID
+
+	} while firstEntry != nextEntry
+
 	return firstEntry
 }
 
@@ -526,7 +536,13 @@ fun rtlAtomicPushEntrySingleList(header PSINGLE_LIST_HEADER, entry PSINGLE_LIST_
 	listHead = header as! PVOID
 	listEntry = entry as! PVOID
 	firstEntry = listHead.next
-	[unknown clang ast] CompoundStmt DoStmt
+	do {
+		listEntry.next = firstEntry
+		nextEntry = firstEntry
+		firstEntry = rtlAtomicCompareExchange64(listHead as! PLONG_PTR, listEntry as! LONG_PTR, firstEntry as! LONG_PTR) as! PVOID
+
+	} while firstEntry != nextEntry
+
 	return firstEntry
 }
 

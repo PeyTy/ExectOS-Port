@@ -166,7 +166,16 @@ fun hlInitializeComPort(port PCPPORT, portAddress PUCHAR, baudRate ULONG) {
 
 	}
 
-	[unknown clang ast] CompoundStmt DoStmt
+	do {
+		hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 7 as! ULONG), byte)
+		if hlIoPortInByte((portAddress as! ULONG_PTR as! USHORT + 7 as! ULONG)) != byte {
+			return (3221226021 as! XTSTATUS)
+
+		}
+
+
+	} while ++byte != 0
+
 	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 3 as! ULONG), 0)
 	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 1 as! ULONG), 0)
 	hlIoPortOutByte((portAddress as! ULONG_PTR as! USHORT + 3 as! ULONG), 128)

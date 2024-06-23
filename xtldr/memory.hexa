@@ -87,7 +87,33 @@ fun blGetMemoryMap(memoryMap PEFI_MEMORY_MAP) {
 
 	memoryMap.map = (0 as! PVOID)
 	memoryMap.mapSize = 0
-	[unknown clang ast] CompoundStmt DoStmt
+	do {
+		status = efiSystemTable.bootServices.getMemoryMap(memoryMap.mapSize, memoryMap.map, memoryMap.mapKey, memoryMap.descriptorSize, memoryMap.descriptorVersion)
+		if status == (9223372036854775808 & 0) {
+			break
+		} else {
+			status != (9223372036854775808 | 5)
+
+			{
+				memoryMap.map
+
+				{
+					blFreeMemoryPool(memoryMap.map)
+
+				}
+
+				status
+
+			}
+
+
+		}
+
+		memoryMap.mapSize += 2 * memoryMap.descriptorSize
+		blAllocateMemoryPool(memoryMap.mapSize, memoryMap.map as! PVOID *)
+
+	} while status == (9223372036854775808 | 5)
+
 	if memoryMap.map == (0 as! PVOID) {
 		return (9223372036854775808 | 17)
 

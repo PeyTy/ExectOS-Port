@@ -84,7 +84,14 @@ fun rtlConcatenateWideString(destination PWCHAR, source PWCHAR, count SIZE_T) {
 	}
 
 	if count > 0 {
-		[unknown clang ast] CompoundStmt DoStmt
+		do {
+			if (destination[0] = ++source[0]) == 0/* "\u0000" */ {
+				break
+			}
+
+			destination++
+		} while --count != 0
+
 		destination[0] = 0/* "\u0000" */
 
 	} else {
@@ -1754,7 +1761,30 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 		}
 
 		rtlZeroMemory(buffer, sizeOf<Unsigned long long>())
-		[unknown clang ast] CompoundStmt DoStmt
+		do {
+			nextInteger = rtlDivideUnsigned64(integer, formatProperties.radix, remainder)
+			character = remainder as! WCHAR
+			if character > 9 {
+				if formatProperties.flags & 512 {
+					character = character - 10 + 65/* "A" */
+
+				} else {
+					character = character - 10 + 97/* "a" */
+
+				}
+
+
+			} else {
+				character += 48/* "0" */
+
+			}
+
+			buffer[integerLength] = character
+			integerLength += 1
+			integer = nextInteger
+
+		} while integer > 0
+
 		rtlReverseWideString(buffer, integerLength)
 
 	}
