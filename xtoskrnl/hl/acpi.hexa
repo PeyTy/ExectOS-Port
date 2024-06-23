@@ -28,6 +28,14 @@ fun hlGetAcpiTable(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 	var status XTSTATUS
 
 	{
+		status = hlpQueryAcpiTables(signature, table)
+		status != (0 as! XTSTATUS)
+
+		{
+			(3221226021 as! XTSTATUS)
+
+		}
+
 
 	}
 
@@ -366,7 +374,36 @@ fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 
 		}
 
-		[unknown clang ast] CompoundStmt ForStmt
+		tableIndex = 0
+		while tableIndex < tableCount {
+			if xsdt != (0 as! PVOID) {
+				TableAddress.quadPart = xsdt.tables[tableIndex]
+
+			} else {
+				TableAddress..lowPart = rsdt.tables[tableIndex]
+				TableAddress..highPart = 0
+
+			}
+
+			if tableHeader != (0 as! PVOID) {
+				mmUnmapHardwareMemory(tableHeader, 2, tRUE)
+
+			}
+
+			status = mmMapHardwareMemory(tableAddress, 2, tRUE, tableHeader as! PVOID *)
+			if status != (0 as! XTSTATUS) {
+				return status
+
+			}
+
+			if tableHeader.signature == signature {
+				break
+			}
+
+			tableIndex
+
+		}
+
 
 	}
 

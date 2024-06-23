@@ -36,6 +36,7 @@ fun bpEnableToneBeep(pitch UINT) {
 		pitch > 20000
 
 		{
+			pitch = 20000
 
 		}
 
@@ -77,11 +78,29 @@ fun bpPlayTune(arguments PWCHAR) {
 			pitch < 0
 
 			{
+				pitch = bpWideStringToNumber(argument)
 
 			}
 
 
 			{
+				duration = bpWideStringToNumber(argument)
+				pitch > 0
+
+				{
+					bpEnableToneBeep(pitch)
+
+				}
+
+
+				{
+					bpDisableToneBeep()
+
+				}
+
+				xtLdrProtocol.util.sleepExecution(60000 * duration / tempo)
+				pitch = -1
+				duration = -1
 
 			}
 

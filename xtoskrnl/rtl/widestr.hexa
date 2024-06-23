@@ -14,8 +14,7 @@
 /// @since XT 1.0
 fun rtlCompareWideString(string1 Const PWCHAR, string2 Const PWCHAR, length SIZE_T) {
 	var index SIZE_T
-	[unknown clang ast] CompoundStmt ForStmt
-	return 0
+[ill ForStmt[0]]	return 0
 }
 
 /// Compares at most specified number of characters of two C wide strings, while ignoring differences in case.
@@ -115,7 +114,17 @@ fun rtlConcatenateWideString(destination PWCHAR, source PWCHAR, count SIZE_T) {
 /// @since XT 1.0
 fun rtlCopyWideString(destination PWCHAR, source Const PWCHAR, length ULONG) {
 	var index ULONG
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < length {
+		destination[index] = source[index]
+		if source[index] == 0/* "\u0000" */ {
+			break
+		}
+
+		index
+
+	}
+
 	destination[index] = 0/* "\u0000" */
 }
 
@@ -184,7 +193,15 @@ fun rtlFormatWideString(context PRTL_PRINT_CONTEXT, format PCWSTR, argumentList 
 fun rtlReverseWideString(string PWCHAR, length ULONG) {
 	var tempChar WCHAR
 	var index ULONG
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < (length / 2) {
+		tempChar = string[index]
+		string[index] = string[length - index - 1]
+		string[length - index - 1] = tempChar
+		index
+
+	}
+
 }
 
 /// Finds the next token in a null-terminated wide string.
@@ -219,8 +236,7 @@ fun rtlTokenizeWideString(string PWCHAR, delimiter Const PWCHAR, savePtr PWCHAR 
 	}
 
 	token = string - 1
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Removes certain characters from a beginning of the wide string.
 /// 
@@ -289,8 +305,7 @@ fun rtlWideStringLength(string Const PWCHAR, maxLength SIZE_T) {
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-	return length
+[ill ForStmt[0]]	return length
 }
 
 /// Formats a wide string according to the given printf-alike format string and a list of arguments.
@@ -358,6 +373,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			formatIndex[0] == 45/* "-" */
 
 			{
+				[unknown clang ast] resolve CompoundAssignOperator
 
 			}
 
@@ -368,6 +384,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 				formatIndex[0] == 43/* "+" */
 
 				{
+					[unknown clang ast] resolve CompoundAssignOperator
 
 				}
 
@@ -378,6 +395,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 					formatIndex[0] == 48/* "0" */
 
 					{
+						[unknown clang ast] resolve CompoundAssignOperator
 
 					}
 
@@ -415,6 +433,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 		(formatIndex[0] >= 49/* "1" */) && (formatIndex[0] <= 57/* "9" */)
 
 		{
+			FormatProperties.fieldWidth = rtlpGetWideStringSpecifierValue(formatIndex as! PWSTR *)
 
 		}
 
@@ -435,11 +454,13 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			(formatIndex[0] >= 48/* "0" */) && (formatIndex[0] <= 57/* "9" */)
 
 			{
+				FormatProperties.precision = rtlpGetWideStringSpecifierValue(formatIndex as! PWSTR *)
 
 			}
 
 
 			{
+				FormatProperties.precision = 0
 
 			}
 
@@ -465,6 +486,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			specifier == 115/* "s" */
 
 			{
+				specifier = 83/* "S" */
 
 			}
 
@@ -504,6 +526,40 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 		FormatProperties.variableType == guid
 
 		{
+			argPosition != 0
+
+			{
+				intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
+				guidArg = intArg as! UINT_PTR as! PGUID
+
+			}
+
+
+			{
+				guidArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PGUID : ([unknown clang ast] resolve VAArgExpr) as! PGUID)
+
+			}
+
+			guidArg != (0 as! PVOID)
+
+			{
+				FormatProperties.flags & 512
+
+				{
+					wideStrArg = "%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X"
+
+				}
+
+
+				{
+					wideStrArg = "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x"
+
+				}
+
+				status = rtlpWriteWideStringCustomValue(context, wideStrArg, guidArg.data1, guidArg.data2, guidArg.data3, guidArg.data4[0], guidArg.data4[1], guidArg.data4[2], guidArg.data4[3], guidArg.data4[4], guidArg.data4[5], guidArg.data4[6], guidArg.data4[7])
+
+			}
+
 
 		}
 
@@ -522,6 +578,20 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			FormatProperties.variableType == wideChar
 
 			{
+				argPosition != 0
+
+				{
+					wideCharArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>()) as! WCHAR
+
+				}
+
+
+				{
+					wideCharArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! INT : ([unknown clang ast] resolve VAArgExpr) as! INT)
+
+				}
+
+				status = rtlpWriteWideStringValue(context, formatProperties, wideCharArg, 1)
 
 			}
 
@@ -547,6 +617,67 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 				FormatProperties.variableType == integer
 
 				{
+					argPosition != 0
+
+					{
+						intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, FormatProperties.integerSize)
+						FormatProperties.integerSize
+
+						{
+							[unknown clang ast] resolve ConstantExpr
+							intArg = intArg as! UCHAR
+							[unknown clang ast] resolve ConstantExpr
+							intArg = intArg as! USHORT
+							[unknown clang ast] resolve ConstantExpr
+							intArg = intArg as! ULONG
+							[unknown clang ast] resolve ConstantExpr
+							intArg = intArg as! ULONGLONG
+							return (3221225485 as! XTSTATUS)
+
+						}
+
+
+					}
+
+
+					{
+						FormatProperties.integerSize
+
+						{
+							[unknown clang ast] resolve ConstantExpr
+							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! UINT : ([unknown clang ast] resolve VAArgExpr) as! UINT) as! CHAR
+							[unknown clang ast] resolve ConstantExpr
+							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! UINT : ([unknown clang ast] resolve VAArgExpr) as! UINT) as! SHORT
+							[unknown clang ast] resolve ConstantExpr
+							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! ULONG : ([unknown clang ast] resolve VAArgExpr) as! ULONG)
+							[unknown clang ast] resolve ConstantExpr
+							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG : ([unknown clang ast] resolve VAArgExpr) as! ULONGLONG)
+							return (3221225485 as! XTSTATUS)
+
+						}
+
+
+					}
+
+					specifier == 110/* "n" */
+
+					{
+						intArg != (0 as! PVOID) as! UINT_PTR
+
+						{
+							(intArg as! UINT_PTR as! PINT)[0] = context.charactersWritten
+
+						}
+
+
+					}
+
+
+					{
+						status = rtlpWriteWideStringIntegerValue(context, formatProperties, intArg)
+
+					}
+
 
 				}
 
@@ -566,6 +697,21 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 					FormatProperties.variableType == wideString
 
 					{
+						argPosition != 0
+
+						{
+							intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
+							wideStrArg = intArg as! UINT_PTR as! PWCHAR
+
+						}
+
+
+						{
+							wideStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PWCHAR : ([unknown clang ast] resolve VAArgExpr) as! PWCHAR)
+
+						}
+
+						status = rtlpWriteWideStringValue(context, formatProperties, wideStrArg, rtlWideStringLength(wideStrArg, 0))
 
 					}
 
@@ -589,6 +735,27 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 						FormatProperties.variableType == unicodeString
 
 						{
+							argPosition != 0
+
+							{
+								intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
+								unicodeStrArg = intArg as! UINT_PTR as! PUNICODE_STRING
+
+							}
+
+
+							{
+								unicodeStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! PUNICODE_STRING : ([unknown clang ast] resolve VAArgExpr) as! PUNICODE_STRING)
+
+							}
+
+							unicodeStrArg != (0 as! PVOID)
+
+							{
+								status = rtlpWriteWideStringValue(context, formatProperties, unicodeStrArg.buffer, unicodeStrArg.length)
+
+							}
+
 
 						}
 
@@ -627,7 +794,14 @@ fun rtlpGetWideStringArgument(argumentList PVA_LIST, argumentNumber ULONG, argum
 	var value ULONGLONG
 	var index ULONG
 	__builtin_va_copy(argumentsCopy, argumentList[0])
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 1
+	while index < argumentNumber {
+		value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? ([unknown clang ast] resolve VAArgExpr) as! LONGLONG : ([unknown clang ast] resolve VAArgExpr) as! LONGLONG)
+		index
+		1
+
+	}
+
 	value = 0
 	[unknown clang ast] CompoundStmt SwitchStmt
 	__builtin_va_end(argumentsCopy)
@@ -647,8 +821,7 @@ fun rtlpGetWideStringSpecifierValue(format PWCHAR *) {
 	var fmt PWCHAR
 	fmt = format[0]
 	count = 0
-	[unknown clang ast] CompoundStmt ForStmt
-	return 0
+[ill ForStmt[0]]	return 0
 }
 
 /// Writes a wide character to the destination provided by the print context.
@@ -765,6 +938,8 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 			formatProperties.flags & 1
 
 			{
+				buffer[index] = 43/* "+" */
+				++index
 
 			}
 
@@ -816,7 +991,13 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		[unknown clang ast] CompoundStmt ForStmt
+		precisionIndex = 0
+		while precisionIndex < precision {
+			roundingAmount *= 0.10000000000000001
+			precisionIndex
+
+		}
+
 		value += roundingAmount
 		value *= tenPower
 		if value as! LONG > 9 {
@@ -860,6 +1041,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 		formatProperties.flags & 1
 
 		{
+			signCharacter = 43/* "+" */
 
 		}
 
@@ -880,6 +1062,21 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 			precision > significantDigits
 
 			{
+				precision = significantDigits
+				!writeExponent && ((exponent + 1) > precision)
+
+				{
+					precision = exponent + 1
+
+				}
+
+				precision == 0
+
+				{
+					precision = 1
+
+				}
+
 
 			}
 
@@ -897,6 +1094,31 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 		formatProperties.flags & 8192
 
 		{
+			writeExponent
+
+			{
+				precision > 1
+
+				{
+					[unknown clang ast] resolve CompoundAssignOperator
+
+				}
+
+
+			}
+
+
+			{
+				(exponent < 0) || ((exponent + 1) - significantDigits < 0)
+
+				{
+					[unknown clang ast] resolve CompoundAssignOperator
+
+				}
+
+
+			}
+
 
 		}
 
@@ -999,7 +1221,18 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		[unknown clang ast] CompoundStmt ForStmt
+		fieldIndex = 0
+		while fieldIndex < fieldCount {
+			status = rtlpWriteWideCharacter(context, character)
+			if status != (0 as! XTSTATUS) {
+				return status
+
+			}
+
+			fieldIndex
+
+		}
+
 		fieldCount = 0
 
 	}
@@ -1044,7 +1277,26 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		[unknown clang ast] CompoundStmt ForStmt
+		precisionIndex = 0
+		while precisionIndex < precision {
+			if index < digitCount {
+				digit = buffer[index]
+				index++
+			} else {
+				digit = 48/* "0" */
+
+			}
+
+			status = rtlpWriteWideCharacter(context, digit)
+			if status != (0 as! XTSTATUS) {
+				return status
+
+			}
+
+			precisionIndex
+
+		}
+
 		if formatProperties.flags & 512 {
 			exponentCharacter = 69/* "E" */
 
@@ -1107,11 +1359,54 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		[unknown clang ast] CompoundStmt ForStmt
+		precisionIndex = 0
+		while precisionIndex < precision {
+			if currentExponent > exponent {
+				digit = 48/* "0" */
+
+			} else {
+				index < digitCount
+
+				{
+					digit = buffer[index]
+					++index
+
+				}
+
+
+				{
+					digit = 48/* "0" */
+
+				}
+
+
+			}
+
+			status = rtlpWriteWideCharacter(context, digit)
+			if status != (0 as! XTSTATUS) {
+				return status
+
+			}
+
+			currentExponent--			precisionIndex
+
+		}
+
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	fieldIndex = 0
+	while fieldIndex < fieldCount {
+		status = rtlpWriteWideCharacter(context, 32/* " " */)
+		if status != (0 as! XTSTATUS) {
+			return status
+
+		}
+
+		fieldIndex
+
+	}
+
 	return (0 as! XTSTATUS)
 }
 
@@ -1164,7 +1459,13 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 		}
 
-		[unknown clang ast] CompoundStmt ForStmt
+		index = 0
+		while index < 13 {
+			buffer[index] = 48/* "0" */
+			index
+
+		}
+
 
 	} else {
 		if (Parts.u.highPart & (9223372036854775808 >> 32)) != 0 {
@@ -1203,7 +1504,34 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 		}
 
-		[unknown clang ast] CompoundStmt ForStmt
+		index = 0
+		while index < 13 {
+			digit = (significand >> (index * 4)) & 15
+			if digit < 10 {
+				character = digit + 48/* "0" */
+
+			} else {
+				formatProperties.flags & 512
+
+				{
+					character = digit + 65/* "A" */ - 10
+
+				}
+
+
+				{
+					character = digit + 97/* "a" */ - 10
+
+				}
+
+
+			}
+
+			buffer[13 - index - 1] = character
+			index
+
+		}
+
 		if precision == -1 {
 			precision = 13
 			while (precision - 1 >= 0) and (buffer[precision - 1] == 48/* "0" */) {
@@ -1225,6 +1553,8 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 		formatProperties.flags & 1
 
 		{
+			prefix[prefixSize] = 43/* "+" */
+			[unknown clang ast] resolve CompoundAssignOperator
 
 		}
 
@@ -1309,7 +1639,18 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	prefixIndex = 0
+	while prefixIndex < prefixSize {
+		status = rtlpWriteWideCharacter(context, prefix[prefixIndex])
+		if status != (0 as! XTSTATUS) {
+			return status
+
+		}
+
+		prefixIndex
+
+	}
+
 	status = rtlpWriteWideCharacter(context, integerValue)
 	if status != (0 as! XTSTATUS) {
 		return status
@@ -1326,7 +1667,26 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	precisionIndex = 0
+	while precisionIndex < precision {
+		if precisionIndex >= 13 {
+			digit = 48/* "0" */
+
+		} else {
+			digit = buffer[precisionIndex]
+
+		}
+
+		status = rtlpWriteWideCharacter(context, digit)
+		if status != (0 as! XTSTATUS) {
+			return status
+
+		}
+
+		precisionIndex
+
+	}
+
 	status = rtlpWriteWideStringCustomValue(context, "%C%+d", exponentCharacter, exponent)
 	if status != (0 as! XTSTATUS) {
 		return status
@@ -1408,6 +1768,8 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 		formatProperties.flags & 1
 
 		{
+			prefix[prefixLength] = 43/* "+" */
+			[unknown clang ast] resolve CompoundAssignOperator
 
 		}
 
@@ -1433,6 +1795,10 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 			formatProperties.radix == 16
 
 			{
+				prefix[prefixLength] = 48/* "0" */
+				[unknown clang ast] resolve CompoundAssignOperator
+				prefix[prefixLength] = 120/* "x" */
+				[unknown clang ast] resolve CompoundAssignOperator
 
 			}
 
@@ -1458,7 +1824,18 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 		character = 32/* " " */
 		if formatProperties.flags & 8 {
 			character = 48/* "0" */
-			[unknown clang ast] CompoundStmt ForStmt
+			prefixIndex = 0
+			while prefixIndex < prefixLength {
+				status = rtlpWriteWideCharacter(context, prefix[prefixIndex])
+				if status != (0 as! XTSTATUS) {
+					return status
+
+				}
+
+				prefixIndex
+
+			}
+
 			prefixLength = 0
 
 		}
@@ -1476,7 +1853,18 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	prefixIndex = 0
+	while prefixIndex < prefixLength {
+		status = rtlpWriteWideCharacter(context, prefix[prefixIndex])
+		if status != (0 as! XTSTATUS) {
+			return status
+
+		}
+
+		prefixIndex
+
+	}
+
 	while precisionLength > 0 {
 		status = rtlpWriteWideCharacter(context, 48/* "0" */)
 		if status != (0 as! XTSTATUS) {
@@ -1487,7 +1875,18 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 		precisionLength--
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	bufferIndex = 0
+	while bufferIndex < integerLength {
+		status = rtlpWriteWideCharacter(context, buffer[bufferIndex])
+		if status != (0 as! XTSTATUS) {
+			return status
+
+		}
+
+		bufferIndex
+
+	}
+
 	while fieldLength > 0 {
 		status = rtlpWriteWideCharacter(context, 32/* " " */)
 		if status != (0 as! XTSTATUS) {

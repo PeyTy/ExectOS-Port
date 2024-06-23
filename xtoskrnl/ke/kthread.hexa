@@ -38,7 +38,13 @@ fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTE
 	thread.header.signalState = 0
 	rtlInitializeListHead(thread.header.waitListHead)
 	rtlInitializeListHead(thread.mutantListHead)
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index <= 3 {
+		thread.waitBlock[index].thread = thread
+		index
+
+	}
+
 	thread.autoAlignment = process.autoAlignment
 	thread.stackResident = tRUE
 	thread.stackSwap = tRUE

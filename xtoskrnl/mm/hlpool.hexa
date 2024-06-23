@@ -176,7 +176,14 @@ fun mmMarkHardwareMemoryWriteThrough(virtualAddress PVOID, pageCount PFN_NUMBER)
 
 	var page PFN_NUMBER
 	ptePointer = mmpGetPteAddress(virtualAddress) as! PHARDWARE_PTE
-	[unknown clang ast] CompoundStmt ForStmt
+	page = 0
+	while page < pageCount {
+		ptePointer.cacheDisable = 1
+		ptePointer.writeThrough = 1
+		ptePointer++		page
+
+	}
+
 }
 
 /// Remaps the PTE to new physical address.
@@ -232,7 +239,17 @@ fun mmUnmapHardwareMemory(virtualAddress PVOID, pageCount PFN_NUMBER, flushTlb B
 
 	virtualAddress = (virtualAddress as! ULONG_PTR & ~(4096 - 1)) as! PVOID
 	ptePointer = mmpGetPteAddress(virtualAddress) as! PHARDWARE_PTE
-	[unknown clang ast] CompoundStmt ForStmt
+	page = 0
+	while page < pageCount {
+		ptePointer.cacheDisable = 0
+		ptePointer.valid = 0
+		ptePointer.writable = 0
+		ptePointer.writeThrough = 0
+		ptePointer.pageFrameNumber = 0
+		ptePointer++		page
+
+	}
+
 	if flushTlb {
 		mmFlushTlb()
 

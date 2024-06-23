@@ -274,7 +274,52 @@ fun fbpFindFramebufferAddress(address PEFI_PHYSICAL_ADDRESS) {
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < handlesCount {
+		status = xtLdrProtocol.protocol.openHandle(handles[index], ioProtocol as! PVOID *, pciIoGuid)
+		if status != (9223372036854775808 & 0) {
+			xtLdrProtocol.debug.print("ERROR: Failed to open protocol (Status Code: 0x%zX)\n", status)
+			continue
+		}
+
+		status = ioProtocol.pci.read(ioProtocol, efiPciIoWidthUint32, 0, sizeOf<Unsigned long long>() / sizeOf<Unsigned long long>(), pciDevice)
+		if status != (9223372036854775808 & 0) {
+			xtLdrProtocol.debug.print("ERROR: Failed to read class (Status Code: 0x%zX)\n", status)
+			xtLdrProtocol.protocol.close(handles[index], pciIoGuid)
+			continue
+		}
+
+		if PciDevice.hdr.classCode[2] != 3 {
+			xtLdrProtocol.protocol.close(handles[index], pciIoGuid)
+			continue
+		}
+
+		[unknown clang ast] resolve DeclStmt
+		while bars < 6 {
+			status = ioProtocol.getBarAttributes(ioProtocol, bars, (0 as! PVOID), barInfo as! VOID **)
+			if status != (9223372036854775808 & 0) {
+				continue
+			}
+
+			if barInfo.spaceDescriptor == 138 and barInfo.resourceType == 0 {
+				if barInfo.addressLength > framebufAddressLength {
+					framebufAddress = (barInfo.addressRangeMin << 16) as! ULONG_PTR as! PVOID
+					framebufAddressLength = barInfo.addressLength
+
+				}
+
+
+			}
+
+			bars
+
+		}
+
+		xtLdrProtocol.protocol.close(handles[index], pciIoGuid)
+		index
+
+	}
+
 	address[0] = framebufAddress as! EFI_PHYSICAL_ADDRESS
 	return (9223372036854775808 & 0)
 }

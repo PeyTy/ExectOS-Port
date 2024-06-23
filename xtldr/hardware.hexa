@@ -44,6 +44,48 @@ fun blpActivateSerialIOController() {
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < (pciHandleSize / sizeOf<Unsigned long long>()) {
+		status = efiSystemTable.bootServices.handleProtocol(pciHandle[index], pciGuid, pciDev as! PVOID *)
+		if status != (9223372036854775808 & 0) {
+			return status
+
+		}
+
+		bus = 0
+		while bus <= 255 {
+			device = 0
+			while device < 32 {
+				function = 0
+				while function < 8 {
+					address = ((((bus as! UINT_PTR) << 24) + ((device as! UINT_PTR) << 16) + ((function as! UINT_PTR) << 8) + (0 as! UINT_PTR)) as! ULONGLONG)
+					pciDev.pci.read(pciDev, 2, address, sizeOf<Unsigned long long>() / sizeOf<Unsigned long long>(), pciHeader)
+					if PciHeader.vendorId == 65535 {
+						continue
+					}
+
+					if PciHeader.baseClass == 7 and (PciHeader.subClass == 0 or PciHeader.subClass == 2) {
+						address |= 4
+						command = 1
+						status = pciDev.pci.write(pciDev, 1, address, 1, command)
+
+					}
+
+					function
+
+				}
+
+				device
+
+			}
+
+			bus
+
+		}
+
+		index
+
+	}
+
 	return (9223372036854775808 & 0)
 }

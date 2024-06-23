@@ -441,6 +441,8 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 		(data.lhsType.typeInfo & 1) && (kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID) < 0)
 
 		{
+			keDbgPrint
+			keDbgPrint("UBSAN: Left shift of negative value %lld\n", kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID))
 
 		}
 
@@ -485,11 +487,13 @@ fun kepHandleUbsanTypeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PT
 		data.alignment && (((pointer) & ((data.alignment) as! Typeof (Pointer) - 1)) != 0)
 
 		{
+			kepHandleUbsanMisalignedAccess(data, pointer)
 
 		}
 
 
 		{
+			kepHandleUbsanObjectSizeMismatch(data, pointer)
 
 		}
 

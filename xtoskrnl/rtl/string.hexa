@@ -14,8 +14,7 @@
 /// @since XT 1.0
 fun rtlCompareString(string1 Const PCHAR, string2 Const PCHAR, length SIZE_T) {
 	var index SIZE_T
-	[unknown clang ast] CompoundStmt ForStmt
-	return 0
+[ill ForStmt[0]]	return 0
 }
 
 /// Compares at most specified number of characters of two C strings, while ignoring differences in case.
@@ -115,7 +114,17 @@ fun rtlConcatenateString(destination PCHAR, source PCHAR, count SIZE_T) {
 /// @since XT 1.0
 fun rtlCopyString(destination PCHAR, source PCCHAR, length ULONG) {
 	var index ULONG
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < length {
+		destination[index] = source[index]
+		if source[index] == 0/* "\u0000" */ {
+			break
+		}
+
+		index
+
+	}
+
 	destination[index] = 0/* "\u0000" */
 }
 
@@ -133,7 +142,15 @@ fun rtlCopyString(destination PCHAR, source PCCHAR, length ULONG) {
 fun rtlReverseString(string PCHAR, length ULONG) {
 	var tempChar UCHAR
 	var index ULONG
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < (length / 2) {
+		tempChar = string[index]
+		string[index] = string[length - index - 1]
+		string[length - index - 1] = tempChar
+		index
+
+	}
+
 }
 
 /// Calculates the length of a given string.
@@ -154,8 +171,7 @@ fun rtlStringLength(string Const PCHAR, maxLength SIZE_T) {
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-	return length
+[ill ForStmt[0]]	return length
 }
 
 /// Converts a multibyte character string to its wide character representation.
@@ -229,8 +245,7 @@ fun rtlTokenizeString(string PCHAR, delimiter Const PCHAR, savePtr PCHAR *) {
 	}
 
 	token = string - 1
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Removes certain characters from a beginning of the string.
 /// 

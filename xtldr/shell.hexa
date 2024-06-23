@@ -6,8 +6,7 @@
 fun blStartLoaderShell() {
 	blInitializeConsole()
 	blpPrintShellPrompt()
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Prints XTLDR shell prompt.
 /// 

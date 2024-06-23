@@ -77,7 +77,34 @@ fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *)
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	tableIndex = 0
+	while tableIndex < tableCount {
+		rsdtIndex = tableCount - tableIndex - 1
+		if xsdp {
+			tableHeader = (rsdt.tables as! PULONGLONG)[rsdtIndex] as! ULONG_PTR as! PACPI_DESCRIPTION_HEADER
+
+		} else {
+			tableHeader = (rsdt.tables as! PULONG)[rsdtIndex] as! ULONG_PTR as! PACPI_DESCRIPTION_HEADER
+
+		}
+
+		if previousTable != (0 as! PVOID) {
+			if tableHeader == previousTable as! PVOID {
+				previousTable = (0 as! PVOID)
+
+			}
+
+			continue
+		}
+
+		if (tableHeader.signature == signature) {
+			break
+		}
+
+		tableIndex
+
+	}
+
 	if tableHeader.signature != signature {
 		return (9223372036854775808 | 14)
 

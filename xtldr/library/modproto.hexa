@@ -26,7 +26,17 @@ fun blGetXtLdrProtocol(systemTable PEFI_SYSTEM_TABLE, imageHandle EFI_HANDLE, pr
 	}
 
 	if count > 0 {
-		[unknown clang ast] CompoundStmt ForStmt
+		index = 0
+		while index < count {
+			status = systemTable.bootServices.openProtocol(handles[index], protocolGuid, protocolHandler as! PVOID *, imageHandle, (0 as! PVOID), 1)
+			if status == (9223372036854775808 & 0) {
+				break
+			}
+
+			index
+
+		}
+
 
 	}
 

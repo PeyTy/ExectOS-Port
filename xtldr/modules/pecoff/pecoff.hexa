@@ -144,7 +144,18 @@ fun peGetSection(imagePointer PVOID, sectionName PCHAR, rawData PULONG *) {
 	}
 
 	sectionNameLength = rtlStringLength(sectionName, 0)
-	[unknown clang ast] CompoundStmt ForStmt
+	sectionIndex = 0
+	while sectionIndex < image.peHeader.fileHeader.numberOfSections {
+		if rtlCompareString(sectionHeader[sectionIndex].name as! PCHAR, sectionName, sectionNameLength) == 0 {
+			rawData[0] = image.data + sectionHeader[sectionIndex].pointerToRawData
+			return (9223372036854775808 & 0)
+
+		}
+
+		sectionIndex
+
+	}
+
 	return (9223372036854775808 | 14)
 }
 
@@ -356,7 +367,30 @@ fun peLoadImage(fileHandle PEFI_FILE_HANDLE, memoryType LOADER_MEMORY_TYPE, virt
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < imageData.peHeader.fileHeader.numberOfSections {
+		if sectionHeader[index].sizeOfRawData < sectionHeader[index].misc.virtualSize {
+			sectionSize = sectionHeader[index].sizeOfRawData
+
+		} else {
+			sectionSize = sectionHeader[index].misc.virtualSize
+
+		}
+
+		if sectionSize > 0 and sectionHeader[index].pointerToRawData != 0 {
+			xtLdrProtocol.memory.copyMemory(imageData.data as! PUINT8 + sectionHeader[index].virtualAddress, data + sectionHeader[index].pointerToRawData, sectionSize)
+
+		}
+
+		if sectionSize < sectionHeader[index].misc.virtualSize {
+			xtLdrProtocol.memory.zeroMemory(imageData.data as! PUINT8 + sectionHeader[index].virtualAddress + sectionSize, sectionHeader[index].misc.virtualSize - sectionSize)
+
+		}
+
+		index
+
+	}
+
 	xtLdrProtocol.memory.freePages(data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS, pages)
 	status = pepRelocateLoadedImage(imageData)
 	if status != (9223372036854775808 & 0) {

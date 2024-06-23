@@ -87,6 +87,47 @@ fun blEnumerateBlockDevices() {
 			lastNode.type == 4
 
 			{
+				lastNode.subType == 2
+
+				{
+					media = blockDeviceData.blockIo.media
+					driveType = 1
+					driveNumber = ++cDCount
+					partitionNumber = 0
+					blDebugPrint("Found CD-ROM drive (DriveNumber: %lu, MediaPresent: %u, RemovableMedia: %u, RO: %u)\n", driveNumber, media.mediaPresent, media.removableMedia, media.readOnly)
+
+				}
+
+				if lastNode.subType == 1 {
+					media = blockDeviceData.blockIo.media
+					hDPath = lastNode as! PEFI_HARDDRIVE_DEVICE_PATH
+					driveType = 3
+					driveNumber = ((hDPath.partitionNumber == 1)) ? ++hDCount : hDCount - 1
+					partitionNumber = hDPath.partitionNumber
+					partitionGuid = hDPath.signature as! PEFI_GUID
+					blDebugPrint("Found Hard Disk partition (DiskNumber: %lu, PartNumber: %lu, MBRType: %u, GUID: {%V}, PartSize: %uB)\n", driveNumber, partitionNumber, hDPath.mBRType, partitionGuid, hDPath.partitionSize * media.blockSize)
+
+				} else {
+					lastNode.subType == 9
+
+					{
+						media = blockDeviceData.blockIo.media
+						driveType = 4
+						driveNumber = ++rDCount
+						partitionNumber = 0
+						blDebugPrint("Found RAM Disk (DiskNumber: %lu, MediaPresent: %u)\n", driveNumber, media.mediaPresent)
+
+					}
+
+
+				}
+
+				blpFindParentBlockDevice(blockDevices, blockDeviceData, parentNode)!
+				{
+					blDebugPrint("WARNING: No parent device found, skipping orphaned media device path\n")
+
+				}
+
 
 			}
 
@@ -203,7 +244,17 @@ fun blGetEfiPath(systemPath PWCHAR, efiPath PWCHAR *) {
 	}
 
 	rtlCopyMemory(efiPath[0], systemPath, sizeOf<Unsigned long long>() * (pathLength + 1))
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < pathLength {
+		if (efiPath[0])[index] == 47/* "/" */ {
+			(efiPath[0])[index] = 92/* "\\" */
+
+		}
+
+		index
+
+	}
+
 	return (9223372036854775808 & 0)
 }
 
@@ -254,11 +305,14 @@ fun blGetVolumeDevicePath(systemPath PWCHAR, devicePath PEFI_DEVICE_PATH_PROTOCO
 			pathLength == 13
 
 			{
+				blDebugPrint("WARNING: MBR partition UUID in system path is not supported\n")
+				(9223372036854775808 | 3)
 
 			}
 
 
 			{
+				(9223372036854775808 | 2)
 
 			}
 
@@ -478,7 +532,45 @@ fun blpDiscoverEfiBlockDevices(blockDevices PLIST_ENTRY) {
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < handlesCount {
+		blDebugPrint("Opening %lu block device from %lu discovered\n", index + 1, handlesCount)
+		io = (0 as! PVOID)
+		status = blOpenProtocolHandle(handles[index], io as! PVOID *, ioGuid)
+		if status != (9223372036854775808 & 0) or io == (0 as! PVOID) {
+			blDebugPrint("WARNING: Failed to open EFI Block I/O protocol (Status Code: 0x%zX)\n", status)
+			continue
+		}
+
+		if io.media and io.media.blockSize == 1 and io.media.mediaId == 1766873157 {
+			blDebugPrint("WARNING: Skipping iPXE stub block I/O protocol")
+			continue
+		}
+
+		devicePath = (0 as! PVOID)
+		status = efiSystemTable.bootServices.handleProtocol(handles[index], devicePathGuid, devicePath as! PVOID *)
+		if status != (9223372036854775808 & 0) or devicePath == (0 as! PVOID) {
+			blDebugPrint("WARNING: Unable to open DevicePath protocol (Status Code: 0x%zX)\n", status)
+			efiSystemTable.bootServices.closeProtocol(handles[index], ioGuid, efiImageHandle, (0 as! PVOID))
+			continue
+		}
+
+		status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), blockDevice as! PVOID *)
+		if status != (9223372036854775808 & 0) {
+			blDebugPrint("ERROR: Failed to allocate memory pool for block device (Status Code: 0x%zX)\n", status)
+			efiSystemTable.bootServices.closeProtocol(handles[index], devicePathGuid, efiImageHandle, (0 as! PVOID))
+			efiSystemTable.bootServices.closeProtocol(handles[index], ioGuid, efiImageHandle, (0 as! PVOID))
+			return status
+
+		}
+
+		blockDevice.blockIo = io
+		blockDevice.devicePath = devicePath
+		rtlInsertTailList(blockDevices, blockDevice.listEntry)
+		index
+
+	}
+
 	blFreeMemoryPool(handles)
 	return (9223372036854775808 & 0)
 }
@@ -518,11 +610,110 @@ fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, 
 		rtlCompareWideStringInsensitive(systemPath, "multi(0)disk(0)", 0) == 0
 
 		{
+			arcLength = 15
+			arcPath = systemPath + arcLength
+			rtlCompareWideStringInsensitive(arcPath, "cdrom(", 0) == 0
+
+			{
+				[unknown clang ast] resolve CompoundAssignOperator
+				systemPath[arcLength] != 41/* ")" */ && systemPath[arcLength] != 0/* "\u0000" */
+
+				{
+					systemPath[arcLength] >= 48/* "0" */ && systemPath[arcLength] <= 57/* "9" */
+
+					{
+						[unknown clang ast] resolve CompoundAssignOperator
+						[unknown clang ast] resolve CompoundAssignOperator
+
+					}
+
+					++arcLength
+
+				}
+
+				driveType[0] = 1
+				++arcLength
+
+			}
+
+			if rtlCompareWideStringInsensitive(arcPath, "fdisk(", 0) == 0 {
+				arcLength += 6
+				while systemPath[arcLength] != 41/* ")" */ and systemPath[arcLength] != 0/* "\u0000" */ {
+					if systemPath[arcLength] >= 48/* "0" */ and systemPath[arcLength] <= 57/* "9" */ {
+						driveNumber[0] *= 10
+						driveNumber[0] += systemPath[arcLength] - 48/* "0" */
+
+					}
+
+					arcLength++
+				}
+
+				driveType[0] = 2
+				arcLength++
+			} else {
+				rtlCompareWideStringInsensitive(arcPath, "rdisk(", 0) == 0
+
+				{
+					[unknown clang ast] resolve CompoundAssignOperator
+					systemPath[arcLength] != 41/* ")" */ && systemPath[arcLength] != 0/* "\u0000" */
+
+					{
+						systemPath[arcLength] >= 48/* "0" */ && systemPath[arcLength] <= 57/* "9" */
+
+						{
+							[unknown clang ast] resolve CompoundAssignOperator
+							[unknown clang ast] resolve CompoundAssignOperator
+
+						}
+
+						++arcLength
+
+					}
+
+					driveType[0] = 3
+					++arcLength
+					arcPath = systemPath + arcLength
+					rtlCompareWideStringInsensitive(arcPath, "partition(", 0) == 0
+
+					{
+						[unknown clang ast] resolve CompoundAssignOperator
+						systemPath[arcLength] != 41/* ")" */ && systemPath[arcLength] != 0/* "\u0000" */
+
+						{
+							systemPath[arcLength] >= 48/* "0" */ && systemPath[arcLength] <= 57/* "9" */
+
+							{
+								[unknown clang ast] resolve CompoundAssignOperator
+								[unknown clang ast] resolve CompoundAssignOperator
+
+							}
+
+							++arcLength
+
+						}
+
+						++arcLength
+
+					}
+
+
+				}
+
+
+				{
+					(9223372036854775808 | 3)
+
+				}
+
+
+			}
+
 
 		}
 
 
 		{
+			(9223372036854775808 | 3)
 
 		}
 

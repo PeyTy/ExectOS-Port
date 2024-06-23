@@ -172,7 +172,23 @@ fun blLoadModule(moduleName PWCHAR) {
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	sectionIndex = 0
+	while sectionIndex < peHeader.fileHeader.numberOfSections {
+		if rtlCompareString(sectionHeader[sectionIndex].name as! PCHAR, ".modinfo", 8) == 0 {
+			sectionData = moduleData + sectionHeader[sectionIndex].pointerToRawData
+			status = blpGetModuleInformation(sectionData, sectionHeader[sectionIndex].sizeOfRawData, moduleInfo)
+			if status != (9223372036854775808 & 0) {
+				return status
+
+			}
+
+
+		}
+
+		sectionIndex
+
+	}
+
 	depsListEntry = moduleInfo.dependencies.flink
 	while depsListEntry != moduleInfo.dependencies {
 		moduleDependency = (((depsListEntry) as! Char * - [unknown clang ast] resolve OffsetOfExpr) as! XTBL_MODULE_DEPS *)
@@ -326,7 +342,18 @@ fun blOpenProtocol(handle PEFI_HANDLE, protocolHandler PVOID *, protocolGuid PEF
 	}
 
 	if count > 0 {
-		[unknown clang ast] CompoundStmt ForStmt
+		index = 0
+		while index < count {
+			status = blOpenProtocolHandle(handles[index], protocolHandler, protocolGuid)
+			if status == (9223372036854775808 & 0) {
+				handle[0] = handles[index]
+				break
+			}
+
+			index
+
+		}
+
 
 	}
 
@@ -444,7 +471,75 @@ fun blpGetModuleInformation(sectionData PWCHAR, sectionSize ULONG, moduleInfo PX
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < count {
+		key = strings[index]
+		while strings[index][0] != 61/* "=" */ and strings[index][0] != 0/* "\u0000" */ and strings[index][0] != 10/* "\n" */ {
+			strings[index]++
+		}
+
+		strings[index][0] = 0/* "\u0000" */
+		strings[index]++		if rtlCompareWideString(key, "author", 6) == 0 {
+			status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), moduleAuthors as! PVOID *)
+			if status != (9223372036854775808 & 0) {
+				return status
+
+			}
+
+			moduleAuthors.authorName = strings[index]
+			rtlInsertTailList(moduleInfo.authors, moduleAuthors.flink)
+
+		} else {
+			rtlCompareWideString(key, "description", 11) == 0
+
+			{
+				moduleInfo.moduleDescription = strings[index]
+
+			}
+
+			if rtlCompareWideString(key, "license", 7) == 0 {
+				moduleInfo.license = strings[index]
+
+			} else {
+				rtlCompareWideString(key, "softdeps", 6) == 0
+
+				{
+					dependency = rtlTokenizeWideString(strings[index], " ", lastStr)
+					dependency != (0 as! PVOID)
+
+					{
+						status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), moduleDependencies as! PVOID *)
+						status != (9223372036854775808 & 0)
+
+						{
+							status
+
+						}
+
+						moduleDependencies.moduleName = dependency
+						rtlInsertTailList(moduleInfo.dependencies, moduleDependencies.flink)
+						dependency = rtlTokenizeWideString((0 as! PVOID), " ", lastStr)
+
+					}
+
+
+				}
+
+				if rtlCompareWideString(key, "version", 7) == 0 {
+					moduleInfo.version = strings[index]
+
+				}
+
+
+			}
+
+
+		}
+
+		index
+
+	}
+
 	return (9223372036854775808 & 0)
 }
 

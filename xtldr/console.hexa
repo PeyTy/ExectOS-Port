@@ -12,7 +12,13 @@ fun blClearConsoleLine(lineNo ULONGLONG) {
 	var resY UINT_PTR
 	blQueryConsoleMode(resX, resY)
 	blSetCursorPosition(0, lineNo)
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < resX {
+		blConsoleWrite(" ")
+		index
+
+	}
+
 }
 
 /// This routine clears the UEFI console screen.

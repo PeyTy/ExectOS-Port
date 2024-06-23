@@ -115,11 +115,26 @@ fun arpIdentifyProcessor() {
 		prcb.cpuId.vendor == cPU_VENDOR_INTEL
 
 		{
+			prcb.cpuId.family == 15
+
+			{
+				prcb.cpuId.family = prcb.cpuId.family + CpuSignature.extendedFamily
+
+			}
+
+			(prcb.cpuId.family == 6) || (prcb.cpuId.family == 15)
+
+			{
+				prcb.cpuId.model = prcb.cpuId.model + (CpuSignature.extendedModel << 4)
+
+			}
+
 
 		}
 
 
 		{
+			prcb.cpuId.vendor = cPU_VENDOR_UNKNOWN
 
 		}
 
@@ -159,7 +174,13 @@ fun arpInitializeGdt(processorBlock PKPROCESSOR_BLOCK) {
 /// @since XT 1.0
 fun arpInitializeIdt(processorBlock PKPROCESSOR_BLOCK) {
 	var vector UINT
-	[unknown clang ast] CompoundStmt ForStmt
+	vector = 0
+	while vector < 256 {
+		arpSetIdtGate(processorBlock.idtBase, vector, arpHandleTrapFF, 16, 0, 0)
+		vector
+
+	}
+
 	arpSetIdtGate(processorBlock.idtBase, 0, arpTrap0x00, 16, 0, 0)
 	arpSetIdtGate(processorBlock.idtBase, 1, arpTrap0x01, 16, 0, 0)
 	arpSetIdtGate(processorBlock.idtBase, 2, arpTrap0x02, 16, 1, 0)

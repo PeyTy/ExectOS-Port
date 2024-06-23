@@ -257,6 +257,9 @@ fun xtBootSystem(parameters PXTBL_BOOT_PARAMETERS) {
 		status != (9223372036854775808 & 0)
 
 		{
+			xtLdrProtocol.debug.print("ERROR: Unable to open system boot directory\n")
+			xtLdrProtocol.disk.closeVolume(diskHandle)
+			status
 
 		}
 

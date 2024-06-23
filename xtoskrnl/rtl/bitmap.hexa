@@ -121,7 +121,17 @@ fun rtlDumpBitMap(bitMap PRTL_BITMAP) {
 		keDbgPrint("BitMap Buffer: 0x%zX (%lu bytes)\n", bitMap.buffer, bitMap.size)
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < (bitMap.size + 64 - 1) / 64 {
+		if keDbgPrint {
+
+			keDbgPrint("  %8zu: %08lx\n", index, bitMap.buffer[index])
+		}
+
+		index
+
+	}
+
 }
 
 /// Searches the bit map for a contiguous region of clear bits.
@@ -376,6 +386,7 @@ fun rtlpFindBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, 
 	} else {
 		length!
 		{
+			startingIndex
 
 		}
 

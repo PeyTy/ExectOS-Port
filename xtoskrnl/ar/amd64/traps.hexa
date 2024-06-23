@@ -40,8 +40,7 @@ fun arpHandleTrap00(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Division-By-Zero Error (0x00)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x01 when Debug exception occurs.
 /// 
@@ -57,8 +56,7 @@ fun arpHandleTrap01(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Debug exception (0x01)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x02 when Non-Maskable Interrupt (NMI) occurs.
 /// 
@@ -74,8 +72,7 @@ fun arpHandleTrap02(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Non-Maskable-Interrupt (0x02)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x03 when the INT3 instruction is executed.
 /// 
@@ -91,8 +88,7 @@ fun arpHandleTrap03(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled INT3 (0x03)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x04 when the INTO instruction is executed and overflow bit is set.
 /// 
@@ -108,8 +104,7 @@ fun arpHandleTrap04(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Overflow exception (0x04)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x05 when the Bound Range Exceeded exception occurs.
 /// 
@@ -125,8 +120,7 @@ fun arpHandleTrap05(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Bound-Range-Exceeded exception (0x05)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x06 when the Invalid Opcode exception occurs.
 /// 
@@ -142,8 +136,7 @@ fun arpHandleTrap06(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Invalid Opcode exception (0x06)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x07 when the Device Not Available exception occurs.
 /// 
@@ -159,8 +152,7 @@ fun arpHandleTrap07(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Device Not Available exception (0x07)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x08 when Double Fault exception occurs.
 /// 
@@ -176,8 +168,7 @@ fun arpHandleTrap08(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Double-Fault exception (0x08)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x09 when the Segment Overrun exception occurs.
 /// 
@@ -193,8 +184,7 @@ fun arpHandleTrap09(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Segment-Overrun exception (0x09)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x0A when the Invalid TSS exception occurs.
 /// 
@@ -210,8 +200,7 @@ fun arpHandleTrap0A(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Invalid-TSS exception (0x0A)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x0B when the Segment Not Present exception occurs.
 /// 
@@ -227,8 +216,7 @@ fun arpHandleTrap0B(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Segment-Not-Present exception (0x0B)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x0C when the Stack Segment Fault exception occurs.
 /// 
@@ -244,8 +232,7 @@ fun arpHandleTrap0C(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Stack-Segment-Fault exception (0x0C)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x0D when General Protection Fault (GPF) exception occurs.
 /// 
@@ -261,8 +248,7 @@ fun arpHandleTrap0D(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled General-Protection-Fault (0x0D)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x0E when the Page Fault (PF) exception occurs.
 /// 
@@ -278,8 +264,7 @@ fun arpHandleTrap0E(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Page-Fault exception (0x0E)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x10 when the X87 Floating-Point exception occurs.
 /// 
@@ -295,8 +280,7 @@ fun arpHandleTrap10(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled x87 Floating-Point exception (0x10)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x11 when the Alignment Check exception occurs.
 /// 
@@ -312,8 +296,7 @@ fun arpHandleTrap11(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Alignment-Check exception (0x11)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x12 when the Machine Check exception occurs.
 /// 
@@ -329,8 +312,7 @@ fun arpHandleTrap12(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Machine-Check exception (0x12)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x13 when the SIMD Floating-Point exception occurs.
 /// 
@@ -346,8 +328,7 @@ fun arpHandleTrap13(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled SIMD Floating-Point exception (0x13)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x1F when software interrupt gets generated at APC_LEVEL.
 /// 
@@ -379,8 +360,7 @@ fun arpHandleTrap2C(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Assertion (0x2C)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x2D when a debug service is being requested.
 /// 
@@ -396,8 +376,7 @@ fun arpHandleTrap2D(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Debug-Service-Request (0x2D)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Handles the trap 0x2F when a software interrupt gets generated at DISPATCH_LEVEL.
 /// 
@@ -445,5 +424,4 @@ fun arpHandleTrapFF(trapFrame PKTRAP_FRAME) {
 		keDbgPrint("Handled Unexpected-Interrupt (0xFF)!\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}

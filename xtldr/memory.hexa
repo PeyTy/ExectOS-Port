@@ -192,7 +192,63 @@ fun blMapEfiMemory(pageMap PXTBL_PAGE_MAPPING, memoryMapAddress PVOID *, getMemo
 
 	descriptor = memoryMap.map
 	descriptorCount = memoryMap.mapSize / memoryMap.descriptorSize
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < descriptorCount {
+		if descriptor.physicalStart <= (~(0 as! UINT_PTR)) {
+			if descriptor.type == efiReservedMemoryType {
+				descriptor = (descriptor as! PUCHAR + memoryMap.descriptorSize) as! PEFI_MEMORY_DESCRIPTOR
+				continue
+			}
+
+			if pageMap.pageMapLevel == 2 {
+				if descriptor.physicalStart > 4294967295 {
+					descriptor = (descriptor as! PUCHAR + memoryMap.descriptorSize) as! PEFI_MEMORY_DESCRIPTOR
+					continue
+				}
+
+				if descriptor.physicalStart + (descriptor.numberOfPages << 12) > 4294967295 {
+					descriptor.numberOfPages = ((4294967295 as! ULONGLONG + 1) - descriptor.physicalStart) >> 12
+
+				}
+
+
+			}
+
+			memoryType = getMemoryTypeRoutine(descriptor.type)
+			if memoryType == loaderFirmwareTemporary {
+				status = blMapVirtualMemory(pageMap, descriptor.physicalStart as! PVOID, descriptor.physicalStart as! PVOID, descriptor.numberOfPages, memoryType)
+
+			} else {
+				memoryType != loaderFree
+
+				{
+					status = blMapVirtualMemory(pageMap, virtualAddress, descriptor.physicalStart as! PVOID, descriptor.numberOfPages, memoryType)
+					[unknown clang ast] resolve CompoundAssignOperator
+
+				}
+
+
+				{
+					status = blMapVirtualMemory(pageMap, (0 as! PVOID), descriptor.physicalStart as! PVOID, descriptor.numberOfPages, loaderFree)
+
+				}
+
+
+			}
+
+			if status != (9223372036854775808 & 0) {
+				return status
+
+			}
+
+
+		}
+
+		descriptor = (descriptor as! PUCHAR + memoryMap.descriptorSize) as! PEFI_MEMORY_DESCRIPTOR
+		index
+
+	}
+
 	status = blMapVirtualMemory(pageMap, (0 as! PVOID), 0 as! PVOID, 1, loaderFirmwarePermanent)
 	if status != (9223372036854775808 & 0) {
 		return status

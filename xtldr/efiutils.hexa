@@ -80,7 +80,18 @@ fun blExitBootServices() {
 /// @since XT 1.0
 fun blGetConfigurationTable(tableGuid PEFI_GUID, table PVOID *) {
 	var index SIZE_T
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < efiSystemTable.numberOfTableEntries {
+		if rtlCompareGuids((efiSystemTable.configurationTable[index].vendorGuid) as! PGUID, tableGuid as! PGUID) {
+			table[0] = efiSystemTable.configurationTable[index].vendorTable
+			return (9223372036854775808 & 0)
+
+		}
+
+		index
+
+	}
+
 	table[0] = (0 as! PVOID)
 	return (9223372036854775808 | 14)
 }

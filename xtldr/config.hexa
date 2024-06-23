@@ -277,6 +277,7 @@ fun blpParseConfigFile(rawConfig Const PCHAR, configuration PLIST_ENTRY) {
 			inputData[0] == 32/* " " */ or inputData[0] == 9/* "\t" */ or inputData[0] == 13/* "\r" */ || inputData[0] == 10/* "\n" */
 
 			{
+				++inputData
 
 			}
 

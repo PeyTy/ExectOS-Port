@@ -96,6 +96,15 @@ fun blDisplayBootMenu() {
 					Key.scanCode == 1
 
 					{
+						highligtedEntryId > 0
+
+						{
+							--highligtedEntryId
+							blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId + 1].entryName, highligtedEntryId + 1, fALSE)
+							blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, tRUE)
+
+						}
+
 
 					}
 
@@ -111,6 +120,15 @@ fun blDisplayBootMenu() {
 						Key.scanCode == 9
 
 						{
+							highligtedEntryId != 0
+
+							{
+								blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, fALSE)
+								blpDrawBootMenuEntry(handle, menuEntries[0].entryName, 0, tRUE)
+								highligtedEntryId = 0
+
+							}
+
 
 						}
 
@@ -127,6 +145,7 @@ fun blDisplayBootMenu() {
 							Key.scanCode == 11
 
 							{
+								blDisplayInfoDialog("XTLDR", "XTLDR, the XTOS Boot Loader for UEFI and EFI-based machines.\n \nUse arrow keys (Up/Down) to change the highlighted entry and\nPgUp/PgDown keys to jump to the first/last position.\n \nPress ENTER key to boot the highlighted boot menu entry.\nPress 'e' key to edit the highlighted menu entry.\nPress 's' key to exit into XTLDR shell (enters advanced mode).\n \nF1 shows this help, F10 reboots into UEFI firmware interface,\nF11 reboots the machine and F12 turns it off.\n \n \nXTLDR is a part of the ExectOS Operating System.\nVisit https://exectos.eu.org/ for more information.")
 
 							}
 
@@ -138,6 +157,8 @@ fun blDisplayBootMenu() {
 								Key.scanCode == 21
 
 								{
+									blRebootSystem()
+									blDisplayErrorDialog("XTLDR", "Failed to reboot the machine!")
 
 								}
 
@@ -149,6 +170,7 @@ fun blDisplayBootMenu() {
 									Key.unicodeChar == 101
 
 									{
+										blDisplayErrorDialog("XTLDR", "Editing boot menu entries is not implemented yet!")
 
 									}
 
@@ -184,6 +206,20 @@ fun blDisplayBootMenu() {
 					timeOut == 0
 
 					{
+						blSetConsoleAttributes(Handle.dialogColor | Handle.textColor)
+						blClearConsoleLine(Handle.posY + Handle.height + 4)
+						blSetCursorPosition(4, Handle.posY + Handle.height + 4)
+						blConsolePrint("Booting '%S' now...\n", menuEntries[highligtedEntryId].entryName)
+						timeOut = -1
+						status = blInvokeBootProtocol(menuEntries[highligtedEntryId].shortName, menuEntries[highligtedEntryId].options)
+						status != (0 as! XTSTATUS)
+
+						{
+							blDebugPrint("ERROR: Failed to boot '%S' (Status Code: 0x%zX)\n", menuEntries[highligtedEntryId].entryName, status)
+							blDisplayErrorDialog("XTLDR", "Failed to startup the selected Operating System.")
+
+						}
+
 
 					}
 
@@ -335,6 +371,8 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 			Key.unicodeChar == 9
 
 			{
+				[unknown clang ast] resolve CompoundAssignOperator
+				[unknown clang ast] resolve CompoundAssignOperator
 
 			}
 
@@ -348,6 +386,13 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 				Key.scanCode == 4
 
 				{
+					Handle.attributes & 16 && textPosition > 0
+
+					{
+						--textPosition
+
+					}
+
 
 				}
 
@@ -362,6 +407,13 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 					Key.scanCode == 6
 
 					{
+						Handle.attributes & 16
+
+						{
+							textPosition = inputFieldLength
+
+						}
+
 
 					}
 
@@ -381,6 +433,22 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 						Key.unicodeChar == 8
 
 						{
+							Handle.attributes & 16
+
+							{
+								inputFieldLength > 0 and textPosition > 0 && textPosition <= inputFieldLength
+
+								{
+									--textPosition
+									rtlMoveMemory(inputFieldBuffer + textPosition, inputFieldBuffer + textPosition + 1, (inputFieldLength - textPosition) * sizeOf<Unsigned long long>())
+									--inputFieldLength
+									inputFieldBuffer[inputFieldLength] = 0
+
+								}
+
+
+							}
+
 
 						}
 
@@ -639,6 +707,8 @@ fun blpDrawDialogBox(handle PXTBL_DIALOG_HANDLE, caption PWCHAR, message PWCHAR)
 		handle.attributes & 1
 
 		{
+			handle.dialogColor = 16
+			handle.textColor = 15
 
 		}
 

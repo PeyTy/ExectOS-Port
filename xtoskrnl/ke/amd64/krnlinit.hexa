@@ -92,8 +92,7 @@ fun kepStartKernel() {
 		keDbgPrint("KepStartKernel() finished. Entering infinite loop.\n")
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Switches to a new kernel boot stack.
 /// 

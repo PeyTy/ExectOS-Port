@@ -28,7 +28,20 @@ fun hlClearScreen(color ULONG) {
 
 	frameBuf = HlpFrameBufferData.address
 	backgroundColor = hlpRGBColor(color)
-	[unknown clang ast] CompoundStmt ForStmt
+	positionY = 0
+	while positionY < HlpFrameBufferData.height {
+		line = positionY * HlpFrameBufferData.pixelsPerScanLine
+		positionX = 0
+		while positionX < HlpFrameBufferData.width {
+			frameBuf[line + positionX] = backgroundColor
+			positionX
+
+		}
+
+		positionY
+
+	}
+
 }
 
 /// Draw a pixel on the screen at the given position and color.
@@ -156,7 +169,40 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 	fbFont = HlpFrameBufferData.font as! PSSFN_FONT_HEADER
 	characterMapping = fbFont as! PUCHAR + fbFont.charactersOffset
 	character = 0
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < 1114112 {
+		if characterMapping[0] == 255 {
+			index += 65535
+			characterMapping++
+		} else {
+			(characterMapping[0] & 192) == 192
+
+			{
+				[unknown clang ast] resolve CompoundAssignOperator
+				[unknown clang ast] resolve CompoundAssignOperator
+
+			}
+
+			if (characterMapping[0] & 192) == 128 {
+				index += (characterMapping[0] & 63)
+				characterMapping++
+			} else {
+				if index == wideCharacter {
+					character = characterMapping
+					break
+				}
+
+				characterMapping += (6 + characterMapping[1] * ((characterMapping[0] & 64) ? 6 : 5))
+
+			}
+
+
+		}
+
+		index
+
+	}
+
 	if !character {
 		return
 
@@ -166,7 +212,52 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 	fontColor = hlpRGBColor(color)
 	mapping = 0
 	characterMapping = character + 6
-	[unknown clang ast] CompoundStmt ForStmt
+	index = 0
+	while index < character[1] {
+		if characterMapping[0] == 255 and characterMapping[1] == 255 {
+			continue
+		}
+
+		fragment = fbFont as! PUCHAR + (characterMapping[2] | (characterMapping[3] << 8) | (characterMapping[4] << 16) | (((character[0] & 64)) ? (characterMapping[5] << 24) : 0))
+		if (fragment[0] & 224) != 128 {
+			continue
+		}
+
+		glyphPixel += (characterMapping[1] - mapping) * HlpFrameBufferData.pitch
+		mapping = characterMapping[1]
+		glyph = ((fragment[0] & 31) + 1) << 3
+		glyphLimit = fragment[1] + 1
+		fragment += 2
+		currentFragment = 1
+		while --glyphLimit {
+			pixel = glyphPixel
+			line = 0
+			while line < glyph {
+				if currentFragment > 128 {
+					fragment++					currentFragment = 1
+
+				}
+
+				if fragment[0] & currentFragment {
+					(pixel as! PULONG)[0] = fontColor
+
+				}
+
+				pixel += 4
+				currentFragment <<= 1
+				line
+
+			}
+
+			glyphPixel += HlpFrameBufferData.pitch
+			mapping++
+		}
+
+		characterMapping += (character[0] & 64) ? 6 : 5
+		index
+
+	}
+
 }
 
 /// Converts color format from (A)RGB one expected by current FrameBuffer.

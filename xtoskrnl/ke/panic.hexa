@@ -4,8 +4,7 @@
 /// 
 /// @since XT 1.0
 fun keHaltSystem() {
-	[unknown clang ast] CompoundStmt ForStmt
-}
+[ill ForStmt[0]]}
 
 /// Crashes the system upon detecting a fatal error in which either it is unable to recover or continue to run system.
 /// 

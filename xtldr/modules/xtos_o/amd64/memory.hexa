@@ -57,7 +57,26 @@ fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 
 	}
 
-	[unknown clang ast] CompoundStmt ForStmt
+	[unknown clang ast] resolve DeclStmt
+	while index < 2 {
+		if !pdeBase[((18446744073705357312 >> 21) & 511) + index].valid {
+			status = xtLdrProtocol.memory.allocatePages(1, address)
+			if status != (9223372036854775808 & 0) {
+				return status
+
+			}
+
+			rtlZeroMemory(address as! PVOID, 4096)
+			pdeBase[((18446744073705357312 >> 21) & 511) + index].valid = 1
+			pdeBase[((18446744073705357312 >> 21) & 511) + index].pageFrameNumber = address / 4096
+			pdeBase[((18446744073705357312 >> 21) & 511) + index].writable = 1
+
+		}
+
+		index
+
+	}
+
 	return (9223372036854775808 & 0)
 }
 

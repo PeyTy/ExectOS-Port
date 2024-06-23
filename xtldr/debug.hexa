@@ -90,6 +90,7 @@ fun blpInitializeDebugConsole() {
 							debugPort[0] >= 65/* "A" */ && debugPort[0] <= 70/* "F" */
 
 							{
+								[unknown clang ast] resolve CompoundAssignOperator
 
 							}
 
@@ -123,11 +124,14 @@ fun blpInitializeDebugConsole() {
 				rtlCompareWideStringInsensitive(debugPort, "SCREEN", 5) == 0
 
 				{
+					[unknown clang ast] resolve CompoundAssignOperator
 
 				}
 
 
 				{
+					blConsolePrint("ERROR: Unsupported debug port ('%S') specified\n", debugPort)
+					blSleepExecution(3000)
 
 				}
 
