@@ -87,9 +87,14 @@ fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTE
 		kepInitializeThreadContext(thread, systemRoutine, startRoutine, startContext, context)
 
 	} catch seh EXCEPTION_EXECUTE_HANDLER {
-				mmFreeKernelStack(stack, fALSE)
-				thread.initialStack = (0 as! PVOID)
-				thread.stackBase = (0 as! PVOID)
+		if allocation {
+			mmFreeKernelStack(stack, fALSE)
+			thread.initialStack = (0 as! PVOID)
+			thread.stackBase = (0 as! PVOID)
+
+		}
+
+		return (3221225473 as! XTSTATUS)
 
 	}
 
