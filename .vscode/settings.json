@@ -2,6 +2,7 @@
 	"files.exclude": {
 		".vscode": true,
 		"**/**.h": true,
+		"miniast": true,
 		"**/**.hpp": true,
 		"**/**.c": true,
 		"**/**.cpp": true,
