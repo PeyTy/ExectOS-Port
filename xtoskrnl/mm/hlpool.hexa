@@ -180,8 +180,7 @@ fun mmMarkHardwareMemoryWriteThrough(virtualAddress PVOID, pageCount PFN_NUMBER)
 	while page < pageCount {
 		ptePointer.cacheDisable = 1
 		ptePointer.writeThrough = 1
-		ptePointer++		page
-
+		ptePointer++		page++
 	}
 
 }

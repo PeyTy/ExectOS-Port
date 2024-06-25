@@ -34,12 +34,10 @@ fun hlClearScreen(color ULONG) {
 		positionX = 0
 		while positionX < HlpFrameBufferData.width {
 			frameBuf[line + positionX] = backgroundColor
-			positionX
-
+			positionX++
 		}
 
-		positionY
-
+		positionY++
 	}
 
 }
@@ -175,32 +173,31 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 			index += 65535
 			characterMapping++
 		} else {
-			(characterMapping[0] & 192) == 192
-
-			{
+			if (characterMapping[0] & 192) == 192 {
 				index += (((characterMapping[0] & 63) << 8) | characterMapping[1])
 				characterMapping += 2
 
-			}
-
-			if (characterMapping[0] & 192) == 128 {
-				index += (characterMapping[0] & 63)
-				characterMapping++
 			} else {
-				if index == wideCharacter {
-					character = characterMapping
-					break
+				if (characterMapping[0] & 192) == 128 {
+					index += (characterMapping[0] & 63)
+					characterMapping++
+				} else {
+					if index == wideCharacter {
+						character = characterMapping
+						break
+					}
+
+					characterMapping += (6 + characterMapping[1] * ((characterMapping[0] & 64) ? 6 : 5))
+
 				}
 
-				characterMapping += (6 + characterMapping[1] * ((characterMapping[0] & 64) ? 6 : 5))
 
 			}
 
 
 		}
 
-		index
-
+		index++
 	}
 
 	if !character {
@@ -245,8 +242,7 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 
 				pixel += 4
 				currentFragment <<= 1
-				line
-
+				line++
 			}
 
 			glyphPixel += HlpFrameBufferData.pitch
@@ -254,8 +250,7 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 		}
 
 		characterMapping += (character[0] & 64) ? 6 : 5
-		index
-
+		index++
 	}
 
 }

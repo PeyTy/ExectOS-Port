@@ -128,8 +128,7 @@ fun rtlCopyString(destination PCHAR, source PCCHAR, length ULONG) {
 			break
 		}
 
-		index
-
+		index++
 	}
 
 	destination[index] = 0/* "\u0000" */
@@ -154,8 +153,7 @@ fun rtlReverseString(string PCHAR, length ULONG) {
 		tempChar = string[index]
 		string[index] = string[length - index - 1]
 		string[length - index - 1] = tempChar
-		index
-
+		index++
 	}
 
 }

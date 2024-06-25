@@ -128,8 +128,7 @@ fun rtlCopyWideString(destination PWCHAR, source Const PWCHAR, length ULONG) {
 			break
 		}
 
-		index
-
+		index++
 	}
 
 	destination[index] = 0/* "\u0000" */
@@ -205,8 +204,7 @@ fun rtlReverseWideString(string PWCHAR, length ULONG) {
 		tempChar = string[index]
 		string[index] = string[length - index - 1]
 		string[length - index - 1] = tempChar
-		index
-
+		index++
 	}
 
 }
@@ -377,37 +375,32 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			FormatProperties.flags |= 16384
 
 		} else {
-			formatIndex[0] == 45/* "-" */
-
-			{
+			if formatIndex[0] == 45/* "-" */ {
 				FormatProperties.flags |= 4
 
-			}
-
-			if formatIndex[0] == 32/* " " */ {
-				FormatProperties.flags |= 2
-
 			} else {
-				formatIndex[0] == 43/* "+" */
-
-				{
-					FormatProperties.flags |= 1
-
-				}
-
-				if formatIndex[0] == 35/* "#" */ {
-					FormatProperties.flags |= 1024
+				if formatIndex[0] == 32/* " " */ {
+					FormatProperties.flags |= 2
 
 				} else {
-					formatIndex[0] == 48/* "0" */
+					if formatIndex[0] == 43/* "+" */ {
+						FormatProperties.flags |= 1
 
-					{
-						FormatProperties.flags |= 8
+					} else {
+						if formatIndex[0] == 35/* "#" */ {
+							FormatProperties.flags |= 1024
 
-					}
+						} else {
+							if formatIndex[0] == 48/* "0" */ {
+								FormatProperties.flags |= 8
+
+							} else {
+								break
+							}
 
 
-					{
+						}
+
 
 					}
 
@@ -437,9 +430,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 		formatIndex++		FormatProperties.fieldWidth = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
 
 	} else {
-		(formatIndex[0] >= 49/* "1" */) && (formatIndex[0] <= 57/* "9" */)
-
-		{
+		if (formatIndex[0] >= 49/* "1" */) and (formatIndex[0] <= 57/* "9" */) {
 			FormatProperties.fieldWidth = rtlpGetWideStringSpecifierValue(formatIndex as! PWSTR *)
 
 		}
@@ -458,15 +449,10 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			formatIndex++			FormatProperties.precision = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
 
 		} else {
-			(formatIndex[0] >= 48/* "0" */) && (formatIndex[0] <= 57/* "9" */)
-
-			{
+			if (formatIndex[0] >= 48/* "0" */) and (formatIndex[0] <= 57/* "9" */) {
 				FormatProperties.precision = rtlpGetWideStringSpecifierValue(formatIndex as! PWSTR *)
 
-			}
-
-
-			{
+			} else {
 				FormatProperties.precision = 0
 
 			}
@@ -535,9 +521,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			FormatProperties.flags |= 16
 
 		} else {
-			(formatIndex[0] == 54/* "6" */) && ((formatIndex + 1)[0] == 52/* "4" */)
-
-			{
+			if (formatIndex[0] == 54/* "6" */) and ((formatIndex + 1)[0] == 52/* "4" */) {
 				formatIndex += 2
 				FormatProperties.integerSize = sizeOf<Unsigned long long>()
 
@@ -560,9 +544,7 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			specifier = 67/* "C" */
 
 		} else {
-			specifier == 115/* "s" */
-
-			{
+			if specifier == 115/* "s" */ {
 				specifier = 83/* "S" */
 
 			}
@@ -599,8 +581,9 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			FormatProperties.variableType = wideChar
 		break
 		case 100/* "d" */:
-			105/* "i" */
-			FormatProperties.variableType = integer
+
+			case 105/* "i" */:
+				FormatProperties.variableType = integer
 		FormatProperties.flags &= ~256
 		FormatProperties.radix = 10
 		break
@@ -712,35 +695,21 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 		status = rtlpWriteWideStringValue(context, formatProperties, wideStrArg, rtlWideStringLength(wideStrArg, 0))
 
 	} else {
-		FormatProperties.variableType == guid
-
-		{
-			argPosition != 0
-
-			{
+		if FormatProperties.variableType == guid {
+			if argPosition != 0 {
 				intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
 				guidArg = intArg as! UINT_PTR as! PGUID
 
-			}
-
-
-			{
+			} else {
 				guidArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PGUID : (va_arg(argumentList[0])) as! PGUID)
 
 			}
 
-			guidArg != (0 as! PVOID)
-
-			{
-				FormatProperties.flags & 512
-
-				{
+			if guidArg != (0 as! PVOID) {
+				if FormatProperties.flags & 512 {
 					wideStrArg = "%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X"
 
-				}
-
-
-				{
+				} else {
 					wideStrArg = "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x"
 
 				}
@@ -750,198 +719,175 @@ fun rtlpFormatWideStringArgumentSpecifier(context PRTL_PRINT_CONTEXT, format PCW
 			}
 
 
-		}
-
-		if FormatProperties.variableType == char {
-			if argPosition != 0 {
-				charArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>()) as! UCHAR
-
-			} else {
-				charArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
-
-			}
-
-			status = rtlpWriteWideStringStringValue(context, formatProperties, charArg, 1)
-
 		} else {
-			FormatProperties.variableType == wideChar
-
-			{
-				argPosition != 0
-
-				{
-					wideCharArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>()) as! WCHAR
-
-				}
-
-
-				{
-					wideCharArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
-
-				}
-
-				status = rtlpWriteWideStringValue(context, formatProperties, wideCharArg, 1)
-
-			}
-
-			if FormatProperties.variableType == float {
+			if FormatProperties.variableType == char {
 				if argPosition != 0 {
-					FloatArg.quadPart = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
+					charArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>()) as! UCHAR
 
 				} else {
-					if FormatProperties.flags & 32 {
-						FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! LDOUBLE : (va_arg(argumentList[0])) as! LDOUBLE)
-
-					} else {
-						FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! DOUBLE : (va_arg(argumentList[0])) as! DOUBLE)
-
-					}
-
+					charArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
 
 				}
 
-				status = rtlpWriteWideStringDoubleValue(context, formatProperties, FloatArg.doublePart)
+				status = rtlpWriteWideStringStringValue(context, formatProperties, charArg, 1)
 
 			} else {
-				FormatProperties.variableType == integer
-
-				{
-					argPosition != 0
-
-					{
-						intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, FormatProperties.integerSize)
-						FormatProperties.integerSize
-
-						{
-							sizeOf<Unsigned long long>()
-							intArg = intArg as! UCHAR
-							sizeOf<Unsigned long long>()
-							intArg = intArg as! USHORT
-							sizeOf<Unsigned long long>()
-							intArg = intArg as! ULONG
-							sizeOf<Unsigned long long>()
-							intArg = intArg as! ULONGLONG
-							return (3221225485 as! XTSTATUS)
-
-						}
-
-
-					}
-
-
-					{
-						FormatProperties.integerSize
-
-						{
-							sizeOf<Unsigned long long>()
-							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! UINT : (va_arg(argumentList[0])) as! UINT) as! CHAR
-							sizeOf<Unsigned long long>()
-							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! UINT : (va_arg(argumentList[0])) as! UINT) as! SHORT
-							sizeOf<Unsigned long long>()
-							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! ULONG : (va_arg(argumentList[0])) as! ULONG)
-							sizeOf<Unsigned long long>()
-							intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! ULONGLONG : (va_arg(argumentList[0])) as! ULONGLONG)
-							return (3221225485 as! XTSTATUS)
-
-						}
-
-
-					}
-
-					specifier == 110/* "n" */
-
-					{
-						intArg != (0 as! PVOID) as! UINT_PTR
-
-						{
-							(intArg as! UINT_PTR as! PINT)[0] = context.charactersWritten
-
-						}
-
-
-					}
-
-
-					{
-						status = rtlpWriteWideStringIntegerValue(context, formatProperties, intArg)
-
-					}
-
-
-				}
-
-				if FormatProperties.variableType == string {
+				if FormatProperties.variableType == wideChar {
 					if argPosition != 0 {
-						intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
-						strArg = intArg as! UINT_PTR as! PCHAR
+						wideCharArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>()) as! WCHAR
 
 					} else {
-						strArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PCHAR : (va_arg(argumentList[0])) as! PCHAR)
+						wideCharArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! INT : (va_arg(argumentList[0])) as! INT)
 
 					}
 
-					status = rtlpWriteWideStringStringValue(context, formatProperties, strArg, rtlStringLength(strArg, 0))
+					status = rtlpWriteWideStringValue(context, formatProperties, wideCharArg, 1)
 
 				} else {
-					FormatProperties.variableType == wideString
-
-					{
-						argPosition != 0
-
-						{
-							intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
-							wideStrArg = intArg as! UINT_PTR as! PWCHAR
-
-						}
-
-
-						{
-							wideStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PWCHAR : (va_arg(argumentList[0])) as! PWCHAR)
-
-						}
-
-						status = rtlpWriteWideStringValue(context, formatProperties, wideStrArg, rtlWideStringLength(wideStrArg, 0))
-
-					}
-
-					if FormatProperties.variableType == ansiString {
+					if FormatProperties.variableType == float {
 						if argPosition != 0 {
-							intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
-							ansiStrArg = intArg as! UINT_PTR as! PANSI_STRING
+							FloatArg.quadPart = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
 
 						} else {
-							ansiStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PANSI_STRING : (va_arg(argumentList[0])) as! PANSI_STRING)
+							if FormatProperties.flags & 32 {
+								FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! LDOUBLE : (va_arg(argumentList[0])) as! LDOUBLE)
+
+							} else {
+								FloatArg.doublePart = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! DOUBLE : (va_arg(argumentList[0])) as! DOUBLE)
+
+							}
+
 
 						}
 
-						if ansiStrArg != (0 as! PVOID) {
-							status = rtlpWriteWideStringStringValue(context, formatProperties, ansiStrArg.buffer, ansiStrArg.length)
-
-						}
-
+						status = rtlpWriteWideStringDoubleValue(context, formatProperties, FloatArg.doublePart)
 
 					} else {
-						FormatProperties.variableType == unicodeString
+						if FormatProperties.variableType == integer {
+							if argPosition != 0 {
+								intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, FormatProperties.integerSize)
+								switch FormatProperties.integerSize {
+									case sizeOf<Unsigned long long>():
+										intArg = intArg as! UCHAR
+									break
+									case sizeOf<Unsigned long long>():
+										intArg = intArg as! USHORT
+									break
+									case sizeOf<Unsigned long long>():
+										intArg = intArg as! ULONG
+									break
+									case sizeOf<Unsigned long long>():
+										intArg = intArg as! ULONGLONG
+									break
+									case _:
+										return (3221225485 as! XTSTATUS)
 
-						{
-							argPosition != 0
+								}
 
-							{
-								intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
-								unicodeStrArg = intArg as! UINT_PTR as! PUNICODE_STRING
+
+							} else {
+								switch FormatProperties.integerSize {
+									case sizeOf<Unsigned long long>():
+										intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! UINT : (va_arg(argumentList[0])) as! UINT) as! CHAR
+									break
+									case sizeOf<Unsigned long long>():
+										intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! UINT : (va_arg(argumentList[0])) as! UINT) as! SHORT
+									break
+									case sizeOf<Unsigned long long>():
+										intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! ULONG : (va_arg(argumentList[0])) as! ULONG)
+									break
+									case sizeOf<Unsigned long long>():
+										intArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! ULONGLONG : (va_arg(argumentList[0])) as! ULONGLONG)
+									break
+									case _:
+										return (3221225485 as! XTSTATUS)
+
+								}
+
+
+							}
+
+							if specifier == 110/* "n" */ {
+								if intArg != (0 as! PVOID) as! UINT_PTR {
+									(intArg as! UINT_PTR as! PINT)[0] = context.charactersWritten
+
+								}
+
+
+							} else {
+								status = rtlpWriteWideStringIntegerValue(context, formatProperties, intArg)
 
 							}
 
 
-							{
-								unicodeStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PUNICODE_STRING : (va_arg(argumentList[0])) as! PUNICODE_STRING)
+						} else {
+							if FormatProperties.variableType == string {
+								if argPosition != 0 {
+									intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
+									strArg = intArg as! UINT_PTR as! PCHAR
 
-							}
+								} else {
+									strArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PCHAR : (va_arg(argumentList[0])) as! PCHAR)
 
-							unicodeStrArg != (0 as! PVOID)
+								}
 
-							{
-								status = rtlpWriteWideStringValue(context, formatProperties, unicodeStrArg.buffer, unicodeStrArg.length)
+								status = rtlpWriteWideStringStringValue(context, formatProperties, strArg, rtlStringLength(strArg, 0))
+
+							} else {
+								if FormatProperties.variableType == wideString {
+									if argPosition != 0 {
+										intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
+										wideStrArg = intArg as! UINT_PTR as! PWCHAR
+
+									} else {
+										wideStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PWCHAR : (va_arg(argumentList[0])) as! PWCHAR)
+
+									}
+
+									status = rtlpWriteWideStringValue(context, formatProperties, wideStrArg, rtlWideStringLength(wideStrArg, 0))
+
+								} else {
+									if FormatProperties.variableType == ansiString {
+										if argPosition != 0 {
+											intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
+											ansiStrArg = intArg as! UINT_PTR as! PANSI_STRING
+
+										} else {
+											ansiStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PANSI_STRING : (va_arg(argumentList[0])) as! PANSI_STRING)
+
+										}
+
+										if ansiStrArg != (0 as! PVOID) {
+											status = rtlpWriteWideStringStringValue(context, formatProperties, ansiStrArg.buffer, ansiStrArg.length)
+
+										}
+
+
+									} else {
+										if FormatProperties.variableType == unicodeString {
+											if argPosition != 0 {
+												intArg = rtlpGetWideStringArgument(argumentsCopy, argPosition, sizeOf<Unsigned long long>())
+												unicodeStrArg = intArg as! UINT_PTR as! PUNICODE_STRING
+
+											} else {
+												unicodeStrArg = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentList[0])) as! PUNICODE_STRING : (va_arg(argumentList[0])) as! PUNICODE_STRING)
+
+											}
+
+											if unicodeStrArg != (0 as! PVOID) {
+												status = rtlpWriteWideStringValue(context, formatProperties, unicodeStrArg.buffer, unicodeStrArg.length)
+
+											}
+
+
+										}
+
+
+									}
+
+
+								}
+
 
 							}
 
@@ -986,8 +932,7 @@ fun rtlpGetWideStringArgument(argumentList PVA_LIST, argumentNumber ULONG, argum
 	index = 1
 	while index < argumentNumber {
 		value = (((sizeOf<Unsigned long long>() < sizeOf<Unsigned long long>())) ? (va_arg(argumentsCopy)) as! LONGLONG : (va_arg(argumentsCopy)) as! LONGLONG)
-		index
-		1
+		index += 1
 
 	}
 
@@ -1141,17 +1086,16 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 			buffer[index] = 45/* "-" */
 			index++
 		} else {
-			formatProperties.flags & 1
-
-			{
+			if formatProperties.flags & 1 {
 				buffer[index] = 43/* "+" */
-				++index
-
-			}
-
-			if formatProperties.flags & 2 {
-				buffer[index] = 32/* " " */
 				index++
+			} else {
+				if formatProperties.flags & 2 {
+					buffer[index] = 32/* " " */
+					index++
+				}
+
+
 			}
 
 
@@ -1200,8 +1144,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 		precisionIndex = 0
 		while precisionIndex < precision {
 			roundingAmount *= 0.10000000000000001
-			precisionIndex
-
+			precisionIndex++
 		}
 
 		value += roundingAmount
@@ -1244,15 +1187,15 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 		signCharacter = 45/* "-" */
 
 	} else {
-		formatProperties.flags & 1
-
-		{
+		if formatProperties.flags & 1 {
 			signCharacter = 43/* "+" */
 
-		}
+		} else {
+			if formatProperties.flags & 2 {
+				signCharacter = 32/* " " */
 
-		if formatProperties.flags & 2 {
-			signCharacter = 32/* " " */
+			}
+
 
 		}
 
@@ -1265,20 +1208,14 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 			significantDigits = precision
 
 		} else {
-			precision > significantDigits
-
-			{
+			if precision > significantDigits {
 				precision = significantDigits
-				!writeExponent && ((exponent + 1) > precision)
-
-				{
+				if !writeExponent and ((exponent + 1) > precision) {
 					precision = exponent + 1
 
 				}
 
-				precision == 0
-
-				{
+				if precision == 0 {
 					precision = 1
 
 				}
@@ -1297,15 +1234,16 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 		numberLength += 1
 
 	} else {
-		formatProperties.flags & 8192
+		if formatProperties.flags & 8192 {
+			if writeExponent {
+				if precision > 1 {
+					numberLength += 1
 
-		{
-			writeExponent
+				}
 
-			{
-				precision > 1
 
-				{
+			} else {
+				if (exponent < 0) or ((exponent + 1) - significantDigits < 0) {
 					numberLength += 1
 
 				}
@@ -1314,22 +1252,12 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 			}
 
 
-			{
-				(exponent < 0) || ((exponent + 1) - significantDigits < 0)
-
-				{
-					numberLength += 1
-
-				}
-
+		} else {
+			if precision != 0 {
+				numberLength += 1
 
 			}
 
-
-		}
-
-		if precision != 0 {
-			numberLength += 1
 
 		}
 
@@ -1435,8 +1363,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 			}
 
-			fieldIndex
-
+			fieldIndex++
 		}
 
 		fieldCount = 0
@@ -1499,8 +1426,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 			}
 
-			precisionIndex
-
+			precisionIndex++
 		}
 
 		if formatProperties.flags & 512 {
@@ -1571,16 +1497,10 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 				digit = 48/* "0" */
 
 			} else {
-				index < digitCount
-
-				{
+				if index < digitCount {
 					digit = buffer[index]
-					++index
-
-				}
-
-
-				{
+					index++
+				} else {
 					digit = 48/* "0" */
 
 				}
@@ -1594,8 +1514,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 			}
 
-			currentExponent--			precisionIndex
-
+			currentExponent--			precisionIndex++
 		}
 
 
@@ -1609,8 +1528,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 		}
 
-		fieldIndex
-
+		fieldIndex++
 	}
 
 	return (0 as! XTSTATUS)
@@ -1668,8 +1586,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 		index = 0
 		while index < 13 {
 			buffer[index] = 48/* "0" */
-			index
-
+			index++
 		}
 
 
@@ -1717,15 +1634,10 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 				character = digit + 48/* "0" */
 
 			} else {
-				formatProperties.flags & 512
-
-				{
+				if formatProperties.flags & 512 {
 					character = digit + 65/* "A" */ - 10
 
-				}
-
-
-				{
+				} else {
 					character = digit + 97/* "a" */ - 10
 
 				}
@@ -1734,8 +1646,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 			}
 
 			buffer[13 - index - 1] = character
-			index
-
+			index++
 		}
 
 		if precision == -1 {
@@ -1756,17 +1667,17 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 		prefixSize += 1
 
 	} else {
-		formatProperties.flags & 1
-
-		{
+		if formatProperties.flags & 1 {
 			prefix[prefixSize] = 43/* "+" */
 			prefixSize += 1
 
-		}
+		} else {
+			if formatProperties.flags & 2 {
+				prefix[prefixSize] = 32/* " " */
+				prefixSize += 1
 
-		if formatProperties.flags & 2 {
-			prefix[prefixSize] = 32/* " " */
-			prefixSize += 1
+			}
+
 
 		}
 
@@ -1853,8 +1764,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 		}
 
-		prefixIndex
-
+		prefixIndex++
 	}
 
 	status = rtlpWriteWideCharacter(context, integerValue)
@@ -1889,8 +1799,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 		}
 
-		precisionIndex
-
+		precisionIndex++
 	}
 
 	status = rtlpWriteWideStringCustomValue(context, "%C%+d", exponentCharacter, exponent)
@@ -2005,17 +1914,17 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 		prefixLength += 1
 
 	} else {
-		formatProperties.flags & 1
-
-		{
+		if formatProperties.flags & 1 {
 			prefix[prefixLength] = 43/* "+" */
 			prefixLength += 1
 
-		}
+		} else {
+			if formatProperties.flags & 2 {
+				prefix[prefixLength] = 32/* " " */
+				prefixLength += 1
 
-		if formatProperties.flags & 2 {
-			prefix[prefixLength] = 32/* " " */
-			prefixLength += 1
+			}
+
 
 		}
 
@@ -2032,9 +1941,7 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 
 		} else {
-			formatProperties.radix == 16
-
-			{
+			if formatProperties.radix == 16 {
 				prefix[prefixLength] = 48/* "0" */
 				prefixLength += 1
 				prefix[prefixLength] = 120/* "x" */
@@ -2072,8 +1979,7 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 				}
 
-				prefixIndex
-
+				prefixIndex++
 			}
 
 			prefixLength = 0
@@ -2101,8 +2007,7 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 		}
 
-		prefixIndex
-
+		prefixIndex++
 	}
 
 	while precisionLength > 0 {
@@ -2123,8 +2028,7 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 		}
 
-		bufferIndex
-
+		bufferIndex++
 	}
 
 	while fieldLength > 0 {

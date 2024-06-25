@@ -128,8 +128,7 @@ fun rtlDumpBitMap(bitMap PRTL_BITMAP) {
 			keDbgPrint("  %8zu: %08lx\n", index, bitMap.buffer[index])
 		}
 
-		index
-
+		index++
 	}
 
 }

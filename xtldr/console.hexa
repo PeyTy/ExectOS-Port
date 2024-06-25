@@ -15,8 +15,7 @@ fun blClearConsoleLine(lineNo ULONGLONG) {
 	index = 0
 	while index < resX {
 		blConsoleWrite(" ")
-		index
-
+		index++
 	}
 
 }

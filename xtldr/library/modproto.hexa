@@ -33,8 +33,7 @@ fun blGetXtLdrProtocol(systemTable PEFI_SYSTEM_TABLE, imageHandle EFI_HANDLE, pr
 				break
 			}
 
-			index
-
+			index++
 		}
 
 

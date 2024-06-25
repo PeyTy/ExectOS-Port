@@ -171,50 +171,50 @@ fun blInvokeBootProtocol(shortName PWCHAR, optionsList PLIST_ENTRY) {
 			rtlCopyMemory(modulesList, option.value, sizeOf<Unsigned long long>() * (moduleListLength + 1))
 
 		} else {
-			rtlCompareWideStringInsensitive(option.name, "SYSTEMTYPE", 0) == 0
-
-			{
+			if rtlCompareWideStringInsensitive(option.name, "SYSTEMTYPE", 0) == 0 {
 				BootParameters.systemType = option.value
 
-			}
-
-			if rtlCompareWideStringInsensitive(option.name, "SYSTEMPATH", 0) == 0 {
-				status = blGetVolumeDevicePath(option.value, BootParameters.devicePath, BootParameters.arcName, BootParameters.systemPath)
-				if status != (9223372036854775808 & 0) {
-					blDebugPrint("ERROR: Failed to find volume device path (Status Code: 0x%zX)\n", status)
-					return status
-
-				}
-
-				status = blGetEfiPath(BootParameters.systemPath, BootParameters.efiPath)
-				if status != (9223372036854775808 & 0) {
-					blDebugPrint("ERROR: Failed to get EFI path (Status Code: 0x%zX)\n", status)
-					return status
-
-				}
-
-
 			} else {
-				rtlCompareWideStringInsensitive(option.name, "KERNELFILE", 0) == 0
-
-				{
-					BootParameters.kernelFile = option.value
-
-				}
-
-				if rtlCompareWideStringInsensitive(option.name, "INITRDFILE", 0) == 0 {
-					BootParameters.initrdFile = option.value
-
-				} else {
-					rtlCompareWideStringInsensitive(option.name, "HALFILE", 0) == 0
-
-					{
-						BootParameters.halFile = option.value
+				if rtlCompareWideStringInsensitive(option.name, "SYSTEMPATH", 0) == 0 {
+					status = blGetVolumeDevicePath(option.value, BootParameters.devicePath, BootParameters.arcName, BootParameters.systemPath)
+					if status != (9223372036854775808 & 0) {
+						blDebugPrint("ERROR: Failed to find volume device path (Status Code: 0x%zX)\n", status)
+						return status
 
 					}
 
-					if rtlCompareWideStringInsensitive(option.name, "PARAMETERS", 0) == 0 {
-						BootParameters.parameters = option.value
+					status = blGetEfiPath(BootParameters.systemPath, BootParameters.efiPath)
+					if status != (9223372036854775808 & 0) {
+						blDebugPrint("ERROR: Failed to get EFI path (Status Code: 0x%zX)\n", status)
+						return status
+
+					}
+
+
+				} else {
+					if rtlCompareWideStringInsensitive(option.name, "KERNELFILE", 0) == 0 {
+						BootParameters.kernelFile = option.value
+
+					} else {
+						if rtlCompareWideStringInsensitive(option.name, "INITRDFILE", 0) == 0 {
+							BootParameters.initrdFile = option.value
+
+						} else {
+							if rtlCompareWideStringInsensitive(option.name, "HALFILE", 0) == 0 {
+								BootParameters.halFile = option.value
+
+							} else {
+								if rtlCompareWideStringInsensitive(option.name, "PARAMETERS", 0) == 0 {
+									BootParameters.parameters = option.value
+
+								}
+
+
+							}
+
+
+						}
+
 
 					}
 

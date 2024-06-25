@@ -41,8 +41,7 @@ fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTE
 	index = 0
 	while index <= 3 {
 		thread.waitBlock[index].thread = thread
-		index
-
+		index++
 	}
 
 	thread.autoAlignment = process.autoAlignment
@@ -88,22 +87,9 @@ fun keInitializeThread(process PKPROCESS, thread PKTHREAD, systemRoutine PKSYSTE
 		kepInitializeThreadContext(thread, systemRoutine, startRoutine, startContext, context)
 
 	} catch seh EXCEPTION_EXECUTE_HANDLER {
-		1
-
-		{
-			allocation
-
-			{
 				mmFreeKernelStack(stack, fALSE)
 				thread.initialStack = (0 as! PVOID)
 				thread.stackBase = (0 as! PVOID)
-
-			}
-
-			(3221225473 as! XTSTATUS)
-
-		}
-
 
 	}
 

@@ -29,10 +29,8 @@ fun hlGetAcpiTable(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 
 	{
 		status = hlpQueryAcpiTables(signature, table)
-		status != (0 as! XTSTATUS)
-
-		{
-			(3221226021 as! XTSTATUS)
+		if status != (0 as! XTSTATUS) {
+			return (3221226021 as! XTSTATUS)
 
 		}
 
@@ -400,8 +398,7 @@ fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 				break
 			}
 
-			tableIndex
-
+			tableIndex++
 		}
 
 

@@ -185,8 +185,7 @@ fun blLoadModule(moduleName PWCHAR) {
 
 		}
 
-		sectionIndex
-
+		sectionIndex++
 	}
 
 	depsListEntry = moduleInfo.dependencies.flink
@@ -350,8 +349,7 @@ fun blOpenProtocol(handle PEFI_HANDLE, protocolHandler PVOID *, protocolGuid PEF
 				break
 			}
 
-			index
-
+			index++
 		}
 
 
@@ -490,43 +488,39 @@ fun blpGetModuleInformation(sectionData PWCHAR, sectionSize ULONG, moduleInfo PX
 			rtlInsertTailList(moduleInfo.authors, moduleAuthors.flink)
 
 		} else {
-			rtlCompareWideString(key, "description", 11) == 0
-
-			{
+			if rtlCompareWideString(key, "description", 11) == 0 {
 				moduleInfo.moduleDescription = strings[index]
 
-			}
-
-			if rtlCompareWideString(key, "license", 7) == 0 {
-				moduleInfo.license = strings[index]
-
 			} else {
-				rtlCompareWideString(key, "softdeps", 6) == 0
+				if rtlCompareWideString(key, "license", 7) == 0 {
+					moduleInfo.license = strings[index]
 
-				{
-					dependency = rtlTokenizeWideString(strings[index], " ", lastStr)
-					dependency != (0 as! PVOID)
+				} else {
+					if rtlCompareWideString(key, "softdeps", 6) == 0 {
+						dependency = rtlTokenizeWideString(strings[index], " ", lastStr)
+						while dependency != (0 as! PVOID) {
+							status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), moduleDependencies as! PVOID *)
+							if status != (9223372036854775808 & 0) {
+								return status
 
-					{
-						status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), moduleDependencies as! PVOID *)
-						status != (9223372036854775808 & 0)
+							}
 
-						{
-							status
+							moduleDependencies.moduleName = dependency
+							rtlInsertTailList(moduleInfo.dependencies, moduleDependencies.flink)
+							dependency = rtlTokenizeWideString((0 as! PVOID), " ", lastStr)
 
 						}
 
-						moduleDependencies.moduleName = dependency
-						rtlInsertTailList(moduleInfo.dependencies, moduleDependencies.flink)
-						dependency = rtlTokenizeWideString((0 as! PVOID), " ", lastStr)
+
+					} else {
+						if rtlCompareWideString(key, "version", 7) == 0 {
+							moduleInfo.version = strings[index]
+
+						}
+
 
 					}
 
-
-				}
-
-				if rtlCompareWideString(key, "version", 7) == 0 {
-					moduleInfo.version = strings[index]
 
 				}
 
@@ -536,8 +530,7 @@ fun blpGetModuleInformation(sectionData PWCHAR, sectionSize ULONG, moduleInfo PX
 
 		}
 
-		index
-
+		index++
 	}
 
 	return (9223372036854775808 & 0)

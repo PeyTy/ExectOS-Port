@@ -87,15 +87,15 @@ fun blpInitializeDebugConsole() {
 							portAddress += debugPort[0] - 48/* "0" */
 
 						} else {
-							debugPort[0] >= 65/* "A" */ && debugPort[0] <= 70/* "F" */
-
-							{
+							if debugPort[0] >= 65/* "A" */ and debugPort[0] <= 70/* "F" */ {
 								portAddress += debugPort[0] - 65/* "A" */ + 10
 
-							}
+							} else {
+								if debugPort[0] >= 97/* "a" */ and debugPort[0] <= 102/* "f" */ {
+									portAddress += debugPort[0] - 97/* "a" */ + 10
 
-							if debugPort[0] >= 97/* "a" */ and debugPort[0] <= 102/* "f" */ {
-								portAddress += debugPort[0] - 97/* "a" */ + 10
+								}
+
 
 							}
 
@@ -121,15 +121,10 @@ fun blpInitializeDebugConsole() {
 				BlpStatus.debugPort |= 2
 
 			} else {
-				rtlCompareWideStringInsensitive(debugPort, "SCREEN", 5) == 0
-
-				{
+				if rtlCompareWideStringInsensitive(debugPort, "SCREEN", 5) == 0 {
 					BlpStatus.debugPort |= 1
 
-				}
-
-
-				{
+				} else {
 					blConsolePrint("ERROR: Unsupported debug port ('%S') specified\n", debugPort)
 					blSleepExecution(3000)
 

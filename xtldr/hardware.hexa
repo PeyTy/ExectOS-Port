@@ -71,20 +71,16 @@ fun blpActivateSerialIOController() {
 
 					}
 
-					function
-
+					function++
 				}
 
-				device
-
+				device++
 			}
 
-			bus
-
+			bus++
 		}
 
-		index
-
+		index++
 	}
 
 	return (9223372036854775808 & 0)

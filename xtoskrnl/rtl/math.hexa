@@ -241,18 +241,13 @@ fun rtlDivideUnsigned64(dividend ULONGLONG, divisor ULONGLONG, remainder PULONGL
 				RemainderParts.u.highPart = 0
 
 			} else {
-				shift < (sizeOf<Unsigned long long>() * 8)
-
-				{
+				if shift < (sizeOf<Unsigned long long>() * 8) {
 					QuotientParts.u.lowPart = 0
 					QuotientParts.u.highPart = DividendParts.u.lowPart << ((sizeOf<Unsigned long long>() * 8) - shift)
 					RemainderParts.u.lowPart = (DividendParts.u.highPart << ((sizeOf<Unsigned long long>() * 8) - shift)) | (DividendParts.u.lowPart >> shift)
 					RemainderParts.u.highPart = DividendParts.u.highPart >> shift
 
-				}
-
-
-				{
+				} else {
 					QuotientParts.u.lowPart = DividendParts.u.lowPart << ((sizeOf<Unsigned long long>() * 8) - shift)
 					QuotientParts.u.highPart = (DividendParts.u.highPart << ((sizeOf<Unsigned long long>() * 8) - shift)) | (DividendParts.u.lowPart >> (shift - (sizeOf<Unsigned long long>() * 8)))
 					RemainderParts.u.lowPart = DividendParts.u.highPart >> (shift - (sizeOf<Unsigned long long>() * 8))

@@ -152,8 +152,7 @@ fun peGetSection(imagePointer PVOID, sectionName PCHAR, rawData PULONG *) {
 
 		}
 
-		sectionIndex
-
+		sectionIndex++
 	}
 
 	return (9223372036854775808 | 14)
@@ -387,8 +386,7 @@ fun peLoadImage(fileHandle PEFI_FILE_HANDLE, memoryType LOADER_MEMORY_TYPE, virt
 
 		}
 
-		index
-
+		index++
 	}
 
 	xtLdrProtocol.memory.freePages(data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS, pages)
@@ -567,7 +565,7 @@ fun pepRelocateLoadedImage(image PPECOFF_IMAGE_CONTEXT) {
 			if (address + offset) as! ULONG_PTR < relocationDir as! ULONG_PTR or (address + offset) as! ULONG_PTR >= relocationEnd as! ULONG_PTR {
 				switch type {
 					case 0:
-
+						break
 					case 10:
 						longPtr = (address as! PUCHAR + offset) as! PULONGLONG
 					longPtr[0] = longPtr[0] - imageBase + image.virtualAddress as! UINT_PTR
@@ -577,7 +575,7 @@ fun pepRelocateLoadedImage(image PPECOFF_IMAGE_CONTEXT) {
 					shortPtr[0] = shortPtr[0] - imageBase + image.virtualAddress as! UINT_PTR
 					break
 					case _:
-						(9223372036854775808 | 3)
+						return (9223372036854775808 | 3)
 
 				}
 

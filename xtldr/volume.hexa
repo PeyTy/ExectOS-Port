@@ -84,48 +84,43 @@ fun blEnumerateBlockDevices() {
 
 
 		} else {
-			lastNode.type == 4
-
-			{
-				lastNode.subType == 2
-
-				{
+			if lastNode.type == 4 {
+				if lastNode.subType == 2 {
 					media = blockDeviceData.blockIo.media
 					driveType = 1
 					driveNumber = ++cDCount
 					partitionNumber = 0
 					blDebugPrint("Found CD-ROM drive (DriveNumber: %lu, MediaPresent: %u, RemovableMedia: %u, RO: %u)\n", driveNumber, media.mediaPresent, media.removableMedia, media.readOnly)
 
-				}
-
-				if lastNode.subType == 1 {
-					media = blockDeviceData.blockIo.media
-					hDPath = lastNode as! PEFI_HARDDRIVE_DEVICE_PATH
-					driveType = 3
-					driveNumber = ((hDPath.partitionNumber == 1)) ? ++hDCount : hDCount - 1
-					partitionNumber = hDPath.partitionNumber
-					partitionGuid = hDPath.signature as! PEFI_GUID
-					blDebugPrint("Found Hard Disk partition (DiskNumber: %lu, PartNumber: %lu, MBRType: %u, GUID: {%V}, PartSize: %uB)\n", driveNumber, partitionNumber, hDPath.mBRType, partitionGuid, hDPath.partitionSize * media.blockSize)
-
 				} else {
-					lastNode.subType == 9
-
-					{
+					if lastNode.subType == 1 {
 						media = blockDeviceData.blockIo.media
-						driveType = 4
-						driveNumber = ++rDCount
-						partitionNumber = 0
-						blDebugPrint("Found RAM Disk (DiskNumber: %lu, MediaPresent: %u)\n", driveNumber, media.mediaPresent)
+						hDPath = lastNode as! PEFI_HARDDRIVE_DEVICE_PATH
+						driveType = 3
+						driveNumber = ((hDPath.partitionNumber == 1)) ? ++hDCount : hDCount - 1
+						partitionNumber = hDPath.partitionNumber
+						partitionGuid = hDPath.signature as! PEFI_GUID
+						blDebugPrint("Found Hard Disk partition (DiskNumber: %lu, PartNumber: %lu, MBRType: %u, GUID: {%V}, PartSize: %uB)\n", driveNumber, partitionNumber, hDPath.mBRType, partitionGuid, hDPath.partitionSize * media.blockSize)
+
+					} else {
+						if lastNode.subType == 9 {
+							media = blockDeviceData.blockIo.media
+							driveType = 4
+							driveNumber = ++rDCount
+							partitionNumber = 0
+							blDebugPrint("Found RAM Disk (DiskNumber: %lu, MediaPresent: %u)\n", driveNumber, media.mediaPresent)
+
+						}
+
 
 					}
 
 
 				}
 
-				blpFindParentBlockDevice(blockDevices, blockDeviceData, parentNode)!
-				{
+				if !blpFindParentBlockDevice(blockDevices, blockDeviceData, parentNode) {
 					blDebugPrint("WARNING: No parent device found, skipping orphaned media device path\n")
-
+					continue
 				}
 
 
@@ -251,8 +246,7 @@ fun blGetEfiPath(systemPath PWCHAR, efiPath PWCHAR *) {
 
 		}
 
-		index
-
+		index++
 	}
 
 	return (9223372036854775808 & 0)
@@ -302,17 +296,12 @@ fun blGetVolumeDevicePath(systemPath PWCHAR, devicePath PEFI_DEVICE_PATH_PROTOCO
 			return (9223372036854775808 | 3)
 
 		} else {
-			pathLength == 13
-
-			{
+			if pathLength == 13 {
 				blDebugPrint("WARNING: MBR partition UUID in system path is not supported\n")
-				(9223372036854775808 | 3)
+				return (9223372036854775808 | 3)
 
-			}
-
-
-			{
-				(9223372036854775808 | 2)
+			} else {
+				return (9223372036854775808 | 2)
 
 			}
 
@@ -567,8 +556,7 @@ fun blpDiscoverEfiBlockDevices(blockDevices PLIST_ENTRY) {
 		blockDevice.blockIo = io
 		blockDevice.devicePath = devicePath
 		rtlInsertTailList(blockDevices, blockDevice.listEntry)
-		index
-
+		index++
 	}
 
 	blFreeMemoryPool(handles)
@@ -607,36 +595,10 @@ fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, 
 		driveType[0] = 4
 
 	} else {
-		rtlCompareWideStringInsensitive(systemPath, "multi(0)disk(0)", 0) == 0
-
-		{
+		if rtlCompareWideStringInsensitive(systemPath, "multi(0)disk(0)", 0) == 0 {
 			arcLength = 15
 			arcPath = systemPath + arcLength
-			rtlCompareWideStringInsensitive(arcPath, "cdrom(", 0) == 0
-
-			{
-				arcLength += 6
-				systemPath[arcLength] != 41/* ")" */ && systemPath[arcLength] != 0/* "\u0000" */
-
-				{
-					systemPath[arcLength] >= 48/* "0" */ && systemPath[arcLength] <= 57/* "9" */
-
-					{
-						driveNumber[0] *= 10
-						driveNumber[0] += systemPath[arcLength] - 48/* "0" */
-
-					}
-
-					++arcLength
-
-				}
-
-				driveType[0] = 1
-				++arcLength
-
-			}
-
-			if rtlCompareWideStringInsensitive(arcPath, "fdisk(", 0) == 0 {
+			if rtlCompareWideStringInsensitive(arcPath, "cdrom(", 0) == 0 {
 				arcLength += 6
 				while systemPath[arcLength] != 41/* ")" */ and systemPath[arcLength] != 0/* "\u0000" */ {
 					if systemPath[arcLength] >= 48/* "0" */ and systemPath[arcLength] <= 57/* "9" */ {
@@ -648,60 +610,59 @@ fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, 
 					arcLength++
 				}
 
-				driveType[0] = 2
+				driveType[0] = 1
 				arcLength++
 			} else {
-				rtlCompareWideStringInsensitive(arcPath, "rdisk(", 0) == 0
-
-				{
+				if rtlCompareWideStringInsensitive(arcPath, "fdisk(", 0) == 0 {
 					arcLength += 6
-					systemPath[arcLength] != 41/* ")" */ && systemPath[arcLength] != 0/* "\u0000" */
-
-					{
-						systemPath[arcLength] >= 48/* "0" */ && systemPath[arcLength] <= 57/* "9" */
-
-						{
+					while systemPath[arcLength] != 41/* ")" */ and systemPath[arcLength] != 0/* "\u0000" */ {
+						if systemPath[arcLength] >= 48/* "0" */ and systemPath[arcLength] <= 57/* "9" */ {
 							driveNumber[0] *= 10
 							driveNumber[0] += systemPath[arcLength] - 48/* "0" */
 
 						}
 
-						++arcLength
-
+						arcLength++
 					}
 
-					driveType[0] = 3
-					++arcLength
-					arcPath = systemPath + arcLength
-					rtlCompareWideStringInsensitive(arcPath, "partition(", 0) == 0
-
-					{
-						arcLength += 10
-						systemPath[arcLength] != 41/* ")" */ && systemPath[arcLength] != 0/* "\u0000" */
-
-						{
-							systemPath[arcLength] >= 48/* "0" */ && systemPath[arcLength] <= 57/* "9" */
-
-							{
-								partNumber[0] *= 10
-								partNumber[0] += systemPath[arcLength] - 48/* "0" */
+					driveType[0] = 2
+					arcLength++
+				} else {
+					if rtlCompareWideStringInsensitive(arcPath, "rdisk(", 0) == 0 {
+						arcLength += 6
+						while systemPath[arcLength] != 41/* ")" */ and systemPath[arcLength] != 0/* "\u0000" */ {
+							if systemPath[arcLength] >= 48/* "0" */ and systemPath[arcLength] <= 57/* "9" */ {
+								driveNumber[0] *= 10
+								driveNumber[0] += systemPath[arcLength] - 48/* "0" */
 
 							}
 
-							++arcLength
-
+							arcLength++
 						}
 
-						++arcLength
+						driveType[0] = 3
+						arcLength++						arcPath = systemPath + arcLength
+						if rtlCompareWideStringInsensitive(arcPath, "partition(", 0) == 0 {
+							arcLength += 10
+							while systemPath[arcLength] != 41/* ")" */ and systemPath[arcLength] != 0/* "\u0000" */ {
+								if systemPath[arcLength] >= 48/* "0" */ and systemPath[arcLength] <= 57/* "9" */ {
+									partNumber[0] *= 10
+									partNumber[0] += systemPath[arcLength] - 48/* "0" */
+
+								}
+
+								arcLength++
+							}
+
+							arcLength++
+						}
+
+
+					} else {
+						return (9223372036854775808 | 3)
 
 					}
 
-
-				}
-
-
-				{
-					(9223372036854775808 | 3)
 
 				}
 
@@ -709,11 +670,8 @@ fun blpDissectVolumeArcPath(systemPath PWCHAR, arcName PWCHAR *, path PWCHAR *, 
 			}
 
 
-		}
-
-
-		{
-			(9223372036854775808 | 3)
+		} else {
+			return (9223372036854775808 | 3)
 
 		}
 

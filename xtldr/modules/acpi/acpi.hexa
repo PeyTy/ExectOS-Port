@@ -101,8 +101,7 @@ fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *)
 			break
 		}
 
-		tableIndex
-
+		tableIndex++
 	}
 
 	if tableHeader.signature != signature {

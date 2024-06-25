@@ -49,8 +49,7 @@ fun blDisplayBootMenu() {
 			index = 0
 			while index < numberOfEntries {
 				blpDrawBootMenuEntry(handle, menuEntries[index].entryName, index, index == highligtedEntryId)
-				index
-
+				index++
 			}
 
 
@@ -99,89 +98,84 @@ fun blDisplayBootMenu() {
 
 					break
 				} else {
-					Key.scanCode == 1
-
-					{
-						highligtedEntryId > 0
-
-						{
-							--highligtedEntryId
-							blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId + 1].entryName, highligtedEntryId + 1, fALSE)
-							blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, tRUE)
-
-						}
-
-
-					}
-
-					if Key.scanCode == 2 {
-						if highligtedEntryId < numberOfEntries - 1 {
-							highligtedEntryId++							blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId - 1].entryName, highligtedEntryId - 1, fALSE)
+					if Key.scanCode == 1 {
+						if highligtedEntryId > 0 {
+							highligtedEntryId--							blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId + 1].entryName, highligtedEntryId + 1, fALSE)
 							blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, tRUE)
 
 						}
 
 
 					} else {
-						Key.scanCode == 9
-
-						{
-							highligtedEntryId != 0
-
-							{
-								blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, fALSE)
-								blpDrawBootMenuEntry(handle, menuEntries[0].entryName, 0, tRUE)
-								highligtedEntryId = 0
-
-							}
-
-
-						}
-
-						if Key.scanCode == 10 {
-							if highligtedEntryId != numberOfEntries - 1 {
-								blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, fALSE)
-								blpDrawBootMenuEntry(handle, menuEntries[numberOfEntries - 1].entryName, numberOfEntries - 1, tRUE)
-								highligtedEntryId = numberOfEntries - 1
+						if Key.scanCode == 2 {
+							if highligtedEntryId < numberOfEntries - 1 {
+								highligtedEntryId++								blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId - 1].entryName, highligtedEntryId - 1, fALSE)
+								blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, tRUE)
 
 							}
 
 
 						} else {
-							Key.scanCode == 11
-
-							{
-								blDisplayInfoDialog("XTLDR", "XTLDR, the XTOS Boot Loader for UEFI and EFI-based machines.\n \nUse arrow keys (Up/Down) to change the highlighted entry and\nPgUp/PgDown keys to jump to the first/last position.\n \nPress ENTER key to boot the highlighted boot menu entry.\nPress 'e' key to edit the highlighted menu entry.\nPress 's' key to exit into XTLDR shell (enters advanced mode).\n \nF1 shows this help, F10 reboots into UEFI firmware interface,\nF11 reboots the machine and F12 turns it off.\n \n \nXTLDR is a part of the ExectOS Operating System.\nVisit https://exectos.eu.org/ for more information.")
-
-							}
-
-							if Key.scanCode == 20 {
-								blEnterFirmwareSetup()
-								blDisplayErrorDialog("XTLDR", "Reboot into firmware setup interface not supported!")
-								break
-							} else {
-								Key.scanCode == 21
-
-								{
-									blRebootSystem()
-									blDisplayErrorDialog("XTLDR", "Failed to reboot the machine!")
+							if Key.scanCode == 9 {
+								if highligtedEntryId != 0 {
+									blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, fALSE)
+									blpDrawBootMenuEntry(handle, menuEntries[0].entryName, 0, tRUE)
+									highligtedEntryId = 0
 
 								}
 
-								if Key.scanCode == 22 {
-									blShutdownSystem()
-									blDisplayErrorDialog("XTLDR", "Failed to shutdown the machine!")
-									break
-								} else {
-									Key.unicodeChar == 101
 
-									{
-										blDisplayErrorDialog("XTLDR", "Editing boot menu entries is not implemented yet!")
+							} else {
+								if Key.scanCode == 10 {
+									if highligtedEntryId != numberOfEntries - 1 {
+										blpDrawBootMenuEntry(handle, menuEntries[highligtedEntryId].entryName, highligtedEntryId, fALSE)
+										blpDrawBootMenuEntry(handle, menuEntries[numberOfEntries - 1].entryName, numberOfEntries - 1, tRUE)
+										highligtedEntryId = numberOfEntries - 1
 
 									}
 
-									if Key.unicodeChar == 115 {
-										return
+
+								} else {
+									if Key.scanCode == 11 {
+										blDisplayInfoDialog("XTLDR", "XTLDR, the XTOS Boot Loader for UEFI and EFI-based machines.\n \nUse arrow keys (Up/Down) to change the highlighted entry and\nPgUp/PgDown keys to jump to the first/last position.\n \nPress ENTER key to boot the highlighted boot menu entry.\nPress 'e' key to edit the highlighted menu entry.\nPress 's' key to exit into XTLDR shell (enters advanced mode).\n \nF1 shows this help, F10 reboots into UEFI firmware interface,\nF11 reboots the machine and F12 turns it off.\n \n \nXTLDR is a part of the ExectOS Operating System.\nVisit https://exectos.eu.org/ for more information.")
+										break
+									} else {
+										if Key.scanCode == 20 {
+											blEnterFirmwareSetup()
+											blDisplayErrorDialog("XTLDR", "Reboot into firmware setup interface not supported!")
+											break
+										} else {
+											if Key.scanCode == 21 {
+												blRebootSystem()
+												blDisplayErrorDialog("XTLDR", "Failed to reboot the machine!")
+												break
+											} else {
+												if Key.scanCode == 22 {
+													blShutdownSystem()
+													blDisplayErrorDialog("XTLDR", "Failed to shutdown the machine!")
+													break
+												} else {
+													if Key.unicodeChar == 101 {
+														blDisplayErrorDialog("XTLDR", "Editing boot menu entries is not implemented yet!")
+														break
+													} else {
+														if Key.unicodeChar == 115 {
+															return
+
+														}
+
+
+													}
+
+
+												}
+
+
+											}
+
+
+										}
+
 
 									}
 
@@ -209,24 +203,20 @@ fun blDisplayBootMenu() {
 					blConsolePrint("The highlighted position will be booted automatically in %ld seconds.", timeOut)
 					timeOut--
 				} else {
-					timeOut == 0
-
-					{
+					if timeOut == 0 {
 						blSetConsoleAttributes(Handle.dialogColor | Handle.textColor)
 						blClearConsoleLine(Handle.posY + Handle.height + 4)
 						blSetCursorPosition(4, Handle.posY + Handle.height + 4)
 						blConsolePrint("Booting '%S' now...\n", menuEntries[highligtedEntryId].entryName)
 						timeOut = -1
 						status = blInvokeBootProtocol(menuEntries[highligtedEntryId].shortName, menuEntries[highligtedEntryId].options)
-						status != (0 as! XTSTATUS)
-
-						{
+						if status != (0 as! XTSTATUS) {
 							blDebugPrint("ERROR: Failed to boot '%S' (Status Code: 0x%zX)\n", menuEntries[highligtedEntryId].entryName, status)
 							blDisplayErrorDialog("XTLDR", "Failed to startup the selected Operating System.")
 
 						}
 
-
+						break
 					}
 
 
@@ -374,98 +364,87 @@ fun blDisplayInputDialog(caption PWCHAR, message PWCHAR, inputFieldText PWCHAR *
 		if Key.scanCode == 23 {
 			break
 		} else {
-			Key.unicodeChar == 9
-
-			{
+			if Key.unicodeChar == 9 {
 				Handle.attributes ^= (16 | 32)
 				Handle.attributes ^= (4 | 8)
 
-			}
-
-			if Key.scanCode == 3 {
-				if Handle.attributes & 16 and textPosition < inputFieldLength {
-					textPosition++
-				}
-
-
 			} else {
-				Key.scanCode == 4
-
-				{
-					Handle.attributes & 16 && textPosition > 0
-
-					{
-						--textPosition
-
-					}
-
-
-				}
-
-				if Key.scanCode == 5 {
-					if Handle.attributes & 16 {
-						textPosition = 0
-
+				if Key.scanCode == 3 {
+					if Handle.attributes & 16 and textPosition < inputFieldLength {
+						textPosition++
 					}
 
 
 				} else {
-					Key.scanCode == 6
-
-					{
-						Handle.attributes & 16
-
-						{
-							textPosition = inputFieldLength
-
-						}
-
-
-					}
-
-					if Key.scanCode == 8 {
-						if Handle.attributes & 16 {
-							if inputFieldLength > 0 and textPosition < inputFieldLength {
-								rtlMoveMemory(inputFieldBuffer + textPosition, inputFieldBuffer + textPosition + 1, (inputFieldLength - textPosition) * sizeOf<Unsigned long long>())
-								inputFieldLength--								inputFieldBuffer[inputFieldLength] = 0
-
-							}
-
-
+					if Key.scanCode == 4 {
+						if Handle.attributes & 16 and textPosition > 0 {
+							textPosition--
 						}
 
 
 					} else {
-						Key.unicodeChar == 8
-
-						{
-							Handle.attributes & 16
-
-							{
-								inputFieldLength > 0 and textPosition > 0 && textPosition <= inputFieldLength
-
-								{
-									--textPosition
-									rtlMoveMemory(inputFieldBuffer + textPosition, inputFieldBuffer + textPosition + 1, (inputFieldLength - textPosition) * sizeOf<Unsigned long long>())
-									--inputFieldLength
-									inputFieldBuffer[inputFieldLength] = 0
-
-								}
-
+						if Key.scanCode == 5 {
+							if Handle.attributes & 16 {
+								textPosition = 0
 
 							}
 
 
-						}
-
-						if Key.unicodeChar == 13 {
-							inputFieldText[0] = inputFieldBuffer
-							break
 						} else {
-							if Handle.attributes & 16 and Key.unicodeChar != 0 {
-								rtlMoveMemory(inputFieldBuffer + textPosition + 1, inputFieldBuffer + textPosition, (inputFieldLength - textPosition) * sizeOf<Unsigned long long>())
-								inputFieldBuffer[textPosition] = Key.unicodeChar
-								textPosition++								inputFieldLength++								inputFieldBuffer[inputFieldLength] = 0
+							if Key.scanCode == 6 {
+								if Handle.attributes & 16 {
+									textPosition = inputFieldLength
+
+								}
+
+
+							} else {
+								if Key.scanCode == 8 {
+									if Handle.attributes & 16 {
+										if inputFieldLength > 0 and textPosition < inputFieldLength {
+											rtlMoveMemory(inputFieldBuffer + textPosition, inputFieldBuffer + textPosition + 1, (inputFieldLength - textPosition) * sizeOf<Unsigned long long>())
+											inputFieldLength--											inputFieldBuffer[inputFieldLength] = 0
+
+										}
+
+
+									}
+
+
+								} else {
+									if Key.unicodeChar == 8 {
+										if Handle.attributes & 16 {
+											if inputFieldLength > 0 and textPosition > 0 and textPosition <= inputFieldLength {
+												textPosition--												rtlMoveMemory(inputFieldBuffer + textPosition, inputFieldBuffer + textPosition + 1, (inputFieldLength - textPosition) * sizeOf<Unsigned long long>())
+												inputFieldLength--												inputFieldBuffer[inputFieldLength] = 0
+
+											}
+
+
+										}
+
+
+									} else {
+										if Key.unicodeChar == 13 {
+											inputFieldText[0] = inputFieldBuffer
+											break
+										} else {
+											if Handle.attributes & 16 and Key.unicodeChar != 0 {
+												rtlMoveMemory(inputFieldBuffer + textPosition + 1, inputFieldBuffer + textPosition, (inputFieldLength - textPosition) * sizeOf<Unsigned long long>())
+												inputFieldBuffer[textPosition] = Key.unicodeChar
+												textPosition++												inputFieldLength++												inputFieldBuffer[inputFieldLength] = 0
+
+											}
+
+
+										}
+
+
+									}
+
+
+								}
+
 
 							}
 
@@ -583,14 +562,16 @@ fun blpDetermineDialogBoxSize(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 	while mask {
 		switch attributes & mask {
 			case 4:
-				8
-				height += 1
+
+				case 8:
+					height += 1
 			break
 			case 16:
-				32
 
-				case 64:
-					height += 2
+				case 32:
+
+					case 64:
+						height += 2
 			break
 		}
 
@@ -619,8 +600,7 @@ fun blpDetermineDialogBoxSize(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 			lineLength++
 		}
 
-		index
-
+		index++
 	}
 
 	width += 4
@@ -713,8 +693,7 @@ fun blpDrawBootMenuEntry(handle PXTBL_DIALOG_HANDLE, menuEntry PWCHAR, position 
 	index = 0
 	while index < handle.width - 4 {
 		blConsolePrint(" ")
-		index
-
+		index++
 	}
 
 	blSetCursorPosition(5, 4 + position)
@@ -745,9 +724,7 @@ fun blpDrawDialogBox(handle PXTBL_DIALOG_HANDLE, caption PWCHAR, message PWCHAR)
 		handle.textColor = 15
 
 	} else {
-		handle.attributes & 1
-
-		{
+		if handle.attributes & 1 {
 			handle.dialogColor = 16
 			handle.textColor = 15
 
@@ -768,8 +745,7 @@ fun blpDrawDialogBox(handle PXTBL_DIALOG_HANDLE, caption PWCHAR, message PWCHAR)
 				posX = 2
 				while posX < captionLength + 4 {
 					boxLine[posX] = 32/* " " */
-					posX
-
+					posX++
 				}
 
 				boxLine[captionLength + 4] = 9500
@@ -782,40 +758,28 @@ fun blpDrawDialogBox(handle PXTBL_DIALOG_HANDLE, caption PWCHAR, message PWCHAR)
 			posX = captionLength + 5
 			while posX < handle.width - 1 {
 				boxLine[posX] = 9472
-				posX
-
+				posX++
 			}
 
 			boxLine[handle.width - 1] = 9488
 
 		} else {
-			posY == handle.posY + handle.height - 1
-
-			{
+			if posY == handle.posY + handle.height - 1 {
 				boxLine[0] = 9492
 				posX = 1
-				[unknown clang ast] CompoundStmt 
-				posX < handle.width - 1
-				posX++
-				{
+				while posX < handle.width - 1 {
 					boxLine[posX] = 9472
-
+					posX++
 				}
 
 				boxLine[handle.width - 1] = 9496
 
-			}
-
-
-			{
+			} else {
 				boxLine[0] = 9474
 				posX = 1
-				[unknown clang ast] CompoundStmt 
-				posX < handle.width - 1
-				posX++
-				{
+				while posX < handle.width - 1 {
 					boxLine[posX] = 32/* " " */
-
+					posX++
 				}
 
 				boxLine[handle.width - 1] = 9474
@@ -827,8 +791,7 @@ fun blpDrawDialogBox(handle PXTBL_DIALOG_HANDLE, caption PWCHAR, message PWCHAR)
 
 		boxLine[handle.width] = 0
 		blConsoleWrite(boxLine)
-		posY
-
+		posY++
 	}
 
 	if caption != (0 as! PVOID) {
@@ -921,8 +884,7 @@ fun blpDrawDialogInputField(handle PXTBL_DIALOG_HANDLE, inputFieldText PWCHAR) {
 	index = 0
 	while index < handle.width - 8 {
 		inputField[index] = 32/* " " */
-		index
-
+		index++
 	}
 
 	blDisableConsoleCursor()
@@ -936,8 +898,7 @@ fun blpDrawDialogInputField(handle PXTBL_DIALOG_HANDLE, inputFieldText PWCHAR) {
 	index = 0
 	while index < length {
 		inputField[index] = inputFieldText[index]
-		index
-
+		index++
 	}
 
 	inputField[handle.width] = 0
@@ -991,8 +952,7 @@ fun blpDrawDialogMessage(handle PXTBL_DIALOG_HANDLE, message PWCHAR) {
 			index = lineLength
 			while index < handle.width - 4 {
 				blConsolePrint(" ")
-				index
-
+				index++
 			}
 
 
@@ -1036,8 +996,7 @@ fun blpDrawDialogProgressBar(handle PXTBL_DIALOG_HANDLE, percentage UCHAR) {
 
 		}
 
-		index
-
+		index++
 	}
 
 	progressBar[index] = 0

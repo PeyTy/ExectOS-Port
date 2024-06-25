@@ -228,40 +228,25 @@ fun fbSetScreenResolution(width UINT, height UINT) {
 	modeChanged = fALSE
 	switch FbpDisplayInfo.protocol {
 		case gOP:
-			width == 0 || height == 0
-
-			{
+			if width == 0 or height == 0 {
 				status = FbpDisplayInfo.driver.gop.setMode(FbpDisplayInfo.driver.gop, 1)
-				status == (9223372036854775808 & 0)
-
-				{
+				if status == (9223372036854775808 & 0) {
 					status = FbpDisplayInfo.driver.gop.setMode(FbpDisplayInfo.driver.gop, FbpDisplayInfo.defaultMode)
 					modeChanged = (status == (9223372036854775808 & 0))
 
 				}
 
 
-			}
-
-
-			{
+			} else {
 				mode = 1
-				mode <= FbpDisplayInfo.driver.gop.mode.maxMode
-
-				{
+				while mode <= FbpDisplayInfo.driver.gop.mode.maxMode {
 					status = FbpDisplayInfo.driver.gop.queryMode(FbpDisplayInfo.driver.gop, mode, size, modeInfo)
-					status == (9223372036854775808 & 0) and size >= sizeOf<Unsigned long long>() && modeInfo != (0 as! PVOID)
-
-					{
-						modeInfo.horizontalResolution == width && modeInfo.verticalResolution == height
-
-						{
+					if status == (9223372036854775808 & 0) and size >= sizeOf<Unsigned long long>() and modeInfo != (0 as! PVOID) {
+						if modeInfo.horizontalResolution == width and modeInfo.verticalResolution == height {
 							status = FbpDisplayInfo.driver.gop.setMode(FbpDisplayInfo.driver.gop, mode)
-							status == (9223372036854775808 & 0)
-
-							{
+							if status == (9223372036854775808 & 0) {
 								modeChanged = tRUE
-
+								break
 							}
 
 
@@ -270,8 +255,7 @@ fun fbSetScreenResolution(width UINT, height UINT) {
 
 					}
 
-					++mode
-
+					mode++
 				}
 
 
@@ -287,7 +271,7 @@ fun fbSetScreenResolution(width UINT, height UINT) {
 
 		break
 		case _:
-
+			break
 	}
 
 	if !modeChanged {
@@ -375,13 +359,11 @@ fun fbpFindFramebufferAddress(address PEFI_PHYSICAL_ADDRESS) {
 
 			}
 
-			bars
-
+			bars++
 		}
 
 		xtLdrProtocol.protocol.close(handles[index], pciIoGuid)
-		index
-
+		index++
 	}
 
 	address[0] = framebufAddress as! EFI_PHYSICAL_ADDRESS
@@ -470,7 +452,7 @@ fun fbpGetModeInfo() {
 		FbpDisplayInfo.frameBufferSize = FbpDisplayInfo.modeInfo.width * FbpDisplayInfo.modeInfo.height * FbpDisplayInfo.modeInfo.bytesPerPixel + 1024
 		break
 		case _:
-
+			break
 	}
 
 	return (9223372036854775808 & 0)

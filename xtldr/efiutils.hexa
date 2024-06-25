@@ -88,8 +88,7 @@ fun blGetConfigurationTable(tableGuid PEFI_GUID, table PVOID *) {
 
 		}
 
-		index
-
+		index++
 	}
 
 	table[0] = (0 as! PVOID)

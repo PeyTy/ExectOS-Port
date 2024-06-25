@@ -150,22 +150,22 @@ fun arLoadMxcsrRegister(source ULONG) {
 fun arLoadSegment(segment USHORT, source ULONG) {
 	switch segment {
 		case 46:
-			source as! ULONGLONG
+			asm(source as! ULONGLONG)
 		break
 		case 62:
-			source
+			asm(source)
 		break
 		case 38:
-			source
+			asm(source)
 		break
 		case 100:
-			source
+			asm(source)
 		break
 		case 101:
-			source
+			asm(source)
 		break
 		case 54:
-			source
+			asm(source)
 		break
 	}
 
@@ -205,19 +205,19 @@ fun arReadControlRegister(controlRegister USHORT) {
 	var value ULONG_PTR
 	switch controlRegister {
 		case 0:
-			value
+			asm(value)
 		break
 		case 2:
-			value
+			asm(value)
 		break
 		case 3:
-			value
+			asm(value)
 		break
 		case 4:
-			value
+			asm(value)
 		break
 		case 8:
-			value
+			asm(value)
 		break
 		case _:
 			value = 0
@@ -239,28 +239,28 @@ fun arReadDebugRegister(debugRegister USHORT) {
 	var value ULONG_PTR
 	switch debugRegister {
 		case 0:
-			value
+			asm(value)
 		break
 		case 1:
-			value
+			asm(value)
 		break
 		case 2:
-			value
+			asm(value)
 		break
 		case 3:
-			value
+			asm(value)
 		break
 		case 4:
-			value
+			asm(value)
 		break
 		case 5:
-			value
+			asm(value)
 		break
 		case 6:
-			value
+			asm(value)
 		break
 		case 7:
-			value
+			asm(value)
 		break
 		case _:
 			value = 0
@@ -388,17 +388,23 @@ fun arStoreLocalDescriptorTable(destination PVOID) {
 fun arStoreSegment(segment USHORT, destination PVOID) {
 	switch segment {
 		case 46:
-			destination as! PUINT*		break
+			asm(destination as! PUINT[0])
+		break
 		case 62:
-			destination as! PUINT*		break
+			asm(destination as! PUINT[0])
+		break
 		case 38:
-			destination as! PUINT*		break
+			asm(destination as! PUINT[0])
+		break
 		case 100:
-			destination as! PUINT*		break
+			asm(destination as! PUINT[0])
+		break
 		case 101:
-			destination as! PUINT*		break
+			asm(destination as! PUINT[0])
+		break
 		case 54:
-			destination as! PUINT*		break
+			asm(destination as! PUINT[0])
+		break
 		case _:
 			destination = (0 as! PVOID)
 		break
@@ -432,19 +438,19 @@ fun arStoreTaskRegister(destination PVOID) {
 fun arWriteControlRegister(controlRegister USHORT, value UINT_PTR) {
 	switch controlRegister {
 		case 0:
-			value
+			asm(value)
 		break
 		case 2:
-			value
+			asm(value)
 		break
 		case 3:
-			value
+			asm(value)
 		break
 		case 4:
-			value
+			asm(value)
 		break
 		case 8:
-			value
+			asm(value)
 		break
 	}
 
@@ -464,28 +470,28 @@ fun arWriteControlRegister(controlRegister USHORT, value UINT_PTR) {
 fun arWriteDebugRegister(debugRegister USHORT, value UINT_PTR) {
 	switch debugRegister {
 		case 0:
-			value
+			asm(value)
 
 		case 1:
-			value
+			asm(value)
 
 		case 2:
-			value
+			asm(value)
 
 		case 3:
-			value
+			asm(value)
 
 		case 4:
-			value
+			asm(value)
 
 		case 5:
-			value
+			asm(value)
 
 		case 6:
-			value
+			asm(value)
 
 		case 7:
-			value
+			asm(value)
 
 	}
 

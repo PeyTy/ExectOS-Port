@@ -274,99 +274,98 @@ fun blpParseConfigFile(rawConfig Const PCHAR, configuration PLIST_ENTRY) {
 
 
 		} else {
-			inputData[0] == 32/* " " */ or inputData[0] == 9/* "\t" */ or inputData[0] == 13/* "\r" */ || inputData[0] == 10/* "\n" */
-
-			{
-				++inputData
-
-			}
-
-			if inputData[0] == 91/* "[" */ {
-				inputData++				sectionName = inputData
-				while inputData[0] != 93/* "]" */ and inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
-					inputData++
-				}
-
-				if inputData[0] != 93/* "]" */ {
-					return (9223372036854775808 | 2)
-
-				}
-
-				inputData[0] = 0/* "\u0000" */
-				inputData++				sectionName = rtlTrimString(sectionName)
-				sectionLength = rtlStringLength(sectionName, 0)
-				status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), section as! PVOID *)
-				if status == (9223372036854775808 & 0) {
-					status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (sectionLength + 1), section.sectionName as! PVOID *)
-
-				}
-
-				if status != (9223372036854775808 & 0) {
-					return status
-
-				}
-
-				rtlInitializeListHead(section.options)
-				rtlStringToWideString(section.sectionName, sectionName, sectionLength)
-				section.sectionName[sectionLength] = 0/* "\u0000" */
-				rtlInsertTailList(configuration, section.flink)
-
+			if inputData[0] == 32/* " " */ or inputData[0] == 9/* "\t" */ or inputData[0] == 13/* "\r" */ or inputData[0] == 10/* "\n" */ {
+				inputData++
 			} else {
-				key = inputData
-				while inputData[0] != 61/* "=" */ and inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
-					inputData++
-				}
+				if inputData[0] == 91/* "[" */ {
+					inputData++					sectionName = inputData
+					while inputData[0] != 93/* "]" */ and inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
+						inputData++
+					}
 
-				if inputData[0] != 61/* "=" */ {
-					return (9223372036854775808 | 2)
-
-				}
-
-				inputData[0] = 0
-				inputData++				while inputData[0] == 32/* " " */ {
-					inputData++
-				}
-
-				value = inputData
-				while inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
-					inputData++
-				}
-
-				inputData[0] = 0
-				inputData++				key = rtlTrimString(key)
-				value = rtlTrimString(value)
-				keyLength = rtlStringLength(key, 0)
-				valueLength = rtlStringLength(value, 0)
-				status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), option as! PVOID *)
-				if status == (9223372036854775808 & 0) {
-					status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (keyLength + 1), option.name as! PVOID *)
-					if status == (9223372036854775808 & 0) {
-						status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (valueLength + 1), option.value as! PVOID *)
+					if inputData[0] != 93/* "]" */ {
+						return (9223372036854775808 | 2)
 
 					}
 
+					inputData[0] = 0/* "\u0000" */
+					inputData++					sectionName = rtlTrimString(sectionName)
+					sectionLength = rtlStringLength(sectionName, 0)
+					status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), section as! PVOID *)
+					if status == (9223372036854775808 & 0) {
+						status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (sectionLength + 1), section.sectionName as! PVOID *)
+
+					}
+
+					if status != (9223372036854775808 & 0) {
+						return status
+
+					}
+
+					rtlInitializeListHead(section.options)
+					rtlStringToWideString(section.sectionName, sectionName, sectionLength)
+					section.sectionName[sectionLength] = 0/* "\u0000" */
+					rtlInsertTailList(configuration, section.flink)
+
+				} else {
+					key = inputData
+					while inputData[0] != 61/* "=" */ and inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
+						inputData++
+					}
+
+					if inputData[0] != 61/* "=" */ {
+						return (9223372036854775808 | 2)
+
+					}
+
+					inputData[0] = 0
+					inputData++					while inputData[0] == 32/* " " */ {
+						inputData++
+					}
+
+					value = inputData
+					while inputData[0] != 0/* "\u0000" */ and inputData[0] != 10/* "\n" */ {
+						inputData++
+					}
+
+					inputData[0] = 0
+					inputData++					key = rtlTrimString(key)
+					value = rtlTrimString(value)
+					keyLength = rtlStringLength(key, 0)
+					valueLength = rtlStringLength(value, 0)
+					status = blAllocateMemoryPool(sizeOf<Unsigned long long>(), option as! PVOID *)
+					if status == (9223372036854775808 & 0) {
+						status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (keyLength + 1), option.name as! PVOID *)
+						if status == (9223372036854775808 & 0) {
+							status = blAllocateMemoryPool(sizeOf<Unsigned long long>() * (valueLength + 1), option.value as! PVOID *)
+
+						}
+
+
+					}
+
+					if status != (9223372036854775808 & 0) {
+						return status
+
+					}
+
+					if value[0] == 34/* "\"" */ or value[0] == 39/* "'" */ {
+						value++
+					}
+
+					if value[valueLength - 2] == 34/* "\"" */ or value[valueLength - 2] == 39/* "'" */ {
+						value[valueLength - 2] = 0/* "\u0000" */
+
+					}
+
+					rtlStringToWideString(option.name, key, rtlStringLength(key, 0) + 1)
+					rtlStringToWideString(option.value, value, rtlStringLength(value, 0) + 1)
+					option.name[keyLength] = 0/* "\u0000" */
+					option.value[valueLength] = 0/* "\u0000" */
+					rtlInsertTailList(section.options, option.flink)
 
 				}
 
-				if status != (9223372036854775808 & 0) {
-					return status
-
-				}
-
-				if value[0] == 34/* "\"" */ or value[0] == 39/* "'" */ {
-					value++
-				}
-
-				if value[valueLength - 2] == 34/* "\"" */ or value[valueLength - 2] == 39/* "'" */ {
-					value[valueLength - 2] = 0/* "\u0000" */
-
-				}
-
-				rtlStringToWideString(option.name, key, rtlStringLength(key, 0) + 1)
-				rtlStringToWideString(option.value, value, rtlStringLength(value, 0) + 1)
-				option.name[keyLength] = 0/* "\u0000" */
-				option.value[valueLength] = 0/* "\u0000" */
-				rtlInsertTailList(section.options, option.flink)
 
 			}
 

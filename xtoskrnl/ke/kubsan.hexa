@@ -67,37 +67,37 @@ fun kepGetSignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 fun kepGetUbsanTypeKind(typeCheckKind UCHAR) {
 	switch typeCheckKind {
 		case 0:
-			"Load of"
+			return "Load of"
 
 		case 1:
-			"Store to"
+			return "Store to"
 
 		case 2:
-			"Reference binding to"
+			return "Reference binding to"
 
 		case 3:
-			"Member access within"
+			return "Member access within"
 
 		case 4:
-			"Member call on"
+			return "Member call on"
 
 		case 5:
-			"Constructor call on"
+			return "Constructor call on"
 
 		case 6:
-			"Downcast of"
+			return "Downcast of"
 
 		case 7:
-			"Downcast of"
+			return "Downcast of"
 
 		case 8:
-			"Upcast of"
+			return "Upcast of"
 
 		case 9:
-			"Cast to virtual base of"
+			return "Cast to virtual base of"
 
 		case _:
-			"Unrecognized failure code"
+			return "Unrecognized failure code"
 
 	}
 
@@ -473,25 +473,28 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 
 
 	} else {
-		(data.lhsType.typeInfo & 1) && (kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID) < 0)
-
-		{
-			keDbgPrint
-			keDbgPrint("UBSAN: Left shift of negative value %lld\n", kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID))
-
-		}
-
-		if kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID) >= lhsBitWidth {
+		if (data.lhsType.typeInfo & 1) and (kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID) < 0) {
 			if keDbgPrint {
 
-				keDbgPrint("UBSAN: Shift exponent %lld is too large for %u-bit type %s\n", kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID), lhsBitWidth, data.lhsType.typeName)
+				keDbgPrint("UBSAN: Left shift of negative value %lld\n", kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID))
 			}
 
 
 		} else {
-			if keDbgPrint {
+			if kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID) >= lhsBitWidth {
+				if keDbgPrint {
 
-				keDbgPrint("UBSAN: Left shift of %lld by %lld places cannot be represented in type %s\n", kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID), kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID), data.lhsType.typeName)
+					keDbgPrint("UBSAN: Shift exponent %lld is too large for %u-bit type %s\n", kepGetUnsignedUbsanValue(data.rhsType, rhs as! PVOID), lhsBitWidth, data.lhsType.typeName)
+				}
+
+
+			} else {
+				if keDbgPrint {
+
+					keDbgPrint("UBSAN: Left shift of %lld by %lld places cannot be represented in type %s\n", kepGetSignedUbsanValue(data.lhsType, lhs as! PVOID), kepGetSignedUbsanValue(data.rhsType, rhs as! PVOID), data.lhsType.typeName)
+				}
+
+
 			}
 
 
@@ -519,15 +522,10 @@ fun kepHandleUbsanTypeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PT
 		kepHandleUbsanNullPointerDereference(data)
 
 	} else {
-		data.alignment && (((pointer) & ((data.alignment) as! Typeof (Pointer) - 1)) != 0)
-
-		{
+		if data.alignment and (((pointer) & ((data.alignment) as! Typeof (Pointer) - 1)) != 0) {
 			kepHandleUbsanMisalignedAccess(data, pointer)
 
-		}
-
-
-		{
+		} else {
 			kepHandleUbsanObjectSizeMismatch(data, pointer)
 
 		}
