@@ -70,7 +70,7 @@ fun rtlCopyMemory(destination PVOID, source PCVOID, length SIZE_T) {
 fun rtlMoveMemory(destination PVOID, source PCVOID, length SIZE_T) {
 	var destinationBytes PCHAR = destination as! PCHAR
 	var sourceBytes PCHAR = source as! PCHAR
-	if (!sourceBytes) and (!destinationBytes) {
+	if (not sourceBytes) and (not destinationBytes) {
 		return
 
 	}

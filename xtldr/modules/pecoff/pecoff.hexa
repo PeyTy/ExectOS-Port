@@ -21,7 +21,7 @@ var __UNIQUE_ID_version3
 fun peGetEntryPoint(imagePointer PVOID, entryPoint PVOID *) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.peHeader {
+	if not image or not image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
@@ -52,7 +52,7 @@ fun peGetFileSize(imagePointer PVOID, fileSize PULONGLONG) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
 	image = imagePointer
-	if !image or !image.imageSize {
+	if not image or not image.imageSize {
 		return (9223372036854775808 | 2)
 
 	}
@@ -76,7 +76,7 @@ fun peGetImageSize(imagePointer PVOID, imageSize PUINT) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
 	image = imagePointer
-	if !image or !image.imageSize {
+	if not image or not image.imageSize {
 		return (9223372036854775808 | 2)
 
 	}
@@ -99,7 +99,7 @@ fun peGetImageSize(imagePointer PVOID, imageSize PUINT) {
 fun peGetMachineType(imagePointer PVOID, machineType PUSHORT) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.peHeader {
+	if not image or not image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
@@ -130,7 +130,7 @@ fun peGetSection(imagePointer PVOID, sectionName PCHAR, rawData PULONG *) {
 	var sectionNameLength SIZE_T
 	var sectionIndex USHORT
 	image = imagePointer
-	if !image or !image.peHeader {
+	if not image or not image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
@@ -172,7 +172,7 @@ fun peGetSection(imagePointer PVOID, sectionName PCHAR, rawData PULONG *) {
 fun peGetSubSystem(imagePointer PVOID, subSystem PUSHORT) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.peHeader {
+	if not image or not image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
@@ -202,7 +202,7 @@ fun peGetSubSystem(imagePointer PVOID, subSystem PUSHORT) {
 fun peGetVersion(imagePointer PVOID, version PUSHORT) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.peHeader {
+	if not image or not image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}
@@ -321,7 +321,7 @@ fun peLoadImage(fileHandle PEFI_FILE_HANDLE, memoryType LOADER_MEMORY_TYPE, virt
 
 	}
 
-	if !(imageData.peHeader.fileHeader.characteristics & 2) {
+	if not (imageData.peHeader.fileHeader.characteristics & 2) {
 		xtLdrProtocol.debug.print("ERROR: Non-executable PE/COFF image loaded\n")
 		xtLdrProtocol.memory.freePages(pages, data as! UINT_PTR as! EFI_PHYSICAL_ADDRESS)
 		xtLdrProtocol.memory.freePool(imageData)
@@ -451,7 +451,7 @@ fun peUnloadImage(imagePointer PVOID) {
 
 	var status EFI_STATUS
 	image = imagePointer
-	if !image or !image.data {
+	if not image or not image.data {
 		return (9223372036854775808 | 2)
 
 	}
@@ -472,7 +472,7 @@ fun peUnloadImage(imagePointer PVOID) {
 fun peVerifyImage(imagePointer PVOID) {
 	let image = new ByValue<PPECOFF_IMAGE_CONTEXT>()
 
-	if !image or !image.peHeader {
+	if not image or not image.peHeader {
 		return (9223372036854775808 | 2)
 
 	}

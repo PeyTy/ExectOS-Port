@@ -1120,7 +1120,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 	exponent = rtlGetBaseExponent(value, tenPower)
 	roundingAmount = 0.5
 	writeExponent = (formatProperties.flags & 4096)
-	if (writeExponent == fALSE) and !(formatProperties.flags & 2048) {
+	if (writeExponent == fALSE) and not (formatProperties.flags & 2048) {
 		if (exponent < -4) or (exponent >= precision) {
 			writeExponent = tRUE
 
@@ -1210,7 +1210,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 		} else {
 			if precision > significantDigits {
 				precision = significantDigits
-				if !writeExponent and ((exponent + 1) > precision) {
+				if not writeExponent and ((exponent + 1) > precision) {
 					precision = exponent + 1
 
 				}
@@ -1266,7 +1266,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 	if writeExponent {
 		numberLength += 4
-		if !(formatProperties.flags & 8192) {
+		if not (formatProperties.flags & 8192) {
 			numberLength += 1
 
 		}
@@ -1300,7 +1300,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 	} else {
 		if exponent >= 0 {
-			if !(formatProperties.flags & 8192) {
+			if not (formatProperties.flags & 8192) {
 				numberLength += exponent + 1
 
 			}
@@ -1346,7 +1346,7 @@ fun rtlpWriteWideStringDoubleValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 	}
 
-	if !(formatProperties.flags & 4) or (formatProperties.flags & 8) {
+	if not (formatProperties.flags & 4) or (formatProperties.flags & 8) {
 		if formatProperties.flags & 8 {
 			character = 48/* "0" */
 
@@ -1723,7 +1723,7 @@ fun rtlpWriteWideStringHexDoubleValue(context PRTL_PRINT_CONTEXT, formatProperti
 
 	}
 
-	if !(formatProperties.flags & 4) or (formatProperties.flags & 8) {
+	if not (formatProperties.flags & 4) or (formatProperties.flags & 8) {
 		if formatProperties.flags & 8 {
 			character = 48/* "0" */
 			prefixIndex = 0
@@ -1851,7 +1851,7 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 	var status XTSTATUS
 	integerLength = 0
 	negative = fALSE
-	if !(formatProperties.flags & 256) {
+	if not (formatProperties.flags & 256) {
 		switch formatProperties.integerSize {
 			case sizeOf<Unsigned long long>():
 				integer = integer as! CHAR
@@ -1873,7 +1873,7 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 	}
 
 	if integer != 0 or formatProperties.precision != 0 {
-		if !(formatProperties.flags & 256) and integer as! LONGLONG < 0 {
+		if not (formatProperties.flags & 256) and integer as! LONGLONG < 0 {
 			negative = tRUE
 			integer *= -1
 
@@ -1909,7 +1909,7 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 	}
 
 	prefixLength = 0
-	if !(formatProperties.flags & 256) and negative {
+	if not (formatProperties.flags & 256) and negative {
 		prefix[prefixLength] = 45/* "-" */
 		prefixLength += 1
 
@@ -1967,7 +1967,7 @@ fun rtlpWriteWideStringIntegerValue(context PRTL_PRINT_CONTEXT, formatProperties
 
 	}
 
-	if !(formatProperties.flags & 4) or (formatProperties.flags & 8) {
+	if not (formatProperties.flags & 4) or (formatProperties.flags & 8) {
 		character = 32/* " " */
 		if formatProperties.flags & 8 {
 			character = 48/* "0" */
@@ -2082,7 +2082,7 @@ fun rtlpWriteWideStringStringValue(context PRTL_PRINT_CONTEXT, formatProperties 
 
 	}
 
-	if !(formatProperties.flags & 4) {
+	if not (formatProperties.flags & 4) {
 		while paddingLength > 0 {
 			status = rtlpWriteWideCharacter(context, 32/* " " */)
 			if status != (0 as! XTSTATUS) {
@@ -2158,7 +2158,7 @@ fun rtlpWriteWideStringValue(context PRTL_PRINT_CONTEXT, formatProperties PRTL_P
 
 	}
 
-	if !(formatProperties.flags & 4) {
+	if not (formatProperties.flags & 4) {
 		while paddingLength > 0 {
 			status = rtlpWriteWideCharacter(context, 32/* " " */)
 			if status != (0 as! XTSTATUS) {

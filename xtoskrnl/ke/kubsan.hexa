@@ -7,7 +7,7 @@
 /// 
 /// @since XT 1.0
 fun kepCheckUbsanReport(location PKUBSAN_SOURCE_LOCATION) {
-	return !kepUbsanActiveFrame
+	return not kepUbsanActiveFrame
 }
 
 /// Enters UBSAN frame and marks it as active.
@@ -140,7 +140,7 @@ fun kepGetUnsignedUbsanValue(type PKUBSAN_TYPE_DESCRIPTOR, value PVOID) {
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PVOID) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -180,7 +180,7 @@ fun kepHandleUbsanDivisionOverflow(data PKUBSAN_OVERFLOW_DATA, lhs PVOID, rhs PV
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -206,7 +206,7 @@ fun kepHandleUbsanFloatCastOverflow(data PKUBSAN_FLOAT_CAST_OVERFLOW_DATA, lhs U
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -235,7 +235,7 @@ fun kepHandleUbsanFunctionTypeMismatch(data PKUBSAN_FUNCTION_TYPE_MISMATCH_DATA,
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -258,7 +258,7 @@ fun kepHandleUbsanIntegerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -295,7 +295,7 @@ fun kepHandleUbsanInvalidBuiltin(data PKUBSAN_INVALID_BUILTIN_DATA) {
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -321,7 +321,7 @@ fun kepHandleUbsanMisalignedAccess(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULON
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -347,7 +347,7 @@ fun kepHandleUbsanNegateOverflow(data PKUBSAN_OVERFLOW_DATA, oldValue ULONG_PTR)
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -373,7 +373,7 @@ fun kepHandleUbsanNullPointerDereference(data PKUBSAN_TYPE_MISMATCH_DATA) {
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -399,7 +399,7 @@ fun kepHandleUbsanObjectSizeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer UL
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -428,7 +428,7 @@ fun kepHandleUbsanOutOfBounds(data PKUBSAN_OUT_OF_BOUNDS_DATA, index ULONG_PTR) 
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -458,7 +458,7 @@ fun kepHandleUbsanPointerOverflow(data PKUBSAN_OVERFLOW_DATA, lhs ULONG_PTR, rhs
 /// @since XT 1.0
 fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs ULONG_PTR, rhs ULONG_PTR) {
 	var lhsBitWidth ULONG
-	if !kepCheckUbsanReport(data.location) {
+	if not kepCheckUbsanReport(data.location) {
 		return
 
 	}
@@ -518,7 +518,7 @@ fun kepHandleUbsanShiftOutOfBounds(data PKUBSAN_SHIFT_OUT_OF_BOUNDS_DATA, lhs UL
 /// 
 /// @since XT 1.0
 fun kepHandleUbsanTypeMismatch(data PKUBSAN_TYPE_MISMATCH_DATA, pointer ULONG_PTR) {
-	if !pointer {
+	if not pointer {
 		kepHandleUbsanNullPointerDereference(data)
 
 	} else {

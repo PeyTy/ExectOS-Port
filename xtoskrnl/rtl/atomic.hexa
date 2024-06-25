@@ -500,7 +500,7 @@ fun rtlAtomicPopEntrySingleList(header PSINGLE_LIST_HEADER) {
 	listHead = header as! PVOID
 	firstEntry = listHead.next
 	do {
-		if !firstEntry {
+		if not firstEntry {
 			return (0 as! PVOID)
 
 		}

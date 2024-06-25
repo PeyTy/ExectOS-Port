@@ -10,7 +10,7 @@ fun blEnterFirmwareSetup() {
 	var indications ULONGLONG
 	var status EFI_STATUS
 	status = blGetEfiVariable(guid, "OsIndicationsSupported", setupSupport as! PVOID *)
-	if status != (9223372036854775808 & 0) or !(setupSupport[0] & 1) {
+	if status != (9223372036854775808 & 0) or not (setupSupport[0] & 1) {
 		blDebugPrint("WARNING: Reboot into firmware setup interface not supported\n")
 		return (9223372036854775808 | 3)
 

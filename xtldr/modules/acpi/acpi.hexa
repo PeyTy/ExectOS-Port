@@ -110,7 +110,7 @@ fun acGetAcpiTable(signature Const UINT, previousTable PVOID, acpiTable PVOID *)
 	}
 
 	if tableHeader.signature != 1346584902 or tableHeader.revision > 2 {
-		if !acpValidateAcpiTable(tableHeader, tableHeader.length) {
+		if not acpValidateAcpiTable(tableHeader, tableHeader.length) {
 			return (9223372036854775808 | 27)
 
 		}
@@ -163,7 +163,7 @@ fun acGetRsdpTable(acpiTable PVOID *) {
 	var status EFI_STATUS
 	var rsdpTable PVOID
 	status = xtLdrProtocol.util.getConfigurationTable(acpiGuid, rsdpTable)
-	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(rsdpTable, 20) {
+	if status != (9223372036854775808 & 0) or not acpValidateAcpiTable(rsdpTable, 20) {
 		acpiTable[0] = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
@@ -188,7 +188,7 @@ fun acGetSMBiosTable(smBiosTable PVOID *) {
 
 	var status EFI_STATUS
 	status = xtLdrProtocol.util.getConfigurationTable(smBiosGuid, smBios as! PVOID)
-	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(smBios, smBios.length) {
+	if status != (9223372036854775808 & 0) or not acpValidateAcpiTable(smBios, smBios.length) {
 		smBiosTable[0] = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
@@ -213,7 +213,7 @@ fun acGetSMBios3Table(smBiosTable PVOID *) {
 
 	var status EFI_STATUS
 	status = xtLdrProtocol.util.getConfigurationTable(smBios3Guid, smBios as! PVOID)
-	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(smBios, smBios.length) {
+	if status != (9223372036854775808 & 0) or not acpValidateAcpiTable(smBios, smBios.length) {
 		smBiosTable[0] = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 
@@ -237,7 +237,7 @@ fun acGetXsdpTable(acpiTable PVOID *) {
 	var status EFI_STATUS
 	var xsdpTable PVOID
 	status = xtLdrProtocol.util.getConfigurationTable(acpiGuid, xsdpTable)
-	if status != (9223372036854775808 & 0) or !acpValidateAcpiTable(xsdpTable, 36) {
+	if status != (9223372036854775808 & 0) or not acpValidateAcpiTable(xsdpTable, 36) {
 		acpiTable[0] = (0 as! PVOID)
 		return (9223372036854775808 | 14)
 

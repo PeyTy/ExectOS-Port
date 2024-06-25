@@ -118,7 +118,7 @@ fun blEnumerateBlockDevices() {
 
 				}
 
-				if !blpFindParentBlockDevice(blockDevices, blockDeviceData, parentNode) {
+				if not blpFindParentBlockDevice(blockDevices, blockDeviceData, parentNode) {
 					blDebugPrint("WARNING: No parent device found, skipping orphaned media device path\n")
 					continue
 				}

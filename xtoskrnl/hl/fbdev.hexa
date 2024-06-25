@@ -95,7 +95,7 @@ fun hlInitializeFrameBuffer() {
 	}
 
 	frameBufferResource = systemResource as! PSYSTEM_RESOURCE_FRAMEBUFFER
-	if !frameBufferResource.header.virtualAddress {
+	if not frameBufferResource.header.virtualAddress {
 		return (3221225635 as! XTSTATUS)
 
 	}
@@ -200,7 +200,7 @@ fun hlPutCharacter(positionX ULONG, positionY ULONG, color ULONG, wideCharacter 
 		index++
 	}
 
-	if !character {
+	if not character {
 		return
 
 	}

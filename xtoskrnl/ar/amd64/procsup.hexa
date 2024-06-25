@@ -377,7 +377,7 @@ fun arpSetGdtEntry(gdt PKGDTENTRY, selector USHORT, base ULONG_PTR, limit ULONG,
 	gdtEntry.baseUpper = (base >> 32)
 	gdtEntry.limitLow = (limit & 65535)
 	gdtEntry.bits.limitHigh = ((limit >> 16) & 15)
-	gdtEntry.bits.defaultBig = !!(segmentMode & 2)
+	gdtEntry.bits.defaultBig = not not (segmentMode & 2)
 	gdtEntry.bits.dpl = (dpl & 3)
 	gdtEntry.bits.granularity = granularity
 	gdtEntry.bits.longMode = !!(segmentMode & 1)

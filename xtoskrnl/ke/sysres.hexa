@@ -114,7 +114,7 @@ fun kepInitializeSystemResources() {
 	var resourceSize ULONG
 	keInitializeSpinLock(kepSystemResourcesLock)
 	rtlInitializeListHead(kepSystemResourcesListHead)
-	if !rtlListEmpty(keInitializationBlock.systemResourcesListHead) {
+	if not rtlListEmpty(keInitializationBlock.systemResourcesListHead) {
 		listEntry = keInitializationBlock.systemResourcesListHead.flink
 		while listEntry != keInitializationBlock.systemResourcesListHead {
 			resourceHeader = (((listEntry) as! Char * - __builtin_offsetof<Unsigned long long>()) as! SYSTEM_RESOURCE_HEADER *)

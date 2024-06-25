@@ -86,7 +86,7 @@ fun blInitializeBootMenuList(menuEntries PXTBL_BOOTMENU_ITEM *, entriesCount PUL
 	}
 
 	status = blAllocateMemoryPool(numberOfEntries * sizeOf<Unsigned long long>(), osList as! PVOID *)
-	if status != (9223372036854775808 & 0) or !osList {
+	if status != (9223372036854775808 & 0) or not osList {
 		return (9223372036854775808 | 9)
 
 	}

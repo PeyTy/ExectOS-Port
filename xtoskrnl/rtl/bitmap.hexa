@@ -48,7 +48,7 @@ fun rtlClearBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) 
 	var bitOffset ULONG_PTR
 	var mask ULONG_PTR
 	var buffer PULONG_PTR
-	if !length {
+	if not length {
 		return
 
 	}
@@ -238,7 +238,7 @@ fun rtlSetBits(bitMap PRTL_BITMAP, startingIndex ULONG_PTR, length ULONG_PTR) {
 	var bitOffset ULONG_PTR
 	var mask ULONG_PTR
 	var buffer PULONG_PTR
-	if !length {
+	if not length {
 		return
 
 	}
@@ -343,12 +343,12 @@ fun rtlpCountBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR,
 	bufferEnd = buffer + ((length + 64 - 1) / 64)
 	bitOffset = startingIndex & (64 - 1)
 	value = ((setBits) ? ~buffer[0] : buffer[0]) >> bitOffset << bitOffset
-	while !value and buffer + 1 < bufferEnd {
+	while not value and buffer + 1 < bufferEnd {
 		value = (setBits) ? ~(++buffer)[0] : (++buffer)[0]
 
 	}
 
-	if !value {
+	if not value {
 		return length
 
 	}
@@ -383,9 +383,8 @@ fun rtlpFindBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, 
 		return -1 as! ULONG_PTR
 
 	} else {
-		length!
-		{
-			startingIndex
+		if not length {
+			return startingIndex
 
 		}
 
@@ -402,7 +401,7 @@ fun rtlpFindBits(bitMap PRTL_BITMAP, length ULONG_PTR, startingIndex ULONG_PTR, 
 	tries = (startingIndex != 0) + 2
 	while tries {
 		while bitOffset + length < bitMapEnd {
-			bitOffset += rtlpCountBits(bitMap, bitMap.size - bitOffset, bitOffset, !setBits)
+			bitOffset += rtlpCountBits(bitMap, bitMap.size - bitOffset, bitOffset, not setBits)
 			if bitOffset + length > bitMapEnd {
 				break
 			}

@@ -72,7 +72,7 @@ fun hlpInitializeAcpi() {
 	}
 
 	status = hlGetAcpiTable(1346584902, fadt as! PACPI_DESCRIPTION_HEADER *)
-	if status != (0 as! XTSTATUS) or !fadt {
+	if status != (0 as! XTSTATUS) or not fadt {
 		return (3221226021 as! XTSTATUS)
 
 	}
@@ -246,7 +246,7 @@ fun hlpInitializeAcpiTimer() {
 
 	var status XTSTATUS
 	status = hlGetAcpiTable(1346584902, fadt as! PACPI_DESCRIPTION_HEADER *)
-	if status != (0 as! XTSTATUS) or !fadt {
+	if status != (0 as! XTSTATUS) or not fadt {
 		return (3221226021 as! XTSTATUS)
 
 	}
@@ -420,7 +420,7 @@ fun hlpQueryAcpiTables(signature ULONG, acpiTable PACPI_DESCRIPTION_HEADER *) {
 	}
 
 	if tableHeader.signature != 1346584902 or tableHeader.revision > 2 {
-		if !hlpValidateAcpiTable(tableHeader, tableHeader.length) {
+		if not hlpValidateAcpiTable(tableHeader, tableHeader.length) {
 			mmUnmapHardwareMemory(tableHeader, 2, tRUE)
 			return (3221225535 as! XTSTATUS)
 

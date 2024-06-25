@@ -21,7 +21,7 @@ fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 	}
 
 	pxeBase = ((pageMap.ptePointer) as! PHARDWARE_PTE)
-	if !pxeBase[(18446744073705357312 >> 39) & 511].valid {
+	if not pxeBase[(18446744073705357312 >> 39) & 511].valid {
 		status = xtLdrProtocol.memory.allocatePages(1, address)
 		if status != (9223372036854775808 & 0) {
 			return status
@@ -39,7 +39,7 @@ fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 
 	}
 
-	if !ppeBase[(18446744073705357312 >> 30) & 511].valid {
+	if not ppeBase[(18446744073705357312 >> 30) & 511].valid {
 		status = xtLdrProtocol.memory.allocatePages(1, address)
 		if status != (9223372036854775808 & 0) {
 			return status
@@ -60,7 +60,7 @@ fun xtpMapHardwareMemoryPool(pageMap PXTBL_PAGE_MAPPING) {
 	var index UINT = 0
 	
 	while index < 2 {
-		if !pdeBase[((18446744073705357312 >> 21) & 511) + index].valid {
+		if not pdeBase[((18446744073705357312 >> 21) & 511) + index].valid {
 			status = xtLdrProtocol.memory.allocatePages(1, address)
 			if status != (9223372036854775808 & 0) {
 				return status

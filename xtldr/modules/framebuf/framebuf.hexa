@@ -16,7 +16,7 @@ var __UNIQUE_ID_version3
 /// 
 /// @since XT 1.0
 fun fbGetDisplayDriver(protocol PEFI_GRAPHICS_PROTOCOL) {
-	if !FbpDisplayInfo.initialized {
+	if not FbpDisplayInfo.initialized {
 		return (9223372036854775808 | 6)
 
 	}
@@ -34,7 +34,7 @@ fun fbGetDisplayDriver(protocol PEFI_GRAPHICS_PROTOCOL) {
 /// 
 /// @since XT 1.0
 fun fbGetDisplayInformation(frameBufferBase PEFI_PHYSICAL_ADDRESS, frameBufferSize PULONG_PTR, modeInfo PXTBL_FRAMEBUFFER_MODE_INFORMATION) {
-	if !FbpDisplayInfo.initialized {
+	if not FbpDisplayInfo.initialized {
 		return (9223372036854775808 | 6)
 
 	}
@@ -73,7 +73,7 @@ fun fbGetPreferredScreenResolution(preferredWidth PUINT, preferredHeight PUINT) 
 	let activeEdid = new ByValue<PEFI_EDID_ACTIVE_PROTOCOL>()
 
 	var status EFI_STATUS
-	if !FbpDisplayInfo.initialized {
+	if not FbpDisplayInfo.initialized {
 		return (9223372036854775808 | 6)
 
 	}
@@ -113,7 +113,7 @@ fun fbInitializeDisplay() {
 	var refresh UINT
 	var infoSize UINT_PTR
 	var status EFI_STATUS
-	if !FbpDisplayInfo.initialized {
+	if not FbpDisplayInfo.initialized {
 		xtLdrProtocol.debug.print("Initializing framebuffer device\n")
 		status = xtLdrProtocol.protocol.open(FbpDisplayInfo.handle, FbpDisplayInfo.driver.gop as! PVOID *, gopGuid)
 		if status == (9223372036854775808 & 0) {
@@ -220,7 +220,7 @@ fun fbSetScreenResolution(width UINT, height UINT) {
 	var status EFI_STATUS
 	var size UINT_PTR
 	var mode UINT
-	if !FbpDisplayInfo.initialized {
+	if not FbpDisplayInfo.initialized {
 		return (9223372036854775808 | 6)
 
 	}
@@ -274,7 +274,7 @@ fun fbSetScreenResolution(width UINT, height UINT) {
 			break
 	}
 
-	if !modeChanged {
+	if not modeChanged {
 		xtLdrProtocol.debug.print("ERROR: Failed to change screen mode to %ux%u (Status Code: 0x%zX)\n", width, height, status)
 		return (9223372036854775808 | 3)
 

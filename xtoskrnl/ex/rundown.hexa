@@ -82,7 +82,7 @@ fun exReleaseRundownProtection(descriptor PEX_RUNDOWN_REFERENCE) {
 	while tRUE {
 		if currentValue & 1 {
 			waitBlock = (currentValue & ~1) as! PEX_RUNDOWN_WAIT_BLOCK
-			if !rtlAtomicDecrement64(waitBlock.count as! PLONG_PTR) {
+			if not rtlAtomicDecrement64(waitBlock.count as! PLONG_PTR) {
 				keSetEvent(waitBlock.wakeEvent, 0, fALSE)
 
 			}

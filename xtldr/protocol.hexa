@@ -562,7 +562,7 @@ fun blpGetModuleInfoStrings(sectionData PWCHAR, sectionSize ULONG, modInfo PWCHA
 	var array PWCHAR *
 	var string PWCHAR
 	infoStrings = sectionData
-	if !infoStrings or !sectionSize {
+	if not infoStrings or not sectionSize {
 		return (9223372036854775808 | 2)
 
 	}
