@@ -432,6 +432,7 @@ fun rtlGetBaseExponent(value DOUBLE, powerOfTen PDOUBLE) {
 /// 
 /// @since XT 1.0
 fun rtlInfiniteDouble(value DOUBLE) {
+	
 	var var Union (unnamed union at /home/Belliash/ExectOS/xtoskrnl/rtl/math.c:618:5)
 	Var.double = value
 	return ((Var.doubleS.exponent & 2047) == 2047)
@@ -463,6 +464,7 @@ fun rtlMultiplyLargeInteger(multiplicand LARGE_INTEGER, multiplier LONG) {
 /// 
 /// @since XT 1.0
 fun rtlNanDouble(value DOUBLE) {
+	
 	var var Union (unnamed union at /home/Belliash/ExectOS/xtoskrnl/rtl/math.c:677:5)
 	Var.double = value
 	return (Var.doubleS.exponent == 2047 and (Var.doubleS.mantissaHigh != 0 or Var.doubleS.mantissaLow != 0))
